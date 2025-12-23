@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "id": "piku",
+  "version": "${version}",
+  "name": "piku",
+  "description": "",
+  "authors": [],
+  "contact": {},
+  "license": "All-Rights-Reserved",
+  "icon": "assets/piku/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "fabric-datagen": [
+      "me.znotchill.piku.client.PikuDataGenerator"
+    ],
+    "client": [
+      "me.znotchill.piku.client.PikuClient"
+    ],
+    "main": [
+      "me.znotchill.piku.Piku"
+    ]
+  },
+  "mixins": [
+    "piku.mixins.json",
+    {
+      "config": "piku.client.mixins.json",
+      "environment": "client"
+    }
+  ],
+  "depends": {
+    "fabricloader": ">=${loader_version}",
+    "fabric-language-kotlin": ">=${kotlin_loader_version}",
+    "fabric-api": "*",
+    "minecraft": "${minecraft_version}"
+  }
+}

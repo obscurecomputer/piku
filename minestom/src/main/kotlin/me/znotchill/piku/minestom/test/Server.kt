@@ -30,28 +30,17 @@ class Server : BlossomServer(
         }
 
         eventHandler.addListener<PlayerLoadedEvent> { event ->
-            val name = "test.lua"
-            val content = """
-                print("hi")
-                
-                listen("client.key_update", function(event)
-                    print(event.key)
-                    print("hsdadsa")
-                    
-                    send("test.bro", { awesome = 5 })
-                end)
-            """.trimIndent()
-
-            piku.sendScript(event.player, name, content)
-
-            piku.runScript("test.lua", """
-                print("HELLO FROM MINESTOM!!")
-                
-                listen("test.bro", function(event)
-                    print("HI!!!! NO WAY")
-                end)
-            """.trimIndent())
+            piku.sendAllScripts(
+                player = event.player,
+                resourceDirectory = "scripts/client",
+                recurse = true
+            )
         }
+
+        piku.runAllScripts(
+            resourceDirectory = "scripts/server",
+            recurse = true
+        )
     }
 }
 

@@ -10,6 +10,7 @@ interface EventBus {
 }
 
 fun EventBus.registerListen(globals: Globals) {
+    println("registered listener")
     globals["listen"] = object : TwoArgFunction() {
         override fun call(eventArg: LuaValue, fnArg: LuaValue): LuaValue {
             val eventId = eventArg.checkjstring()

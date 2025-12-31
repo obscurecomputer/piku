@@ -11,8 +11,10 @@ object InputTracker {
 
     fun init() {
         ClientTickEvents.END_CLIENT_TICK.register { client ->
-            pollKeyboard(client)
-            pollMouse(client)
+            if (Client.connectedToServer && Client.serverRunsPiku) {
+                pollMouse(client)
+                pollKeyboard(client)
+            }
         }
     }
 

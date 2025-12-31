@@ -1,5 +1,6 @@
 plugins {
     kotlin("jvm") version "2.3.0"
+    application
 }
 
 group = "me.znotchill.piku"
@@ -14,6 +15,8 @@ repositories {
             includeModule("net.minestom", "testing")
         }
     }
+    maven("https://jitpack.io")
+    mavenLocal()
 }
 
 dependencies {
@@ -30,6 +33,7 @@ dependencies {
     implementation("ch.qos.logback:logback-classic:1.5.6")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.9.0")
     implementation("org.luaj:luaj-jse:3.0.1")
+    implementation("dev.znci:twine:2.1.2")
 }
 
 tasks.test {
@@ -37,4 +41,8 @@ tasks.test {
 }
 kotlin {
     jvmToolchain(25)
+}
+
+application {
+    mainClass = "me.znotchill.piku.minestom.test.ServerKt"
 }

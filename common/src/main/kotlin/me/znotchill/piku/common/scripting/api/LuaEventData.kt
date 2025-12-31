@@ -9,18 +9,24 @@ class LuaEventData(fields: Map<String, Any?>) {
 
     init {
         for ((key, value) in fields) {
-            table[key] = when (value) {
-                is LuaValue -> value
-                else -> LuaValue.userdataOf(value)
-            }
+            table[key] = toLuaValue(value)
         }
     }
 
     operator fun get(key: String) = table[key]
     operator fun set(key: String, value: Any?) {
-        table[key] = when (value) {
-            is LuaValue -> value
-            else -> LuaValue.userdataOf(value)
-        }
+        table[key] = toLuaValue(value)
+    }
+
+    private fun toLuaValue(value: Any?): LuaValue = when (value) {
+        null -> LuaValue.NIL
+        is LuaValue -> value
+        is String -> LuaValue.valueOf(value)
+        is Int -> LuaValue.valueOf(value)
+        is Long -> LuaValue.valueOf(value.toInt())
+        is Double -> LuaValue.valueOf(value)
+        is Float -> LuaValue.valueOf(value.toDouble())
+        is Boolean -> LuaValue.valueOf(value)
+        else -> LuaValue.userdataOf(value)
     }
 }

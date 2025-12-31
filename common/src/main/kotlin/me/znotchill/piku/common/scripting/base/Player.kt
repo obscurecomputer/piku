@@ -1,6 +1,11 @@
 package me.znotchill.piku.common.scripting.base
 
-interface Player {
-    fun send(message: String)
-    val uuid: String
+import dev.znci.twine.nativex.TwineNative
+
+abstract class Player : TwineNative() {
+
+    abstract val uuid: String
+    abstract val username: String
+
+    abstract fun send(message: String)
 }

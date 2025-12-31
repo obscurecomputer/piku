@@ -5,14 +5,18 @@ import io.netty.buffer.ByteBufAllocator
 import io.netty.buffer.Unpooled
 import me.znotchill.blossom.extensions.addListener
 import me.znotchill.blossom.server.BlossomServer
+import me.znotchill.piku.common.scripting.api.LuaEventData
 import me.znotchill.piku.common.scripting.server.ServerAPI
 import me.znotchill.piku.common.utils.jsonStringToLua
 import me.znotchill.piku.common.utils.jsonToLua
 import me.znotchill.piku.common.utils.readString
 import me.znotchill.piku.common.utils.writeString
+import me.znotchill.piku.minestom.scripting.api.LuaPlayer
 import net.minestom.server.entity.Player
+import net.minestom.server.event.player.PlayerLoadedEvent
 import net.minestom.server.event.player.PlayerPluginMessageEvent
 import net.minestom.server.network.packet.server.common.PluginMessagePacket
+import org.luaj.vm2.LuaValue
 
 class MinestomAPI(val server: BlossomServer) : ServerAPI<Player> {
     override val engine = MinestomLuaEngine()
@@ -35,6 +39,24 @@ class MinestomAPI(val server: BlossomServer) : ServerAPI<Player> {
                 }
             }
         }
+
+        server.eventHandler.addListener<PlayerLoadedEvent> { event ->
+            val player = event.player
+
+            engine.events.fire(
+                "server.player_loaded",
+                LuaEventData(
+                    mapOf(
+                        "player" to LuaPlayer(player).table
+                    )
+                ).table
+            )
+        }
+    }
+
+    override fun getPlayerUD(player: Player): LuaValue {
+        val playerUd = LuaValue.userdataOf(LuaPlayer(player))
+        return playerUd
     }
 
     override fun sendScript(player: Player, name: String, content: String) {

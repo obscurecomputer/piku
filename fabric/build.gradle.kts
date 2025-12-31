@@ -75,6 +75,8 @@ repositories {
         name = "Terraformers"
         url = uri("https://maven.terraformersmc.com/")
     }
+    maven("https://jitpack.io")
+    mavenLocal()
 }
 
 dependencies {
@@ -91,6 +93,7 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.9.0")
     modImplementation("com.terraformersmc:modmenu:${project.property("modmenu_version")}")
     implementation("org.luaj:luaj-jse:3.0.1")
+    implementation("dev.znci:twine:2.1.2")
 }
 
 tasks.processResources {

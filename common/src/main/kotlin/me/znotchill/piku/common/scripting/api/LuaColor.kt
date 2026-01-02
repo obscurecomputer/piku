@@ -1,8 +1,8 @@
 package me.znotchill.piku.common.scripting.api
 
-import dev.znci.twine.annotations.TwineNativeFunction
-import dev.znci.twine.annotations.TwineNativeProperty
-import dev.znci.twine.nativex.TwineNative
+import computer.obscure.twine.annotations.TwineNativeFunction
+import computer.obscure.twine.annotations.TwineNativeProperty
+import computer.obscure.twine.nativex.TwineNative
 import me.znotchill.piku.common.ui.classes.UIColor
 
 class LuaColor : TwineNative("color") {

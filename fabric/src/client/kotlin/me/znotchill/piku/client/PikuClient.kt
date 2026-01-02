@@ -28,13 +28,17 @@ class PikuClient : ClientModInitializer {
 
         ClientPlayConnectionEvents.DISCONNECT.register { _, _ ->
             UIRenderer.currentWindow.components.clear()
-            engine.reset()
+            engine.shutdown()
+            Client.connectedToServer = false
+            Client.serverRunsPiku = false
         }
 
 //        ClientPlayerEntity.
 
         ClientPlayConnectionEvents.JOIN.register { _, _, _ ->
-            engine.reset()
+            Client.connectedToServer = true
+            Client.serverRunsPiku = true // TODO: change this
+            engine.init()
         }
     }
 }

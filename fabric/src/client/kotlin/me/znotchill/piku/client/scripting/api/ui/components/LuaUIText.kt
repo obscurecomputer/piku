@@ -1,6 +1,6 @@
 package me.znotchill.piku.client.scripting.api.ui.components
 
-import dev.znci.twine.annotations.TwineNativeProperty
+import computer.obscure.twine.annotations.TwineNativeProperty
 import me.znotchill.piku.common.ui.components.Text
 
 class LuaUIText(

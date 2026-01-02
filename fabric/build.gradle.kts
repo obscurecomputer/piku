@@ -65,6 +65,7 @@ fabricApi {
 }
 
 repositories {
+    mavenLocal()
     // Add repositories to retrieve artifacts from in here.
     // You should only use this when depending on other mods because
     // Loom adds the essential maven repositories to download Minecraft and libraries from automatically.
@@ -76,7 +77,7 @@ repositories {
         url = uri("https://maven.terraformersmc.com/")
     }
     maven("https://jitpack.io")
-    mavenLocal()
+    maven("https://repo.obscure.computer/repository/maven-releases/")
 }
 
 dependencies {
@@ -92,8 +93,8 @@ dependencies {
     modImplementation("net.fabricmc.fabric-api:fabric-api:${project.property("fabric_version")}")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.9.0")
     modImplementation("com.terraformersmc:modmenu:${project.property("modmenu_version")}")
-    implementation("org.luaj:luaj-jse:3.0.1")
-    implementation("dev.znci:twine:2.1.2")
+    implementation("org.luaj:luaj-jse:${project.property("luaj_version")}")
+    implementation("computer.obscure:twine:${project.property("twine_version")}")
 }
 
 tasks.processResources {

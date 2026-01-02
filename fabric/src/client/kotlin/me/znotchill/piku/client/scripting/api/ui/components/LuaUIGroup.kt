@@ -1,7 +1,6 @@
 package me.znotchill.piku.client.scripting.api.ui.components
 
-import dev.znci.twine.annotations.TwineNativeFunction
-import dev.znci.twine.nativex.TwineNative
+import computer.obscure.twine.annotations.TwineNativeFunction
 import me.znotchill.piku.client.scripting.api.ui.LuaUI
 import me.znotchill.piku.common.ui.components.Box
 import me.znotchill.piku.common.ui.components.Group
@@ -19,7 +18,7 @@ class LuaUIGroup(
 ) {
     @TwineNativeFunction("get")
     fun getById(name: String): LuaUIComponent? {
-        return ui.smartGet(ui.window.components.values, name)
+        return ui.smartGet(group.props.components, name)
     }
 
     @TwineNativeFunction

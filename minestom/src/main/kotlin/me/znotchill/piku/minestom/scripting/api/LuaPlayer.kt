@@ -1,7 +1,7 @@
 package me.znotchill.piku.minestom.scripting.api
 
-import dev.znci.twine.annotations.TwineNativeFunction
-import dev.znci.twine.annotations.TwineNativeProperty
+import computer.obscure.twine.annotations.TwineNativeFunction
+import computer.obscure.twine.annotations.TwineNativeProperty
 import me.znotchill.piku.common.scripting.base.Player
 import net.kyori.adventure.text.minimessage.MiniMessage
 

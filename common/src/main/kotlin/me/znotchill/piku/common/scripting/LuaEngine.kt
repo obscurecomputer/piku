@@ -1,9 +1,10 @@
 package me.znotchill.piku.common.scripting
 
-import dev.znci.twine.TwineTable
-import dev.znci.twine.nativex.TwineNative
-import org.luaj.vm2.Globals
+import computer.obscure.twine.TwineTable
+import computer.obscure.twine.nativex.TwineEngine
+import computer.obscure.twine.nativex.TwineNative
 import org.luaj.vm2.LoadState
+import org.luaj.vm2.LuaError
 import org.luaj.vm2.compiler.LuaC
 import org.luaj.vm2.lib.Bit32Lib
 import org.luaj.vm2.lib.CoroutineLib
@@ -13,52 +14,57 @@ import org.luaj.vm2.lib.jse.JseBaseLib
 import org.luaj.vm2.lib.jse.JseMathLib
 import org.luaj.vm2.lib.jse.LuajavaLib
 
-interface LuaEngine {
-    var globals: Globals
-    val registeredTables: MutableMap<String, TwineTable>
+abstract class LuaEngine {
+    val engine = TwineEngine()
+    open val registeredTables: MutableMap<String, TwineTable> = mutableMapOf()
+    open val registeredBaseTables: MutableList<TwineNative> = mutableListOf()
 
-    fun init() {
+    open fun init() {
+        engine.clear()
+        registeredBaseTables.clear()
         registeredTables.clear()
         rebuildGlobals()
     }
 
-    fun reset() {
-        rebuildGlobals()
-        rebuildEvents()
-    }
-
     private fun rebuildGlobals() {
-        globals = Globals()
+        engine.clear()
 
-        globals.load(JseBaseLib())
-        globals.load(PackageLib())
-        globals.load(Bit32Lib())
-        globals.load(TableLib())
-        globals.load(CoroutineLib())
-        globals.load(JseMathLib())
-        globals.load(LuajavaLib())
+        engine.load(JseBaseLib())
+        engine.load(PackageLib())
+        engine.load(Bit32Lib())
+        engine.load(TableLib())
+        engine.load(CoroutineLib())
+        engine.load(JseMathLib())
+        engine.load(LuajavaLib())
 
-        LoadState.install(globals)
-        LuaC.install(globals)
+        LoadState.install(engine.globals)
+        LuaC.install(engine.globals)
 
         // re-register natives
         registeredTables.values.forEach {
-            globals.set(it.valueName, it.table)
+            engine.set(it.valueName, it.table)
+        }
+        registeredBaseTables.forEach {
+            engine.setBase(it)
         }
     }
 
-    fun rebuildEvents() {}
+    open fun rebuildEvents() {}
 
-    fun register(native: TwineTable) {
-        registeredTables[native.valueName] = native
-        globals.set(native.valueName, native.table)
+    fun register(table: TwineTable) {
+        registeredTables[table.valueName] = table
+        engine.set(table.valueName, table.table)
+    }
+
+    fun registerBase(native: TwineNative) {
+        registeredBaseTables.add(native)
+        engine.setBase(native)
     }
 
     fun runScript(name: String, content: String) {
-        try {
-            globals.load(content, name).call()
-        } catch (e: Exception) {
-            println("Lua error in $name: ${e.message}")
+        val result = engine.runSafe(name, content)
+        if (result.isFailure) {
+            throw LuaError(result.exceptionOrNull())
         }
     }
 }

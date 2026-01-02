@@ -1,15 +1,17 @@
 package me.znotchill.piku.client.scripting.api.ui
 
-import dev.znci.twine.annotations.TwineNativeFunction
-import dev.znci.twine.nativex.TwineNative
+import computer.obscure.twine.annotations.TwineNativeFunction
+import computer.obscure.twine.nativex.TwineNative
 import me.znotchill.piku.client.scripting.api.ui.components.LuaUIBox
 import me.znotchill.piku.client.scripting.api.ui.components.LuaUIComponent
 import me.znotchill.piku.client.scripting.api.ui.components.LuaUIGroup
+import me.znotchill.piku.client.scripting.api.ui.components.LuaUISprite
 import me.znotchill.piku.client.scripting.api.ui.components.LuaUIText
 import me.znotchill.piku.client.ui.UIRenderer
 import me.znotchill.piku.common.ui.components.Box
 import me.znotchill.piku.common.ui.components.Component
 import me.znotchill.piku.common.ui.components.Group
+import me.znotchill.piku.common.ui.components.Sprite
 import me.znotchill.piku.common.ui.components.Text
 import me.znotchill.piku.common.ui.components.props.CollectionProps
 
@@ -62,6 +64,7 @@ class LuaUI : TwineNative() {
             is Text -> LuaUIText(component)
             is Group -> LuaUIGroup(this, component)
             is Box -> LuaUIBox(component)
+            is Sprite -> LuaUISprite(component)
             else -> null
         }
 }

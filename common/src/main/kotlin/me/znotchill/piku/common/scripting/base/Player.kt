@@ -1,6 +1,6 @@
 package me.znotchill.piku.common.scripting.base
 
-import dev.znci.twine.nativex.TwineNative
+import computer.obscure.twine.nativex.TwineNative
 
 abstract class Player : TwineNative() {
 

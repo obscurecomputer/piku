@@ -1,3 +1,5 @@
+package me.znotchill.piku.client.scripting.api
+
 import me.znotchill.piku.client.packets.serverbound.payloads.SendDataPayload
 import me.znotchill.piku.client.scripting.ClientEventBus
 import me.znotchill.piku.client.scripting.events.HeartbeatEvent
@@ -19,6 +21,11 @@ class LuaClientEvents : ClientEventBus {
 
     private fun register(luaEvent: LuaEvent) {
         baseListeners[luaEvent.id] = luaEvent
+    }
+
+    fun clear() {
+        customListeners.clear()
+        baseListeners.clear()
     }
 
     // lua > server

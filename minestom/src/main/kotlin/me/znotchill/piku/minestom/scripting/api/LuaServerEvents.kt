@@ -1,6 +1,5 @@
 package me.znotchill.piku.minestom.scripting.api
 
-import me.znotchill.piku.common.scripting.api.LuaEventData
 import me.znotchill.piku.common.scripting.base.Player
 import me.znotchill.piku.minestom.scripting.ServerEventBus
 import org.luaj.vm2.LuaValue

@@ -2,7 +2,6 @@ package me.znotchill.piku.minestom.scripting
 
 import me.znotchill.piku.common.scripting.LuaEngine
 import me.znotchill.piku.common.scripting.api.LuaColor
-import me.znotchill.piku.common.scripting.api.LuaEventListener
 import me.znotchill.piku.common.scripting.api.LuaVec2
 import me.znotchill.piku.minestom.scripting.api.LuaServerEvents
 
@@ -16,7 +15,7 @@ class MinestomLuaEngine : LuaEngine() {
         register(LuaVec2())
         register(LuaColor())
 
-        val eventListener = LuaEventListener()
+        val eventListener = LuaServerEventListener()
         eventListener.bus = events
         registerBase(eventListener)
     }

@@ -1,12 +1,12 @@
-package me.znotchill.piku.common.scripting.api
+package me.znotchill.piku.client.scripting.api
 
 import computer.obscure.twine.annotations.TwineNativeFunction
 import computer.obscure.twine.nativex.TwineNative
-import me.znotchill.piku.common.scripting.base.EventBus
+import me.znotchill.piku.client.scripting.ClientEventBus
 import org.luaj.vm2.LuaValue
 
-class LuaEventListener : TwineNative() {
-    lateinit var bus: EventBus
+class LuaClientEventListener : TwineNative() {
+    lateinit var bus: ClientEventBus
 
     @TwineNativeFunction
     fun listen(id: String, callback: Function1<LuaValue, Unit>) {
@@ -16,8 +16,7 @@ class LuaEventListener : TwineNative() {
     }
 
     @TwineNativeFunction
-    fun fire(id: String, data: LuaValue) {
-        bus.fire(id, data)
+    fun send(id: String, data: LuaValue) {
+        bus.send(id, data)
     }
-
 }

@@ -1,12 +1,12 @@
 package me.znotchill.piku.client.scripting
 
 import me.znotchill.piku.client.scripting.api.LuaClient
+import me.znotchill.piku.client.scripting.api.LuaClientEventListener
 import me.znotchill.piku.client.scripting.api.LuaClientEvents
 import me.znotchill.piku.client.scripting.api.LuaGame
 import me.znotchill.piku.client.scripting.api.enums.LuaUIAnchor
 import me.znotchill.piku.common.scripting.LuaEngine
 import me.znotchill.piku.common.scripting.api.LuaColor
-import me.znotchill.piku.common.scripting.api.LuaEventListener
 import me.znotchill.piku.common.scripting.api.LuaVec2
 
 class FabricLuaEngine : LuaEngine() {
@@ -27,7 +27,7 @@ class FabricLuaEngine : LuaEngine() {
         register(LuaColor())
         register(LuaClient())
 
-        val eventListener = LuaEventListener()
+        val eventListener = LuaClientEventListener()
         eventListener.bus = events
         registerBase(eventListener)
     }

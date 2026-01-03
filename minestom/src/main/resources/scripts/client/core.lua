@@ -16,4 +16,8 @@ listen("client.key_update", function(event)
         local gotsprite = ui.get("test").get("test_sprite")
         gotsprite.size = vec2.of(gotsprite.size.x + 1, gotsprite.size.y + 1)
     end
+    if event.key == "b" and event.action == "press" then
+        client.send("<yellow>Began holding b!")
+        send("test.hi", 5)
+    end
 end)

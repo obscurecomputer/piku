@@ -2,8 +2,8 @@ plugins {
     kotlin("jvm") version "2.2.20"
 }
 
-group = "me.znotchill.piku"
-version = "1.0.0"
+group = project.property("group")!!
+version = project.property("common_version")!!
 
 repositories {
     mavenLocal()

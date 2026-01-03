@@ -11,13 +11,13 @@
   "environment": "*",
   "entrypoints": {
     "fabric-datagen": [
-      "me.znotchill.piku.client.PikuDataGenerator"
+      "computer.obscure.piku.client.PikuDataGenerator"
     ],
     "client": [
-      "me.znotchill.piku.client.PikuClient"
+      "computer.obscure.piku.client.PikuClient"
     ],
     "main": [
-      "me.znotchill.piku.Piku"
+      "computer.obscure.piku.Piku"
     ]
   },
   "mixins": [

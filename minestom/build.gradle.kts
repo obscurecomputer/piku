@@ -1,10 +1,11 @@
 plugins {
     kotlin("jvm") version "2.3.0"
-    application
+    `java-library`
+    `maven-publish`
 }
 
-group = "me.znotchill.piku"
-version = "1.0.0"
+group = project.property("group")!!
+version = project.property("minestom_version")!!
 
 repositories {
     mavenLocal()
@@ -43,7 +44,7 @@ tasks.test {
 kotlin {
     jvmToolchain(25)
 }
-
-application {
-    mainClass = "me.znotchill.piku.minestom.test.ServerKt"
+java {
+    withSourcesJar()
+    withJavadocJar()
 }

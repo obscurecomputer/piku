@@ -9,8 +9,8 @@ plugins {
     kotlin("plugin.serialization") version "2.2.20"
 }
 
-version = project.property("mod_version") as String
-group = project.property("maven_group") as String
+group = project.property("group")!!
+version = project.property("fabric_mod_version")!!
 
 base {
     archivesName.set(project.property("archives_base_name") as String)

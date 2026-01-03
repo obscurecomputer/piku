@@ -1,4 +1,4 @@
-package me.znotchill.piku
+package computer.obscure.piku
 
 import net.fabricmc.api.ModInitializer
 

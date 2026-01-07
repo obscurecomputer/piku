@@ -21,9 +21,8 @@ class MoveEventHandler : UIEventHandler<MoveEvent> {
             from = null,
             to = event.position,
             durationSeconds = event.durationSeconds,
-            easing = event.easing.toString()
+            easing = event.easing
         )
-        anim.window = event.window
         context.enqueueAnimation(anim)
     }
 }

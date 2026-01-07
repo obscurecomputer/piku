@@ -15,7 +15,6 @@ class PaddingEventHandler : UIEventHandler<PaddingEvent> {
             durationSeconds = event.durationSeconds,
             easing = event.easing.toString()
         )
-        anim.window = event.window
         context.enqueueAnimation(anim)
     }
 }

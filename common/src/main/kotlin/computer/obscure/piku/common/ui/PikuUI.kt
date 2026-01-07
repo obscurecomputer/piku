@@ -13,7 +13,6 @@ open class PikuUI(val id: String) {
     fun build(): UIWindow {
         val window = UIWindow(id)
         components.forEach {
-            it.window = window
             window.add(it)
         }
         return window

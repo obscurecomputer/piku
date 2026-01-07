@@ -4,12 +4,14 @@ import computer.obscure.twine.annotations.TwineNativeFunction
 import computer.obscure.twine.nativex.TwineNative
 import computer.obscure.piku.client.scripting.api.ui.components.LuaUIBox
 import computer.obscure.piku.client.scripting.api.ui.components.LuaUIComponent
+import computer.obscure.piku.client.scripting.api.ui.components.LuaUIGradient
 import computer.obscure.piku.client.scripting.api.ui.components.LuaUIGroup
 import computer.obscure.piku.client.scripting.api.ui.components.LuaUISprite
 import computer.obscure.piku.client.scripting.api.ui.components.LuaUIText
 import computer.obscure.piku.client.ui.UIRenderer
 import computer.obscure.piku.common.ui.components.Box
 import computer.obscure.piku.common.ui.components.Component
+import computer.obscure.piku.common.ui.components.Gradient
 import computer.obscure.piku.common.ui.components.Group
 import computer.obscure.piku.common.ui.components.Sprite
 import computer.obscure.piku.common.ui.components.Text
@@ -65,6 +67,7 @@ class LuaUI : TwineNative() {
             is Group -> LuaUIGroup(this, component)
             is Box -> LuaUIBox(component)
             is Sprite -> LuaUISprite(component)
+            is Gradient -> LuaUIGradient(component)
             else -> null
         }
 }

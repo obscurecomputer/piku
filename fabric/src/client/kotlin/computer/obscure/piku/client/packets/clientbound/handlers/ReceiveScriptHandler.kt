@@ -9,8 +9,12 @@ class ReceiveScriptHandler {
         ClientPlayNetworking.registerGlobalReceiver(ReceiveScriptPayload.ID) { payload, context ->
             val client = context.client()
             client.execute {
-                println("Received script ${payload.name} from the server!")
-                PikuClient.engine.runScript(payload.name, payload.fileContents)
+                try {
+                    println("Received script ${payload.name} from the server!")
+                    PikuClient.engine.runScript(payload.name, payload.fileContents)
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
             }
         }
     }

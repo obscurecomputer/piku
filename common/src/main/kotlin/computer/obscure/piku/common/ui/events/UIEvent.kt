@@ -5,6 +5,4 @@ import computer.obscure.piku.common.ui.UIWindow
 sealed class UIEvent {
     abstract val targetId: String
     abstract var delay: Long
-
-    var window: UIWindow? = null
 }

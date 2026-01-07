@@ -29,7 +29,6 @@ class CollectionBuilder<P : CollectionProps>(
         val comp = Text(
             props = props
         )
-        comp.window = window
         comp.name = id
         children += comp
         return comp
@@ -43,7 +42,6 @@ class CollectionBuilder<P : CollectionProps>(
         val comp = Sprite(
             props = props
         )
-        comp.window = window
         comp.name = id
         children += comp
         return comp
@@ -57,7 +55,6 @@ class CollectionBuilder<P : CollectionProps>(
         val comp = Line(
             props = props
         )
-        comp.window = window
         comp.name = id
         children += comp
         return comp
@@ -71,7 +68,6 @@ class CollectionBuilder<P : CollectionProps>(
         val comp = Gradient(
             props = props
         )
-        comp.window = window
         comp.name = id
         children += comp
         return comp
@@ -85,8 +81,6 @@ class CollectionBuilder<P : CollectionProps>(
         val comp = Box(
             props = props
         )
-        comp.window = window
-        comp.name = id
         children += comp
         return comp
     }
@@ -99,7 +93,6 @@ class CollectionBuilder<P : CollectionProps>(
         val comp = ProgressBar(
             props = props
         )
-        comp.window = window
         comp.name = id
         children += comp
         return comp

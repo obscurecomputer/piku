@@ -12,6 +12,7 @@ object UIEventQueue {
     }
 
     fun enqueueNow(event: UIEvent) {
+        println("Enqueuing $event")
         readyEvents += event
     }
 

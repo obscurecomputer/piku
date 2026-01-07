@@ -32,7 +32,7 @@ fun ProgressBar.progress(
         progress = progress,
         durationSeconds = duration,
         easing = easing
-    ).also { it.window = this.window }
+    )
 
     UIEventQueue.enqueueNow(event)
     return event

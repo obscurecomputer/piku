@@ -15,7 +15,6 @@ class RotateEventHandler : UIEventHandler<RotateEvent> {
             durationSeconds = event.durationSeconds,
             easing = event.easing.toString()
         )
-        anim.window = event.window
         context.enqueueAnimation(anim)
     }
 }

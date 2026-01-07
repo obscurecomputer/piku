@@ -8,7 +8,7 @@ data class MoveEvent(
     override val targetId: String,
     val position: Vec2,
     val durationSeconds: Double,
-    val easing: Easing,
+    val easing: String,
 ) : UIEvent() {
     var elapsed = 0.0
     var start: Vec2? = null

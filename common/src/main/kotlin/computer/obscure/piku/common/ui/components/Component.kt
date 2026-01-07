@@ -15,11 +15,8 @@ import computer.obscure.piku.common.ui.events.RotateEvent
 import java.util.UUID
 
 sealed class Component {
-    lateinit var window: UIWindow
-
     var name: String = ""
     val internalId: String = UUID.randomUUID().toString()
-        get() = name.ifBlank { field }
     var relativeTo: String? = null
     var relativePosition: RelativePosition? = null
     abstract val compType: CompType
@@ -38,7 +35,7 @@ sealed class Component {
 fun Component.move(
     to: Vec2,
     duration: Double = 0.0,
-    easing: Easing = Easing.LINEAR,
+    easing: String,
     delay: Long = 0L
 ): MoveEvent {
     val event = MoveEvent(
@@ -47,7 +44,7 @@ fun Component.move(
         position = to,
         durationSeconds = duration,
         easing = easing
-    ).also { it.window = this.window }
+    )
 
     UIEventQueue.enqueueNow(event)
     return event
@@ -65,7 +62,7 @@ fun Component.rotate(
         rotation = rotation,
         durationSeconds = duration,
         easing = easing
-    ).also { it.window = this.window }
+    )
 
     UIEventQueue.enqueueNow(event)
     return event
@@ -87,7 +84,7 @@ fun Component.opacity(
         opacity = opacity,
         durationSeconds = duration,
         easing = easing
-    ).also { it.window = this.window }
+    )
 
     UIEventQueue.enqueueNow(event)
     return event
@@ -105,7 +102,7 @@ fun Component.padding(
         padding = padding,
         durationSeconds = duration,
         easing = easing
-    ).also { it.window = this.window }
+    )
 
     UIEventQueue.enqueueNow(event)
     return event

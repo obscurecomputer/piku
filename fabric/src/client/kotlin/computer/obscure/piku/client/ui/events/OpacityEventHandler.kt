@@ -15,7 +15,6 @@ class OpacityEventHandler : UIEventHandler<OpacityEvent> {
             durationSeconds = event.durationSeconds,
             easing = event.easing.toString()
         )
-        anim.window = event.window
         context.enqueueAnimation(anim)
     }
 }

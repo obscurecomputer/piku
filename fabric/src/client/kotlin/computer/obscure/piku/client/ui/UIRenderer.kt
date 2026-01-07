@@ -1,5 +1,8 @@
 package computer.obscure.piku.client.ui
 
+import computer.obscure.piku.client.PikuClient
+import computer.obscure.piku.client.scripting.api.ui.LuaEasing
+import computer.obscure.piku.client.scripting.api.ui.LuaEasingInstance
 import computer.obscure.piku.client.ui.components.BoxRenderer
 import computer.obscure.piku.client.ui.components.FlowContainerRenderer
 import computer.obscure.piku.client.ui.components.GradientRenderer
@@ -38,6 +41,7 @@ import computer.obscure.piku.common.ui.events.ProgressEvent
 import computer.obscure.piku.common.ui.events.PropertyAnimation
 import computer.obscure.piku.common.ui.events.RotateEvent
 import computer.obscure.piku.common.ui.events.UIEvent
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback
 import net.minecraft.client.MinecraftClient
 import net.minecraft.client.gui.DrawContext
@@ -52,7 +56,10 @@ import kotlin.to
 object UIRenderer {
     val currentWindow: UIWindow = UIWindow("main")
     private var activeAnimations = mutableListOf<PropertyAnimation<*, *>>()
-    private var lastTime: Long = System.nanoTime()
+
+    private val registeredEasings = mutableMapOf<String, (time: Double) -> Double>()
+    private var lastTimeNano = System.nanoTime()
+
 
     // TODO: improve this system somehow
     // if it cannot be done, find a way to remove the ::class.java
@@ -84,22 +91,30 @@ object UIRenderer {
         )
     )
 
+    fun registerEasing(easing: LuaEasingInstance) {
+        registeredEasings[easing.id] = easing.function
+    }
+
 //    fun setWindow(window: UIWindow?) {
 //        currentWindow = window
 //        activeAnimations = mutableListOf()
 //    }
 
     fun register() {
+        ClientTickEvents.END_CLIENT_TICK.register {
+            handleUpdateRender()
+        }
+
+        var lastTimeNano = System.nanoTime()
         HudRenderCallback.EVENT.register { context, _ ->
-            val now = System.nanoTime()
-            val deltaSeconds = (now - lastTime) / 1_000_000_000.0
-            lastTime = now
+            val currentTime = System.nanoTime()
+            val deltaSeconds = (currentTime - lastTimeNano) / 1_000_000_000.0
+            lastTimeNano = currentTime
 
             tickAnimations(deltaSeconds)
 
-            currentWindow?.let { window ->
+            currentWindow.let { window ->
                 layout(window)
-
                 window.components.values
                     .sortedBy { it.props.zIndex }
                     .forEach { component ->
@@ -120,14 +135,14 @@ object UIRenderer {
      * Handles UI updates for an already rendered UI.
      * Handles animations.
      */
-    fun handleUpdateRender(events: List<UIEvent>) {
-        events.forEach { event ->
+    fun handleUpdateRender() {
+        UIEventQueue.tick().forEach { event ->
             eventDispatcher.applyEvent(event)
         }
     }
 
     fun <C : Component, T> enqueueAnimation(event: PropertyAnimation<C, T>) {
-        val comp = currentWindow?.getComponentByIdDeep(event.targetId)
+        val comp = currentWindow.getComponentByIdDeep(event.targetId)
         if (comp != null && event.from == null) {
             @Suppress("UNCHECKED_CAST")
             event.from = (event.getter as (Component) -> T)(comp)
@@ -141,18 +156,27 @@ object UIRenderer {
         while (iterator.hasNext()) {
             val anim = iterator.next()
 
-            val comp = currentWindow?.getComponentByIdDeep(anim.targetId) ?: continue
+            val comp = currentWindow.getComponentByIdDeep(anim.targetId) ?: continue
             anim.elapsed += deltaSeconds
+//            println(anim.elapsed)
+//            println(deltaSeconds)
+
+            //TODO: Figure out why animations are way too fast (reaching easedT=1.0 before the duration is reached)
 
             val t = (anim.elapsed / anim.durationSeconds).coerceIn(0.0, 1.0)
-            val easedT = Easing.valueOf(anim.easing).getValue(t)
+
+            val easedT: Double = ((registeredEasings[anim.easing]?.invoke(t)
+                ?: Easing.valueOf(anim.easing).getValue(t)))
+                .coerceIn(0.0, 1.0)
+//            println("t=$t easedT=$easedT elapsed=${anim.elapsed} duration=${anim.durationSeconds}")
+
 
             @Suppress("UNCHECKED_CAST")
             val typedGetter = anim.getter as (Component) -> Any?
             @Suppress("UNCHECKED_CAST")
             val typedSetter = anim.setter as (Component, Any?) -> Unit
 
-//            pikuClient.LOGGER.info("deltaSeconds=$deltaSeconds elapsed=${anim.elapsed} t=$t easedT=$easedT")
+//            println("deltaSeconds=$deltaSeconds elapsed=${anim.elapsed} t=$t easedT=$easedT")
 
             val start = anim.from ?: typedGetter(comp)
             val end = anim.to

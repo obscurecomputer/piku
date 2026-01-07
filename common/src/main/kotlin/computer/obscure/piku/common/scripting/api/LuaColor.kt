@@ -7,13 +7,13 @@ import computer.obscure.piku.common.ui.classes.UIColor
 
 class LuaColor : TwineNative("color") {
     @TwineNativeFunction
-    fun rgb(r: Int, g: Int, b: Int): computer.obscure.piku.common.scripting.api.LuaColorInstance {
-        return _root_ide_package_.computer.obscure.piku.common.scripting.api.LuaColorInstance(r, g, b)
+    fun rgb(r: Int, g: Int, b: Int): LuaColorInstance {
+        return LuaColorInstance(r, g, b)
     }
 
     companion object {
-        fun fromUIColor(uiColor: computer.obscure.piku.common.ui.classes.UIColor): computer.obscure.piku.common.scripting.api.LuaColorInstance {
-            return _root_ide_package_.computer.obscure.piku.common.scripting.api.LuaColorInstance(
+        fun fromUIColor(uiColor: UIColor): LuaColorInstance {
+            return LuaColorInstance(
                 uiColor.r, uiColor.g, uiColor.b
             )
         }

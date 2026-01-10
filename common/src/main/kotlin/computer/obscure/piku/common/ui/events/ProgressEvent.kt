@@ -1,11 +1,10 @@
 package computer.obscure.piku.common.ui.events
 
-import computer.obscure.piku.common.ui.classes.Easing
 
 data class ProgressEvent(
     override var delay: Long,
     override val targetId: String,
     val progress: Float,
     val durationSeconds: Double,
-    val easing: Easing,
+    val easing: String,
 ) : UIEvent()

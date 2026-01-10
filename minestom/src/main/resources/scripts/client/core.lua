@@ -8,28 +8,25 @@ local ui = game.ui
 function render()
     local group = ui.group("test")
 
-    group.sprite("test_sprite")
+    local sprite = group.sprite("test_sprite")
         .texture("legacylands:sprites/world.png")
         .size(vec2.of(64, 64))
+        .pos(vec2.of(0, -200))
+        .opacity(0)
 
-    group.text("test_text")
-        .text("hi")
+    sprite.animate()
+        .opacity(1, 0.5, "linear")
+        .move(vec2.of(0, 0), 0.5, "ease_out_bounce")
+
+    local text = group.text("test_text")
+        .text("Hello")
+        .rightOf(sprite.id)
+        .scale(vec2.of(3, 3))
 end
 
--- local grad = group.gradient("test_gradient")
--- grad.from = color.rgb(100, 100, 100)
--- grad.to = color.rgb(255, 255, 100)
--- grad.size = vec2.of(100, 50)
---
--- easing.new("hello", function(t)
---     return math.min(t / 0.5, 1)
--- end)
---
--- grad.move(
---     vec2.of(50, 50),
---     3,
---     "hello"
--- )
+easing.new("hello", function(t)
+    return math.min(t / 0.5, 1)
+end)
 
 listen("client.key_update", function(event)
     if event.key == "y" and event.action == "press" then

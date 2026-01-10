@@ -7,8 +7,5 @@ data class RotateEvent(
     override val targetId: String,
     val rotation: Int,
     val durationSeconds: Double,
-    val easing: Easing,
-) : UIEvent() {
-    var elapsed = 0.0
-    var start: Float? = null
-}
+    val easing: String,
+) : UIEvent()

@@ -1,4 +1,4 @@
-package computer.obscure.piku.client.scripting
+package computer.obscure.piku.client.scripting.engine
 
 import computer.obscure.piku.client.scripting.api.LuaClient
 import computer.obscure.piku.client.scripting.api.LuaClientEventListener

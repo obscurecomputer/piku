@@ -8,5 +8,5 @@ data class PaddingEvent(
     override val targetId: String,
     val padding: Spacing,
     val durationSeconds: Double,
-    val easing: Easing,
+    val easing: String,
 ) : UIEvent()

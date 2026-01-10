@@ -1,7 +1,6 @@
 package computer.obscure.piku.client.ui
 
 import computer.obscure.piku.client.PikuClient
-import computer.obscure.piku.client.scripting.api.ui.LuaEasing
 import computer.obscure.piku.client.scripting.api.ui.LuaEasingInstance
 import computer.obscure.piku.client.ui.components.BoxRenderer
 import computer.obscure.piku.client.ui.components.FlowContainerRenderer
@@ -40,7 +39,6 @@ import computer.obscure.piku.common.ui.events.PaddingEvent
 import computer.obscure.piku.common.ui.events.ProgressEvent
 import computer.obscure.piku.common.ui.events.PropertyAnimation
 import computer.obscure.piku.common.ui.events.RotateEvent
-import computer.obscure.piku.common.ui.events.UIEvent
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback
 import net.minecraft.client.MinecraftClient
@@ -158,28 +156,27 @@ object UIRenderer {
 
             val comp = currentWindow.getComponentByIdDeep(anim.targetId) ?: continue
             anim.elapsed += deltaSeconds
-//            println(anim.elapsed)
-//            println(deltaSeconds)
-
-            //TODO: Figure out why animations are way too fast (reaching easedT=1.0 before the duration is reached)
 
             val t = (anim.elapsed / anim.durationSeconds).coerceIn(0.0, 1.0)
 
-            val easedT: Double = ((registeredEasings[anim.easing]?.invoke(t)
-                ?: Easing.valueOf(anim.easing).getValue(t)))
-                .coerceIn(0.0, 1.0)
-//            println("t=$t easedT=$easedT elapsed=${anim.elapsed} duration=${anim.durationSeconds}")
-
+            val easedT: Double = try {
+                ((registeredEasings[anim.easing]?.invoke(t)
+                    ?: Easing.valueOf(anim.easing.uppercase()).getValue(t)))
+                    .coerceIn(0.0, 1.0)
+            } catch (_: Exception) {
+                PikuClient.warn("Unknown easing \"${anim.easing}\". Falling back to LINEAR.")
+                Easing.LINEAR.getValue(t)
+            }
 
             @Suppress("UNCHECKED_CAST")
             val typedGetter = anim.getter as (Component) -> Any?
             @Suppress("UNCHECKED_CAST")
             val typedSetter = anim.setter as (Component, Any?) -> Unit
 
-//            println("deltaSeconds=$deltaSeconds elapsed=${anim.elapsed} t=$t easedT=$easedT")
-
             val start = anim.from ?: typedGetter(comp)
             val end = anim.to
+
+            // Get the result no matter what data type it may be
             val result = when (start) {
                 is Float -> lerp(start, end as Float, easedT)
                 is Int -> lerp(start.toFloat(), (end as Int).toFloat(), easedT).toInt()

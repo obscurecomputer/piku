@@ -14,7 +14,7 @@ class ProgressEventHandler : UIEventHandler<ProgressEvent> {
             from = null,
             to = event.progress,
             durationSeconds = event.durationSeconds,
-            easing = event.easing.toString()
+            easing = event.easing
         )
         context.enqueueAnimation(anim)
     }

@@ -1,5 +1,6 @@
 package computer.obscure.piku.client.scripting.api.ui.components
 
+import computer.obscure.piku.client.scripting.api.ui.LuaUIAnimation
 import computer.obscure.twine.annotations.TwineNativeFunction
 import computer.obscure.twine.annotations.TwineNativeProperty
 import computer.obscure.twine.nativex.TwineNative
@@ -29,46 +30,76 @@ open class LuaUIComponent(open val component: Component) : TwineNative() {
         return this
     }
 
+    @TwineNativeProperty
+    var opacity: Float
+        get() = component.props.opacity
+        set(value) {
+            component.props.opacity = value
+        }
+
     @TwineNativeFunction
-    fun rightOf(other: LuaUIComponent) {
-        component.relativeTo = other.id
+    fun opacity(value: Float): LuaUIComponent {
+        component.props.opacity = value
+        return this
+    }
+
+    @TwineNativeProperty
+    var pos: LuaVec2Instance
+        get() = LuaVec2.fromVec2(component.props.pos)
+        set(value) {
+            component.props.pos = value.toVec2()
+        }
+
+    @TwineNativeFunction
+    fun pos(value: LuaVec2Instance): LuaUIComponent {
+        component.props.pos = value.toVec2()
+        return this
+    }
+
+    @TwineNativeProperty
+    var scale: LuaVec2Instance
+        get() = LuaVec2.fromVec2(component.props.scale)
+        set(value) {
+            component.props.scale = value.toVec2()
+        }
+
+    @TwineNativeFunction
+    fun scale(value: LuaVec2Instance): LuaUIComponent {
+        component.props.scale = value.toVec2()
+        return this
+    }
+
+    @TwineNativeFunction
+    fun rightOf(otherId: String): LuaUIComponent {
+        component.relativeTo = otherId
         component.relativePosition = RelativePosition.RIGHT_OF
+        return this
     }
 
     @TwineNativeFunction
-    fun leftOf(relativeComponent: LuaUIComponent) {
-        relativeComponent.component.leftOf(component)
+    fun leftOf(otherId: String): LuaUIComponent {
+        component.relativeTo = otherId
+        component.relativePosition = RelativePosition.LEFT_OF
+        return this
     }
 
     @TwineNativeFunction
-    fun topOf(relativeComponent: LuaUIComponent) {
-        relativeComponent.component.topOf(component)
+    fun topOf(otherId: String): LuaUIComponent {
+        component.relativeTo = otherId
+        component.relativePosition = RelativePosition.ABOVE
+        return this
     }
 
     @TwineNativeFunction
-    fun bottomOf(relativeComponent: LuaUIComponent) {
-        relativeComponent.component.bottomOf(component)
+    fun bottomOf(otherId: String): LuaUIComponent {
+        component.relativeTo = otherId
+        component.relativePosition = RelativePosition.BELOW
+        return this
     }
 
-//    TODO: fix bug in twine relating to overloads and properties
-//    @TwineOverload
-//    @TwineNativeFunction
-//    fun move(to: LuaVec2Instance, duration: Double, easing: LuaEasingInstance) {
-//        component.move(
-//            to.toVec2(),
-//            duration,
-//            easing.id
-//        )
-//    }
-
-    @TwineOverload
     @TwineNativeFunction
-    fun move(to: LuaVec2Instance, duration: Double, easing: String) {
-        component.move(
-            to.toVec2(),
-            duration,
-            easing
-        )
+    fun animate(): LuaUIAnimation {
+        return LuaUIAnimation(this.component)
     }
 
     @TwineNativeFunction

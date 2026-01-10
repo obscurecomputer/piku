@@ -5,6 +5,7 @@ import computer.obscure.piku.common.ui.components.Sprite
 import net.minecraft.client.MinecraftClient
 import net.minecraft.client.gl.RenderPipelines
 import net.minecraft.client.gui.DrawContext
+import net.minecraft.util.math.ColorHelper
 
 class SpriteRenderer : UIComponent<Sprite>() {
     override fun drawContent(component: Sprite, context: DrawContext, instance: MinecraftClient) {
@@ -22,6 +23,8 @@ class SpriteRenderer : UIComponent<Sprite>() {
             drawHeight = window.scaledHeight
         }
 
+        val color = ColorHelper.withAlpha(props.opacity, -1)
+
         context.drawTexture(
             RenderPipelines.GUI_TEXTURED,
             texture,
@@ -30,6 +33,7 @@ class SpriteRenderer : UIComponent<Sprite>() {
             0f, 0f,
             drawWidth, drawHeight,
             drawWidth, drawHeight,
+            color
         )
     }
 }

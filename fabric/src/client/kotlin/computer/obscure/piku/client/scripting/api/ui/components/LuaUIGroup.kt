@@ -5,10 +5,12 @@ import computer.obscure.piku.client.scripting.api.ui.LuaUI
 import computer.obscure.piku.common.ui.components.Box
 import computer.obscure.piku.common.ui.components.Gradient
 import computer.obscure.piku.common.ui.components.Group
+import computer.obscure.piku.common.ui.components.ProgressBar
 import computer.obscure.piku.common.ui.components.Sprite
 import computer.obscure.piku.common.ui.components.Text
 import computer.obscure.piku.common.ui.components.props.BoxProps
 import computer.obscure.piku.common.ui.components.props.GradientProps
+import computer.obscure.piku.common.ui.components.props.ProgressBarProps
 import computer.obscure.piku.common.ui.components.props.SpriteProps
 import computer.obscure.piku.common.ui.components.props.TextProps
 
@@ -53,5 +55,13 @@ class LuaUIGroup(
         component.name = name
         group.props.components.add(component)
         return LuaUIGradient(component)
+    }
+
+    @TwineNativeFunction
+    fun progressBar(name: String): LuaUIProgressBar {
+        val component = ProgressBar(ProgressBarProps())
+        component.name = name
+        group.props.components.add(component)
+        return LuaUIProgressBar(component)
     }
 }

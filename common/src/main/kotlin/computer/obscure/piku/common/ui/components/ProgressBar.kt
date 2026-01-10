@@ -23,11 +23,11 @@ open class ProgressBar(
 fun ProgressBar.progress(
     progress: Float,
     duration: Double = 0.0,
-    easing: Easing = Easing.LINEAR,
+    easing: String,
     delay: Long = 0L
 ): ProgressEvent {
     val event = ProgressEvent(
-        targetId = this.name,
+        targetId = this.internalId,
         delay = delay,
         progress = progress,
         durationSeconds = duration,

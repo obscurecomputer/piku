@@ -6,6 +6,5 @@ import computer.obscure.piku.common.ui.classes.UIColor
 open class ProgressBarProps(
     var progress: Float = 0f,
     var fillColor: UIColor? = null,
-    var emptyColor: UIColor? = null,
-    var fillDirection: FillDirection = FillDirection.RIGHT
+    var emptyColor: UIColor? = null
 ) : BaseProps()

@@ -53,7 +53,7 @@ fun Component.move(
 fun Component.rotate(
     rotation: Int,
     duration: Double = 0.0,
-    easing: Easing = Easing.LINEAR,
+    easing: String,
     delay: Long = 0L
 ): RotateEvent {
     val event = RotateEvent(
@@ -75,7 +75,7 @@ fun Component.opacity(
      */
     opacity: Float,
     duration: Double = 0.0,
-    easing: Easing = Easing.LINEAR,
+    easing: String,
     delay: Long = 0L
 ): OpacityEvent {
     val event = OpacityEvent(
@@ -93,7 +93,7 @@ fun Component.opacity(
 fun Component.padding(
     padding: Spacing,
     duration: Double = 0.0,
-    easing: Easing = Easing.LINEAR,
+    easing: String,
     delay: Long = 0L
 ): PaddingEvent {
     val event = PaddingEvent(

@@ -11,10 +11,16 @@ object InputTracker {
 
     fun init() {
         ClientTickEvents.END_CLIENT_TICK.register { client ->
-            if (Client.connectedToServer && Client.serverRunsPiku) {
-                pollMouse(client)
-                pollKeyboard(client)
-            }
+            if (!Client.connectedToServer || !Client.serverRunsPiku) return@register
+
+            // player must be in-game (no menus open at all)
+            if (client.currentScreen != null) return@register
+
+            // client's player entity must exist
+            if (client.player == null) return@register
+
+            pollMouse(client)
+            pollKeyboard(client)
         }
     }
 

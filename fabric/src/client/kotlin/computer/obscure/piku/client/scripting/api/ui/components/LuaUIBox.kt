@@ -4,6 +4,7 @@ import computer.obscure.twine.annotations.TwineNativeProperty
 import computer.obscure.piku.common.scripting.api.LuaColor
 import computer.obscure.piku.common.scripting.api.LuaColorInstance
 import computer.obscure.piku.common.ui.components.Box
+import computer.obscure.twine.annotations.TwineNativeFunction
 
 class LuaUIBox(
     override val component: Box
@@ -14,4 +15,10 @@ class LuaUIBox(
         set(value) {
             component.props.color = value.toUIColor()
         }
+
+    @TwineNativeFunction
+    fun color(value: LuaColorInstance): LuaUIComponent {
+        component.props.color = value.toUIColor()
+        return this
+    }
 }

@@ -1,15 +1,21 @@
 package computer.obscure.piku.client.scripting.api.ui.components
 
-import computer.obscure.piku.client.scripting.api.ui.LuaEasingInstance
 import computer.obscure.twine.annotations.TwineNativeFunction
 import computer.obscure.twine.annotations.TwineNativeProperty
 import computer.obscure.twine.nativex.TwineNative
 import computer.obscure.piku.common.scripting.api.LuaVec2
 import computer.obscure.piku.common.scripting.api.LuaVec2Instance
+import computer.obscure.piku.common.ui.UIEventQueue
+import computer.obscure.piku.common.ui.classes.RelativePosition
 import computer.obscure.piku.common.ui.components.*
+import computer.obscure.piku.common.ui.events.DestroyEvent
 import computer.obscure.twine.annotations.TwineOverload
 
 open class LuaUIComponent(open val component: Component) : TwineNative() {
+    @TwineNativeProperty
+    val id: String
+        get() = component.internalId
+
     @TwineNativeProperty
     var size: LuaVec2Instance
         get() = LuaVec2.fromVec2(component.props.size)
@@ -18,8 +24,15 @@ open class LuaUIComponent(open val component: Component) : TwineNative() {
         }
 
     @TwineNativeFunction
-    fun rightOf(relativeComponent: LuaUIComponent) {
-        relativeComponent.component.rightOf(component)
+    fun size(value: LuaVec2Instance): LuaUIComponent {
+        component.props.size = value.toVec2()
+        return this
+    }
+
+    @TwineNativeFunction
+    fun rightOf(other: LuaUIComponent) {
+        component.relativeTo = other.id
+        component.relativePosition = RelativePosition.RIGHT_OF
     }
 
     @TwineNativeFunction
@@ -55,6 +68,16 @@ open class LuaUIComponent(open val component: Component) : TwineNative() {
             to.toVec2(),
             duration,
             easing
+        )
+    }
+
+    @TwineNativeFunction
+    fun remove() {
+        UIEventQueue.enqueueNow(
+            DestroyEvent(
+                delay = 0L,
+                targetId = component.internalId
+            )
         )
     }
 }

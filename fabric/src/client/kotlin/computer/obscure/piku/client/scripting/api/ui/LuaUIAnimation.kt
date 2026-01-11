@@ -4,19 +4,18 @@ import computer.obscure.piku.client.scripting.engine.EngineError
 import computer.obscure.piku.client.scripting.engine.EngineErrorCode
 import computer.obscure.piku.common.scripting.api.LuaSpacingInstance
 import computer.obscure.piku.common.scripting.api.LuaVec2Instance
+import computer.obscure.piku.common.ui.UIEventQueue
 import computer.obscure.piku.common.ui.components.Component
 import computer.obscure.piku.common.ui.components.ProgressBar
-import computer.obscure.piku.common.ui.components.move
-import computer.obscure.piku.common.ui.components.opacity
-import computer.obscure.piku.common.ui.components.padding
-import computer.obscure.piku.common.ui.components.progress
-import computer.obscure.piku.common.ui.components.rotate
+import computer.obscure.piku.common.ui.events.*
 import computer.obscure.twine.annotations.TwineNativeFunction
 import computer.obscure.twine.nativex.TwineNative
 
 class LuaUIAnimation(
     val component: Component
 ) : TwineNative() {
+    val storedEvents: MutableList<UIEvent> = mutableListOf()
+
     private fun invalidComponent(
         function: String,
         expected: String
@@ -29,38 +28,99 @@ class LuaUIAnimation(
     }
 
     @TwineNativeFunction
+    fun play() {
+        storedEvents.forEach {
+            UIEventQueue.enqueueNow(it)
+        }
+    }
+
+    @TwineNativeFunction
     fun move(to: LuaVec2Instance, duration: Double, easing: String): LuaUIAnimation {
-        component.move(
-            to.toVec2(),
-            duration,
-            easing
+        storedEvents.add(
+            MoveEvent(
+                targetId = component.internalId,
+                delay = 0,
+                position = to.toVec2(),
+                durationSeconds = duration,
+                easing = easing
+            )
         )
+
+        return this
+    }
+
+    @TwineNativeFunction
+    fun size(to: LuaVec2Instance, duration: Double, easing: String): LuaUIAnimation {
+        storedEvents.add(
+            SizeEvent(
+                targetId = component.internalId,
+                delay = 0,
+                size = to.toVec2(),
+                durationSeconds = duration,
+                easing = easing
+            )
+        )
+
+        return this
+    }
+
+    @TwineNativeFunction
+    fun scale(to: LuaVec2Instance, duration: Double, easing: String): LuaUIAnimation {
+        storedEvents.add(
+            ScaleEvent(
+                targetId = component.internalId,
+                delay = 0,
+                scale = to.toVec2(),
+                durationSeconds = duration,
+                easing = easing
+            )
+        )
+
         return this
     }
 
     @TwineNativeFunction
     fun rotate(to: Int, duration: Double, easing: String): LuaUIAnimation {
-        component.rotate(
-            to,
-            duration,
-            easing
+        storedEvents.add(
+            RotateEvent(
+                targetId = component.internalId,
+                delay = 0,
+                rotation = to,
+                durationSeconds = duration,
+                easing = easing
+            )
         )
+
         return this
     }
 
     @TwineNativeFunction
     fun opacity(to: Float, duration: Double, easing: String): LuaUIAnimation {
-        component.opacity(to, duration, easing)
+        storedEvents.add(
+            OpacityEvent(
+                targetId = component.internalId,
+                delay = 0,
+                opacity = to,
+                durationSeconds = duration,
+                easing = easing
+            )
+        )
+
         return this
     }
 
     @TwineNativeFunction
     fun padding(to: LuaSpacingInstance, duration: Double, easing: String): LuaUIAnimation {
-        component.padding(
-            to.toSpacing(),
-            duration,
-            easing
+        storedEvents.add(
+            PaddingEvent(
+                targetId = component.internalId,
+                delay = 0,
+                padding = to.toSpacing(),
+                durationSeconds = duration,
+                easing = easing
+            )
         )
+
         return this
     }
 
@@ -69,11 +129,16 @@ class LuaUIAnimation(
         if (component !is ProgressBar)
             invalidComponent("progress", "ProgressBar")
 
-        component.progress(
-            to,
-            duration,
-            easing
+        storedEvents.add(
+            ProgressEvent(
+                targetId = component.internalId,
+                delay = 0,
+                progress = to,
+                durationSeconds = duration,
+                easing = easing
+            )
         )
+
         return this
     }
 }

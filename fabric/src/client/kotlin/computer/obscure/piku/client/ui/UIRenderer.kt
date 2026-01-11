@@ -16,6 +16,8 @@ import computer.obscure.piku.client.ui.events.OpacityEventHandler
 import computer.obscure.piku.client.ui.events.PaddingEventHandler
 import computer.obscure.piku.client.ui.events.ProgressEventHandler
 import computer.obscure.piku.client.ui.events.RotateEventHandler
+import computer.obscure.piku.client.ui.events.ScaleEventHandler
+import computer.obscure.piku.client.ui.events.SizeEventHandler
 import computer.obscure.piku.client.ui.events.UIEventContext
 import computer.obscure.piku.common.classes.Vec2
 import computer.obscure.piku.common.ui.*
@@ -39,6 +41,8 @@ import computer.obscure.piku.common.ui.events.PaddingEvent
 import computer.obscure.piku.common.ui.events.ProgressEvent
 import computer.obscure.piku.common.ui.events.PropertyAnimation
 import computer.obscure.piku.common.ui.events.RotateEvent
+import computer.obscure.piku.common.ui.events.ScaleEvent
+import computer.obscure.piku.common.ui.events.SizeEvent
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback
 import net.minecraft.client.MinecraftClient
@@ -54,13 +58,8 @@ import kotlin.to
 object UIRenderer {
     val currentWindow: UIWindow = UIWindow("main")
     private var activeAnimations = mutableListOf<PropertyAnimation<*, *>>()
-
     private val registeredEasings = mutableMapOf<String, (time: Double) -> Double>()
-    private var lastTimeNano = System.nanoTime()
 
-
-    // TODO: improve this system somehow
-    // if it cannot be done, find a way to remove the ::class.java
     val eventDispatcher = UIEventDispatcher(
         handlers = mapOf(
             MoveEvent::class.java to MoveEventHandler(),
@@ -68,7 +67,9 @@ object UIRenderer {
             DestroyEvent::class.java to DestroyEventHandler(),
             RotateEvent::class.java to RotateEventHandler(),
             PaddingEvent::class.java to PaddingEventHandler(),
-            ProgressEvent::class.java to ProgressEventHandler()
+            ProgressEvent::class.java to ProgressEventHandler(),
+            SizeEvent::class.java to SizeEventHandler(),
+            ScaleEvent::class.java to ScaleEventHandler()
         ),
         context = UIEventContext(
             currentWindow = { currentWindow },
@@ -114,6 +115,7 @@ object UIRenderer {
             currentWindow.let { window ->
                 layout(window)
                 window.components.values
+                    .toList()
                     .sortedBy { it.props.zIndex }
                     .forEach { component ->
                         component.draw(context)
@@ -208,8 +210,9 @@ object UIRenderer {
      * Performs a layout pass, resolving every component's position.
      */
     private fun layout(window: UIWindow) {
-        window.components.forEach { component ->
-            layoutComponent(component.value, window)
+        val snapshot = window.components.values.toList()
+        snapshot.forEach { component ->
+            layoutComponent(component, window)
         }
     }
 

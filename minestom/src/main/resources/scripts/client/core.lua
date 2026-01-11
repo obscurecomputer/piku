@@ -13,6 +13,7 @@ function render()
         .size(vec2.of(0, 0))
         .pos(vec2.of(0, -200))
         .opacity(0)
+        .anchor("center_center")
 
     sprite.animate()
         .opacity(1, 0.5, "linear")
@@ -21,9 +22,12 @@ function render()
         .play()
 
     local text = group.text("test_text")
-        .text("Hello")
-        .rightOf(sprite.id)
+        .text("LOADING...")
         .scale(vec2.of(1, 1))
+        .color(color.rgb(0, 0, 0))
+        .backgroundColor(color.rgb(255, 255, 255))
+        .padding(spacing.of(2,2,2,2))
+        .bottomOf(sprite.id)
 
     text.animate()
         .scale(vec2.of(3, 3), 5, "ease_out_bounce")
@@ -39,11 +43,7 @@ listen("client.key_update", function(event)
         client.send("<yellow>Began holding Y!")
         render()
     end
-    if event.key == "h" and event.action == "press" then
-        client.send("<yellow>Began holding H!")
-    end
-    if event.key == "y" and event.action == "release" then
-        client.send("<yellow>Released Y!")
+    if event.key == "]" and event.action == "press" then
         ui.get("test").remove()
     end
 end)

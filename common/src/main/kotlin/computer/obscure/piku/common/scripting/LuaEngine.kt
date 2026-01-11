@@ -49,8 +49,6 @@ abstract class LuaEngine {
         }
     }
 
-    open fun rebuildEvents() {}
-
     fun register(table: TwineTable) {
         registeredTables[table.valueName] = table
         engine.set(table.valueName, table.table)

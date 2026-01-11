@@ -1,16 +1,20 @@
 package computer.obscure.piku.client.scripting.api.ui.components
 
 import computer.obscure.piku.client.scripting.api.ui.LuaUIAnimation
+import computer.obscure.piku.client.scripting.engine.EngineError
+import computer.obscure.piku.client.scripting.engine.EngineErrorCode
+import computer.obscure.piku.common.scripting.api.LuaSpacing
+import computer.obscure.piku.common.scripting.api.LuaSpacingInstance
 import computer.obscure.twine.annotations.TwineNativeFunction
 import computer.obscure.twine.annotations.TwineNativeProperty
 import computer.obscure.twine.nativex.TwineNative
 import computer.obscure.piku.common.scripting.api.LuaVec2
 import computer.obscure.piku.common.scripting.api.LuaVec2Instance
+import computer.obscure.piku.common.ui.Anchor
 import computer.obscure.piku.common.ui.UIEventQueue
 import computer.obscure.piku.common.ui.classes.RelativePosition
 import computer.obscure.piku.common.ui.components.*
 import computer.obscure.piku.common.ui.events.DestroyEvent
-import computer.obscure.twine.annotations.TwineOverload
 
 open class LuaUIComponent(open val component: Component) : TwineNative() {
     @TwineNativeProperty
@@ -53,6 +57,31 @@ open class LuaUIComponent(open val component: Component) : TwineNative() {
     @TwineNativeFunction
     fun pos(value: LuaVec2Instance): LuaUIComponent {
         component.props.pos = value.toVec2()
+        return this
+    }
+
+    @TwineNativeProperty
+    var padding: LuaSpacingInstance
+        get() = LuaSpacing.fromSpacing(component.props.padding)
+        set(value) {
+            component.props.padding = value.toSpacing()
+        }
+
+    @TwineNativeFunction
+    fun padding(value: LuaSpacingInstance): LuaUIComponent {
+        component.props.padding = value.toSpacing()
+        return this
+    }
+
+    @TwineNativeFunction
+    fun anchor(value: String): LuaUIComponent {
+        component.props.anchor =
+            Anchor.entries.find { it.name.equals(value, ignoreCase = true) }
+                ?: throw EngineError(
+                    EngineErrorCode.INVALID_ANCHOR,
+                    "Unknown anchor \"$value\"."
+                )
+
         return this
     }
 

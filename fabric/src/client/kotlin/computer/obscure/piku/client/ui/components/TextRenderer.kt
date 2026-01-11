@@ -24,16 +24,14 @@ class TextRenderer : UIComponent<Text>() {
         val scaleX = props.textScale.x
         val scaleY = props.textScale.y
 
-        val paddingX = props.padding.x
-        val paddingY = props.padding.y
-
         val scaledTextWidth = textWidth * scaleX
         val scaledTextHeight = textHeight * scaleY
 
-        val bgWidth = scaledTextWidth + paddingX * 2
-        val bgHeight = scaledTextHeight + paddingY * 2
+        val padding = props.padding
 
-        // Draw background
+        val bgWidth = scaledTextWidth + padding.left + padding.right
+        val bgHeight = scaledTextHeight + padding.top + padding.bottom
+
         props.backgroundColor?.let { bg ->
             context.fill(
                 x.toInt(),
@@ -44,8 +42,9 @@ class TextRenderer : UIComponent<Text>() {
             )
         }
 
-        val textStartX = x + paddingX
-        val textStartY = y + paddingY
+        val textStartX = x + padding.left
+        val textStartY = y + padding.top
+
 
         context.matrices.pushMatrix()
         context.matrices.translate(textStartX, textStartY)

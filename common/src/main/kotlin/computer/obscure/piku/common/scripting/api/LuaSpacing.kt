@@ -43,9 +43,7 @@ class LuaSpacing : TwineNative("spacing") {
                 left = spacing.left,
                 top = spacing.top,
                 right = spacing.right,
-                bottom = spacing.bottom,
-                x = spacing.x,
-                y = spacing.y
+                bottom = spacing.bottom
             )
         }
     }
@@ -55,9 +53,7 @@ class LuaSpacingInstance(
     var left: Float = 0f,
     var top: Float = 0f,
     var right: Float = 0f,
-    var bottom: Float = 0f,
-    var x: Float = 0f,
-    var y: Float = 0f
+    var bottom: Float = 0f
 ) : TwineNative() {
 
     @TwineNativeProperty("left")
@@ -80,32 +76,13 @@ class LuaSpacingInstance(
         get() = bottom
         set(value) { bottom = value }
 
-    @TwineNativeProperty("x")
-    var xValue: Float
-        get() = x
-        set(value) {
-            x = value
-            left = value
-            right = value
-        }
-
-    @TwineNativeProperty("y")
-    var yValue: Float
-        get() = y
-        set(value) {
-            y = value
-            top = value
-            bottom = value
-        }
-
     fun toSpacing(): Spacing {
+        println(this.toString())
         return Spacing(
             left = left,
             top = top,
             right = right,
-            bottom = bottom,
-            x = x,
-            y = y
+            bottom = bottom
         )
     }
 

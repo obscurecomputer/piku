@@ -1,9 +1,9 @@
 
 local ui = game.ui
 
--- local sprite = group.sprite("test_sprite")
--- sprite.texture = "textures/block/dirt.png"
--- sprite.size = vec2.of(32, 32)
+easing.new("hello", function(t)
+    return math.min(t / 0.5, 1)
+end)
 
 function render()
     local group = ui.group("test")
@@ -26,17 +26,13 @@ function render()
         .scale(vec2.of(1, 1))
         .color(color.rgb(0, 0, 0))
         .backgroundColor(color.rgb(255, 255, 255))
-        .padding(spacing.of(2,2,2,2))
+        .padding(spacing.of(20, 20, 20, 20))
         .bottomOf(sprite.id)
 
     text.animate()
         .scale(vec2.of(3, 3), 5, "ease_out_bounce")
         .play()
 end
-
-easing.new("hello", function(t)
-    return math.min(t / 0.5, 1)
-end)
 
 listen("client.key_update", function(event)
     if event.key == "y" and event.action == "press" then

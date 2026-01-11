@@ -189,8 +189,10 @@ object UIRenderer {
                 is Spacing -> {
                     val target = anim.to as Spacing
                     Spacing(
-                        x = lerp(start.x, target.x, easedT),
-                        y = lerp(start.y, target.y, easedT)
+                        left = lerp(start.left, target.left, easedT),
+                        top = lerp(start.top, target.top, easedT),
+                        right = lerp(start.right, target.right, easedT),
+                        bottom = lerp(start.bottom, target.bottom, easedT)
                     )
                 }
 
@@ -398,20 +400,20 @@ object UIRenderer {
             val relativeTo = window.getComponentByIdDeep(relId) ?: return@let
             when (component.relativePosition) {
                 RelativePosition.RIGHT_OF -> {
-                    resolvedX = relativeTo.screenX + relativeTo.width() + relativeTo.props.margin.x
-                    resolvedY = relativeTo.screenY + relativeTo.props.margin.y
+                    resolvedX = relativeTo.screenX + relativeTo.width() + relativeTo.props.margin.right
+                    resolvedY = relativeTo.screenY + relativeTo.props.margin.top
                 }
                 RelativePosition.LEFT_OF -> {
-                    resolvedX = relativeTo.screenX - width - relativeTo.props.margin.x
-                    resolvedY = relativeTo.screenY + relativeTo.props.margin.y
+                    resolvedX = relativeTo.screenX - width - relativeTo.props.margin.left
+                    resolvedY = relativeTo.screenY + relativeTo.props.margin.top
                 }
                 RelativePosition.BELOW -> {
-                    resolvedX = relativeTo.screenX + relativeTo.props.margin.x
-                    resolvedY = relativeTo.screenY + relativeTo.height() + relativeTo.props.margin.y
+                    resolvedX = relativeTo.screenX + relativeTo.props.margin.left
+                    resolvedY = relativeTo.screenY + relativeTo.height() + relativeTo.props.margin.bottom
                 }
                 RelativePosition.ABOVE -> {
-                    resolvedX = relativeTo.screenX + relativeTo.props.margin.x
-                    resolvedY = relativeTo.screenY - height - relativeTo.props.margin.y
+                    resolvedX = relativeTo.screenX + relativeTo.props.margin.left
+                    resolvedY = relativeTo.screenY - height - relativeTo.props.margin.top
                 }
 
                 else -> {}
@@ -429,7 +431,7 @@ object UIRenderer {
             Anchor.TOP_LEFT, Anchor.CENTER_LEFT, Anchor.BOTTOM_LEFT ->
                 resolvedX += margin.left
             Anchor.TOP_CENTER, Anchor.CENTER_CENTER, Anchor.BOTTOM_CENTER ->
-                resolvedX += margin.x
+                resolvedX += (margin.left + margin.right) / 2f
             Anchor.TOP_RIGHT, Anchor.CENTER_RIGHT, Anchor.BOTTOM_RIGHT ->
                 resolvedX -= margin.right
         }
@@ -438,7 +440,7 @@ object UIRenderer {
             Anchor.TOP_LEFT, Anchor.TOP_CENTER, Anchor.TOP_RIGHT ->
                 resolvedY += margin.top
             Anchor.CENTER_LEFT, Anchor.CENTER_CENTER, Anchor.CENTER_RIGHT ->
-                resolvedY += margin.y
+                resolvedY += (margin.top + margin.bottom) / 2f
             Anchor.BOTTOM_LEFT, Anchor.BOTTOM_CENTER, Anchor.BOTTOM_RIGHT ->
                 resolvedY -= margin.bottom
         }

@@ -21,4 +21,17 @@ class LuaUIBox(
         component.props.color = value.toUIColor()
         return this
     }
+
+    @TwineNativeProperty
+    var fillScreen: Boolean
+        get() = component.props.fillScreen
+        set(value) {
+            component.props.fillScreen = value
+        }
+
+    @TwineNativeFunction
+    fun fillScreen(): LuaUIComponent {
+        component.props.fillScreen = true
+        return this
+    }
 }

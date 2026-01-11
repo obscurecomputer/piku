@@ -38,19 +38,23 @@ class TextRenderer : UIComponent<Text>() {
                 y.toInt(),
                 (x + bgWidth).toInt(),
                 (y + bgHeight - 2).toInt(),
-                bg.toArgb()
+                bg.copy(
+                    a = (bg.a * props.opacity).coerceIn(0f, 255f).toInt()
+                ).toArgb()
             )
         }
 
         val textStartX = x + padding.left
         val textStartY = y + padding.top
 
-
         context.matrices.pushMatrix()
         context.matrices.translate(textStartX, textStartY)
         context.matrices.scale(scaleX, scaleY)
 
-        val color = props.color.copy(a = (props.opacity * 255).toInt()).toArgb()
+        val color =
+            props.color.copy(
+                a = (props.color.a * props.opacity).coerceIn(0f, 255f).toInt()
+            ).toArgb()
 
         for (line in lines) {
             context.drawText(renderer, line, 0, 0, color, props.shadow)

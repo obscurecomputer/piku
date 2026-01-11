@@ -14,13 +14,17 @@ class ProgressBarRenderer : UIComponent<ProgressBar>() {
         val height = props.size.y
 
         // background (empty fill)
+        val emptyColorAlpha = ((props.fillColor?.a ?: 0) * props.opacity)
+            .coerceIn(0f, 255f)
+            .toInt()
+
         props.emptyColor?.let {
             context.fill(
                 x.toInt(),
                 y.toInt(),
                 (x + width).toInt(),
                 (y + height).toInt(),
-                it.toArgb()
+                it.copy(a = emptyColorAlpha).toArgb()
             )
         }
 
@@ -28,13 +32,17 @@ class ProgressBarRenderer : UIComponent<ProgressBar>() {
         val clampedProgress = props.progress.coerceIn(0f, 1f)
         val fillWidth = width * clampedProgress
 
+        val fillColorAlpha = ((props.fillColor?.a ?: 0) * props.opacity)
+            .coerceIn(0f, 255f)
+            .toInt()
+
         props.fillColor?.let {
             context.fill(
                 x.toInt(),
                 y.toInt(),
                 (x + fillWidth).toInt(),
                 (y + height).toInt(),
-                it.toArgb()
+                it.copy(a = fillColorAlpha).toArgb()
             )
         }
     }

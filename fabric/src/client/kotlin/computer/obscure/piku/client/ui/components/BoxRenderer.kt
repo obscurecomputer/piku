@@ -16,12 +16,14 @@ class BoxRenderer : UIComponent<Box>() {
             drawHeight = window.scaledHeight
         }
 
+        val alpha = (props.color.a * props.opacity)
+            .coerceIn(0f, 255f)
+            .toInt()
+
         context.fill(
             0, 0,
             drawWidth, drawHeight,
-            props.color.copy(
-                a = (props.color.a - props.opacity * 255).toInt()
-            ).toArgb()
+            props.color.copy(a = alpha).toArgb()
         )
     }
 }

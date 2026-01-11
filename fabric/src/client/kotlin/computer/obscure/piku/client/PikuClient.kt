@@ -49,8 +49,6 @@ class PikuClient : ClientModInitializer {
             Client.serverRunsPiku = false
         }
 
-//        ClientPlayerEntity.
-
         ClientPlayConnectionEvents.JOIN.register { _, _, _ ->
             Client.connectedToServer = true
             Client.serverRunsPiku = true // TODO: change this

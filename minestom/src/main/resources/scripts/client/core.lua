@@ -1,36 +1,53 @@
 
 local ui = game.ui
 
-easing.new("hello", function(t)
-    return math.min(t / 0.5, 1)
-end)
-
 function render()
-    local group = ui.group("test")
+    local group = ui.group("loading_screen")
+
+    local box = group.box("background")
+        .color(color.rgb(0, 0, 0))
+        .fillScreen()
+        .opacity(0)
+        .anchor("top_left")
 
     local sprite = group.sprite("test_sprite")
         .texture("legacylands:sprites/world.png")
-        .size(vec2.of(0, 0))
+        .size(vec2.of(64, 64))
         .pos(vec2.of(0, -200))
         .opacity(0)
         .anchor("center_center")
 
-    sprite.animate()
-        .opacity(1, 0.5, "linear")
-        .move(vec2.of(0, 0), 0.5, "ease_out_bounce")
-        .size(vec2.of(64, 64), 0.5, "ease_out_bounce")
-        .play()
-
     local text = group.text("test_text")
-        .text("LOADING...")
-        .scale(vec2.of(1, 1))
+        .text("LOADING")
+        .scale(vec2.of(2, 2))
         .color(color.rgb(0, 0, 0))
         .backgroundColor(color.rgb(255, 255, 255))
-        .padding(spacing.of(20, 20, 20, 20))
+        .padding(spacing.of(2,2,2,2))
+        .pos(vec2.of(3, 6))
         .bottomOf(sprite.id)
 
+    local progressBar = group.progressBar("test_bar")
+        .progress(0)
+        .emptyColor(color.rgb(190, 190, 190))
+        .fillColor(color.rgb(255, 255, 255))
+        .pos(vec2.of(0, -10))
+        .size(vec2.of(300, 10))
+        .anchor("bottom_center")
+        .opacity(0)
+
+    box.animate()
+        .opacity(1, 1, "EASE_IN_OUT_CUBIC")
+        .play()
+    sprite.animate()
+        .opacity(1, 2, "EASE_IN_OUT_CUBIC")
+        .move(vec2.of(0, 0), 2, "EASE_IN_OUT_CUBIC")
+        .play()
     text.animate()
-        .scale(vec2.of(3, 3), 5, "ease_out_bounce")
+        .scale(vec2.of(3, 3), 5, "EASE_IN_OUT_CUBIC")
+        .play()
+    progressBar.animate()
+        .opacity(1, 2, "EASE_IN_OUT_CUBIC")
+        .progress(1, 5, "EASE_IN_OUT_CUBIC")
         .play()
 end
 
@@ -40,6 +57,22 @@ listen("client.key_update", function(event)
         render()
     end
     if event.key == "]" and event.action == "press" then
-        ui.get("test").remove()
+        ui.get("loading_screen").remove()
+    end
+    if event.key == "[" and event.action == "press" then
+        local screen = ui.get("loading_screen")
+
+        screen.get("background").animate()
+            .opacity(0, 2, "EASE_IN_OUT_CUBIC")
+            .play()
+        screen.get("test_sprite").animate()
+            .opacity(0, 2, "EASE_IN_OUT_CUBIC")
+            .play()
+        screen.get("test_text").animate()
+            .opacity(0, 2, "EASE_IN_OUT_CUBIC")
+            .play()
+        screen.get("test_bar").animate()
+            .opacity(0, 2, "EASE_IN_OUT_CUBIC")
+            .play()
     end
 end)

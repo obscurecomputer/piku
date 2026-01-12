@@ -13,8 +13,8 @@ class ScaleEventHandler : UIEventHandler<ScaleEvent> {
             setter = { c, value ->
                 var x = value.x
                 var y = value.y
-                if (value.x == 0f) x = c.props.scale.x
-                if (value.y == 0f) y = c.props.scale.y
+                if (value.x == 0.0) x = c.props.scale.x
+                if (value.y == 0.0) y = c.props.scale.y
 
                 c.props.scale = Vec2(x, y)
             },

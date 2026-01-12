@@ -48,8 +48,8 @@ class TextRenderer : UIComponent<Text>() {
         val textStartY = y + padding.top
 
         context.matrices.pushMatrix()
-        context.matrices.translate(textStartX, textStartY)
-        context.matrices.scale(scaleX, scaleY)
+        context.matrices.translate(textStartX.toFloat(), textStartY.toFloat())
+        context.matrices.scale(scaleX.toFloat(), scaleY.toFloat())
 
         val color =
             props.color.copy(

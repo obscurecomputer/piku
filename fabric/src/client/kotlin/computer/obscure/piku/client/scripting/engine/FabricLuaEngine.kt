@@ -10,6 +10,7 @@ import computer.obscure.piku.common.scripting.LuaEngine
 import computer.obscure.piku.common.scripting.api.LuaColor
 import computer.obscure.piku.common.scripting.api.LuaSpacing
 import computer.obscure.piku.common.scripting.api.LuaVec2
+import computer.obscure.piku.common.scripting.api.LuaVec3
 
 class FabricLuaEngine : LuaEngine() {
     lateinit var events: LuaClientEvents
@@ -26,6 +27,7 @@ class FabricLuaEngine : LuaEngine() {
         register(LuaGame())
         register(LuaUIAnchor())
         register(LuaVec2())
+        register(LuaVec3())
         register(LuaColor())
         register(LuaClient())
         register(LuaEasing())

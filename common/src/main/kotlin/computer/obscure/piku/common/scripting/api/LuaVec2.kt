@@ -7,7 +7,7 @@ import computer.obscure.piku.common.classes.Vec2
 
 class LuaVec2 : TwineNative("vec2") {
     @TwineNativeFunction
-    fun of(x: Float, y: Float): LuaVec2Instance {
+    fun of(x: Double, y: Double): LuaVec2Instance {
         return LuaVec2Instance(x, y)
     }
 
@@ -22,16 +22,16 @@ class LuaVec2 : TwineNative("vec2") {
 }
 
 class LuaVec2Instance(
-    var x: Float,
-    var y: Float
+    var x: Double,
+    var y: Double
 ) : TwineNative() {
     @TwineNativeProperty("x")
-    var xCoord: Float
+    var xCoord: Double
         get() = x
         set(value) { x = value }
 
     @TwineNativeProperty("y")
-    var yCoord: Float
+    var yCoord: Double
         get() = y
         set(value) { y = value }
 

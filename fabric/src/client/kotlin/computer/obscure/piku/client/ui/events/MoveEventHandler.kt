@@ -13,8 +13,8 @@ class MoveEventHandler : UIEventHandler<MoveEvent> {
             setter = { c, value ->
                 var x = value.x
                 var y = value.y
-                if (value.x == 0f) x = c.props.pos.x
-                if (value.y == 0f) y = c.props.pos.y
+                if (value.x == 0.0) x = c.props.pos.x
+                if (value.y == 0.0) y = c.props.pos.y
 
                 c.props.pos = Vec2(x, y)
             },

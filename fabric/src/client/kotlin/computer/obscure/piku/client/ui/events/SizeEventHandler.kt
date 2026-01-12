@@ -13,8 +13,8 @@ class SizeEventHandler : UIEventHandler<SizeEvent> {
             setter = { c, value ->
                 var x = value.x
                 var y = value.y
-                if (value.x == 0f) x = c.props.size.x
-                if (value.y == 0f) y = c.props.size.y
+                if (value.x == 0.0) x = c.props.size.x
+                if (value.y == 0.0) y = c.props.size.y
 
                 c.props.size = Vec2(x, y)
             },

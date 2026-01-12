@@ -11,11 +11,11 @@ open class ProgressBar(
 ) : Component() {
     override val compType: CompType = CompType.PROGRESS_BAR
 
-    override fun width(): Float {
+    override fun width(): Double {
         return props.size.x
     }
 
-    override fun height(): Float {
+    override fun height(): Double {
         return props.size.y
     }
 }

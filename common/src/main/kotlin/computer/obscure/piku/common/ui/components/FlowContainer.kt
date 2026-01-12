@@ -9,34 +9,34 @@ data class FlowContainer(
 ) : Component() {
     override val compType: CompType = CompType.FLOW_CONTAINER
 
-    override fun width(): Float {
+    override fun width(): Double {
         val totalWidth = when (props.direction) {
             FlowDirection.HORIZONTAL -> {
-                val contentWidth = props.components.sumOf { (it.width() + it.props.margin.left + it.props.margin.right).toDouble() } +
+                val contentWidth = props.components.sumOf { (it.width() + it.props.margin.left + it.props.margin.right) } +
                         ((props.components.size - 1) * props.gap)
-                (contentWidth + props.padding.left + props.padding.right).toFloat()
+                (contentWidth + props.padding.left + props.padding.right)
             }
             FlowDirection.VERTICAL -> {
                 val contentWidth = props.components.maxOfOrNull {
                     it.width() + it.props.margin.left + it.props.margin.right
-                } ?: 0f
+                } ?: 0.0
                 contentWidth + props.padding.left + props.padding.right
             }
         }
         return totalWidth
     }
 
-    override fun height(): Float {
+    override fun height(): Double {
         val totalHeight = when (props.direction) {
             FlowDirection.VERTICAL -> {
-                val contentHeight = props.components.sumOf { (it.height() + it.props.margin.top + it.props.margin.bottom).toDouble() } +
+                val contentHeight = props.components.sumOf { (it.height() + it.props.margin.top + it.props.margin.bottom) } +
                         ((props.components.size - 1) * props.gap)
-                (contentHeight + props.padding.top + props.padding.bottom).toFloat()
+                (contentHeight + props.padding.top + props.padding.bottom)
             }
             FlowDirection.HORIZONTAL -> {
                 val contentHeight = props.components.maxOfOrNull {
                     it.height() + it.props.margin.top + it.props.margin.bottom
-                } ?: 0f
+                } ?: 0.0
                 contentHeight + props.padding.top + props.padding.bottom
             }
         }

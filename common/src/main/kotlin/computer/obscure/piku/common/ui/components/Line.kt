@@ -8,11 +8,11 @@ open class Line(
 ) : Component() {
     override val compType: CompType = CompType.LINE
 
-    override fun width(): Float {
-        return 1f
+    override fun width(): Double {
+        return 1.0
     }
 
-    override fun height(): Float {
-        return 1f
+    override fun height(): Double {
+        return 1.0
     }
 }

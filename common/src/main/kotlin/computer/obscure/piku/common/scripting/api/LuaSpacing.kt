@@ -8,7 +8,7 @@ import computer.obscure.twine.nativex.TwineNative
 class LuaSpacing : TwineNative("spacing") {
 //    @TwineOverload
 //    @TwineNativeFunction
-//    fun of(all: Float): LuaSpacingInstance {
+//    fun of(all: Double): LuaSpacingInstance {
 //        return LuaSpacingInstance(
 //            left = all,
 //            top = all,
@@ -19,7 +19,7 @@ class LuaSpacing : TwineNative("spacing") {
 //
 //    @TwineOverload
 //    @TwineNativeFunction
-//    fun of(x: Float, y: Float): LuaSpacingInstance {
+//    fun of(x: Double, y: Double): LuaSpacingInstance {
 //        return LuaSpacingInstance(
 //            x = x,
 //            y = y
@@ -28,7 +28,7 @@ class LuaSpacing : TwineNative("spacing") {
 
 //    @TwineOverload
     @TwineNativeFunction
-    fun of(left: Float, top: Float, right: Float, bottom: Float): LuaSpacingInstance {
+    fun of(left: Double, top: Double, right: Double, bottom: Double): LuaSpacingInstance {
         return LuaSpacingInstance(
             left = left,
             top = top,
@@ -50,29 +50,29 @@ class LuaSpacing : TwineNative("spacing") {
 }
 
 class LuaSpacingInstance(
-    var left: Float = 0f,
-    var top: Float = 0f,
-    var right: Float = 0f,
-    var bottom: Float = 0f
+    var left: Double = 0.0,
+    var top: Double = 0.0,
+    var right: Double = 0.0,
+    var bottom: Double = 0.0
 ) : TwineNative() {
 
     @TwineNativeProperty("left")
-    var leftValue: Float
+    var leftValue: Double
         get() = left
         set(value) { left = value }
 
     @TwineNativeProperty("top")
-    var topValue: Float
+    var topValue: Double
         get() = top
         set(value) { top = value }
 
     @TwineNativeProperty("right")
-    var rightValue: Float
+    var rightValue: Double
         get() = right
         set(value) { right = value }
 
     @TwineNativeProperty("bottom")
-    var bottomValue: Float
+    var bottomValue: Double
         get() = bottom
         set(value) { bottom = value }
 

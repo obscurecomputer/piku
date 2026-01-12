@@ -8,11 +8,11 @@ open class Box(
 ) : Component() {
     override val compType: CompType = CompType.BOX
 
-    override fun width(): Float {
+    override fun width(): Double {
         return props.size.x
     }
 
-    override fun height(): Float {
+    override fun height(): Double {
         return props.size.y
     }
 }

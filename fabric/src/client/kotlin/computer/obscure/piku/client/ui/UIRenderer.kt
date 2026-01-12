@@ -1,6 +1,7 @@
 package computer.obscure.piku.client.ui
 
 import computer.obscure.piku.client.PikuClient
+import computer.obscure.piku.client.animation.AnimationUtil.lerp
 import computer.obscure.piku.client.scripting.api.ui.LuaEasingInstance
 import computer.obscure.piku.client.ui.components.BoxRenderer
 import computer.obscure.piku.client.ui.components.FlowContainerRenderer
@@ -53,12 +54,13 @@ import net.minecraft.resource.Resource
 import net.minecraft.util.Identifier
 import org.joml.Matrix3x2f
 import java.io.IOException
+import kotlin.time.toDuration
 import kotlin.to
 
 object UIRenderer {
     val currentWindow: UIWindow = UIWindow("main")
     private var activeAnimations = mutableListOf<PropertyAnimation<*, *>>()
-    private val registeredEasings = mutableMapOf<String, (time: Double) -> Double>()
+    val registeredEasings = mutableMapOf<String, (time: Double) -> Double>()
 
     val eventDispatcher = UIEventDispatcher(
         handlers = mapOf(
@@ -204,10 +206,6 @@ object UIRenderer {
         }
     }
 
-    fun lerp(start: Float, end: Float, t: Double): Float {
-        return start + ((end - start) * t).toFloat()
-    }
-
     /**
      * Performs a layout pass, resolving every component's position.
      */
@@ -224,7 +222,7 @@ object UIRenderer {
     private fun layoutComponent(
         component: Component,
         window: UIWindow,
-        parentScale: Vec2 = Vec2(1f, 1f)
+        parentScale: Vec2 = Vec2(1.0, 1.0)
     ) {
         val effectiveScale = Vec2(
             component.props.scale.x * parentScale.x,
@@ -342,10 +340,10 @@ object UIRenderer {
         val pivotY = height / 2f
 
         context.matrices.translate(component.screenX.toFloat(), component.screenY.toFloat())
-        context.matrices.translate(pivotX, pivotY)
-        context.matrices.scale(scale.x, scale.y)
+        context.matrices.translate(pivotX.toFloat(), pivotY.toFloat())
+        context.matrices.scale(scale.x.toFloat(), scale.y.toFloat())
         context.matrices.mul(Matrix3x2f().rotation(rotation.toFloat()))
-        context.matrices.translate(-pivotX, -pivotY)
+        context.matrices.translate(-pivotX.toFloat(), -pivotY.toFloat())
     }
 
     /**
@@ -362,15 +360,15 @@ object UIRenderer {
         // default relative positioning: the screen
         var baseX = component.computedPos?.x ?: component.props.pos.x
         var baseY = component.computedPos?.y ?: component.props.pos.y
-        var baseWidth = screenWidth.toFloat()
-        var baseHeight = screenHeight.toFloat()
+        var baseWidth = screenWidth.toDouble()
+        var baseHeight = screenHeight.toDouble()
 
         // if the component is relative to another, use that component's bounds as the base
         component.relativeTo?.let { relId ->
             val relativeTo = window.getComponentByIdDeep(relId)
             if (relativeTo != null) {
-                baseX = relativeTo.screenX.toFloat()
-                baseY = relativeTo.screenY.toFloat()
+                baseX = relativeTo.screenX.toDouble()
+                baseY = relativeTo.screenY.toDouble()
                 baseWidth = relativeTo.width()
                 baseHeight = relativeTo.height()
             }
@@ -492,8 +490,8 @@ fun Sprite.resolveTexture() {
         val texture = UIRenderer.getTexture(props.texturePath)
         texture?.let {
             computedSize = Vec2(
-                it.image?.width?.toFloat() ?: 0f,
-                it.image?.height?.toFloat() ?: 0f
+                it.image?.width?.toDouble() ?: 0.0,
+                it.image?.height?.toDouble() ?: 0.0
             )
         }
     }

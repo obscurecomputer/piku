@@ -8,6 +8,6 @@ open class TextProps(
     var color: UIColor = UIColor(255, 255, 255),
     var shadow: Boolean = false,
     var backgroundColor: UIColor? = null,
-    var textScale: Vec2 = Vec2(1f, 1f),
-    var backgroundScale: Vec2 = Vec2(1f, 1f)
+    var textScale: Vec2 = Vec2(1.0, 1.0),
+    var backgroundScale: Vec2 = Vec2(1.0, 1.0)
 ) : BaseProps()

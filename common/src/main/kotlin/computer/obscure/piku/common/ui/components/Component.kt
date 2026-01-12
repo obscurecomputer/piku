@@ -22,12 +22,12 @@ sealed class Component {
     abstract val compType: CompType
     abstract val props: BaseProps
 
-    abstract fun width(): Float
-    abstract fun height(): Float
+    abstract fun width(): Double
+    abstract fun height(): Double
 
     var screenX: Int = 0
     var screenY: Int = 0
-    var computedScale: Vec2 = Vec2(0f, 0f)
+    var computedScale: Vec2 = Vec2(0.0, 0.0)
     var computedSize: Vec2? = null
     var computedPos: Vec2? = null
 }

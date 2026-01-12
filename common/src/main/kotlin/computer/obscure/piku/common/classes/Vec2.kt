@@ -1,12 +1,9 @@
 package computer.obscure.piku.common.classes
 
-import org.joml.Vector2f
-import org.joml.Vector2fc
-
-data class Vec2(val x: Float = 0f, val y: Float = 0f) {
-    fun toJoml(): Vector2f = Vector2f(x, y)
-    companion object { fun fromJoml(v: Vector2fc) = Vec2(v.x(), v.y()) }
-
+data class Vec2(
+    val x: Double = 0.0,
+    val y: Double = 0.0
+) {
     fun lineTo(to: Vec2): List<Vec2> {
         val points = mutableListOf<Vec2>()
 
@@ -26,7 +23,7 @@ data class Vec2(val x: Float = 0f, val y: Float = 0f) {
 
         // todo: find out if this is dangerous
         while (true) {
-            points.add(Vec2(x1.toFloat(), y1.toFloat()))
+            points.add(Vec2(x1.toDouble(), y1.toDouble()))
             if (x1 == x2 && y1 == y2) break
             val e2 = 2 * err
             if (e2 > -dy) {

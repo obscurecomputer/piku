@@ -8,10 +8,8 @@ import computer.obscure.piku.client.ui.UIRenderer
 import net.fabricmc.api.ClientModInitializer
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry
-import org.apache.commons.logging.Log
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
-import kotlin.math.log
 
 class PikuClient : ClientModInitializer {
     companion object {

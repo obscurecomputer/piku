@@ -1,9 +1,10 @@
 {
   "required": true,
   "minVersion": "0.8",
-  "package": "computer.obscure.piku.mixin.client",
+  "package": "computer.obscure.piku.client.mixin",
   "compatibilityLevel": "JAVA_21",
   "client": [
+    "CameraMixin"
   ],
   "injectors": {
     "defaultRequire": 1

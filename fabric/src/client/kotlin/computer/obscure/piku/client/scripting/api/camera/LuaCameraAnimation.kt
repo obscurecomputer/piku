@@ -33,4 +33,29 @@ class LuaCameraAnimation : TwineNative() {
         return this
     }
 
+    @TwineNativeFunction
+    fun rotate(to: LuaVec3Instance, duration: Double, easing: String): LuaCameraAnimation {
+        storedAnimations.add(
+            ValueAnimation(
+                durationSeconds = duration,
+                easing = easing,
+                getter = {
+                    Vec3d(
+                        CinematicCamera.pitch.toDouble(),
+                        CinematicCamera.yaw.toDouble(),
+                        CinematicCamera.roll.toDouble()
+                    )
+                },
+                setter = { vec ->
+                    CinematicCamera.pitch = vec.x.toFloat()
+                    CinematicCamera.yaw = vec.y.toFloat()
+                    CinematicCamera.roll = vec.z.toFloat()
+                },
+                to = Vec3d(to.x, to.y, to.z)
+            )
+        )
+
+        return this
+    }
+
 }

@@ -3,6 +3,7 @@ package computer.obscure.piku.client.mixin;
 import computer.obscure.piku.client.camera.CinematicCamera;
 import net.minecraft.client.render.Camera;
 import net.minecraft.entity.Entity;
+import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.BlockView;
 import org.spongepowered.asm.mixin.Mixin;
@@ -34,10 +35,24 @@ public abstract class CameraMixin {
     ) {
         if (!CinematicCamera.INSTANCE.getActive()) return;
 
-        this.setPos(CinematicCamera.INSTANCE.getPos());
-        this.setRotation(
-            CinematicCamera.INSTANCE.getYaw(),
-            CinematicCamera.INSTANCE.getPitch()
+        float t = tickDelta;
+
+        Vec3d pos = CinematicCamera.INSTANCE.getPrevPos()
+                .lerp(CinematicCamera.INSTANCE.getPos(), t);
+
+        float yaw = MathHelper.lerpAngleDegrees(
+                t,
+                CinematicCamera.INSTANCE.getPrevYaw(),
+                CinematicCamera.INSTANCE.getYaw()
         );
+
+        float pitch = MathHelper.lerp(
+                t,
+                CinematicCamera.INSTANCE.getPrevPitch(),
+                CinematicCamera.INSTANCE.getPitch()
+        );
+
+        this.setPos(pos);
+        this.setRotation(yaw, pitch);
     }
 }

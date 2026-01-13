@@ -15,6 +15,10 @@ object CameraAnimator {
     }
 
     fun tick(deltaSeconds: Double) {
+        CinematicCamera.prevPos = CinematicCamera.pos
+        CinematicCamera.prevYaw = CinematicCamera.yaw
+        CinematicCamera.prevPitch = CinematicCamera.pitch
+
         val it = animations.iterator()
         while (it.hasNext()) {
             val anim = it.next()

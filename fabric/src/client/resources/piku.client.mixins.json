@@ -4,7 +4,9 @@
   "package": "computer.obscure.piku.client.mixin",
   "compatibilityLevel": "JAVA_21",
   "client": [
-    "CameraMixin"
+    "CameraMixin",
+    "HeldItemRendererMixin",
+    "InGameHudMixin"
   ],
   "injectors": {
     "defaultRequire": 1

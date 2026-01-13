@@ -10,6 +10,7 @@ import net.fabricmc.api.ClientModInitializer
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry
+import net.minecraft.client.MinecraftClient
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
 
@@ -51,6 +52,7 @@ class PikuClient : ClientModInitializer {
 
         ClientTickEvents.END_CLIENT_TICK.register {
             CameraAnimator.tick(1.0 / 20.0)
+            MinecraftClient.getInstance().options.hudHidden = Client.hideHUD
         }
 
         ClientPlayConnectionEvents.JOIN.register { _, _, _ ->

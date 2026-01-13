@@ -66,4 +66,11 @@ object Client {
     var connectedToServer: Boolean = false
     @JvmField
     var serverRunsPiku: Boolean = false
+
+    @JvmField
+    var hideHUD = false
+    @JvmField
+    var hideHotbar = false
+    @JvmField
+    var hideArm = false
 }

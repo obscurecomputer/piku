@@ -1,11 +1,11 @@
 package computer.obscure.piku.client.scripting.api
 
-import computer.obscure.twine.annotations.TwineNativeFunction
-import computer.obscure.twine.nativex.TwineNative
+import computer.obscure.piku.client.Client
 import computer.obscure.piku.client.utils.parseMini
-import computer.obscure.piku.common.scripting.api.LuaVec3
 import computer.obscure.piku.common.scripting.api.LuaVec3Instance
+import computer.obscure.twine.annotations.TwineNativeFunction
 import computer.obscure.twine.annotations.TwineNativeProperty
+import computer.obscure.twine.nativex.TwineNative
 import net.minecraft.client.MinecraftClient
 import net.minecraft.client.option.Perspective
 
@@ -31,6 +31,15 @@ class LuaClient : TwineNative("client") {
             return LuaVec3Instance(v.x, v.y, v.z)
         }
 
+    @TwineNativeProperty
+    val headRot: LuaVec3Instance
+        get() {
+            val p = instance.player
+                ?: return LuaVec3Instance(0.0, 0.0, 0.0)
+
+            return LuaVec3Instance(p.pitch.toDouble(), p.yaw.toDouble(), 0.0)
+        }
+
     @TwineNativeFunction
     fun sendActionbar(message: String) {
         instance.player?.sendMessage(parseMini(message), true)
@@ -47,4 +56,19 @@ class LuaClient : TwineNative("client") {
 
         instance.options.perspective = enum
     }
+
+    @TwineNativeProperty
+    var hideHotbar: Boolean
+        get() = Client.hideHotbar
+        set(value) { Client.hideHotbar = value }
+
+    @TwineNativeProperty
+    var hideArm: Boolean
+        get() = Client.hideArm
+        set(value) { Client.hideArm = value }
+
+    @TwineNativeProperty
+    var hideHUD: Boolean
+        get() = Client.hideHUD
+        set(value) { Client.hideHUD = value }
 }

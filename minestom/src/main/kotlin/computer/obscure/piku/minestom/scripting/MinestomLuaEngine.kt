@@ -1,8 +1,6 @@
 package computer.obscure.piku.minestom.scripting
 
 import computer.obscure.piku.common.scripting.LuaEngine
-import computer.obscure.piku.common.scripting.api.LuaColor
-import computer.obscure.piku.common.scripting.api.LuaVec2
 import computer.obscure.piku.minestom.scripting.api.LuaServerEvents
 
 class MinestomLuaEngine : LuaEngine() {
@@ -12,8 +10,7 @@ class MinestomLuaEngine : LuaEngine() {
         super.init()
         events = LuaServerEvents()
 
-        register(LuaVec2())
-        register(LuaColor())
+        super.registerCommons()
 
         val eventListener = LuaServerEventListener()
         eventListener.bus = events

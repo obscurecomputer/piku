@@ -1,4 +1,4 @@
-package computer.obscure.piku.client.scripting.engine
+package computer.obscure.piku.common.scripting.engine
 
 class EngineError(
     val code: EngineErrorCode,

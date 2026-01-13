@@ -92,6 +92,12 @@ object UIRenderer {
         )
     )
 
+    fun reset() {
+        activeAnimations.clear()
+        registeredEasings.clear()
+        currentWindow.components.clear()
+    }
+
     fun registerEasing(easing: LuaEasingInstance) {
         registeredEasings[easing.id] = easing.function
     }

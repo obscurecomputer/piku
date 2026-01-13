@@ -7,10 +7,6 @@ import computer.obscure.piku.client.scripting.api.LuaGame
 import computer.obscure.piku.client.scripting.api.enums.LuaUIAnchor
 import computer.obscure.piku.client.scripting.api.ui.LuaEasing
 import computer.obscure.piku.common.scripting.LuaEngine
-import computer.obscure.piku.common.scripting.api.LuaColor
-import computer.obscure.piku.common.scripting.api.LuaSpacing
-import computer.obscure.piku.common.scripting.api.LuaVec2
-import computer.obscure.piku.common.scripting.api.LuaVec3
 
 class FabricLuaEngine : LuaEngine() {
     lateinit var events: LuaClientEvents
@@ -25,13 +21,10 @@ class FabricLuaEngine : LuaEngine() {
         events = LuaClientEvents()
 
         register(LuaGame())
-        register(LuaUIAnchor())
-        register(LuaVec2())
-        register(LuaVec3())
-        register(LuaColor())
         register(LuaClient())
+        register(LuaUIAnchor())
         register(LuaEasing())
-        register(LuaSpacing())
+        super.registerCommons()
 
         val eventListener = LuaClientEventListener()
         eventListener.bus = events

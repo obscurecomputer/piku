@@ -1,9 +1,9 @@
 package computer.obscure.piku.client.scripting.api.ui
 
-import computer.obscure.piku.client.scripting.engine.EngineError
-import computer.obscure.piku.client.scripting.engine.EngineErrorCode
 import computer.obscure.piku.common.scripting.api.LuaSpacingInstance
 import computer.obscure.piku.common.scripting.api.LuaVec2Instance
+import computer.obscure.piku.common.scripting.engine.EngineError
+import computer.obscure.piku.common.scripting.engine.EngineErrorCode
 import computer.obscure.piku.common.ui.UIEventQueue
 import computer.obscure.piku.common.ui.components.Component
 import computer.obscure.piku.common.ui.components.ProgressBar

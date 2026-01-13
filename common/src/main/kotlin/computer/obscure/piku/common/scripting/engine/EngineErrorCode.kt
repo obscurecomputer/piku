@@ -1,4 +1,4 @@
-package computer.obscure.piku.client.scripting.engine
+package computer.obscure.piku.common.scripting.engine
 
 enum class EngineErrorCode {
     INVALID_COMPONENT,
@@ -6,5 +6,6 @@ enum class EngineErrorCode {
     TYPE_MISMATCH,
     INVALID_ANCHOR,
     CAMERA_ACTIVE,
-    CAMERA_INACTIVE
+    CAMERA_INACTIVE,
+    GENERIC_ERROR
 }

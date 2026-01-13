@@ -1,5 +1,8 @@
 
 listen("client.key_update", function(event)
+    if event.key == "i" and event.action == "press" then
+        cancelled = true
+    end
     if event.key == "b" and event.action == "press" then
         client.send("<yellow>Began holding B! (test)")
 

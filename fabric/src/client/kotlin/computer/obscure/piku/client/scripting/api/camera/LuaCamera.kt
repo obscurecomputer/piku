@@ -1,10 +1,10 @@
 package computer.obscure.piku.client.scripting.api.camera
 
 import computer.obscure.piku.client.camera.CinematicCamera
-import computer.obscure.piku.client.scripting.engine.EngineError
-import computer.obscure.piku.client.scripting.engine.EngineErrorCode
 import computer.obscure.piku.common.classes.Vec3
 import computer.obscure.piku.common.scripting.api.LuaVec3Instance
+import computer.obscure.piku.common.scripting.engine.EngineError
+import computer.obscure.piku.common.scripting.engine.EngineErrorCode
 import computer.obscure.twine.annotations.TwineNativeFunction
 import computer.obscure.twine.nativex.TwineNative
 import net.minecraft.util.math.Vec3d

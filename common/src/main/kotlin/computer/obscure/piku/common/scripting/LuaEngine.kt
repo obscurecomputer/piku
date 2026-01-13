@@ -1,5 +1,11 @@
 package computer.obscure.piku.common.scripting
 
+import computer.obscure.piku.common.scripting.api.LuaColor
+import computer.obscure.piku.common.scripting.api.LuaMath
+import computer.obscure.piku.common.scripting.api.LuaScheduler
+import computer.obscure.piku.common.scripting.api.LuaSpacing
+import computer.obscure.piku.common.scripting.api.LuaVec2
+import computer.obscure.piku.common.scripting.api.LuaVec3
 import computer.obscure.twine.TwineTable
 import computer.obscure.twine.nativex.TwineEngine
 import computer.obscure.twine.nativex.TwineNative
@@ -47,6 +53,15 @@ abstract class LuaEngine {
         registeredBaseTables.forEach {
             engine.setBase(it)
         }
+    }
+
+    fun registerCommons() {
+        register(LuaVec2())
+        register(LuaVec3())
+        register(LuaColor())
+        register(LuaSpacing())
+        register(LuaScheduler())
+        registerBase(LuaMath())
     }
 
     fun register(table: TwineTable) {

@@ -6,6 +6,7 @@ import computer.obscure.piku.common.scripting.engine.EngineError
 import computer.obscure.piku.common.scripting.engine.EngineErrorCode
 import computer.obscure.piku.common.ui.UIEventQueue
 import computer.obscure.piku.common.ui.components.Component
+import computer.obscure.piku.common.ui.components.Line
 import computer.obscure.piku.common.ui.components.ProgressBar
 import computer.obscure.piku.common.ui.events.*
 import computer.obscure.twine.annotations.TwineNativeFunction
@@ -134,6 +135,42 @@ class LuaUIAnimation(
                 targetId = component.internalId,
                 delay = 0,
                 progress = to,
+                durationSeconds = duration,
+                easing = easing
+            )
+        )
+
+        return this
+    }
+
+    @TwineNativeFunction
+    fun to(to: LuaVec2Instance, duration: Double, easing: String): LuaUIAnimation {
+        if (component !is Line)
+            invalidComponent("to", "Line")
+
+        storedEvents.add(
+            LineToEvent(
+                targetId = component.internalId,
+                delay = 0,
+                position = to.toVec2(),
+                durationSeconds = duration,
+                easing = easing
+            )
+        )
+
+        return this
+    }
+
+    @TwineNativeFunction
+    fun from(to: LuaVec2Instance, duration: Double, easing: String): LuaUIAnimation {
+        if (component !is Line)
+            invalidComponent("from", "Line")
+
+        storedEvents.add(
+            LineFromEvent(
+                targetId = component.internalId,
+                delay = 0,
+                position = to.toVec2(),
                 durationSeconds = duration,
                 easing = easing
             )

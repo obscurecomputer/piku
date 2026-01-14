@@ -13,7 +13,7 @@ class RotateEventHandler : UIEventHandler<RotateEvent> {
             from = null,
             to = event.rotation,
             durationSeconds = event.durationSeconds,
-            easing = event.easing.toString()
+            easing = event.easing
         )
         context.enqueueAnimation(anim)
     }

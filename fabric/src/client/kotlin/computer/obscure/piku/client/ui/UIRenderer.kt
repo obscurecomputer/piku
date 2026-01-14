@@ -12,6 +12,8 @@ import computer.obscure.piku.client.ui.components.ProgressBarRenderer
 import computer.obscure.piku.client.ui.components.SpriteRenderer
 import computer.obscure.piku.client.ui.components.TextRenderer
 import computer.obscure.piku.client.ui.events.DestroyEventHandler
+import computer.obscure.piku.client.ui.events.LineFromEventHandler
+import computer.obscure.piku.client.ui.events.LineToEventHandler
 import computer.obscure.piku.client.ui.events.MoveEventHandler
 import computer.obscure.piku.client.ui.events.OpacityEventHandler
 import computer.obscure.piku.client.ui.events.PaddingEventHandler
@@ -36,6 +38,8 @@ import computer.obscure.piku.common.ui.components.ProgressBar
 import computer.obscure.piku.common.ui.components.Sprite
 import computer.obscure.piku.common.ui.components.Text
 import computer.obscure.piku.common.ui.events.DestroyEvent
+import computer.obscure.piku.common.ui.events.LineFromEvent
+import computer.obscure.piku.common.ui.events.LineToEvent
 import computer.obscure.piku.common.ui.events.MoveEvent
 import computer.obscure.piku.common.ui.events.OpacityEvent
 import computer.obscure.piku.common.ui.events.PaddingEvent
@@ -71,7 +75,9 @@ object UIRenderer {
             PaddingEvent::class.java to PaddingEventHandler(),
             ProgressEvent::class.java to ProgressEventHandler(),
             SizeEvent::class.java to SizeEventHandler(),
-            ScaleEvent::class.java to ScaleEventHandler()
+            ScaleEvent::class.java to ScaleEventHandler(),
+            LineToEvent::class.java to LineToEventHandler(),
+            LineFromEvent::class.java to LineFromEventHandler()
         ),
         context = UIEventContext(
             currentWindow = { currentWindow },

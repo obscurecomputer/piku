@@ -6,6 +6,7 @@ import computer.obscure.piku.client.scripting.api.ui.components.LuaUIBox
 import computer.obscure.piku.client.scripting.api.ui.components.LuaUIComponent
 import computer.obscure.piku.client.scripting.api.ui.components.LuaUIGradient
 import computer.obscure.piku.client.scripting.api.ui.components.LuaUIGroup
+import computer.obscure.piku.client.scripting.api.ui.components.LuaUILine
 import computer.obscure.piku.client.scripting.api.ui.components.LuaUIProgressBar
 import computer.obscure.piku.client.scripting.api.ui.components.LuaUISprite
 import computer.obscure.piku.client.scripting.api.ui.components.LuaUIText
@@ -14,6 +15,7 @@ import computer.obscure.piku.common.ui.components.Box
 import computer.obscure.piku.common.ui.components.Component
 import computer.obscure.piku.common.ui.components.Gradient
 import computer.obscure.piku.common.ui.components.Group
+import computer.obscure.piku.common.ui.components.Line
 import computer.obscure.piku.common.ui.components.ProgressBar
 import computer.obscure.piku.common.ui.components.Sprite
 import computer.obscure.piku.common.ui.components.Text
@@ -71,6 +73,7 @@ class LuaUI : TwineNative() {
             is Sprite -> LuaUISprite(component)
             is Gradient -> LuaUIGradient(component)
             is ProgressBar -> LuaUIProgressBar(component)
+            is Line -> LuaUILine(component)
             else -> null
         }
 }

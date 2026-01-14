@@ -12,6 +12,8 @@ interface ServerAPI<T> {
 
     fun registerEvents()
 
+    fun sendData(player: T, eventId: String, data: Any)
+
     fun sendScript(player: T, name: String, content: String)
 
     fun sendAllScripts(

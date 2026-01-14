@@ -1,11 +1,16 @@
 
+listen("load_map", function(event)
+    local chunkCount = tonumber(event["chunk_count"])
+    render(chunkCount)
+end)
+
 local ui = game.ui
 
-function render()
+function render(chunkCount)
     local group = ui.group("loading_screen")
 
-    local assetCount = 0
-    local totalAssets = 600
+    local loadedChunkCount = 0
+    local screenUnloaded = false
 
     local box = group.box("background")
         .color(color.rgb(0, 0, 0))
@@ -39,22 +44,26 @@ function render()
         .opacity(0)
 
     local assetCounter = group.text("asset_counter")
-        .text(assetCount .. "/" .. totalAssets)
+        .text(loadedChunkCount .. "/" .. chunkCount)
         .anchor("bottom_center")
         .pos(vec2.of(0, 10))
         .opacity(0)
 
     scheduler
         .task(function(task)
-            if assetCount >= totalAssets then
+            if screenUnloaded then
                 task.cancel()
                 return
             end
-            assetCount = clamp(assetCount + 9, 0, totalAssets)
+            if loadedChunkCount >= chunkCount then
+                task.cancel()
+                return
+            end
+            loadedChunkCount = clamp(loadedChunkCount + 1, 0, chunkCount)
             ui.get("loading_screen").get("asset_counter")
-                .text(assetCount .. "/" .. totalAssets)
+                .text(loadedChunkCount .. "/" .. chunkCount)
         end)
-            .loop(1)
+            .loop(5)
             .run()
 
     box.animate()
@@ -102,6 +111,7 @@ function render()
             scheduler
                 .task(function(task)
                     ui.get("loading_screen").remove()
+                    screenUnloaded = true
                 end)
                 .delay(40)
                 .run()
@@ -109,13 +119,3 @@ function render()
         .delay(70)
         .run()
 end
-
-listen("client.key_update", function(event)
-    if event.key == "y" and event.action == "press" then
-        client.send("<yellow>Began holding Y!")
-        render()
-    end
-    if event.key == "]" and event.action == "press" then
-        ui.get("loading_screen").remove()
-    end
-end)

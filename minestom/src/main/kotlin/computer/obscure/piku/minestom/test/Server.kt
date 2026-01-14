@@ -1,8 +1,10 @@
 package computer.obscure.piku.minestom.test
 
+import computer.obscure.piku.common.scripting.api.LuaEventData
 import me.znotchill.blossom.extensions.addListener
 import me.znotchill.blossom.server.BlossomServer
 import computer.obscure.piku.minestom.scripting.MinestomAPI
+import me.znotchill.blossom.command.command
 import net.minestom.server.entity.GameMode
 import net.minestom.server.event.player.AsyncPlayerConfigurationEvent
 import net.minestom.server.event.player.PlayerLoadedEvent
@@ -33,6 +35,22 @@ class Server : BlossomServer(
                 recurse = true
             )
         }
+
+        registerCommand(
+            command("test") {
+                syntax {
+                    piku.sendData(
+                        this,
+                        "load_map",
+                        LuaEventData(
+                            mapOf(
+                                "chunk_count" to 500
+                            )
+                        )
+                    )
+                }
+            }
+        )
 
         piku.runAllScripts(
             resourceDirectory = "scripts/server",

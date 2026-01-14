@@ -2,7 +2,9 @@ package computer.obscure.piku.client
 
 import computer.obscure.piku.client.events.ClientPlayConnection
 import computer.obscure.piku.client.events.ClientTick
+import computer.obscure.piku.client.packets.clientbound.handlers.ReceiveDataHandler
 import computer.obscure.piku.client.packets.clientbound.handlers.ReceiveScriptHandler
+import computer.obscure.piku.client.packets.clientbound.payloads.ReceiveDataPayload
 import computer.obscure.piku.client.packets.clientbound.payloads.ReceiveScriptPayload
 import computer.obscure.piku.client.packets.serverbound.payloads.SendDataPayload
 import computer.obscure.piku.client.scripting.engine.FabricLuaEngine
@@ -38,6 +40,8 @@ class PikuClient : ClientModInitializer {
 
         PayloadTypeRegistry.playS2C().register(ReceiveScriptPayload.ID, ReceiveScriptPayload.CODEC)
         ReceiveScriptHandler().register()
+        PayloadTypeRegistry.playS2C().register(ReceiveDataPayload.ID, ReceiveDataPayload.CODEC)
+        ReceiveDataHandler().register()
 
         PayloadTypeRegistry.playC2S().register(SendDataPayload.ID, SendDataPayload.CODEC)
 

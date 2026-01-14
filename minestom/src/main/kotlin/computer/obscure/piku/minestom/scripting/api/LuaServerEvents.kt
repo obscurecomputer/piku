@@ -1,6 +1,5 @@
 package computer.obscure.piku.minestom.scripting.api
 
-import computer.obscure.piku.common.scripting.base.Player
 import computer.obscure.piku.minestom.scripting.ServerEventBus
 import org.luaj.vm2.LuaValue
 
@@ -15,7 +14,9 @@ class LuaServerEvents : ServerEventBus {
         listeners[eventId]?.forEach { it(data) }
     }
 
-    override fun send(player: Player, eventId: String, data: LuaValue) {
-        println("Sending $eventId to ${player.uuid}")
-    }
+    override fun send(
+        player: computer.obscure.piku.common.scripting.base.Player,
+        eventId: String,
+        data: LuaValue
+    ) {}
 }

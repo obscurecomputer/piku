@@ -9,8 +9,10 @@ import computer.obscure.piku.common.scripting.api.LuaEventData
 import computer.obscure.piku.common.scripting.server.ServerAPI
 import computer.obscure.piku.common.utils.jsonStringToLua
 import computer.obscure.piku.common.utils.readString
+import computer.obscure.piku.common.utils.toJson
 import computer.obscure.piku.common.utils.writeString
 import computer.obscure.piku.minestom.scripting.api.LuaPlayer
+import computer.obscure.twine.nativex.conversion.Converter.toLuaValue
 import net.minestom.server.entity.Player
 import net.minestom.server.event.player.PlayerLoadedEvent
 import net.minestom.server.event.player.PlayerPluginMessageEvent
@@ -51,6 +53,25 @@ class MinestomAPI(val server: BlossomServer) : ServerAPI<Player> {
                 ).table
             )
         }
+    }
+
+    override fun sendData(player: Player, eventId: String, data: Any) {
+        val serializedData: LuaValue = when (data) {
+            is LuaEventData -> data.table
+            else -> data.toLuaValue()
+        }
+
+        val buf = ByteBufAllocator.DEFAULT.buffer()
+        buf.writeString(eventId)
+        buf.writeString(serializedData.toJson())
+
+        val bytes = ByteArray(buf.readableBytes())
+        buf.readBytes(bytes)
+        buf.release()
+
+        player.sendPacket(
+            PluginMessagePacket("piku:receive_data", bytes)
+        )
     }
 
     override fun getPlayerUD(player: Player): LuaValue {

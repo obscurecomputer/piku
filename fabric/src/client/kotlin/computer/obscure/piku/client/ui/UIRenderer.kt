@@ -24,6 +24,7 @@ import computer.obscure.piku.client.ui.events.SizeEventHandler
 import computer.obscure.piku.client.ui.events.UIEventContext
 import computer.obscure.piku.common.classes.Vec2
 import computer.obscure.piku.common.ui.*
+import computer.obscure.piku.common.ui.classes.DirtyFlag
 import computer.obscure.piku.common.ui.classes.Easing
 import computer.obscure.piku.common.ui.classes.FlowDirection
 import computer.obscure.piku.common.ui.classes.RelativePosition
@@ -127,15 +128,47 @@ object UIRenderer {
             tickAnimations(deltaSeconds)
 
             currentWindow.let { window ->
-                layout(window)
-                window.components.values
-                    .toList()
+                layoutIfNeeded(window)
+
+                window.components.values.toList()
                     .sortedBy { it.props.zIndex }
                     .forEach { component ->
-                        component.draw(context)
+                        drawComponent(context, component)
                     }
             }
         }
+    }
+
+    private fun layoutIfNeeded(window: UIWindow) {
+        window.components.values.forEach { component ->
+            layoutComponentIfDirty(component, window)
+        }
+    }
+
+    private fun layoutComponentIfDirty(
+        component: Component,
+        window: UIWindow,
+        parentScale: Vec2 = Vec2(1.0, 1.0)
+    ) {
+        val props = component.props
+
+        if (!props.isDirty(DirtyFlag.LAYOUT)) {
+            if (component is Group) {
+                component.props.components.forEach {
+                    layoutComponentIfDirty(it, window, component.computedScale)
+                }
+            }
+            return
+        }
+
+        layoutComponent(component, window, parentScale)
+
+        props.clear(DirtyFlag.LAYOUT)
+    }
+
+    private fun drawComponent(context: DrawContext, component: Component) {
+        if (!component.props.visible) return
+        component.draw(context)
     }
 
     /**
@@ -156,13 +189,14 @@ object UIRenderer {
     }
 
     fun <C : Component, T> enqueueAnimation(event: PropertyAnimation<C, T>) {
-        val comp = currentWindow.getComponentByIdDeep(event.targetId)
-        if (comp != null && event.from == null) {
-            @Suppress("UNCHECKED_CAST")
+        val comp = currentWindow.getComponentByIdDeep(event.targetId) ?: return
+        event.target = comp as C
+
+        if (event.from == null) {
             event.from = (event.getter as (Component) -> T)(comp)
         }
-        @Suppress("UNCHECKED_CAST")
-        activeAnimations += event as PropertyAnimation<*, *>
+
+        activeAnimations += event
     }
 
     fun tickAnimations(deltaSeconds: Double) {
@@ -170,7 +204,7 @@ object UIRenderer {
         while (iterator.hasNext()) {
             val anim = iterator.next()
 
-            val comp = currentWindow.getComponentByIdDeep(anim.targetId) ?: continue
+            val comp = anim.target ?: continue
             anim.elapsed += deltaSeconds
 
             val t = (anim.elapsed / anim.durationSeconds).coerceIn(0.0, 1.0)
@@ -264,29 +298,30 @@ object UIRenderer {
                 // additionally, handle multiline strings
                 val renderer = MinecraftClient.getInstance().textRenderer
 
-                val text = TextInterpolator.interpolate(component.props.text)
-                val lines = text.split("\n")
+                val interpolated = TextInterpolator.interpolate(component.props.text)
 
-                // measure widest line and total height
-                val widestLine = lines.maxOfOrNull { renderer.getWidth(it) }?.toFloat() ?: 0f
-                val totalHeight = renderer.fontHeight.toFloat() * lines.size
+                if (component.cachedText != interpolated) {
+                    component.cachedText = interpolated
 
-                // apply text scale
-                val scaledWidth = widestLine * component.props.textScale.x
-                val scaledHeight = totalHeight * component.props.textScale.y
+                    val lines = interpolated.split("\n")
+                    val widestLine = lines.maxOfOrNull { renderer.getWidth(it) }?.toFloat() ?: 0f
+                    val totalHeight = renderer.fontHeight.toFloat() * lines.size
 
-                // add padding
-                val widthWithPadding =
-                    scaledWidth + component.props.padding.left + component.props.padding.right
-                val heightWithPadding =
-                    scaledHeight + component.props.padding.top + component.props.padding.bottom
-
-                component.computedSize = Vec2(widthWithPadding, heightWithPadding)
+                    component.cachedTextSize = Vec2(
+                        widestLine * component.props.textScale.x,
+                        totalHeight * component.props.textScale.y
+                    )
+                }
+                val size = component.cachedTextSize!!
+                component.computedSize = Vec2(
+                    size.x + component.props.padding.left + component.props.padding.right,
+                    size.y + component.props.padding.top + component.props.padding.bottom
+                )
             }
             is Sprite -> {
                 // handle textures early so width and height are accurate
                 // (since the server does not know clientside textures)
-                component.resolveTexture()
+                component.resolveTextureOnce()
             }
             is FlowContainer -> {
                 val props = component.props
@@ -499,6 +534,25 @@ object UIRenderer {
  */
 fun Sprite.resolveTexture() {
     if (props.texturePath != "") {
+        val texture = UIRenderer.getTexture(props.texturePath)
+        texture?.let {
+            computedSize = Vec2(
+                it.image?.width?.toDouble() ?: 0.0,
+                it.image?.height?.toDouble() ?: 0.0
+            )
+        }
+    }
+}
+
+/**
+ * An optimisation to only resolvve the texture if it has not been resolved before
+ * for this component.
+ */
+fun Sprite.resolveTextureOnce() {
+    if (textureResolved) return
+    textureResolved = true
+
+    if (props.texturePath.isNotEmpty()) {
         val texture = UIRenderer.getTexture(props.texturePath)
         texture?.let {
             computedSize = Vec2(

@@ -1,5 +1,6 @@
 package computer.obscure.piku.common.ui.components
 
+import computer.obscure.piku.common.classes.Vec2
 import computer.obscure.piku.common.ui.classes.CompType
 import computer.obscure.piku.common.ui.components.props.TextProps
 import computer.obscure.piku.common.ui.mcWidth
@@ -8,6 +9,9 @@ open class Text(
     override val props: TextProps
 ) : Component() {
     override val compType: CompType = CompType.TEXT
+
+    var cachedTextSize: Vec2? = null
+    var cachedText: String? = null
 
     override fun width(): Double {
         val computed = computedSize?.x ?: 0.0

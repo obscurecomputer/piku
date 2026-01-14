@@ -3,19 +3,25 @@ package computer.obscure.piku.client.ui.components
 import net.minecraft.client.MinecraftClient
 import net.minecraft.client.gui.DrawContext
 import computer.obscure.piku.common.ui.components.Line
+import computer.obscure.piku.common.ui.components.rebuildRuns
 
 class LineRenderer : UIComponent<Line>() {
-    override fun drawContent(component: Line, context: DrawContext, instance: MinecraftClient) {
-        val props = component.props
-        val points = props.from.lineTo(props.to)
 
-        points.forEach { point ->
+    override fun drawContent(component: Line, context: DrawContext, instance: MinecraftClient) {
+        if (component.props.geometryDirty) {
+            component.rebuildRuns()
+        }
+
+        val color = component.props.color.toArgb()
+
+
+        for (run in component.runs) {
             context.fill(
-                point.x.toInt(),
-                point.y.toInt(),
-                (point.x + props.pointSize.x).toInt(),
-                (point.y + props.pointSize.y).toInt(),
-                props.color.toArgb()
+                (run.x),
+                (run.y),
+                (run.x) + run.w,
+                (run.y) + run.h,
+                color
             )
         }
     }

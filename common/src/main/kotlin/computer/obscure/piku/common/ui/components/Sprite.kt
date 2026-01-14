@@ -9,6 +9,8 @@ open class Sprite(
     override val compType: CompType
         get() = CompType.SPRITE
 
+    var textureResolved = false
+
     override fun width(): Double {
         val drawWidth = if (props.size.x > 0)
             props.size.x else (computedSize?.x ?: 0)

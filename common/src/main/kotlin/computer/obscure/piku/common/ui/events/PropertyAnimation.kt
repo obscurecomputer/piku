@@ -13,4 +13,5 @@ data class PropertyAnimation<C : Component, T>(
     val easing: String = "linear"
 ) : UIEvent() {
     var elapsed = 0.0
+    var target: C? = null
 }

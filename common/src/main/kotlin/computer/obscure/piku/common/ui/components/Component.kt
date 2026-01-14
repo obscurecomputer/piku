@@ -30,6 +30,19 @@ sealed class Component {
     var computedScale: Vec2 = Vec2(0.0, 0.0)
     var computedSize: Vec2? = null
     var computedPos: Vec2? = null
+
+    var layoutDirty = true
+    var transformDirty = true
+
+    fun markLayoutDirty() {
+        if (!layoutDirty) {
+            layoutDirty = true
+        }
+    }
+
+    fun markTransformDirty() {
+        transformDirty = true
+    }
 }
 
 fun Component.move(

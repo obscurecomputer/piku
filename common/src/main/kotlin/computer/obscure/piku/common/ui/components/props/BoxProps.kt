@@ -1,12 +1,22 @@
 package computer.obscure.piku.common.ui.components.props
 
-import computer.obscure.piku.common.classes.Vec2
+import computer.obscure.piku.common.ui.classes.DirtyFlag
 import computer.obscure.piku.common.ui.classes.UIColor
 
-open class BoxProps(
-    var color: UIColor = UIColor(255, 255, 255),
+open class BoxProps : BaseProps() {
+    var color: UIColor = UIColor(255, 255, 255)
+        set(value) {
+            if (field != value) {
+                field = value
+                mark(DirtyFlag.VISUAL)
+            }
+        }
+
     var fillScreen: Boolean = false
-) : BaseProps(
-    size = Vec2(0.0, 0.0),
-    pos = Vec2(0.0, 0.0)
-)
+        set(value) {
+            if (field != value) {
+                field = value
+                mark(DirtyFlag.LAYOUT)
+            }
+        }
+}

@@ -262,7 +262,7 @@ object UIRenderer {
     /**
      * Performs a layout pass, resolving every component's position.
      */
-    private fun layout(window: UIWindow) {
+    fun layout(window: UIWindow) {
         val snapshot = window.components.values.toList()
         snapshot.forEach { component ->
             layoutComponent(component, window)
@@ -315,8 +315,8 @@ object UIRenderer {
                     val totalHeight = renderer.fontHeight.toFloat() * lines.size
 
                     component.cachedTextSize = Vec2(
-                        widestLine * component.props.textScale.x,
-                        totalHeight * component.props.textScale.y
+                        widestLine.toDouble(),
+                        totalHeight.toDouble()
                     )
                 }
                 val size = component.cachedTextSize!!

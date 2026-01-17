@@ -24,4 +24,28 @@ public class InGameHudMixin {
             ci.cancel();
         }
     }
+
+    @Inject(
+            method = "renderStatusBars",
+            at = @At("HEAD"),
+            cancellable = true
+    )
+    private void piku$hideStatusBars(
+            DrawContext context, CallbackInfo ci
+    ) {
+        if (Client.hideHotbar) {
+            ci.cancel();
+        }
+    }
+
+    @Inject(
+            method = "renderMainHud",
+            at = @At("HEAD"),
+            cancellable = true
+    )
+    private void piku$skipMainHud(DrawContext context, RenderTickCounter tickCounter, CallbackInfo ci) {
+        if (Client.hideHotbar) {
+            ci.cancel();
+        }
+    }
 }

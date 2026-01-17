@@ -2,9 +2,9 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    kotlin("jvm") version "2.2.20"
+    kotlin("jvm") version "2.3.0"
     id("fabric-loom") version "1.11-SNAPSHOT"
-    kotlin("kapt") version "2.2.20"
+    kotlin("kapt") version "2.3.0"
     id("maven-publish")
     kotlin("plugin.serialization") version "2.2.20"
     id("com.modrinth.minotaur") version "2.+"
@@ -17,7 +17,7 @@ base {
     archivesName.set(project.property("archives_base_name") as String)
 }
 
-val targetJavaVersion = 21
+val targetJavaVersion = 25
 java {
     toolchain.languageVersion = JavaLanguageVersion.of(targetJavaVersion)
     // Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task

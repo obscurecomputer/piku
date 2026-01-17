@@ -22,8 +22,12 @@ import computer.obscure.piku.common.ui.components.Text
 import computer.obscure.piku.common.ui.components.props.CollectionProps
 
 class LuaUI : TwineNative() {
-
     val window = UIRenderer.currentWindow
+
+    @TwineNativeFunction
+    fun layout() {
+        UIRenderer.layout(window)
+    }
 
     @TwineNativeFunction
     fun group(name: String = ""): LuaUIGroup {

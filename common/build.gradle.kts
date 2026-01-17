@@ -2,7 +2,7 @@ import org.gradle.kotlin.dsl.publishing
 
 plugins {
     `maven-publish`
-    kotlin("jvm") version "2.2.20"
+    kotlin("jvm") version "2.3.0"
 }
 
 group = project.property("group")!!
@@ -29,7 +29,7 @@ tasks.test {
     useJUnitPlatform()
 }
 kotlin {
-    jvmToolchain(21)
+    jvmToolchain(25)
 }
 
 

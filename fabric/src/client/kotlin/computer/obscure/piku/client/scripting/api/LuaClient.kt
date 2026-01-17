@@ -108,6 +108,7 @@ class LuaClient : TwineNative("client") {
         get() {
             val player = instance.player ?: return null
             val stack = player.mainHandStack
-            return if (stack.isEmpty) null else LuaItem().setStack(stack)
+            return if (stack.isEmpty) null
+            else LuaItem().setStack(stack)
         }
 }

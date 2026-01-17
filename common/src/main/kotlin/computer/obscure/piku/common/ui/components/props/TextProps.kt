@@ -10,7 +10,7 @@ open class TextProps : BaseProps() {
             if (field != value) {
                 field = value
                 mark(DirtyFlag.LAYOUT)
-                mark(DirtyFlag.VISUAL)
+//                mark(DirtyFlag.VISUAL)
             }
         }
 

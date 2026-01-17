@@ -5,7 +5,7 @@ import computer.obscure.twine.nativex.TwineNative
 import net.minecraft.item.ItemStack
 import net.minecraft.registry.Registries
 
-class LuaItem : TwineNative("item") {
+class LuaItem : TwineNative() {
     lateinit var stack: ItemStack
         private set
 

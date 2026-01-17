@@ -71,7 +71,6 @@ repositories {
     // Loom adds the essential maven repositories to download Minecraft and libraries from automatically.
     // See https://docs.gradle.org/current/userguide/declaring_repositories.html
     // for more information about repositories.
-    maven("https://repo.spongepowered.org/repository/maven-public/")
     maven {
         name = "Terraformers"
         url = uri("https://maven.terraformersmc.com/")
@@ -81,8 +80,6 @@ repositories {
 }
 
 dependencies {
-//    compileOnly("org.spongepowered:mixin:0.8.7")
-//    annotationProcessor("org.spongepowered:mixin:0.8.7:processor")
     // To change the versions see the gradle.properties file
     implementation(project(":common"))
     include(project(":common"))

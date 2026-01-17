@@ -36,7 +36,7 @@ class MinestomAPI(val server: BlossomServer) : ServerAPI<Player> {
 
                     val luaData = jsonStringToLua(data)
 
-                    engine.events.fire(eventId, luaData)
+                    engine.events.fire(eventId, luaData, event.player)
                 }
             }
         }

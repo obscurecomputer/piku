@@ -7,6 +7,7 @@ plugins {
     kotlin("kapt") version "2.2.20"
     id("maven-publish")
     kotlin("plugin.serialization") version "2.2.20"
+    id("com.modrinth.minotaur") version "2.+"
 }
 
 group = project.property("group")!!
@@ -170,9 +171,21 @@ tasks.named<Jar>("sourcesJar") {
 tasks.withType<ProcessResources>().configureEach {
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
-//tasks.named<JavaCompile>("compileClientJava") {
-//    options.annotationProcessorPath = configurations.annotationProcessor.get()
-//}
-//tasks.named<RemapJarTask>("remapJar") {
-//    archiveFileName.set("${project.name}-${project.version}-yarn.jar")
-//}
+
+modrinth {
+    token.set(System.getenv("MODRINTH_TOKEN"))
+    projectId.set("piku")
+    versionNumber.set(project.version.toString())
+    versionType.set(
+        if (project.version.toString().contains("SNAPSHOT") ||
+            project.version.toString().contains("beta")) {
+            "beta"
+        } else {
+            "release"
+        }
+    )
+    uploadFile.set(tasks.jar)
+    gameVersions.addAll("1.21.10")
+    loaders.addAll("fabric")
+    changelog.set(System.getenv("CHANGELOG") ?: "Automated release from CI")
+}

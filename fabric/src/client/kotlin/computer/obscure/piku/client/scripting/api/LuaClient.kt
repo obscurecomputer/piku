@@ -8,6 +8,7 @@ import computer.obscure.twine.annotations.TwineNativeProperty
 import computer.obscure.twine.nativex.TwineNative
 import net.minecraft.client.MinecraftClient
 import net.minecraft.client.option.Perspective
+import net.minecraft.item.ItemStack
 
 class LuaClient : TwineNative("client") {
     val instance: MinecraftClient = MinecraftClient.getInstance()!!
@@ -71,4 +72,42 @@ class LuaClient : TwineNative("client") {
     var hideHUD: Boolean
         get() = Client.hideHUD
         set(value) { Client.hideHUD = value }
+
+    @TwineNativeProperty
+    var selectedSlot: Int
+        get() = instance.player?.inventory?.selectedSlot ?: 0
+        set(value) {
+            instance.player?.inventory?.selectedSlot = value.coerceIn(0, 8)
+        }
+
+    @TwineNativeFunction
+    fun getItem(slot: Int): LuaItem? {
+        val player = instance.player ?: return null
+        val inv = player.inventory
+
+        if (slot !in 0 until inv.size()) return null
+
+        val stack = inv.getStack(slot)
+        if (stack.isEmpty) return null
+
+        return LuaItem().setStack(stack)
+    }
+
+    @TwineNativeFunction
+    fun clearSlot(slot: Int) {
+        val player = instance.player ?: return
+        val inv = player.inventory
+
+        if (slot !in 0 until inv.size()) return
+
+        inv.setStack(slot, ItemStack.EMPTY)
+    }
+
+    @TwineNativeProperty
+    val heldItem: LuaItem?
+        get() {
+            val player = instance.player ?: return null
+            val stack = player.mainHandStack
+            return if (stack.isEmpty) null else LuaItem().setStack(stack)
+        }
 }

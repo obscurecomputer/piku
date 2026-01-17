@@ -14,7 +14,6 @@ class LineRenderer : UIComponent<Line>() {
 
         val color = component.props.color.toArgb()
 
-
         for (run in component.runs) {
             context.fill(
                 (run.x),

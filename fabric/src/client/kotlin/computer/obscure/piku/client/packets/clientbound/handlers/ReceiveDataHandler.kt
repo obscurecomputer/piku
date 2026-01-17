@@ -11,7 +11,7 @@ class ReceiveDataHandler {
             val client = context.client()
             client.execute {
                 try {
-                    println("Received data ${payload.id} with content ${payload.json}")
+//                    println("Received data ${payload.id} with content ${payload.json}")
 
                     PikuClient.engine.events.fire(payload.id, jsonStringToLua(payload.json))
                 } catch (e: Exception) {

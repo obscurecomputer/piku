@@ -6,7 +6,8 @@
   "client": [
     "CameraMixin",
     "HeldItemRendererMixin",
-    "InGameHudMixin"
+    "InGameHudMixin",
+    "MinecraftClientMixin"
   ],
   "injectors": {
     "defaultRequire": 1

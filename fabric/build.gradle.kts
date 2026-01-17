@@ -85,6 +85,7 @@ dependencies {
 //    annotationProcessor("org.spongepowered:mixin:0.8.7:processor")
     // To change the versions see the gradle.properties file
     implementation(project(":common"))
+    include(project(":common"))
     minecraft("com.mojang:minecraft:${project.property("minecraft_version")}")
     mappings("net.fabricmc:yarn:${project.property("yarn_mappings")}:v2")
     modImplementation("net.fabricmc:fabric-loader:${project.property("loader_version")}")
@@ -94,7 +95,9 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.9.0")
     modImplementation("com.terraformersmc:modmenu:${project.property("modmenu_version")}")
     implementation("org.luaj:luaj-jse:${project.property("luaj_version")}")
+    include("org.luaj:luaj-jse:${project.property("luaj_version")}")
     implementation("computer.obscure:twine:${project.property("twine_version")}")
+    include("computer.obscure:twine:${project.property("twine_version")}")
 }
 
 tasks.processResources {
@@ -143,15 +146,24 @@ publishing {
         create<MavenPublication>("mavenJava") {
             artifactId = project.property("archives_base_name") as String
             from(components["java"])
+
+            group
+            artifactId = "fabric"
+            version
         }
     }
 
-    // See https://docs.gradle.org/current/userguide/publishing_maven.html for information on how to set up publishing.
     repositories {
-        // Add repositories to publish to here.
-        // Notice: This block does NOT have the same function as the block in the top level.
-        // The repositories here will be used for publishing your artifact, not for
-        // retrieving dependencies.
+        maven {
+            name = "obscurerepo"
+            url = uri("https://repo.obscure.computer/repository/maven-releases/")
+            credentials {
+                username = findProperty("obscureUsername") as String? ?: System.getenv("OBSCURE_MAVEN_USER")
+                password = findProperty("obscurePassword") as String? ?: System.getenv("OBSCURE_MAVEN_PASS")
+            }
+        }
+
+        mavenLocal()
     }
 }
 

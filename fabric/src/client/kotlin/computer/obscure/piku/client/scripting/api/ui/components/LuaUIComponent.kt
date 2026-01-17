@@ -70,8 +70,8 @@ open class LuaUIComponent(open val component: Component) : TwineNative() {
     @TwineNativeFunction
     fun padding(value: LuaSpacingInstance): LuaUIComponent {
         component.props.padding = value.toSpacing()
-        println(value.toSpacing())
-        println(component.props.padding)
+//        println(value.toSpacing())
+//        println(component.props.padding)
         return this
     }
 

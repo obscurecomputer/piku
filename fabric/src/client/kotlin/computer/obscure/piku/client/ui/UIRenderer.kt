@@ -114,6 +114,13 @@ object UIRenderer {
 //        activeAnimations = mutableListOf()
 //    }
 
+    fun onWindowResized() {
+        // not the most efficient method, but it works and fixes
+        // ui components not re-laying out when the window is resized
+        val window = currentWindow
+        layout(window)
+    }
+
     fun register() {
         ClientTickEvents.END_CLIENT_TICK.register {
             handleUpdateRender()

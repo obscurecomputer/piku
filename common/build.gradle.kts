@@ -1,4 +1,7 @@
+import org.gradle.kotlin.dsl.publishing
+
 plugins {
+    `maven-publish`
     kotlin("jvm") version "2.2.20"
 }
 
@@ -27,4 +30,30 @@ tasks.test {
 }
 kotlin {
     jvmToolchain(21)
+}
+
+
+publishing {
+    publications {
+        create<MavenPublication>("mavenJava") {
+            from(components["java"])
+
+            group
+            artifactId = "common"
+            version
+        }
+    }
+
+    repositories {
+        maven {
+            name = "obscurerepo"
+            url = uri("https://repo.obscure.computer/repository/maven-releases/")
+            credentials {
+                username = findProperty("obscureUsername") as String? ?: System.getenv("OBSCURE_MAVEN_USER")
+                password = findProperty("obscurePassword") as String? ?: System.getenv("OBSCURE_MAVEN_PASS")
+            }
+        }
+
+        mavenLocal()
+    }
 }

@@ -1,5 +1,6 @@
 package computer.obscure.piku.minestom.test
 
+import computer.obscure.piku.common.classes.ScriptSource
 import computer.obscure.piku.common.scripting.api.LuaEventData
 import me.znotchill.blossom.extensions.addListener
 import me.znotchill.blossom.server.BlossomServer
@@ -40,7 +41,7 @@ class Server : BlossomServer(
         eventHandler.addListener<PlayerLoadedEvent> { event ->
             piku.sendAllScripts(
                 player = event.player,
-                resourceDirectory = "scripts/client",
+                source = ScriptSource.Resource(path = "scripts/client"),
                 recurse = true
             )
 
@@ -106,9 +107,8 @@ class Server : BlossomServer(
         }
 
 
-
         piku.runAllScripts(
-            resourceDirectory = "scripts/server",
+            source = ScriptSource.Resource("scripts/server"),
             recurse = true
         )
     }

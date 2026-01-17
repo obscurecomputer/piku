@@ -10,7 +10,7 @@ class ReceiveScriptHandler {
             val client = context.client()
             client.execute {
                 try {
-                    println("Received script ${payload.name} from the server!")
+//                    println("Received script ${payload.name} from the server!")
                     PikuClient.engine.runScript(payload.name, payload.fileContents)
                 } catch (e: Exception) {
                     e.printStackTrace()

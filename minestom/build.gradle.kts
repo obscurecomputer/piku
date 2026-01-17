@@ -5,7 +5,7 @@ plugins {
 }
 
 group = project.property("group")!!
-version = project.property("minestom_version")!!
+version = project.property("minestom_api_version")!!
 
 repositories {
     mavenLocal()
@@ -47,4 +47,31 @@ kotlin {
 java {
     withSourcesJar()
     withJavadocJar()
+}
+
+
+
+publishing {
+    publications {
+        create<MavenPublication>("mavenJava") {
+            from(components["java"])
+
+            group
+            artifactId = "minestom"
+            version
+        }
+    }
+
+    repositories {
+        maven {
+            name = "obscurerepo"
+            url = uri("https://repo.obscure.computer/repository/maven-releases/")
+            credentials {
+                username = findProperty("obscureUsername") as String? ?: System.getenv("OBSCURE_MAVEN_USER")
+                password = findProperty("obscurePassword") as String? ?: System.getenv("OBSCURE_MAVEN_PASS")
+            }
+        }
+
+        mavenLocal()
+    }
 }

@@ -7,3 +7,22 @@
 Client & Server scripting mod for Fabric and Minestom. 
 
 More info on [docs.obscure.computer](https://docs.obscure.computer/projects/piku/).
+
+# To-do List / Roadmap
+Tasks labeled here may not be worked on in chronological order.
+
+- [x] Input Handling
+- [ ] Finish UI system
+  - [ ] Use GPU based rendering
+- [ ] Error handling & debugging
+  - [ ] `log.info`, `warn`, `error`
+- [x] Time system/scheduler
+- [ ] Camera System
+  - [x] Movement/rotation + easing
+  - [ ] All 3 axes of rotation
+- [ ] World Interaction
+  - [ ] Raycasts
+  - [ ] Querying blocks/entities on the client
+- [ ] Shared states
+- [ ] Particle System (GPU based)
+- [ ] Write docs

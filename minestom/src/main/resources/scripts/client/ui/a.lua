@@ -3,6 +3,7 @@ local ui = game.ui
 local looptimes = 0
 
 listen("client.key_update", function(event)
+    log.info("hi")
     if event.key == "y" and event.action == "press" then
         local group = ui.group("line_test")
 

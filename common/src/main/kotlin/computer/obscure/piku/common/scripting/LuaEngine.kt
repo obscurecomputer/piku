@@ -1,6 +1,7 @@
 package computer.obscure.piku.common.scripting
 
 import computer.obscure.piku.common.scripting.api.LuaColor
+import computer.obscure.piku.common.scripting.api.LuaLogger
 import computer.obscure.piku.common.scripting.api.LuaMath
 import computer.obscure.piku.common.scripting.api.LuaScheduler
 import computer.obscure.piku.common.scripting.api.LuaSpacing
@@ -76,6 +77,10 @@ abstract class LuaEngine {
 
     fun runScript(name: String, content: String) {
         val result = engine.runSafe(name, content)
+
+        // Allocate a new LuaLogger to this script
+        register(LuaLogger(content))
+
         if (result.isFailure) {
             throw LuaError(result.exceptionOrNull())
         }

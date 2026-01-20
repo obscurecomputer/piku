@@ -2,6 +2,7 @@ package computer.obscure.piku.client.scripting.api.ui.components
 
 import computer.obscure.piku.common.scripting.api.LuaColor
 import computer.obscure.piku.common.scripting.api.LuaColorInstance
+import computer.obscure.piku.common.ui.classes.FillDirection
 import computer.obscure.piku.common.ui.classes.UIColor
 import computer.obscure.piku.common.ui.components.ProgressBar
 import computer.obscure.twine.annotations.TwineNativeFunction
@@ -46,6 +47,21 @@ class LuaUIProgressBar (
     @TwineNativeFunction
     fun emptyColor(value: LuaColorInstance): LuaUIProgressBar {
         component.props.emptyColor = value.toUIColor()
+        return this
+    }
+
+    @TwineNativeFunction
+    fun fillDirection(value: String): LuaUIProgressBar {
+        component.props.fillDirection = when (value) {
+            "top" -> FillDirection.TOP
+            "left" -> FillDirection.LEFT
+            "bottom" -> FillDirection.BOTTOM
+            "right" -> FillDirection.RIGHT
+
+            "down" -> FillDirection.TOP
+            "up" -> FillDirection.BOTTOM
+            else -> FillDirection.RIGHT
+        }
         return this
     }
 }

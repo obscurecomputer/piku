@@ -29,4 +29,12 @@ open class ProgressBarProps : BaseProps() {
                 mark(DirtyFlag.VISUAL)
             }
         }
+
+    var fillDirection: FillDirection? = null
+        set(value) {
+            if (field != value) {
+                field = value
+                mark(DirtyFlag.VISUAL)
+            }
+        }
 }

@@ -1,6 +1,7 @@
 package computer.obscure.piku.client.scripting.api.ui.components
 
 import computer.obscure.piku.client.scripting.api.ui.LuaUIAnimation
+import computer.obscure.piku.client.ui.UIRenderer
 import computer.obscure.piku.common.scripting.api.LuaSpacing
 import computer.obscure.piku.common.scripting.api.LuaSpacingInstance
 import computer.obscure.twine.annotations.TwineNativeFunction
@@ -137,6 +138,12 @@ open class LuaUIComponent(open val component: Component) : TwineNative() {
     @TwineNativeFunction
     fun animate(): LuaUIAnimation {
         return LuaUIAnimation(this.component)
+    }
+
+    @TwineNativeFunction
+    fun cancelAnimations() {
+        UIEventQueue.clear()
+        UIRenderer.cancelAnimations()
     }
 
     @TwineNativeFunction

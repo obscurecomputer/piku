@@ -11,6 +11,11 @@ object UIEventQueue {
         tasks += ScheduledTask(tick + delay, block)
     }
 
+    fun clear() {
+        tasks.clear()
+        readyEvents.clear()
+    }
+
     fun enqueueNow(event: UIEvent) {
         println("Enqueuing $event")
         readyEvents += event

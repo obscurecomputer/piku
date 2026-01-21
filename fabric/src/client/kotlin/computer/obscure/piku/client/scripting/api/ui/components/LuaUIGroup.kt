@@ -1,86 +1,19 @@
 package computer.obscure.piku.client.scripting.api.ui.components
 
-import computer.obscure.twine.annotations.TwineNativeFunction
 import computer.obscure.piku.client.scripting.api.ui.LuaUI
-import computer.obscure.piku.common.ui.components.Box
-import computer.obscure.piku.common.ui.components.Gradient
 import computer.obscure.piku.common.ui.components.Group
-import computer.obscure.piku.common.ui.components.Line
-import computer.obscure.piku.common.ui.components.ProgressBar
-import computer.obscure.piku.common.ui.components.Sprite
-import computer.obscure.piku.common.ui.components.Text
-import computer.obscure.piku.common.ui.components.props.BoxProps
-import computer.obscure.piku.common.ui.components.props.CollectionProps
-import computer.obscure.piku.common.ui.components.props.GradientProps
-import computer.obscure.piku.common.ui.components.props.LineProps
-import computer.obscure.piku.common.ui.components.props.ProgressBarProps
-import computer.obscure.piku.common.ui.components.props.SpriteProps
-import computer.obscure.piku.common.ui.components.props.TextProps
+import computer.obscure.twine.annotations.TwineNativeFunction
 
 class LuaUIGroup(
-    val ui: LuaUI,
-    val group: Group
-) : LuaUIComponent(
-    group
-) {
+    override val component: Group
+) : AllComponentBuilder(component) {
     @TwineNativeFunction("get")
     fun getById(name: String): LuaUIComponent? {
-        return ui.smartGet(group.props.components, name)
+        return LuaUI.smartGet(component.props.components, name)
     }
 
-    @TwineNativeFunction
-    fun group(name: String): LuaUIGroup {
-        val component = Group(CollectionProps())
-        component.name = name
-        group.props.components.add(component)
-        return LuaUIGroup(ui, component)
-    }
-
-    @TwineNativeFunction
-    fun text(name: String): LuaUIText {
-        val component = Text(TextProps())
-        component.name = name
-        group.props.components.add(component)
-        return LuaUIText(component)
-    }
-
-    @TwineNativeFunction
-    fun box(name: String): LuaUIBox {
-        val component = Box(BoxProps())
-        component.name = name
-        group.props.components.add(component)
-        return LuaUIBox(component)
-    }
-
-    @TwineNativeFunction
-    fun sprite(name: String): LuaUISprite {
-        val component = Sprite(SpriteProps())
-        component.name = name
-        group.props.components.add(component)
-        return LuaUISprite(component)
-    }
-
-    @TwineNativeFunction
-    fun gradient(name: String): LuaUIGradient {
-        val component = Gradient(GradientProps())
-        component.name = name
-        group.props.components.add(component)
-        return LuaUIGradient(component)
-    }
-
-    @TwineNativeFunction
-    fun progressBar(name: String): LuaUIProgressBar {
-        val component = ProgressBar(ProgressBarProps())
-        component.name = name
-        group.props.components.add(component)
-        return LuaUIProgressBar(component)
-    }
-
-    @TwineNativeFunction
-    fun line(name: String): LuaUILine {
-        val component = Line(LineProps())
-        component.name = name
-        group.props.components.add(component)
-        return LuaUILine(component)
+    @TwineNativeFunction("exists")
+    fun exists(name: String): Boolean {
+        return LuaUI.smartGet(component.props.components, name) != null
     }
 }

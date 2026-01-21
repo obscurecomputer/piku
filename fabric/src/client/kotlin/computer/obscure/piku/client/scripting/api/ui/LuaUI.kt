@@ -38,7 +38,7 @@ class LuaUI : TwineNative() {
         window.add(component)
 
         return LuaUIGroup(
-            this, component
+            component
         )
     }
 
@@ -53,31 +53,38 @@ class LuaUI : TwineNative() {
         return smartGet(window.components.values, name)
     }
 
-    fun smartGet(components: Collection<Component>, name: String): LuaUIComponent? {
-        for (component in components) {
-            if (component.name == name) {
-                return wrap(component)
-            }
-
-            // recurse
-            if (component is Group) {
-                smartGet(component.props.components, name)?.let {
-                    return it
-                }
-            }
-        }
-        return null
+    @TwineNativeFunction("exists")
+    fun exists(name: String): Boolean {
+        return smartGet(window.components.values, name) != null
     }
 
-    private fun wrap(component: Component): LuaUIComponent? =
-        when (component) {
-            is Text -> LuaUIText(component)
-            is Group -> LuaUIGroup(this, component)
-            is Box -> LuaUIBox(component)
-            is Sprite -> LuaUISprite(component)
-            is Gradient -> LuaUIGradient(component)
-            is ProgressBar -> LuaUIProgressBar(component)
-            is Line -> LuaUILine(component)
-            else -> null
+    companion object {
+        fun smartGet(components: Collection<Component>, name: String): LuaUIComponent? {
+            for (component in components) {
+                if (component.name == name) {
+                    return wrap(component)
+                }
+
+                // recurse
+                if (component is Group) {
+                    smartGet(component.props.components, name)?.let {
+                        return it
+                    }
+                }
+            }
+            return null
         }
+
+        fun wrap(component: Component): LuaUIComponent? =
+            when (component) {
+                is Text -> LuaUIText(component)
+                is Group -> LuaUIGroup(component)
+                is Box -> LuaUIBox(component)
+                is Sprite -> LuaUISprite(component)
+                is Gradient -> LuaUIGradient(component)
+                is ProgressBar -> LuaUIProgressBar(component)
+                is Line -> LuaUILine(component)
+                else -> null
+            }
+    }
 }

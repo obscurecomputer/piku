@@ -6,8 +6,16 @@ import computer.obscure.piku.common.ui.classes.BorderRules
 import computer.obscure.piku.common.ui.classes.DirtyFlag
 import computer.obscure.piku.common.ui.classes.DirtyProps
 import computer.obscure.piku.common.ui.classes.Spacing
+import computer.obscure.piku.common.ui.components.Component
 
 open class BaseProps : DirtyProps() {
+
+    var components: MutableList<Component> = mutableListOf()
+        set(value) {
+            field = value
+            mark(DirtyFlag.LAYOUT)
+        }
+
     var pos: Vec2 = Vec2(0.0, 0.0)
         set(value) {
             if (field != value) {

@@ -59,7 +59,6 @@ import net.minecraft.resource.Resource
 import net.minecraft.util.Identifier
 import org.joml.Matrix3x2f
 import java.io.IOException
-import kotlin.time.toDuration
 import kotlin.to
 
 object UIRenderer {
@@ -103,6 +102,10 @@ object UIRenderer {
         activeAnimations.clear()
         registeredEasings.clear()
         currentWindow.components.clear()
+    }
+
+    fun cancelAnimations() {
+        activeAnimations.clear()
     }
 
     fun registerEasing(easing: LuaEasingInstance) {

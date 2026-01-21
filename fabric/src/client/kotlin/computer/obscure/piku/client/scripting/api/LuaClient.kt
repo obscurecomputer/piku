@@ -2,6 +2,7 @@ package computer.obscure.piku.client.scripting.api
 
 import computer.obscure.piku.client.Client
 import computer.obscure.piku.client.utils.parseMini
+import computer.obscure.piku.common.scripting.api.LuaVec2Instance
 import computer.obscure.piku.common.scripting.api.LuaVec3Instance
 import computer.obscure.twine.annotations.TwineNativeFunction
 import computer.obscure.twine.annotations.TwineNativeProperty
@@ -110,5 +111,13 @@ class LuaClient : TwineNative("client") {
             val stack = player.mainHandStack
             return if (stack.isEmpty) null
             else LuaItem().setStack(stack)
+        }
+
+    @TwineNativeProperty
+    val windowSize: LuaVec2Instance
+        get() {
+            val x = instance.window.width.toDouble()
+            val y = instance.window.height.toDouble()
+            return LuaVec2Instance(x, y)
         }
 }

@@ -10,6 +10,7 @@ import computer.obscure.piku.common.ui.components.ProgressBar
 import computer.obscure.piku.common.ui.components.Sprite
 import computer.obscure.piku.common.ui.components.Text
 import computer.obscure.piku.common.ui.components.props.BoxProps
+import computer.obscure.piku.common.ui.components.props.CollectionProps
 import computer.obscure.piku.common.ui.components.props.GradientProps
 import computer.obscure.piku.common.ui.components.props.LineProps
 import computer.obscure.piku.common.ui.components.props.ProgressBarProps
@@ -25,6 +26,14 @@ class LuaUIGroup(
     @TwineNativeFunction("get")
     fun getById(name: String): LuaUIComponent? {
         return ui.smartGet(group.props.components, name)
+    }
+
+    @TwineNativeFunction
+    fun group(name: String): LuaUIGroup {
+        val component = Group(CollectionProps())
+        component.name = name
+        group.props.components.add(component)
+        return LuaUIGroup(ui, component)
     }
 
     @TwineNativeFunction

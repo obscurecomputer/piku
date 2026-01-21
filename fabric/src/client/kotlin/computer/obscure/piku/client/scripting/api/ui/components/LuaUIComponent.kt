@@ -129,6 +129,12 @@ open class LuaUIComponent(open val component: Component) : TwineNative() {
     }
 
     @TwineNativeFunction
+    fun relative(otherId: String): LuaUIComponent {
+        component.relativeTo = otherId
+        return this
+    }
+
+    @TwineNativeFunction
     fun animate(): LuaUIAnimation {
         return LuaUIAnimation(this.component)
     }

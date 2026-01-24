@@ -14,7 +14,7 @@ object Client {
     @JvmField
     var targetFov: Float = -1f
     @JvmField
-    var currentFov: Float = MinecraftClient.getInstance().options.fov.value.toFloat()
+    var currentFov: Float = MinecraftClient.getInstance()?.options?.fov?.value?.toFloat() ?: 0f
     @JvmField
     var lockFov: Boolean = false
     @JvmField

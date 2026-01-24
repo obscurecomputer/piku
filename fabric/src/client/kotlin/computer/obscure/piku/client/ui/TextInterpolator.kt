@@ -1,5 +1,7 @@
 package computer.obscure.piku.client.ui
 
+import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.TextReplacementConfig
 import net.minecraft.client.MinecraftClient
 
 
@@ -252,4 +254,34 @@ object TextInterpolator {
         return output
     }
 
+
+
+    fun interpolate(component: Component): Component {
+        val regex = Regex("\\{([A-Z_]+)(?::R(\\d+))?}")
+
+        return component.replaceText(
+            TextReplacementConfig.builder()
+                .match(regex.toPattern())
+                .replacement { match, _ ->
+                    val key = match.group(1)
+                    val rounding = match.group(2)
+
+                    val provider = providers[key] ?: return@replacement Component.text(match.group())
+
+                    val value = provider()
+
+                    val finalValue =
+                        if (rounding != null) {
+                            val digits = rounding
+                            val number = value.toDoubleOrNull()
+                            if (digits != null && number != null)
+                                "%.${digits}f".format(number)
+                            else value
+                        } else value
+
+                    Component.text(finalValue)
+                }
+                .build()
+        )
+    }
 }

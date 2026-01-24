@@ -308,7 +308,7 @@ object UIRenderer {
                 // additionally, handle multiline strings
                 val renderer = MinecraftClient.getInstance().textRenderer
 
-                val interpolated = TextInterpolator.interpolate(component.props.text)
+                val interpolated = TextInterpolator.interpolate(component.props.rawText)
 
                 if (component.cachedText != interpolated) {
                     component.cachedText = interpolated

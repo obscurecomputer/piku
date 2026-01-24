@@ -12,12 +12,12 @@ import net.minecraft.client.option.Perspective
 import net.minecraft.item.ItemStack
 
 class LuaClient : TwineNative("client") {
-    val instance: MinecraftClient = MinecraftClient.getInstance()!!
+    val instance: MinecraftClient? = MinecraftClient.getInstance()
 
     @TwineNativeProperty
     val pos: LuaVec3Instance
         get() {
-            val p = instance.player
+            val p = instance?.player
                 ?: return LuaVec3Instance(0.0, 0.0, 0.0)
 
             return LuaVec3Instance(p.x, p.y, p.z)
@@ -26,7 +26,7 @@ class LuaClient : TwineNative("client") {
     @TwineNativeProperty
     val headPos: LuaVec3Instance
         get() {
-            val p = instance.player
+            val p = instance?.player
                 ?: return LuaVec3Instance(0.0, 0.0, 0.0)
 
             val v = p.getCameraPosVec(1.0f)
@@ -36,7 +36,7 @@ class LuaClient : TwineNative("client") {
     @TwineNativeProperty
     val headRot: LuaVec3Instance
         get() {
-            val p = instance.player
+            val p = instance?.player
                 ?: return LuaVec3Instance(0.0, 0.0, 0.0)
 
             return LuaVec3Instance(p.pitch.toDouble(), p.yaw.toDouble(), 0.0)
@@ -44,19 +44,19 @@ class LuaClient : TwineNative("client") {
 
     @TwineNativeFunction
     fun sendActionbar(message: String) {
-        instance.player?.sendMessage(parseMini(message), true)
+        instance?.player?.sendMessage(parseMini(message), true)
     }
 
     @TwineNativeFunction
     fun send(message: String) {
-        instance.player?.sendMessage(parseMini(message), false)
+        instance?.player?.sendMessage(parseMini(message), false)
     }
 
     @TwineNativeFunction
     fun setPerspective(perspective: String) {
         val enum = Perspective.valueOf(perspective)
 
-        instance.options.perspective = enum
+        instance?.options?.perspective = enum
     }
 
     @TwineNativeProperty
@@ -76,14 +76,14 @@ class LuaClient : TwineNative("client") {
 
     @TwineNativeProperty
     var selectedSlot: Int
-        get() = instance.player?.inventory?.selectedSlot ?: 0
+        get() = instance?.player?.inventory?.selectedSlot ?: 0
         set(value) {
-            instance.player?.inventory?.selectedSlot = value.coerceIn(0, 8)
+            instance?.player?.inventory?.selectedSlot = value.coerceIn(0, 8)
         }
 
     @TwineNativeFunction
     fun getItem(slot: Int): LuaItem? {
-        val player = instance.player ?: return null
+        val player = instance?.player ?: return null
         val inv = player.inventory
 
         if (slot !in 0 until inv.size()) return null
@@ -96,7 +96,7 @@ class LuaClient : TwineNative("client") {
 
     @TwineNativeFunction
     fun clearSlot(slot: Int) {
-        val player = instance.player ?: return
+        val player = instance?.player ?: return
         val inv = player.inventory
 
         if (slot !in 0 until inv.size()) return
@@ -107,7 +107,7 @@ class LuaClient : TwineNative("client") {
     @TwineNativeProperty
     val heldItem: LuaItem?
         get() {
-            val player = instance.player ?: return null
+            val player = instance?.player ?: return null
             val stack = player.mainHandStack
             return if (stack.isEmpty) null
             else LuaItem().setStack(stack)
@@ -116,8 +116,14 @@ class LuaClient : TwineNative("client") {
     @TwineNativeProperty
     val windowSize: LuaVec2Instance
         get() {
-            val x = instance.window.width.toDouble()
-            val y = instance.window.height.toDouble()
+            val x = instance?.window?.width?.toDouble() ?: 0.0
+            val y = instance?.window?.height?.toDouble() ?: 0.0
             return LuaVec2Instance(x, y)
+        }
+
+    @TwineNativeProperty
+    val fps: Int
+        get() {
+            return instance?.currentFps ?: 0
         }
 }

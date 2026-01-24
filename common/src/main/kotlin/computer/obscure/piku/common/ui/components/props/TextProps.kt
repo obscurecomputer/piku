@@ -3,16 +3,22 @@ package computer.obscure.piku.common.ui.components.props
 import computer.obscure.piku.common.classes.Vec2
 import computer.obscure.piku.common.ui.classes.DirtyFlag
 import computer.obscure.piku.common.ui.classes.UIColor
+import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer
 
 open class TextProps : BaseProps() {
-    var text: String = ""
+    var text: Component = Component.empty()
         set(value) {
-            if (field != value) {
+            if (field !== value) {
+                println("Setting text value to ${value}")
                 field = value
+                rawText = PlainTextComponentSerializer.plainText().serialize(value)
                 mark(DirtyFlag.LAYOUT)
-//                mark(DirtyFlag.VISUAL)
             }
         }
+
+    var rawText: String = ""
+        private set
 
     var color: UIColor = UIColor(255, 255, 255)
         set(value) {

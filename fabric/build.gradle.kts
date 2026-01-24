@@ -96,6 +96,9 @@ dependencies {
     include("org.luaj:luaj-jse:${project.property("luaj_version")}")
     implementation("computer.obscure:twine:${project.property("twine_version")}")
     include("computer.obscure:twine:${project.property("twine_version")}")
+    implementation("net.kyori:adventure-text-minimessage:${project.property("adventure_version")}")
+    implementation("net.kyori:adventure-api:${project.property("adventure_version")}")
+    modImplementation(include("net.kyori:adventure-platform-fabric:6.7.0")!!)
 }
 
 tasks.processResources {

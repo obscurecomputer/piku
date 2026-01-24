@@ -2,6 +2,7 @@ package computer.obscure.piku.client.ui.components
 
 import computer.obscure.piku.client.ui.TextInterpolator
 import computer.obscure.piku.common.ui.components.Text
+import net.kyori.adventure.platform.modcommon.MinecraftClientAudiences
 import net.minecraft.client.MinecraftClient
 import net.minecraft.client.gui.DrawContext
 
@@ -14,12 +15,15 @@ class TextRenderer : UIComponent<Text>() {
         val y = props.pos.y
 
         // interpolate dynamic variables & split into lines
-        val text = TextInterpolator.interpolate(props.text)
-        val lines = text.split("\n")
+//        val interpolated = TextInterpolator.interpolate(props.text)
+        val mcText = MinecraftClientAudiences
+            .of()
+            .asNative(props.text)
 
-        // measure and get widest line
-        val textWidth = lines.maxOfOrNull { renderer.getWidth(it) }?.toFloat() ?: 0f
-        val textHeight = (renderer.fontHeight * lines.size).toFloat()
+
+        // measure and get the widest line
+        val textWidth = renderer.getWidth(mcText).toFloat()
+        val textHeight = renderer.fontHeight.toFloat()
 
         val scaleX = props.textScale.x
         val scaleY = props.textScale.y
@@ -56,10 +60,14 @@ class TextRenderer : UIComponent<Text>() {
                 a = (props.color.a * props.opacity).coerceIn(0f, 255f).toInt()
             ).toArgb()
 
-        for (line in lines) {
-            context.drawText(renderer, line, 0, 0, color, props.shadow)
-            context.matrices.translate(0f, renderer.fontHeight.toFloat())
-        }
+        context.drawText(
+            renderer,
+            mcText,
+            0,
+            0,
+            0xFFFFFFFF.toInt(),
+            props.shadow
+        )
 
         context.matrices.popMatrix()
     }

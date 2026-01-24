@@ -7,6 +7,7 @@ import computer.obscure.piku.common.scripting.api.LuaScheduler
 import computer.obscure.piku.common.scripting.api.LuaSpacing
 import computer.obscure.piku.common.scripting.api.LuaVec2
 import computer.obscure.piku.common.scripting.api.LuaVec3
+import computer.obscure.piku.common.scripting.api.LuaText
 import computer.obscure.twine.TwineTable
 import computer.obscure.twine.nativex.TwineEngine
 import computer.obscure.twine.nativex.TwineNative
@@ -15,6 +16,7 @@ import org.luaj.vm2.LuaError
 import org.luaj.vm2.compiler.LuaC
 import org.luaj.vm2.lib.Bit32Lib
 import org.luaj.vm2.lib.CoroutineLib
+import org.luaj.vm2.lib.MathLib
 import org.luaj.vm2.lib.PackageLib
 import org.luaj.vm2.lib.TableLib
 import org.luaj.vm2.lib.jse.JseBaseLib
@@ -43,6 +45,7 @@ abstract class LuaEngine {
         engine.load(CoroutineLib())
         engine.load(JseMathLib())
         engine.load(LuajavaLib())
+        engine.load(MathLib())
 
         LoadState.install(engine.globals)
         LuaC.install(engine.globals)
@@ -63,6 +66,7 @@ abstract class LuaEngine {
         register(LuaSpacing())
         register(LuaScheduler())
         registerBase(LuaMath())
+        register(LuaText())
     }
 
     fun register(table: TwineTable) {

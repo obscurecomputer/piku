@@ -17,7 +17,7 @@ open class Text(
         val computed = computedSize?.x ?: 0.0
         if (computed > 0.0) return computed
 
-        val lines = props.text.split("\n")
+        val lines = props.rawText.split("\n")
         val widest = lines.maxOfOrNull { it.mcWidth() } ?: 0
         val baseWidth = widest + props.padding.left + props.padding.right
         return (baseWidth * props.scale.x)
@@ -27,7 +27,7 @@ open class Text(
         val computed = computedSize?.y ?: 0.0
         if (computed > 0.0) return computed
 
-        val lineCount = props.text.count { it == '\n' } + 1
+        val lineCount = props.rawText.count { it == '\n' } + 1
         val baseHeight = (7 * lineCount) + props.padding.top + props.padding.bottom
         return (baseHeight * props.scale.y)
     }

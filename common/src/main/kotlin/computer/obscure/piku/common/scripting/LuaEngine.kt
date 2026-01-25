@@ -5,6 +5,7 @@ import computer.obscure.piku.common.scripting.api.LuaLogger
 import computer.obscure.piku.common.scripting.api.LuaMath
 import computer.obscure.piku.common.scripting.api.LuaScheduler
 import computer.obscure.piku.common.scripting.api.LuaSpacing
+import computer.obscure.piku.common.scripting.api.LuaText
 import computer.obscure.piku.common.scripting.api.LuaVec2
 import computer.obscure.piku.common.scripting.api.LuaVec3
 import computer.obscure.twine.TwineTable
@@ -63,6 +64,7 @@ abstract class LuaEngine {
         register(LuaSpacing())
         register(LuaScheduler())
         registerBase(LuaMath())
+        register(LuaText())
     }
 
     fun register(table: TwineTable) {

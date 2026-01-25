@@ -4,6 +4,7 @@ import computer.obscure.twine.annotations.TwineNativeFunction
 import computer.obscure.twine.annotations.TwineNativeProperty
 import computer.obscure.twine.nativex.TwineNative
 import computer.obscure.piku.common.ui.classes.UIColor
+import net.kyori.adventure.text.format.ShadowColor
 
 class LuaColor : TwineNative("color") {
     @TwineNativeFunction
@@ -17,13 +18,23 @@ class LuaColor : TwineNative("color") {
                 uiColor.r, uiColor.g, uiColor.b
             )
         }
+
+        fun fromShadowColor(shadowColor: ShadowColor): LuaColorInstance {
+            return LuaColorInstance(
+                shadowColor.red(),
+                shadowColor.green(),
+                shadowColor.blue(),
+                shadowColor.alpha()
+            )
+        }
     }
 }
 
 class LuaColorInstance(
     var r: Int,
     var g: Int,
-    var b: Int
+    var b: Int,
+    var a: Int = 255
 ) : TwineNative() {
     @TwineNativeProperty("r")
     var red: Int
@@ -40,10 +51,17 @@ class LuaColorInstance(
         get() = b
         set(value) { b = value }
 
-    fun toUIColor(): UIColor = UIColor(r, g, b)
+    @TwineNativeProperty("a")
+    var alpha: Int
+        get() = a
+        set(value) { a = value }
+
+    fun toUIColor(): UIColor = UIColor(r, g, b, a)
+
+    fun toShadowColor(): ShadowColor = ShadowColor.shadowColor(r, g, b, a)
 
     @TwineNativeFunction("tostring")
     override fun toString(): String {
-        return "color[r=$r, g=$g, b=$b]"
+        return "color[r=$r, g=$g, b=$b, a=$a]"
     }
 }

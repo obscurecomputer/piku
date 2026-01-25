@@ -4,6 +4,7 @@ import computer.obscure.piku.client.Client
 import computer.obscure.piku.client.utils.parseMini
 import computer.obscure.piku.common.scripting.api.LuaVec2Instance
 import computer.obscure.piku.common.scripting.api.LuaVec3Instance
+import computer.obscure.twine.TwineLogger
 import computer.obscure.twine.annotations.TwineNativeFunction
 import computer.obscure.twine.annotations.TwineNativeProperty
 import computer.obscure.twine.nativex.TwineNative
@@ -13,6 +14,11 @@ import net.minecraft.item.ItemStack
 
 class LuaClient : TwineNative("client") {
     val instance: MinecraftClient = MinecraftClient.getInstance()!!
+
+    @TwineNativeFunction
+    fun debug(value: Boolean) {
+        TwineLogger.level = if (value) TwineLogger.DEBUG else TwineLogger.INFO
+    }
 
     @TwineNativeProperty
     val pos: LuaVec3Instance

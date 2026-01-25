@@ -77,7 +77,6 @@ class LuaSpacingInstance(
         set(value) { bottom = value }
 
     fun toSpacing(): Spacing {
-        println(this.toString())
         return Spacing(
             left = left,
             top = top,

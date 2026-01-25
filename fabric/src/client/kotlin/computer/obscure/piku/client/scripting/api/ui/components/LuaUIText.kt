@@ -4,24 +4,29 @@ import computer.obscure.piku.common.scripting.api.LuaColor
 import computer.obscure.piku.common.scripting.api.LuaColorInstance
 import computer.obscure.piku.common.scripting.api.LuaVec2
 import computer.obscure.piku.common.scripting.api.LuaVec2Instance
+import computer.obscure.piku.common.scripting.api.LuaText
+import computer.obscure.piku.common.scripting.api.LuaTextInstance
 import computer.obscure.piku.common.ui.classes.UIColor
 import computer.obscure.twine.annotations.TwineNativeProperty
 import computer.obscure.piku.common.ui.components.Text
 import computer.obscure.twine.annotations.TwineNativeFunction
+import computer.obscure.twine.annotations.TwineOverload
 
 class LuaUIText(
     override val component: Text
 ) : LuaUIComponent(component) {
-    @TwineNativeProperty
-    var text: String
-        get() = component.props.text
-        set(value) {
-            component.props.text = value
-        }
 
+    @TwineOverload
     @TwineNativeFunction
-    fun text(value: String): LuaUIText {
-        component.props.text = value
+    fun text(value: LuaTextInstance): LuaUIText {
+        component.props.text = value.toComponent()
+        return this
+    }
+
+    @TwineOverload
+    @TwineNativeFunction
+    fun text(value: Any): LuaUIText {
+        component.props.text = LuaTextInstance("text", value.toString()).toComponent()
         return this
     }
 

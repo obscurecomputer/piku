@@ -1,5 +1,6 @@
 package computer.obscure.piku.client.ui.components
 
+import computer.obscure.piku.client.ui.TextInterpolator
 import computer.obscure.piku.common.ui.components.Text
 import net.kyori.adventure.platform.modcommon.MinecraftClientAudiences
 import net.minecraft.client.MinecraftClient
@@ -14,9 +15,9 @@ class TextRenderer : UIComponent<Text>() {
         val y = props.pos.y
 
         // interpolate dynamic variables & split into lines
-//        val interpolated = TextInterpolator.interpolate(props.text)
+        val interpolated = TextInterpolator.interpolate(props.text)
 
-        val text = props.text.colorIfAbsent(props.color.toTextColor())
+        val text = interpolated.colorIfAbsent(props.color.toTextColor())
 
         val mcText = MinecraftClientAudiences
             .of()

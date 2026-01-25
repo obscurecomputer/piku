@@ -63,6 +63,7 @@ import kotlin.to
 
 object UIRenderer {
     val currentWindow: UIWindow = UIWindow("main")
+
     private var activeAnimations = mutableListOf<PropertyAnimation<*, *>>()
     val registeredEasings = mutableMapOf<String, (time: Double) -> Double>()
 

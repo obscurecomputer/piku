@@ -1,5 +1,6 @@
 package computer.obscure.piku.client.scripting.api.ui.components
 
+import computer.obscure.piku.client.ui.UIRenderer
 import computer.obscure.piku.common.ui.components.Box
 import computer.obscure.piku.common.ui.components.Component
 import computer.obscure.piku.common.ui.components.Gradient
@@ -20,59 +21,32 @@ import computer.obscure.twine.annotations.TwineNativeFunction
 open class AllComponentBuilder(
     override val component: Component
 ) : LuaUIComponent(component) {
-    @TwineNativeFunction
-    fun group(name: String): LuaUIGroup {
-        val newComponent = Group(CollectionProps())
+
+    private fun <T : Component> setup(newComponent: T, name: String): T {
         newComponent.name = name
         component.props.components.add(newComponent)
-        return LuaUIGroup(newComponent)
+        UIRenderer.currentWindow.registerRecursive(newComponent)
+        return newComponent
     }
 
     @TwineNativeFunction
-    fun text(name: String): LuaUIText {
-        val newComponent = Text(TextProps())
-        newComponent.name = name
-        component.props.components.add(newComponent)
-        return LuaUIText(newComponent)
-    }
+    fun group(name: String): LuaUIGroup = LuaUIGroup(setup(Group(CollectionProps()), name))
 
     @TwineNativeFunction
-    fun box(name: String): LuaUIBox {
-        val newComponent = Box(BoxProps())
-        newComponent.name = name
-        component.props.components.add(newComponent)
-        return LuaUIBox(newComponent)
-    }
+    fun text(name: String): LuaUIText = LuaUIText(setup(Text(TextProps()), name))
 
     @TwineNativeFunction
-    fun sprite(name: String): LuaUISprite {
-        val newComponent = Sprite(SpriteProps())
-        newComponent.name = name
-        component.props.components.add(newComponent)
-        return LuaUISprite(newComponent)
-    }
+    fun box(name: String): LuaUIBox = LuaUIBox(setup(Box(BoxProps()), name))
 
     @TwineNativeFunction
-    fun gradient(name: String): LuaUIGradient {
-        val newComponent = Gradient(GradientProps())
-        newComponent.name = name
-        component.props.components.add(newComponent)
-        return LuaUIGradient(newComponent)
-    }
+    fun sprite(name: String): LuaUISprite = LuaUISprite(setup(Sprite(SpriteProps()), name))
 
     @TwineNativeFunction
-    fun progressBar(name: String): LuaUIProgressBar {
-        val newComponent = ProgressBar(ProgressBarProps())
-        newComponent.name = name
-        component.props.components.add(newComponent)
-        return LuaUIProgressBar(newComponent)
-    }
+    fun gradient(name: String): LuaUIGradient = LuaUIGradient(setup(Gradient(GradientProps()), name))
 
     @TwineNativeFunction
-    fun line(name: String): LuaUILine {
-        val newComponent = Line(LineProps())
-        newComponent.name = name
-        component.props.components.add(newComponent)
-        return LuaUILine(newComponent)
-    }
+    fun progressBar(name: String): LuaUIProgressBar = LuaUIProgressBar(setup(ProgressBar(ProgressBarProps()), name))
+
+    @TwineNativeFunction
+    fun line(name: String): LuaUILine = LuaUILine(setup(Line(LineProps()), name))
 }

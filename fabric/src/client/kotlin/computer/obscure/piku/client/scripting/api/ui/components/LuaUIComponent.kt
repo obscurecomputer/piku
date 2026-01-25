@@ -148,11 +148,6 @@ open class LuaUIComponent(open val component: Component) : TwineNative() {
 
     @TwineNativeFunction
     fun remove() {
-        UIEventQueue.enqueueNow(
-            DestroyEvent(
-                delay = 0L,
-                targetId = component.internalId
-            )
-        )
+        UIRenderer.currentWindow.components.remove(this.component.internalId)
     }
 }

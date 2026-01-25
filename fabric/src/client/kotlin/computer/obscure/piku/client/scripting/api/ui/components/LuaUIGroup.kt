@@ -8,12 +8,13 @@ class LuaUIGroup(
     override val component: Group
 ) : AllComponentBuilder(component) {
     @TwineNativeFunction("get")
-    fun getById(name: String): LuaUIComponent? {
-        return LuaUI.smartGet(component.props.components, name)
+    fun getByName(name: String): LuaUIComponent? {
+        val found = component.props.components.find { it.name == name }
+        return found?.let { LuaUI.wrap(it) }
     }
 
-    @TwineNativeFunction("exists")
+    @TwineNativeFunction
     fun exists(name: String): Boolean {
-        return LuaUI.smartGet(component.props.components, name) != null
+        return component.props.components.any { it.name == name }
     }
 }

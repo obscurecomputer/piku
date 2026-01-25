@@ -4,22 +4,36 @@ import computer.obscure.piku.common.ui.components.Group
 
 class UIWindow(val id: String) {
     var components = mutableMapOf<String, Component>()
-    private val previousState = mutableMapOf<String, Component>()
+
+    private val idCache = mutableMapOf<String, Component>()
+
+    fun getComponentById(id: String): Component? = idCache[id]
+
+    fun registerRecursive(component: Component) {
+        idCache[component.internalId] = component
+        if (component is Group) {
+            component.props.components.forEach { registerRecursive(it) }
+        }
+    }
+
+    fun unregisterRecursive(id: String) {
+        val comp = idCache.remove(id)
+        if (comp is Group) {
+            comp.props.components.forEach { unregisterRecursive(it.internalId) }
+        }
+    }
 
     fun add(component: Component) {
-        val key = componentKey(component)
-        components[key] = component
+        components[component.internalId] = component
+        registerRecursive(component)
     }
 
     fun remove(id: String) {
+        unregisterRecursive(id)
         components.remove(id)
     }
 
     private fun componentKey(comp: Component): String = comp.internalId
-
-    fun getComponentById(id: String?): Component? {
-        return components[id]
-    }
 
     /**
      * Perform a recursive search for a component by its ID.

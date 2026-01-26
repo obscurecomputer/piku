@@ -5,6 +5,7 @@ import computer.obscure.piku.client.scripting.ClientEventBus
 import computer.obscure.piku.client.scripting.events.HeartbeatEvent
 import computer.obscure.piku.common.scripting.base.LuaEvent
 import computer.obscure.piku.common.utils.toJson
+import computer.obscure.twine.nativex.conversion.Converter.toLuaValue
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking
 import org.luaj.vm2.LuaValue
 
@@ -38,6 +39,10 @@ class LuaClientEvents : ClientEventBus {
         )
 
         ClientPlayNetworking.send(payload)
+    }
+
+    fun send(eventId: String, data: Any) {
+        send(eventId, data.toLuaValue())
     }
 
     // lua > local register

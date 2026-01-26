@@ -1,4 +1,4 @@
-package computer.obscure.piku.common.scripting
+package computer.obscure.piku.common.scripting.engine
 
 import computer.obscure.piku.common.scripting.api.LuaColor
 import computer.obscure.piku.common.scripting.api.LuaLogger
@@ -26,6 +26,9 @@ abstract class LuaEngine {
     val engine = TwineEngine()
     open val registeredTables: MutableMap<String, TwineTable> = mutableMapOf()
     open val registeredBaseTables: MutableList<TwineNative> = mutableListOf()
+    open val activeScripts: MutableMap<String, String> = mutableMapOf()
+
+    open var resourceFinder = EngineResourceFinder(activeScripts)
 
     open fun init() {
         engine.clear()
@@ -44,6 +47,8 @@ abstract class LuaEngine {
         engine.load(CoroutineLib())
         engine.load(JseMathLib())
         engine.load(LuajavaLib())
+
+        engine.globals.finder = resourceFinder
 
         LoadState.install(engine.globals)
         LuaC.install(engine.globals)

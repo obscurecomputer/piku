@@ -10,7 +10,6 @@ open class TextProps : BaseProps() {
     var text: Component = Component.empty()
         set(value) {
             if (field !== value) {
-                println("Setting text value to ${value}")
                 field = value
                 rawText = PlainTextComponentSerializer.plainText().serialize(value)
                 mark(DirtyFlag.LAYOUT)

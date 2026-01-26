@@ -1,6 +1,6 @@
 package computer.obscure.piku.client.packets.clientbound.handlers
 
-import computer.obscure.piku.client.PikuClient
+import computer.obscure.piku.client.PikuClient.Companion.engine
 import computer.obscure.piku.client.packets.clientbound.payloads.ReceiveScriptPayload
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking
 
@@ -10,8 +10,13 @@ class ReceiveScriptHandler {
             val client = context.client()
             client.execute {
                 try {
-//                    println("Received script ${payload.name} from the server!")
-                    PikuClient.engine.runScript(payload.name, payload.fileContents)
+                    if (payload.name == "END_OF_SCRIPT_LOADING") {
+                        engine.activeScripts.forEach { script ->
+                            engine.runScript(script.key, script.value)
+                        }
+                        return@execute
+                    }
+                    engine.activeScripts[payload.name] = payload.fileContents
                 } catch (e: Exception) {
                     e.printStackTrace()
                 }

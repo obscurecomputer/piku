@@ -12,10 +12,15 @@ class LuaColor : TwineNative("color") {
         return LuaColorInstance(r, g, b)
     }
 
+    @TwineNativeFunction
+    fun rgba(r: Int, g: Int, b: Int, a: Int): LuaColorInstance {
+        return LuaColorInstance(r, g, b, a)
+    }
+
     companion object {
         fun fromUIColor(uiColor: UIColor): LuaColorInstance {
             return LuaColorInstance(
-                uiColor.r, uiColor.g, uiColor.b
+                uiColor.r, uiColor.g, uiColor.b, uiColor.a
             )
         }
 

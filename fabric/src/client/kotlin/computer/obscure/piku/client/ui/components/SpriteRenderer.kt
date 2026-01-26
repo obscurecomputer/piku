@@ -23,13 +23,15 @@ class SpriteRenderer : UIComponent<Sprite>() {
             drawHeight = window.scaledHeight
         }
 
+        val unscaledCompHeight = component.height() / props.scale.y
+        val yOffset = (unscaledCompHeight - drawHeight) / 2.0
         val color = ColorHelper.withAlpha(props.opacity, -1)
 
         context.drawTexture(
             RenderPipelines.GUI_TEXTURED,
             texture,
             0,
-            0,
+            yOffset.toInt(),
             0f, 0f,
             drawWidth, drawHeight,
             drawWidth, drawHeight,

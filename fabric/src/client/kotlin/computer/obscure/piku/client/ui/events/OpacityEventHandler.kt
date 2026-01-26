@@ -13,7 +13,7 @@ class OpacityEventHandler : UIEventHandler<OpacityEvent> {
             from = null,
             to = event.opacity,
             durationSeconds = event.durationSeconds,
-            easing = event.easing.toString()
+            easing = event.easing
         )
         context.enqueueAnimation(anim)
     }

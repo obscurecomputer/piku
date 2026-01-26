@@ -274,7 +274,7 @@ object TextInterpolator {
                         if (rounding != null) {
                             val digits = rounding
                             val number = value.toDoubleOrNull()
-                            if (digits != null && number != null)
+                            if (number != null)
                                 "%.${digits}f".format(number)
                             else value
                         } else value

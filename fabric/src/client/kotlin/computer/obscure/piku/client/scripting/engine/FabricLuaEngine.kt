@@ -6,7 +6,7 @@ import computer.obscure.piku.client.scripting.api.LuaClientEvents
 import computer.obscure.piku.client.scripting.api.LuaGame
 import computer.obscure.piku.client.scripting.api.enums.LuaUIAnchor
 import computer.obscure.piku.client.scripting.api.ui.LuaEasing
-import computer.obscure.piku.common.scripting.LuaEngine
+import computer.obscure.piku.common.scripting.engine.LuaEngine
 
 class FabricLuaEngine : LuaEngine() {
     lateinit var events: LuaClientEvents

@@ -1,7 +1,7 @@
 package computer.obscure.piku.common.scripting.server
 
 import computer.obscure.piku.common.classes.ScriptSource
-import computer.obscure.piku.common.scripting.LuaEngine
+import computer.obscure.piku.common.scripting.engine.LuaEngine
 import org.luaj.vm2.LuaValue
 import java.io.File
 import java.net.JarURLConnection
@@ -95,6 +95,8 @@ interface ServerAPI<T> {
                     sendScript(player, n, c)
                 }
         }
+
+        sendScript(player, "END_OF_SCRIPT_LOADING", "")
     }
 
     fun runAllScripts(

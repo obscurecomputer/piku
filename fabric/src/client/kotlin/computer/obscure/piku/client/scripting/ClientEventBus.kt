@@ -8,12 +8,3 @@ import org.luaj.vm2.lib.TwoArgFunction
 interface ClientEventBus : EventBus {
     fun send(eventId: String, data: LuaValue)
 }
-
-fun ClientEventBus.registerSend(globals: Globals) {
-    globals["send"] = object : TwoArgFunction() {
-        override fun call(eventArg: LuaValue, dataArg: LuaValue): LuaValue {
-            send(eventArg.checkjstring(), dataArg)
-            return NIL
-        }
-    }
-}

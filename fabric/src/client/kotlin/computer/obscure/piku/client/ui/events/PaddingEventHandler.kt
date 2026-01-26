@@ -13,7 +13,7 @@ class PaddingEventHandler : UIEventHandler<PaddingEvent> {
             from = null,
             to = event.padding,
             durationSeconds = event.durationSeconds,
-            easing = event.easing.toString()
+            easing = event.easing
         )
         context.enqueueAnimation(anim)
     }

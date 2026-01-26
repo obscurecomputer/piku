@@ -177,6 +177,24 @@ object UIRenderer {
         props.clear(DirtyFlag.LAYOUT)
     }
 
+    fun markDependentsDirty(providerId: String) {
+        currentWindow.components.values.forEach { component ->
+            if (component.relativeTo == providerId) {
+                component.props.mark(DirtyFlag.LAYOUT)
+                // recursively check if those components have dependents too
+                markDependentsDirty(component.internalId)
+            }
+            component.props.components.forEach { child ->
+                if (child.relativeTo == providerId) {
+                    child.props.mark(DirtyFlag.LAYOUT)
+                    // recursively check if those components have dependents too
+                    markDependentsDirty(child.internalId)
+                }
+            }
+
+        }
+    }
+
     private fun drawComponent(context: DrawContext, component: Component) {
         if (!component.props.visible) return
         component.draw(context)

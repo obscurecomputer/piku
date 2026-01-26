@@ -1,6 +1,8 @@
 package computer.obscure.piku.client.ui.events
 
+import computer.obscure.piku.client.ui.UIRenderer
 import computer.obscure.piku.common.classes.Vec2
+import computer.obscure.piku.common.ui.classes.DirtyFlag
 import computer.obscure.piku.common.ui.components.Component
 import computer.obscure.piku.common.ui.events.MoveEvent
 import computer.obscure.piku.common.ui.events.PropertyAnimation
@@ -16,6 +18,7 @@ class MoveEventHandler : UIEventHandler<MoveEvent> {
                 if (value.x == 0.0) x = c.props.pos.x
                 if (value.y == 0.0) y = c.props.pos.y
 
+                UIRenderer.markDependentsDirty(c.internalId)
                 c.props.pos = Vec2(x, y)
             },
             from = null,

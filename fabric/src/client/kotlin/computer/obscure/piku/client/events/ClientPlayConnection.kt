@@ -37,6 +37,10 @@ object ClientPlayConnection {
         Client.serverRunsPiku = false
 
         engine.shutdown()
+
+        // !!! VERY IMPORTANT
+        // This clears all active scripts upon disconnect
+        engine.activeScripts.clear()
         UIRenderer.reset()
         Scheduler.reset()
     }

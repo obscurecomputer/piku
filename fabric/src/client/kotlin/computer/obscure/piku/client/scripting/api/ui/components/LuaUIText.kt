@@ -4,7 +4,6 @@ import computer.obscure.piku.common.scripting.api.LuaColor
 import computer.obscure.piku.common.scripting.api.LuaColorInstance
 import computer.obscure.piku.common.scripting.api.LuaVec2
 import computer.obscure.piku.common.scripting.api.LuaVec2Instance
-import computer.obscure.piku.common.scripting.api.LuaText
 import computer.obscure.piku.common.scripting.api.LuaTextInstance
 import computer.obscure.piku.common.ui.classes.UIColor
 import computer.obscure.twine.annotations.TwineNativeProperty

@@ -297,7 +297,7 @@ object UIRenderer {
     private fun layoutComponent(
         component: Component,
         window: UIWindow,
-        parentScale: Vec2 = Vec2(1.0, 1.0)
+        parentScale: Vec2 = Vec2(1.0, 1.0),
     ) {
         val effectiveScale = Vec2(
             component.props.scale.x * parentScale.x,
@@ -308,14 +308,7 @@ object UIRenderer {
         when (component) {
             is Group -> {
                 component.props.components.forEach { child ->
-                    val childBasePos = child.props.pos
-                    val groupOffset = component.props.pos
-                    val effectivePos = Vec2(
-                        childBasePos.x + groupOffset.x,
-                        childBasePos.y + groupOffset.y
-                    )
-
-                    child.computedPos = effectivePos
+                    child.computedPos = child.props.pos
 
                     layoutComponent(child, window, component.computedScale)
                 }
@@ -354,43 +347,45 @@ object UIRenderer {
             }
             is FlowContainer -> {
                 val props = component.props
-                var cursorX = props.padding.left
-                var cursorY = props.padding.top
+                var offsetX = props.padding.left
+                var offsetY = props.padding.top
+                val initialPos = component.props.pos
 
-                // apply inherited scale (very important for nested layouts)
-                val effectiveScale = Vec2(
-                    props.scale.x * parentScale.x,
-                    props.scale.y * parentScale.y
-                )
-                component.computedScale = effectiveScale
+                var maxChildX = 0.0
+                var maxChildY = 0.0
 
-                props.components.forEach { child ->
+                component.props.components.forEachIndexed { index, child ->
                     val margin = child.props.margin
-                    val x = component.screenX.toFloat()
-                    val y = component.screenY.toFloat()
+
+                    child.computedPos = Vec2(
+                        child.props.pos.x + offsetX + margin.left + initialPos.x,
+                        child.props.pos.y + offsetY + margin.top + initialPos.y,
+                    )
+
+                    child.screenX = (component.screenX + child.computedPos!!.x).toInt()
+                    child.screenY = (component.screenY + child.computedPos!!.y).toInt()
+                    layoutComponent(child, window, component.computedScale)
 
                     when (props.direction) {
                         FlowDirection.HORIZONTAL -> {
-                            val childX = x + cursorX + margin.left
-                            val childY = y + props.padding.top + margin.top
-
-                            cursorX += child.width() + margin.left + margin.right + props.gap
-                            child.screenX = childX.toInt()
-                            child.screenY = childY.toInt()
+                            offsetX += child.width() + margin.left + margin.right + props.gap
+                            maxChildY = maxOf(maxChildY, offsetY + child.height() + margin.top + margin.bottom)
                         }
-
                         FlowDirection.VERTICAL -> {
-                            val childX = x + props.padding.left + margin.left
-                            val childY = y + cursorY + margin.top
-
-                            cursorY += child.height() + margin.top + margin.bottom + props.gap
-                            child.screenX = childX.toInt()
-                            child.screenY = childY.toInt()
+                            offsetY += child.height() + margin.top + margin.bottom + props.gap
+                            maxChildX = maxOf(maxChildX, offsetX + child.width() + margin.left + margin.right)
                         }
                     }
-
-                    layoutComponent(child, window, effectiveScale)
                 }
+
+                val finalWidth = if (props.direction == FlowDirection.HORIZONTAL) offsetX else maxChildX
+                val finalHeight = if (props.direction == FlowDirection.VERTICAL) offsetY else maxChildY
+
+                component.computedSize = Vec2(
+                    finalWidth + props.padding.right,
+                    finalHeight + props.padding.bottom
+                )
+
                 return
             }
 

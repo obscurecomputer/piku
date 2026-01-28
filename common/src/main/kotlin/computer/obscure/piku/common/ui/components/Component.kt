@@ -24,6 +24,9 @@ sealed class Component {
 
     abstract fun width(): Double
     abstract fun height(): Double
+    fun dimensions(): Vec2 {
+        return Vec2(width(), height())
+    }
 
     var screenX: Int = 0
     var screenY: Int = 0

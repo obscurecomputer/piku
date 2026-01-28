@@ -4,6 +4,7 @@ import computer.obscure.twine.annotations.TwineNativeFunction
 import computer.obscure.twine.nativex.TwineNative
 import computer.obscure.piku.client.scripting.api.ui.components.LuaUIBox
 import computer.obscure.piku.client.scripting.api.ui.components.LuaUIComponent
+import computer.obscure.piku.client.scripting.api.ui.components.LuaUIFlow
 import computer.obscure.piku.client.scripting.api.ui.components.LuaUIGradient
 import computer.obscure.piku.client.scripting.api.ui.components.LuaUIGroup
 import computer.obscure.piku.client.scripting.api.ui.components.LuaUILine
@@ -13,6 +14,7 @@ import computer.obscure.piku.client.scripting.api.ui.components.LuaUIText
 import computer.obscure.piku.client.ui.UIRenderer
 import computer.obscure.piku.common.ui.components.Box
 import computer.obscure.piku.common.ui.components.Component
+import computer.obscure.piku.common.ui.components.FlowContainer
 import computer.obscure.piku.common.ui.components.Gradient
 import computer.obscure.piku.common.ui.components.Group
 import computer.obscure.piku.common.ui.components.Line
@@ -20,6 +22,7 @@ import computer.obscure.piku.common.ui.components.ProgressBar
 import computer.obscure.piku.common.ui.components.Sprite
 import computer.obscure.piku.common.ui.components.Text
 import computer.obscure.piku.common.ui.components.props.CollectionProps
+import computer.obscure.piku.common.ui.components.props.FlowProps
 
 class LuaUI : TwineNative() {
     val window = UIRenderer.currentWindow
@@ -38,6 +41,19 @@ class LuaUI : TwineNative() {
         window.add(component)
 
         return LuaUIGroup(
+            component
+        )
+    }
+
+    @TwineNativeFunction
+    fun flow(name: String = ""): LuaUIFlow {
+        val component = FlowContainer(
+            FlowProps()
+        )
+        component.name = name
+        window.add(component)
+
+        return LuaUIFlow(
             component
         )
     }
@@ -84,6 +100,7 @@ class LuaUI : TwineNative() {
                 is Gradient -> LuaUIGradient(component)
                 is ProgressBar -> LuaUIProgressBar(component)
                 is Line -> LuaUILine(component)
+                is FlowContainer -> LuaUIFlow(component)
                 else -> null
             }
     }

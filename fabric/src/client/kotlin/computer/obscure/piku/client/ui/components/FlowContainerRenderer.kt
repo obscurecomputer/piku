@@ -1,6 +1,5 @@
 package computer.obscure.piku.client.ui.components
 
-import computer.obscure.piku.client.ui.components.UIComponent
 import computer.obscure.piku.client.ui.draw
 import computer.obscure.piku.common.ui.components.FlowContainer
 import net.minecraft.client.MinecraftClient
@@ -26,6 +25,8 @@ class FlowContainerRenderer : UIComponent<FlowContainer>() {
             )
         }
 
-        props.components.forEach { it.draw(context) }
+        props.components.forEach { child ->
+            child.draw(context)
+        }
     }
 }

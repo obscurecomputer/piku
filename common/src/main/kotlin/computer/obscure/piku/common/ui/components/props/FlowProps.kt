@@ -13,7 +13,7 @@ open class FlowProps : CollectionProps() {
             }
         }
 
-    var direction: FlowDirection = FlowDirection.HORIZONTAL
+    var direction: FlowDirection = FlowDirection.VERTICAL
         set(value) {
             if (field != value) {
                 field = value

@@ -4,6 +4,13 @@ data class Vec2(
     val x: Double = 0.0,
     val y: Double = 0.0
 ) {
+    fun add(vec2: Vec2): Vec2 {
+        return Vec2(x + vec2.x, y + vec2.y)
+    }
+    fun add(x: Double, y: Double): Vec2 {
+        return Vec2(this.x + x, this.y + y)
+    }
+
     fun lineTo(to: Vec2): List<Vec2> {
         val points = mutableListOf<Vec2>()
 

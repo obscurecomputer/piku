@@ -9,12 +9,12 @@ data class Group(
     override val compType: CompType = CompType.GROUP
 
     override fun width(): Double {
-        val childWidths = props.components.map { it.width() + it.props.pos.x }
-        return (childWidths.maxOrNull() ?: 0).toInt() + props.padding.left + props.padding.right
+        val maxChildEdge = props.components.maxOfOrNull { it.props.pos.x + it.width() } ?: 0.0
+        return maxChildEdge + props.padding.left + props.padding.right
     }
 
     override fun height(): Double {
-        val childHeights = props.components.map { it.height() + it.props.pos.y }
-        return (childHeights.maxOrNull() ?: 0).toInt() + props.padding.top + props.padding.bottom
+        val maxChildEdge = props.components.maxOfOrNull { it.props.pos.y + it.height() } ?: 0.0
+        return maxChildEdge + props.padding.top + props.padding.bottom
     }
 }

@@ -5,7 +5,7 @@ listen("client.key_update", function(event)
         local flow = game.ui.flow("fucking_kys")
             .pos(vec2.of(50, 0))
             .direction("h")
-            .gap(5)
+            .gap(15)
 
         local testflow1 = flow.flow("flow6")
             .direction("v")
@@ -18,5 +18,11 @@ listen("client.key_update", function(event)
             .gap(5)
         testflow2.text("text1").text("above line")
         testflow2.text("text2").text("below line")
+    end
+    if event.key == "," and event.action == "press" then
+        game.ui.debug(true)
+    end
+    if event.key == "." and event.action == "press" then
+        game.ui.debug(false)
     end
 end)

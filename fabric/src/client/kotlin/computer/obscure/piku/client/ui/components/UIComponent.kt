@@ -21,6 +21,31 @@ abstract class UIComponent<T : Component> {
         drawContent(component, context, instance)
         drawBorder(component, context)
 
+        if (UIRenderer.debugEnabled) {
+            drawDebugOverlay(component, context, instance)
+        }
+
+        context.matrices.popMatrix()
+    }
+
+    private fun drawDebugOverlay(component: T, context: DrawContext, mc: MinecraftClient) {
+        val w = component.width().toInt()
+        val h = component.height().toInt()
+        val color = 0xFFFF00FF.toInt()
+
+        context.fill(0, 0, w, 1, color)
+        context.fill(0, h - 1, w, h, color)
+        context.fill(0, 0, 1, h, color)
+        context.fill(w - 1, 0, w, h, color)
+
+        val label = "${component.name} [${component.compType}]"
+        context.matrices.pushMatrix()
+        context.matrices.translate(0f, h.toFloat() + 2f)
+
+        val textWidth = mc.textRenderer.getWidth(label)
+        context.fill(0, 0, textWidth + 4, 12, 0xAA000000.toInt())
+        context.drawText(mc.textRenderer, label, 2, 2, 0xFFFFFFFF.toInt(), false)
+
         context.matrices.popMatrix()
     }
 

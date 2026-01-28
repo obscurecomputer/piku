@@ -67,6 +67,8 @@ object UIRenderer {
     private var activeAnimations = mutableListOf<PropertyAnimation<*, *>>()
     val registeredEasings = mutableMapOf<String, (time: Double) -> Double>()
 
+    var debugEnabled: Boolean = false
+
     val eventDispatcher = UIEventDispatcher(
         handlers = mapOf(
             MoveEvent::class.java to MoveEventHandler(),
@@ -100,6 +102,7 @@ object UIRenderer {
     )
 
     fun reset() {
+        debugEnabled = false
         activeAnimations.clear()
         registeredEasings.clear()
         currentWindow.components.clear()
@@ -141,11 +144,12 @@ object UIRenderer {
             currentWindow.let { window ->
                 layoutIfNeeded(window)
 
-                window.components.values.toList()
-                    .sortedBy { it.props.zIndex }
-                    .forEach { component ->
-                        drawComponent(context, component)
-                    }
+                val sorted = window.components.values.toList().sortedBy {
+                    it.props.zIndex
+                }
+                sorted.forEach {
+                    drawComponent(context, it)
+                }
             }
         }
     }

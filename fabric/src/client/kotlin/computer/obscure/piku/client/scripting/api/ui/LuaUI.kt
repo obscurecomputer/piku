@@ -74,6 +74,11 @@ class LuaUI : TwineNative() {
         return smartGet(window.components.values, name) != null
     }
 
+    @TwineNativeFunction()
+    fun debug(value: Boolean) {
+        UIRenderer.debugEnabled = value
+    }
+
     companion object {
         fun smartGet(components: Collection<Component>, name: String): LuaUIComponent? {
             for (component in components) {

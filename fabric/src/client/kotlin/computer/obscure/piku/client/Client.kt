@@ -1,5 +1,7 @@
 package computer.obscure.piku.client
 
+import computer.obscure.piku.common.scripting.api.LuaTextInstance
+import net.kyori.adventure.text.Component
 import net.minecraft.client.MinecraftClient
 import net.minecraft.client.option.Perspective
 
@@ -73,4 +75,9 @@ object Client {
     var hideHotbar = false
     @JvmField
     var hideArm = false
+
+    @JvmField
+    var customScreenshotMessage: Component? = null
+    @JvmField
+    var customScreenshotInstance: LuaTextInstance? = null
 }

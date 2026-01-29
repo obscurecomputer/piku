@@ -33,6 +33,8 @@ object ClientPlayConnection {
         networkHandler: ClientPlayNetworkHandler,
         client: MinecraftClient
     ) {
+        Client.customScreenshotMessage = null
+        Client.customScreenshotInstance = null
         Client.connectedToServer = false
         Client.serverRunsPiku = false
 

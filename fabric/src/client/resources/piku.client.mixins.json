@@ -7,7 +7,8 @@
     "CameraMixin",
     "HeldItemRendererMixin",
     "InGameHudMixin",
-    "MinecraftClientMixin"
+    "MinecraftClientMixin",
+    "ScreenshotMixin"
   ],
   "injectors": {
     "defaultRequire": 1

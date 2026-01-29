@@ -2,6 +2,7 @@ package computer.obscure.piku.client.scripting.api
 
 import computer.obscure.piku.client.Client
 import computer.obscure.piku.client.utils.parseMini
+import computer.obscure.piku.common.scripting.api.LuaTextInstance
 import computer.obscure.piku.common.scripting.api.LuaVec2Instance
 import computer.obscure.piku.common.scripting.api.LuaVec3Instance
 import computer.obscure.twine.TwineLogger
@@ -126,4 +127,10 @@ class LuaClient : TwineNative("client") {
             val y = instance.window.height.toDouble()
             return LuaVec2Instance(x, y)
         }
+
+    @TwineNativeFunction
+    fun screenshotMessage(value: LuaTextInstance) {
+        Client.customScreenshotMessage = value.toComponent()
+        Client.customScreenshotInstance = value
+    }
 }

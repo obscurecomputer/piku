@@ -14,6 +14,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(HeldItemRenderer.class)
 public class HeldItemRendererMixin {
+//    @Shadow private float equipProgressMainHand;
+//    @Shadow private float lastEquipProgressMainHand;
+//    @Shadow private float equipProgressOffHand;
+//    @Shadow private float lastEquipProgressOffHand;
 
     @Inject(
         method = "renderFirstPersonItem",
@@ -36,5 +40,18 @@ public class HeldItemRendererMixin {
         if (Client.hideArm) {
             ci.cancel();
         }
+    }
+
+    @Inject(method = "updateHeldItems", at = @At("TAIL"))
+    void piku$disableArmSwing(CallbackInfo ci) {
+        // TODO: fix this
+        // Items do not render when you hold them!
+//        if (Client.mouseButtonsLocked) {
+//            // force reset the player's swing
+//            equipProgressMainHand = 1f;
+//            lastEquipProgressMainHand = 1f;
+//            equipProgressOffHand = 1f;
+//            lastEquipProgressOffHand = 1f;
+//        }
     }
 }

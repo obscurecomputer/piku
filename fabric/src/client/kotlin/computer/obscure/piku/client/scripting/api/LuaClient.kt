@@ -8,6 +8,7 @@ import computer.obscure.piku.common.scripting.api.LuaVec3Instance
 import computer.obscure.twine.TwineLogger
 import computer.obscure.twine.annotations.TwineNativeFunction
 import computer.obscure.twine.annotations.TwineNativeProperty
+import computer.obscure.twine.annotations.TwineOverload
 import computer.obscure.twine.nativex.TwineNative
 import net.minecraft.client.MinecraftClient
 import net.minecraft.client.option.Perspective
@@ -132,5 +133,47 @@ class LuaClient : TwineNative("client") {
     fun screenshotMessage(value: LuaTextInstance) {
         Client.customScreenshotMessage = value.toComponent()
         Client.customScreenshotInstance = value
+    }
+
+    /*
+    * Camera Controls
+    */
+
+    @TwineNativeProperty
+    var cameraLocked: Boolean
+        get() = Client.cameraLocked
+        set(value) { Client.cameraLocked = value }
+
+    @TwineNativeFunction
+    @TwineOverload
+    fun lockCamera(value: Boolean) {
+        Client.cameraLocked = value
+    }
+
+    @TwineNativeFunction
+    @TwineOverload
+    fun lockCamera() {
+        Client.cameraLocked = true
+    }
+
+    /*
+    * Mouse Controls
+    */
+
+    @TwineNativeProperty
+    var mouseButtonsLocked: Boolean
+        get() = Client.mouseButtonsLocked
+        set(value) { Client.mouseButtonsLocked = value }
+
+    @TwineNativeFunction
+    @TwineOverload
+    fun lockMouseButtons(value: Boolean) {
+        Client.mouseButtonsLocked = value
+    }
+
+    @TwineNativeFunction
+    @TwineOverload
+    fun lockMouseButtons() {
+        Client.mouseButtonsLocked = true
     }
 }

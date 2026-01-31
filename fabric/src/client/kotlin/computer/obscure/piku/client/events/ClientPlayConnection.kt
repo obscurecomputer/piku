@@ -33,10 +33,35 @@ object ClientPlayConnection {
         networkHandler: ClientPlayNetworkHandler,
         client: MinecraftClient
     ) {
-        Client.customScreenshotMessage = null
-        Client.customScreenshotInstance = null
+        Client.customPitch = 0f
+        Client.customYaw = 0f
+        Client.customRoll = 0f
+        Client.targetFov = -1f
+        Client.lockFov = false
+        Client.isInterpolatingFov = false
+        Client.fovAnimTicks = 5
+        Client.animateFov = false
+        Client.previousFov = -1f
+        Client.fovTicksRemaining = 0
+
+        Client.cameraOffsetX = 0f
+        Client.cameraOffsetY = 0f
+        Client.cameraOffsetZ = 0f
+
         Client.connectedToServer = false
         Client.serverRunsPiku = false
+        Client.cameraLocked = false
+        Client.mouseButtonsLocked = false
+        Client.emitMouseEvents = false
+        Client.isLeftClicking = false
+        Client.isRightClicking = false
+        Client.perspectiveLocked = false
+        Client.hideHUD = false
+        Client.hideHotbar = false
+        Client.hideArm = false
+
+        Client.customScreenshotMessage = null
+        Client.customScreenshotInstance = null
 
         engine.shutdown()
 

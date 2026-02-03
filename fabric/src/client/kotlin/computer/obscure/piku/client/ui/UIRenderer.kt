@@ -23,6 +23,7 @@ import computer.obscure.piku.client.ui.events.ScaleEventHandler
 import computer.obscure.piku.client.ui.events.SizeEventHandler
 import computer.obscure.piku.client.ui.events.UIEventContext
 import computer.obscure.piku.common.classes.Vec2
+import computer.obscure.piku.common.scripting.api.LuaEventData
 import computer.obscure.piku.common.ui.*
 import computer.obscure.piku.common.ui.classes.DirtyFlag
 import computer.obscure.piku.common.ui.classes.Easing
@@ -124,8 +125,7 @@ object UIRenderer {
     fun onWindowResized() {
         // not the most efficient method, but it works and fixes
         // ui components not re-laying out when the window is resized
-        val window = currentWindow
-        layout(window)
+        layout(currentWindow)
     }
 
     fun register() {
@@ -150,6 +150,16 @@ object UIRenderer {
                 sorted.forEach {
                     drawComponent(context, it)
                 }
+
+                val event = LuaEventData(
+                    mapOf(
+                        "rendered_components" to sorted.size,
+                        "last_frame_delta" to deltaSeconds,
+                        "current_time" to currentTime,
+                        "active_animations" to activeAnimations.size
+                    )
+                )
+                PikuClient.engine.events.fire("client.ui_render", event.table)
             }
         }
     }

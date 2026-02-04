@@ -28,9 +28,6 @@ configurations {
 }
 
 dependencies {
-    implementation(project(":common"))
-    include(project(":common"))
-    modImplementation(project(":mod:common"))
     modImplementation("net.fabricmc:fabric-loader:${rootProject.extra["fabric_loader_version"]}")
     modImplementation("net.fabricmc:fabric-language-kotlin:${rootProject.extra["kotlin_loader_version"]}")
     modImplementation("net.fabricmc.fabric-api:fabric-api:${rootProject.extra["fabric_api_version"]}")
@@ -44,8 +41,8 @@ dependencies {
     implementation("net.kyori:adventure-text-minimessage:${rootProject.extra["adventure_version"]}")
     modImplementation(include("net.kyori:adventure-platform-fabric:6.7.0")!!)
 
-//    "common"(project(path = ":mod:common", configuration = "namedElements")) { isTransitive = false }
-//    "shadowBundle"(project(path = ":mod:common", configuration = "transformProductionFabric"))
+    "common"(project(path = ":mod:common", configuration = "namedElements")) { isTransitive = false }
+    "shadowBundle"(project(path = ":mod:common", configuration = "transformProductionFabric"))
 }
 
 loom {

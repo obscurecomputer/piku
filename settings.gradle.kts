@@ -9,7 +9,7 @@ pluginManagement {
 }
 
 rootProject.name = "piku"
-include("common")
+include("core")
 include("minestom")
 include("mod:fabric")
 include("mod:common")

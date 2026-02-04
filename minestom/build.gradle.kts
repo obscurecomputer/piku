@@ -22,7 +22,7 @@ repositories {
 }
 
 dependencies {
-    implementation(project(":common"))
+    implementation(project(":core"))
     testImplementation(kotlin("test"))
     implementation("io.netty:netty-buffer:4.1.111.Final")
     implementation("io.netty:netty-common:4.1.111.Final")

@@ -9,9 +9,12 @@ architectury {
 }
 
 dependencies {
-    implementation(project(":common"))
+    implementation(project(":core"))
+    val minecraft_version = rootProject.extra["minecraft_version"] as String
 
-    modImplementation("net.fabricmc:fabric-loader:${rootProject.extra["fabric_loader_version"]}")
-    modImplementation("net.fabricmc.fabric-api:fabric-api:${rootProject.extra["fabric_api_version"]}")
-    modImplementation("dev.architectury:architectury-fabric:${rootProject.extra["architectury_version"]}")
+    minecraft("net.minecraft:minecraft:$minecraft_version")
+    mappings(loom.officialMojangMappings())
+
+    modImplementation("dev.architectury:architectury:${rootProject.extra["architectury_version"]}")
 }
+

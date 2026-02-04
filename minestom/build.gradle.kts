@@ -41,9 +41,6 @@ dependencies {
 tasks.test {
     useJUnitPlatform()
 }
-kotlin {
-    jvmToolchain(25)
-}
 java {
     withSourcesJar()
     withJavadocJar()

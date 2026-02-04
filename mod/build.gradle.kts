@@ -1,8 +1,8 @@
 import org.gradle.api.tasks.compile.JavaCompile
 
 plugins {
-    kotlin("jvm") version "2.3.0" apply false
-    kotlin("plugin.serialization") version "2.3.0" apply false
+    kotlin("jvm")
+    kotlin("plugin.serialization")
     id("dev.architectury.loom") version "1.11-SNAPSHOT" apply false
     id("architectury-plugin") version "3.4-SNAPSHOT"
     id("com.gradleup.shadow") version "8.3.6" apply false
@@ -66,12 +66,12 @@ subprojects {
 
     extensions.configure<JavaPluginExtension> {
         withSourcesJar()
-        sourceCompatibility = JavaVersion.VERSION_25
-        targetCompatibility = JavaVersion.VERSION_25
+        sourceCompatibility = JavaVersion.VERSION_21
+        targetCompatibility = JavaVersion.VERSION_21
     }
 
     tasks.withType<JavaCompile>().configureEach {
-        options.release.set(25)
+        options.release.set(21)
     }
 
     extensions.configure<PublishingExtension> {

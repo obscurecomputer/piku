@@ -2,7 +2,7 @@ package computer.obscure.piku.minestom.scripting.api
 
 import computer.obscure.twine.annotations.TwineNativeFunction
 import computer.obscure.twine.annotations.TwineNativeProperty
-import computer.obscure.piku.common.scripting.base.Player
+import computer.obscure.piku.core.scripting.base.Player
 import net.kyori.adventure.text.minimessage.MiniMessage
 
 class LuaPlayer(

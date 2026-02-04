@@ -1,6 +1,6 @@
 package computer.obscure.piku.minestom.scripting
 
-import computer.obscure.piku.common.scripting.engine.LuaEngine
+import computer.obscure.piku.core.scripting.engine.LuaEngine
 import computer.obscure.piku.minestom.scripting.api.LuaServerEvents
 
 class MinestomLuaEngine : LuaEngine() {

@@ -10,8 +10,6 @@ architectury {
     fabric()
 }
 
-val targetJavaVersion = 25
-
 configurations {
     val common by creating {
         isCanBeResolved = true
@@ -36,10 +34,9 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.9.0")
     modImplementation("com.terraformersmc:modmenu:${rootProject.extra["modmenu_version"]}")
 
-    implementation(include("org.luaj:luaj-jse:${rootProject.extra["luaj_version"]}")!!)
-    implementation(include("computer.obscure:twine:${rootProject.extra["twine_version"]}")!!)
-    implementation("net.kyori:adventure-text-minimessage:${rootProject.extra["adventure_version"]}")
     modImplementation(include("net.kyori:adventure-platform-fabric:6.7.0")!!)
+    implementation(project(":core"))
+    modImplementation(project(":core"))
 
     "common"(project(path = ":mod:common", configuration = "namedElements")) { isTransitive = false }
     "shadowBundle"(project(path = ":mod:common", configuration = "transformProductionFabric"))

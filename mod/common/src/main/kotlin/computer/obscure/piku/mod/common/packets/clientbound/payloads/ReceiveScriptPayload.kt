@@ -10,13 +10,14 @@ class ReceiveScriptPayload(val name: String, val fileContents: String) : CustomP
     override fun type(): CustomPacketPayload.Type<ReceiveScriptPayload> = TYPE
 
     companion object {
+        val ID: ResourceLocation = ResourceLocation.fromNamespaceAndPath("piku", "receive_script")
         val TYPE = CustomPacketPayload.Type<ReceiveScriptPayload>(
-            ResourceLocation.fromNamespaceAndPath("piku", "receive_script")
+            ID
         )
 
         val STREAM_CODEC: StreamCodec<FriendlyByteBuf, ReceiveScriptPayload> = StreamCodec.composite(
             ByteBufCodecs.STRING_UTF8, ReceiveScriptPayload::name,
-            ByteBufCodecs.stringUtf8(1048576), ReceiveScriptPayload::fileContents,
+            ByteBufCodecs.STRING_UTF8, ReceiveScriptPayload::fileContents,
             ::ReceiveScriptPayload
         )
     }

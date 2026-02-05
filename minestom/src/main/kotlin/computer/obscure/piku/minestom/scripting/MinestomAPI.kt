@@ -16,6 +16,7 @@ import computer.obscure.twine.nativex.conversion.Converter.toLuaValue
 import net.minestom.server.entity.Player
 import net.minestom.server.event.player.PlayerLoadedEvent
 import net.minestom.server.event.player.PlayerPluginMessageEvent
+import net.minestom.server.network.NetworkBuffer
 import net.minestom.server.network.packet.server.common.PluginMessagePacket
 import org.luaj.vm2.LuaValue
 
@@ -69,9 +70,9 @@ class MinestomAPI(val server: BlossomServer) : ServerAPI<Player> {
         buf.readBytes(bytes)
         buf.release()
 
-        player.sendPacket(
-            PluginMessagePacket("piku:receive_data", bytes)
-        )
+//        player.sendPacket(
+//            PluginMessagePacket("piku:receive_data", bytes)
+//        )
     }
 
     override fun getPlayerUD(player: Player): LuaValue {
@@ -80,13 +81,12 @@ class MinestomAPI(val server: BlossomServer) : ServerAPI<Player> {
     }
 
     override fun sendScript(player: Player, name: String, content: String) {
-        val buf = ByteBufAllocator.DEFAULT.buffer()
-        buf.writeString(name)
-        buf.writeString(content)
+        val bytes = NetworkBuffer.makeArray { buffer ->
+            buffer.write(NetworkBuffer.STRING, name)
+            buffer.write(NetworkBuffer.STRING, content)
+        }
 
-        val bytes = ByteArray(buf.readableBytes())
-        buf.readBytes(bytes)
-        buf.release()
+        println("sending bytes size ${bytes.size}")
 
         player.sendPacket(
             PluginMessagePacket("piku:receive_script", bytes)

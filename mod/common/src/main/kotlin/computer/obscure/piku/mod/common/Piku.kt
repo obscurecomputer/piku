@@ -2,12 +2,8 @@ package computer.obscure.piku.mod.common
 
 import computer.obscure.piku.mod.common.events.ClientPlayConnection
 import computer.obscure.piku.mod.common.events.ClientTick
-import computer.obscure.piku.mod.common.packets.clientbound.ClientPacketHandlers
-import computer.obscure.piku.mod.common.packets.clientbound.payloads.ReceiveDataPayload
-import computer.obscure.piku.mod.common.packets.clientbound.payloads.ReceiveScriptPayload
 import computer.obscure.piku.mod.common.scripting.engine.ClientLuaEngine
 import computer.obscure.piku.mod.common.ui.UIRenderer
-import dev.architectury.networking.NetworkManager
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
 
@@ -40,7 +36,6 @@ class Piku {
             engine.init()
             InputTracker.init()
             UIRenderer.register()
-            ClientPacketHandlers.init()
 
             ClientPlayConnection.register()
             ClientTick.register()

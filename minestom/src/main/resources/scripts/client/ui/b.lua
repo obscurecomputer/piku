@@ -2,7 +2,7 @@
 listen("client.key_update", function(event)
     if event.key == "m" and event.action == "press" then
 
-        local flow = game.ui.flow("fucking_kys")
+        local flow = game.ui.flow("flow")
             .pos(vec2.of(50, 0))
             .direction("h")
             .gap(15)

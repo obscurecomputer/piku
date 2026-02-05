@@ -11,7 +11,7 @@
       "computer.obscure.piku.fabric.PikuClient"
     ],
     "main": [
-      "computer.obscure.piku.client.fabric.server.Piku"
+      "computer.obscure.piku.fabric.server.Piku"
     ]
   },
   "mixins": [

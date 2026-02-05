@@ -1,0 +1,27 @@
+modLoader = "javafml"
+loaderVersion = "[1,)"
+license = "MIT"
+
+[[mods]]
+modId = "piku"
+version = "${version}"
+displayName = "Piku Mod"
+authors = "zNotChill"
+description = '''
+epic mod that does stuff
+'''
+displayTest = "IGNORE_ALL_VERSION"
+
+[[dependencies.piku]]
+modId = "neoforge"
+type = "required"
+versionRange = "[${neoforge_version},)"
+ordering = "NONE"
+side = "CLIENT"
+
+[[dependencies.piku]]
+modId = "minecraft"
+type = "required"
+versionRange = "[${minecraft_version},)"
+ordering = "NONE"
+side = "CLIENT"

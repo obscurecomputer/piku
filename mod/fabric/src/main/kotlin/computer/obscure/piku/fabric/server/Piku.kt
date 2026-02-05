@@ -1,4 +1,4 @@
-package computer.obscure.piku.client.fabric.server
+package computer.obscure.piku.fabric.server
 
 import net.fabricmc.api.ModInitializer
 

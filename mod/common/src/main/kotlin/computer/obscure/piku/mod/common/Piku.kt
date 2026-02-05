@@ -9,7 +9,7 @@ import org.apache.logging.log4j.Logger
 
 class Piku {
     companion object {
-        val MOD_ID = "piku"
+        const val MOD_ID = "piku"
 
         val engine = ClientLuaEngine()
 

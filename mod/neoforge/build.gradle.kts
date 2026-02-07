@@ -50,7 +50,7 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.9.0")
     implementation(project(":core"))
 
-    modImplementation(include("net.kyori:adventure-platform-neoforge:6.7.0")!!)
+//    modImplementation(include("net.kyori:adventure-platform-neoforge:6.7.0")!!)
 
     "common"(project(path = ":mod:common", configuration = "namedElements")) { isTransitive = false }
     "shadowBundle"(project(path = ":mod:common", configuration = "transformProductionNeoForge"))

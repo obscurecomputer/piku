@@ -38,14 +38,14 @@ public class InGameHudMixin {
         }
     }
 
-    @Inject(
-            method = "render",
-            at = @At("HEAD"),
-            cancellable = true
-    )
-    private void piku$skipMainHud(GuiGraphics graphics, DeltaTracker deltaTracker, CallbackInfo ci) {
-        if (Client.hideHotbar) {
-            ci.cancel();
-        }
-    }
+//    @Inject(
+//            method = "render",
+//            at = @At("HEAD"),
+//            cancellable = true
+//    )
+//    private void piku$skipMainHud(GuiGraphics graphics, DeltaTracker deltaTracker, CallbackInfo ci) {
+//        if (Client.hideHotbar) {
+//            ci.cancel();
+//        }
+//    }
 }

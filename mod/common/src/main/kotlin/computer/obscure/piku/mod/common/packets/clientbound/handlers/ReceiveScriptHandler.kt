@@ -9,6 +9,7 @@ object ReceiveScriptHandler {
         Minecraft.getInstance().execute {
             try {
                 if (payload.name == "END_OF_SCRIPT_LOADING") {
+                    Piku.LOGGER.debug("Server sent EOSL")
                     Piku.engine.activeScripts.forEach { script ->
                         Piku.engine.runScript(script.key, script.value)
                     }

@@ -80,10 +80,19 @@ sourceSets {
 tasks.shadowJar {
     configurations = listOf(project.configurations.getByName("shadowBundle"))
     archiveClassifier.set("dev-shadow")
+
+    from(sourceSets.main.get().output)
+    from(sourceSets.named("client").get().output)
+
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
 
 tasks.remapJar {
     inputFile.set(tasks.shadowJar.get().archiveFile)
+}
+
+tasks.named<Jar>("sourcesJar") {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
 
 tasks.processResources {
@@ -96,7 +105,15 @@ tasks.processResources {
     inputs.properties(expandProps)
     filesMatching("fabric.mod.json") { expand(expandProps) }
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    from(sourceSets.named("client").get().resources)
 }
+tasks.jar {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+
+    from(sourceSets.named("main").get().output)
+    from(sourceSets.named("client").get().output)
+}
+
 tasks.named<ProcessResources>("processClientResources") {
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }

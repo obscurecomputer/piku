@@ -19,7 +19,6 @@ import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.renderer.texture.DynamicTexture
 import net.minecraft.resources.ResourceLocation
 import org.joml.Matrix3x2f
-import java.io.IOException
 
 object UIRenderer {
     val currentWindow: UIWindow = UIWindow("main")
@@ -88,6 +87,7 @@ object UIRenderer {
     }
 
     fun register() {
+        Piku.LOGGER.info("Registering UIRenderer events")
         ClientTickEvent.CLIENT_POST.register {
             handleUpdateRender()
         }

@@ -1,7 +1,7 @@
 {
   "required": true,
   "minVersion": "0.8",
-  "package": "computer.obscure.piku.mixin",
+  "package": "computer.obscure.piku.mod.common.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
   ],

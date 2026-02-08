@@ -1,14 +1,11 @@
 package computer.obscure.piku.minestom.scripting
 
-import io.netty.buffer.ByteBuf
 import io.netty.buffer.ByteBufAllocator
-import io.netty.buffer.Unpooled
 import me.znotchill.blossom.extensions.addListener
 import me.znotchill.blossom.server.BlossomServer
 import computer.obscure.piku.core.scripting.api.LuaEventData
 import computer.obscure.piku.core.scripting.server.ServerAPI
 import computer.obscure.piku.core.utils.jsonStringToLua
-import computer.obscure.piku.core.utils.readString
 import computer.obscure.piku.core.utils.toJson
 import computer.obscure.piku.core.utils.writeString
 import computer.obscure.piku.minestom.scripting.api.LuaPlayer
@@ -28,16 +25,21 @@ class MinestomAPI(val server: BlossomServer) : ServerAPI<Player> {
         server.eventHandler.addListener<PlayerPluginMessageEvent> { event ->
             when (event.identifier) {
                 "piku:send_data" -> {
-                    val buffer: ByteBuf = Unpooled.wrappedBuffer(event.message)
+                    try {
+                        val outerBuffer = NetworkBuffer.wrap(event.message, 0, event.message.size)
 
-                    val eventId = buffer.readString()
-                    val data = buffer.readString()
+                        val innerBytes = outerBuffer.read(NetworkBuffer.BYTE_ARRAY)
 
-                    buffer.release()
+                        val innerBuffer = NetworkBuffer.wrap(innerBytes, 0, innerBytes.size)
 
-                    val luaData = jsonStringToLua(data)
+                        val eventId = innerBuffer.read(NetworkBuffer.STRING)
+                        val dataJson = innerBuffer.read(NetworkBuffer.STRING)
 
-                    engine.events.fire(eventId, luaData, event.player)
+                        val luaData = jsonStringToLua(dataJson)
+                        engine.events.fire(eventId, luaData, event.player)
+                    } catch (e: Exception) {
+                        error("Failed to decode: ${e.message}")
+                    }
                 }
             }
         }
@@ -70,9 +72,9 @@ class MinestomAPI(val server: BlossomServer) : ServerAPI<Player> {
         buf.readBytes(bytes)
         buf.release()
 
-//        player.sendPacket(
-//            PluginMessagePacket("piku:receive_data", bytes)
-//        )
+        player.sendPacket(
+            PluginMessagePacket("piku:receive_data", bytes)
+        )
     }
 
     override fun getPlayerUD(player: Player): LuaValue {

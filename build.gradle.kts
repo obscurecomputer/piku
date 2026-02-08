@@ -4,6 +4,10 @@ plugins {
     kotlin("plugin.serialization") version "2.3.0" apply false
 }
 
+repositories {
+    mavenLocal()
+}
+
 subprojects {
     val targetVersion =
         if (project.path.contains("minestom") || project.name.contains("minestom")) 25

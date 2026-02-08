@@ -13,6 +13,16 @@ interface ServerAPI<T> {
     fun registerEvents()
 
     fun sendData(player: T, eventId: String, data: Any)
+    fun sendData(players: List<T>, eventId: String, data: Any) {
+        players.forEach {
+            sendData(it, eventId, data)
+        }
+    }
+    fun sendData(players: Collection<T>, eventId: String, data: Any) {
+        players.forEach {
+            sendData(it, eventId, data)
+        }
+    }
 
     fun sendScript(player: T, name: String, content: String)
 

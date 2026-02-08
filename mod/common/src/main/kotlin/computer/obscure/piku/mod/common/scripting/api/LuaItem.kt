@@ -17,7 +17,7 @@ class LuaItem : TwineNative() {
 
     @TwineNativeProperty
     val id: String
-        get() = BuiltInRegistries.ITEM.getId(stack.item).toString()
+        get() = BuiltInRegistries.ITEM.getKey(stack.item).toString()
 
     @TwineNativeProperty
     val count: Int

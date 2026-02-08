@@ -8,6 +8,10 @@ architectury {
     common("fabric", "forge", "neoforge")
 }
 
+repositories {
+    mavenLocal()
+}
+
 dependencies {
     implementation(project(":core"))
     val minecraft_version = rootProject.extra["minecraft_version"] as String

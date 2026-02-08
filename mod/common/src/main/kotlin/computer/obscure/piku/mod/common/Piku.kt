@@ -2,8 +2,10 @@ package computer.obscure.piku.mod.common
 
 import computer.obscure.piku.mod.common.events.ClientPlayConnection
 import computer.obscure.piku.mod.common.events.ClientTick
+import computer.obscure.piku.mod.common.packets.serverbound.payloads.SendDataPayload
 import computer.obscure.piku.mod.common.scripting.engine.ClientLuaEngine
 import computer.obscure.piku.mod.common.ui.UIRenderer
+import dev.architectury.networking.NetworkManager
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
 
@@ -36,6 +38,14 @@ class Piku {
             engine.init()
             InputTracker.init()
             UIRenderer.register()
+
+            NetworkManager.registerReceiver(
+                NetworkManager.clientToServer(),
+                SendDataPayload.TYPE,
+                SendDataPayload.CODEC
+            ) { _, _ ->
+                // Do nothing, since this is C2S
+            }
 
             ClientPlayConnection.register()
             ClientTick.register()

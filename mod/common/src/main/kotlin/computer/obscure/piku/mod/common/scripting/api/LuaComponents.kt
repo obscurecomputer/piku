@@ -8,7 +8,6 @@ import computer.obscure.twine.nativex.TwineNative
 import net.minecraft.core.component.DataComponentType
 import net.minecraft.core.component.DataComponents
 import net.minecraft.core.registries.BuiltInRegistries
-import net.minecraft.core.registries.Registries
 import net.minecraft.nbt.ByteTag
 import net.minecraft.nbt.CompoundTag
 import net.minecraft.nbt.DoubleTag
@@ -85,11 +84,20 @@ class LuaComponents(
             .toString()
 
     private fun valueToLua(value: Any): Any? = when (value) {
-        is Optional<*> -> value.unwrap()
+        is Optional<*> -> {
+            value.unwrap()
+        }
         is Int, is Boolean, is Double, is Float, is String -> value
         is Component -> textToJson(value)
         is ItemLore -> value.lines.map(::textToJson)
-        is CustomData -> nbtToLua(value.copyTag())
+        is CustomData -> {
+            val nbt = value.copyTag()
+            LuaNbtCompound(
+                nbt.keySet().associateWith { key ->
+                    nbtToLua(nbt.get(key)!!)?.unwrap()
+                }
+            )
+        }
         is CustomModelData -> mapOf(
             "floats" to value.floats(),
             "flags" to value.flags(),

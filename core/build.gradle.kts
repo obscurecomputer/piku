@@ -38,7 +38,7 @@ publishing {
             from(components["java"])
 
             group
-            artifactId = "common"
+            artifactId = "core"
             version
         }
     }

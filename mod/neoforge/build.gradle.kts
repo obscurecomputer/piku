@@ -16,6 +16,10 @@ architectury {
     neoForge()
 }
 
+repositories {
+    mavenLocal()
+}
+
 configurations {
     val common by creating {
         isCanBeResolved = true

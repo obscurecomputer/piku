@@ -71,6 +71,10 @@ object UIRenderer {
         activeAnimations.clear()
     }
 
+    fun animations(): List<PropertyAnimation<*, *>> {
+        return activeAnimations
+    }
+
     fun registerEasing(easing: LuaEasingInstance) {
         registeredEasings[easing.id] = easing.function
     }

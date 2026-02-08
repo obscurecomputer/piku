@@ -10,6 +10,10 @@ architectury {
     fabric()
 }
 
+repositories {
+    mavenLocal()
+}
+
 configurations {
     val common by creating {
         isCanBeResolved = true
@@ -40,6 +44,7 @@ dependencies {
 
     "common"(project(path = ":mod:common", configuration = "namedElements")) { isTransitive = false }
     "shadowBundle"(project(path = ":mod:common", configuration = "transformProductionFabric"))
+    "shadowBundle"(project(":core"))
 }
 
 loom {

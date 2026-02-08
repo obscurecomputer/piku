@@ -52,7 +52,7 @@ object InputTracker {
                     "action" to if (pressed) "press" else "release"
                 )
 
-                Piku.engine.events.fire("client.key_update", LuaEventData(data))
+                Piku.engine.events.fire("client.key_update", LuaEventData(data).table)
             }
         }
     }
@@ -72,7 +72,7 @@ object InputTracker {
                     "y" to client.mouseHandler.ypos()
                 )
 
-                Piku.engine.events.fire("client.mouse_update", LuaEventData(data))
+                Piku.engine.events.fire("client.mouse_update", LuaEventData(data).table)
             }
         }
     }

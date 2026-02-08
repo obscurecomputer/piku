@@ -48,7 +48,7 @@ open class LuaUIComponent(open val component: Component) : TwineNative() {
     }
 
     @TwineNativeProperty
-    var pos: LuaVec2Instance
+    var position: LuaVec2Instance
         get() = LuaVec2.fromVec2(component.props.pos)
         set(value) {
             component.props.pos = value.toVec2()
@@ -138,6 +138,10 @@ open class LuaUIComponent(open val component: Component) : TwineNative() {
     fun animate(): LuaUIAnimation {
         return LuaUIAnimation(this.component)
     }
+
+    @TwineNativeProperty
+    val isAnimating: Boolean
+        get() = UIRenderer.animations().find { it.targetId == component.internalId } != null
 
     @TwineNativeFunction
     fun cancelAnimations() {

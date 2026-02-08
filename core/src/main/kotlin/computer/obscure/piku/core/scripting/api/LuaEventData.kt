@@ -27,6 +27,13 @@ class LuaEventData(fields: Map<String, Any?>) {
         is Double -> LuaValue.valueOf(value)
         is Float -> LuaValue.valueOf(value.toDouble())
         is Boolean -> LuaValue.valueOf(value)
+        is Map<*, *> -> {
+            val childTable = LuaTable()
+            value.forEach { (k, v) ->
+                childTable[toLuaValue(k)] = toLuaValue(v)
+            }
+            childTable
+        }
         else -> LuaValue.userdataOf(value)
     }
 }

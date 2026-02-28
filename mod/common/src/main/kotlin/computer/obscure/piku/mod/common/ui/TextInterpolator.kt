@@ -6,12 +6,16 @@ import net.minecraft.client.Minecraft
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.phys.EntityHitResult
 import net.minecraft.world.phys.HitResult
+import oshi.SystemInfo
+import oshi.hardware.CentralProcessor
 
 
 object TextInterpolator {
     private val mc get() = Minecraft.getInstance()
-
     private val providers = mutableMapOf<String, () -> String>()
+
+    private val si = SystemInfo()
+    private val hardware = si.hardware
 
     init {
         register("CLIENT_PING") {
@@ -21,7 +25,7 @@ object TextInterpolator {
             "${mc.fps}"
         }
         register("PLAYER_NAME") {
-            mc.player?.name?.string ?: "Unknown"
+            mc.gameProfile.name ?: "Unknown"
         }
 
         register("CLIENT_DIMENSION") { mc.level?.dimension()?.location()?.path ?: "Unknown" }
@@ -30,6 +34,12 @@ object TextInterpolator {
             val used = (rt.totalMemory() - rt.freeMemory()) / 1024 / 1024
             val max = rt.maxMemory() / 1024 / 1024
             "${used}MB/${max}MB"
+        }
+        register("GPU_NAME") {
+            hardware.graphicsCards.firstOrNull()?.name ?: "N/A"
+        }
+        register("OS_NAME") {
+            si.operatingSystem.toString()
         }
 
         register("RANDOM_INT") { (0..9999).random().toString() }

@@ -47,6 +47,9 @@ object TextInterpolator {
             val ping = mc.player?.connection?.getPlayerInfo(mc.player!!.uuid)?.latency ?: -1
             "${getPlayerPingColor()}${ping}"
         }
+        register("PLAYER_PING") {
+            (mc.player?.connection?.getPlayerInfo(mc.player!!.uuid)?.latency ?: -1).toString()
+        }
         register("PLAYER_PING_COLOR") {
             getPlayerPingColor()
         }

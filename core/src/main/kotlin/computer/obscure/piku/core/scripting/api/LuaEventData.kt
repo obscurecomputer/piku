@@ -18,22 +18,35 @@ class LuaEventData(fields: Map<String, Any?>) {
         table[key] = toLuaValue(value)
     }
 
-    private fun toLuaValue(value: Any?): LuaValue = when (value) {
-        null -> LuaValue.NIL
-        is LuaValue -> value
-        is String -> LuaValue.valueOf(value)
-        is Int -> LuaValue.valueOf(value)
-        is Long -> LuaValue.valueOf(value.toInt())
-        is Double -> LuaValue.valueOf(value)
-        is Float -> LuaValue.valueOf(value.toDouble())
-        is Boolean -> LuaValue.valueOf(value)
-        is Map<*, *> -> {
-            val childTable = LuaTable()
-            value.forEach { (k, v) ->
-                childTable[toLuaValue(k)] = toLuaValue(v)
+    fun toLuaValue(value: Any?): LuaValue {
+        val result = when (value) {
+            null -> LuaValue.NIL
+            is LuaValue -> value
+            is String -> LuaValue.valueOf(value)
+            is Int -> LuaValue.valueOf(value)
+            is Long -> LuaValue.valueOf(value.toInt())
+            is Double -> LuaValue.valueOf(value)
+            is Float -> LuaValue.valueOf(value.toDouble())
+            is Boolean -> LuaValue.valueOf(value)
+            is Map<*, *> -> {
+                val childTable = LuaTable()
+                value.forEach { (k, v) ->
+                    childTable[toLuaValue(k)] = toLuaValue(v)
+                }
+                childTable
             }
-            childTable
+            is LuaEventData -> {
+                value.table
+            }
+            is List<*> -> {
+                val childTable = LuaTable()
+                value.forEachIndexed { index, item ->
+                    childTable.set(index + 1, toLuaValue(item))
+                }
+                childTable
+            }
+            else -> LuaValue.userdataOf(value)
         }
-        else -> LuaValue.userdataOf(value)
+        return result
     }
 }

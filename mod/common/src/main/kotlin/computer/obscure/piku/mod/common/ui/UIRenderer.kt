@@ -284,11 +284,18 @@ object UIRenderer {
 
         when (component) {
             is Group -> {
+                var maxW = 0.0
+                var maxH = 0.0
                 component.props.components.forEach { child ->
-                    child.computedPos = child.props.pos
+                    child.screenX = component.screenX + child.props.pos.x.toInt()
+                    child.screenY = component.screenY + child.props.pos.y.toInt()
 
                     layoutComponent(child, window, component.computedScale)
+
+                    maxW = maxOf(maxW, child.props.pos.x + child.width())
+                    maxH = maxOf(maxH, child.props.pos.y + child.height())
                 }
+                component.computedSize = Vec2(maxW, maxH)
                 return
             }
             is Text -> {
@@ -325,17 +332,13 @@ object UIRenderer {
                 val props = component.props
                 var offsetX = props.padding.left
                 var offsetY = props.padding.top
-                val initialPos = component.props.pos
-
-                var maxChildX = 0.0
-                var maxChildY = 0.0
 
                 component.props.components.forEachIndexed { _, child ->
                     val margin = child.props.margin
 
                     child.computedPos = Vec2(
-                        child.props.pos.x + offsetX + margin.left + initialPos.x,
-                        child.props.pos.y + offsetY + margin.top + initialPos.y,
+                        offsetX + margin.left,
+                        offsetY + margin.top
                     )
 
                     child.screenX = (component.screenX + child.computedPos!!.x).toInt()
@@ -345,21 +348,18 @@ object UIRenderer {
                     when (props.direction) {
                         FlowDirection.HORIZONTAL -> {
                             offsetX += child.width() + margin.left + margin.right + props.gap
-                            maxChildY = maxOf(maxChildY, offsetY + child.height() + margin.top + margin.bottom)
                         }
                         FlowDirection.VERTICAL -> {
                             offsetY += child.height() + margin.top + margin.bottom + props.gap
-                            maxChildX = maxOf(maxChildX, offsetX + child.width() + margin.left + margin.right)
                         }
                     }
                 }
 
-                val finalWidth = if (props.direction == FlowDirection.HORIZONTAL) offsetX else maxChildX
-                val finalHeight = if (props.direction == FlowDirection.VERTICAL) offsetY else maxChildY
-
                 component.computedSize = Vec2(
-                    finalWidth + props.padding.right,
-                    finalHeight + props.padding.bottom
+                    if (props.direction == FlowDirection.HORIZONTAL)
+                        offsetX + props.padding.right else component.width(),
+                    if (props.direction == FlowDirection.VERTICAL)
+                        offsetY + props.padding.bottom else component.height()
                 )
 
                 return
@@ -368,7 +368,9 @@ object UIRenderer {
             else -> {}
         }
 
-        resolvePosition(component, window)
+        if (component.computedPos == null) {
+            resolvePosition(component, window)
+        }
     }
 
 
@@ -496,7 +498,7 @@ object UIRenderer {
 
     fun getTexture(path: String): DynamicTexture? {
         // FIXME: gpu memory leaking? DynamicTexture implements Dumpable
-        val id = getIdentifier(path)
+        val id = getIdentifier(path) ?: return null
         return try {
             val resourceManager = Minecraft.getInstance().resourceManager
             val resourceOptional = resourceManager.getResource(id).orElse(null) ?: return null
@@ -509,17 +511,21 @@ object UIRenderer {
         }
     }
 
-    fun getIdentifier(path: String): ResourceLocation {
-        return if (':' in path) {
-            ResourceLocation.parse(path)
-        } else {
-            ResourceLocation.fromNamespaceAndPath("minecraft", path)
+    fun getIdentifier(path: String): ResourceLocation? {
+        return try {
+            if (':' in path) {
+                ResourceLocation.parse(path)
+            } else {
+                ResourceLocation.fromNamespaceAndPath("minecraft", path)
+            }
+        } catch (e: Exception) {
+            null
         }
     }
 }
 
 /**
- * An optimisation to only resolvve the texture if it has not been resolved before
+ * An optimisation to only resolve the texture if it has not been resolved before
  * for this component.
  */
 fun Sprite.resolveTextureOnce() {

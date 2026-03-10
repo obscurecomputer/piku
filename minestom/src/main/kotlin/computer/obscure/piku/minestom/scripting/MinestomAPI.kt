@@ -60,7 +60,7 @@ class MinestomAPI(val server: BlossomServer) : ServerAPI<Player> {
 
     override fun sendData(player: Player, eventId: String, data: Any) {
         val serializedData: LuaValue = when (data) {
-            is LuaEventData -> data.table
+            is LuaEventData -> data.toLuaValue(data)
             else -> data.toLuaValue()
         }
 
@@ -87,8 +87,6 @@ class MinestomAPI(val server: BlossomServer) : ServerAPI<Player> {
             buffer.write(NetworkBuffer.STRING, name)
             buffer.write(NetworkBuffer.STRING, content)
         }
-
-        println("sending bytes size ${bytes.size}")
 
         player.sendPacket(
             PluginMessagePacket("piku:receive_script", bytes)

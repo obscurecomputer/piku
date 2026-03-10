@@ -9,7 +9,7 @@ import net.minecraft.client.renderer.RenderPipelines
 class SpriteRenderer : UIComponent<Sprite>() {
     override fun drawContent(component: Sprite, context: GuiGraphics, instance: Minecraft) {
         val props = component.props
-        val texture = UIRenderer.getIdentifier(props.texturePath)
+        val texture = UIRenderer.getIdentifier(props.texturePath) ?: return
         val texWidth = component.computedSize?.x?.toInt() ?: 16
         val texHeight = component.computedSize?.y?.toInt() ?: 16
 

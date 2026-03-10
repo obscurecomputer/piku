@@ -1,0 +1,17 @@
+{
+  "required": true,
+  "package": "computer.obscure.piku.mod.common.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "client": [
+    "CameraMixin",
+    "ClientPlayerEntityMixin",
+    "HeldItemRendererMixin",
+    "InGameHudMixin",
+    "MinecraftClientMixin",
+    "MouseMixin",
+    "ScreenshotMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

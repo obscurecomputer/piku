@@ -25,7 +25,7 @@ class LuaServerEvents : ServerEventBus {
     }
 
     override fun send(
-        player: computer.obscure.piku.common.scripting.base.Player,
+        player: computer.obscure.piku.core.scripting.base.Player,
         eventId: String,
         data: LuaValue
     ) {}

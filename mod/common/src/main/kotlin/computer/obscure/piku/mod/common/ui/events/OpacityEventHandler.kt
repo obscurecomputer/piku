@@ -1,0 +1,20 @@
+package computer.obscure.piku.mod.common.ui.events
+
+import computer.obscure.piku.core.ui.components.Component
+import computer.obscure.piku.core.ui.events.OpacityEvent
+import computer.obscure.piku.core.ui.events.PropertyAnimation
+
+class OpacityEventHandler : UIEventHandler<OpacityEvent> {
+    override fun handle(event: OpacityEvent, component: Component, context: UIEventContext) {
+        val anim = PropertyAnimation(
+            targetId = event.targetId,
+            getter = { c: Component -> c.props.opacity },
+            setter = { c, value -> c.props.opacity = value },
+            from = null,
+            to = event.opacity,
+            durationSeconds = event.durationSeconds,
+            easing = event.easing
+        )
+        context.enqueueAnimation(anim)
+    }
+}

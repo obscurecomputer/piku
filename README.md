@@ -6,7 +6,7 @@
 
 Client & Server scripting mod for Fabric and Minestom. 
 
-More info on [docs.obscure.computer](https://docs.obscure.computer/projects/piku/).
+More info on [docs.obscure.computer](https://docs.obscure.computer/project.piku/).
 
 # To-do List / Roadmap
 Tasks labeled here may not be worked on in chronological order.

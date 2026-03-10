@@ -1,7 +1,7 @@
 package computer.obscure.piku.minestom.test
 
-import computer.obscure.piku.common.classes.ScriptSource
-import computer.obscure.piku.common.scripting.api.LuaEventData
+import computer.obscure.piku.core.classes.ScriptSource
+import computer.obscure.piku.core.scripting.api.LuaEventData
 import me.znotchill.blossom.extensions.addListener
 import me.znotchill.blossom.server.BlossomServer
 import computer.obscure.piku.minestom.scripting.MinestomAPI

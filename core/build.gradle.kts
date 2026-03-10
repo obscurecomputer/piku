@@ -1,0 +1,58 @@
+import org.gradle.kotlin.dsl.publishing
+
+plugins {
+    `maven-publish`
+    kotlin("jvm")
+}
+
+group = project.property("group")!!
+version = project.property("common_version")!!
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+    maven("https://jitpack.io")
+    maven("https://repo.obscure.computer/repository/maven-releases/")
+}
+
+dependencies {
+    testImplementation(kotlin("test"))
+    implementation("io.netty:netty-buffer:4.1.111.Final")
+    implementation("io.netty:netty-common:4.1.111.Final")
+    implementation("com.google.code.gson:gson:2.10.1")
+    implementation("org.joml:joml:1.10.8")
+    implementation("org.luaj:luaj-jse:${project.property("luaj_version")}")
+    implementation("computer.obscure:twine:${project.property("twine_version")}")
+    compileOnly("net.kyori:adventure-text-minimessage:${project.property("adventure_version")}")
+    compileOnly("net.kyori:adventure-api:${project.property("adventure_version")}")
+    compileOnly("net.kyori:adventure-text-serializer-plain:${project.property("adventure_version")}")
+}
+
+tasks.test {
+    useJUnitPlatform()
+}
+
+publishing {
+    publications {
+        create<MavenPublication>("mavenJava") {
+            from(components["java"])
+
+            group
+            artifactId = "core"
+            version
+        }
+    }
+
+    repositories {
+        maven {
+            name = "obscurerepo"
+            url = uri("https://repo.obscure.computer/repository/maven-releases/")
+            credentials {
+                username = findProperty("obscureUsername") as String? ?: System.getenv("OBSCURE_MAVEN_USER")
+                password = findProperty("obscurePassword") as String? ?: System.getenv("OBSCURE_MAVEN_PASS")
+            }
+        }
+
+        mavenLocal()
+    }
+}

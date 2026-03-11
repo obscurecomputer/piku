@@ -2,12 +2,16 @@ package computer.obscure.piku.minestom.test
 
 import computer.obscure.piku.core.classes.ScriptSource
 import computer.obscure.piku.core.scripting.api.LuaEventData
+import computer.obscure.piku.core.states.SharedState
+import computer.obscure.piku.core.states.sharedState
 import me.znotchill.blossom.extensions.addListener
 import me.znotchill.blossom.server.BlossomServer
 import computer.obscure.piku.minestom.scripting.MinestomAPI
+import me.znotchill.blossom.command.command
 import me.znotchill.blossom.extensions.ticks
 import me.znotchill.blossom.scheduler.task
 import net.minestom.server.entity.GameMode
+import net.minestom.server.entity.Player
 import net.minestom.server.event.player.AsyncPlayerConfigurationEvent
 import net.minestom.server.event.player.PlayerChunkLoadEvent
 import net.minestom.server.event.player.PlayerChunkUnloadEvent
@@ -22,10 +26,7 @@ class Server : BlossomServer(
 
     val piku = MinestomAPI(this)
 
-    val loadedChunks = mutableMapOf<UUID, MutableSet<Long>>()
-
-    fun pack(x: Int, z: Int): Long =
-        (x.toLong() shl 32) or (z.toLong() and 0xffffffff)
+    val states = mutableMapOf<Player, SharedState>()
 
     override fun preLoad() {
         piku.registerEvents()
@@ -44,72 +45,41 @@ class Server : BlossomServer(
                 source = ScriptSource.Resource(path = "scripts/client"),
                 recurse = true
             )
+        }
 
-            scheduler.task {
-                delay = 1.ticks
-                run = {
-                    piku.sendData(
-                        event.player,
-                        "load_map",
-                        LuaEventData(
-                            emptyMap()
+        registerCommand(
+            command("share") {
+                syntax {
+                    if (states[this] != null)
+                        states[this]!!.destroy()
+
+                    val state = sharedState("hi") {
+                        value = uuid.toString()
+                        clientModifiable = true
+
+                        owners = listOf(
+                            this@syntax
                         )
-                    )
+
+                        onSet = { oldValue, newValue ->
+                            sendMessage("$oldValue changed to $newValue!")
+                        }
+                    }
+
+                    states[this] = state
                 }
             }
-        }
+        )
 
-        eventHandler.addListener<PlayerChunkUnloadEvent> { event ->
-            val set = loadedChunks[event.player.uuid] ?: return@addListener
-            set.remove(pack(event.chunkX, event.chunkZ))
-        }
+        registerCommand(
+            command("update") {
+                syntax {
+                    if (states[this] == null) return@syntax
 
-        eventHandler.addListener<PlayerChunkLoadEvent> { event ->
-            val player = event.player
-            val uuid = player.uuid
-
-            val set = loadedChunks.getOrPut(uuid) { mutableSetOf() }
-            set.add(pack(event.chunkX, event.chunkZ))
-
-            val loaded = set.size
-
-            val px = player.chunk?.chunkX ?: 0
-            val pz = player.chunk?.chunkX ?: 0
-
-            val radius = set.maxOf {
-                val x = (it shr 32).toInt()
-                val z = it.toInt()
-                maxOf(kotlin.math.abs(x - px), kotlin.math.abs(z - pz))
+                    val state = states[this]!!
+                    state.set(state.get().toString() + "_hi")
+                }
             }
-
-            val total = (radius * 2 + 1) * (radius * 2 + 1)
-
-            piku.sendData(
-                player,
-                "load_map_progress",
-                LuaEventData(
-                    mapOf(
-                        "loaded" to loaded,
-                        "total" to total
-                    )
-                )
-            )
-
-            if (total == loaded) {
-                piku.sendData(
-                    player,
-                    "load_map_done",
-                    LuaEventData(
-                        emptyMap()
-                    )
-                )
-            }
-        }
-
-
-        piku.runAllScripts(
-            source = ScriptSource.Resource("scripts/server"),
-            recurse = true
         )
     }
 }

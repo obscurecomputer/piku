@@ -57,13 +57,6 @@ object Client {
             Minecraft.getInstance().options.cameraType = value
         }
 
-    fun updateFovAnimation() {
-        if (fovTicksRemaining > 0) {
-            println(fovTicksRemaining)
-            fovTicksRemaining--
-        }
-    }
-
     @JvmField
     var connectedToServer: Boolean = false
     @JvmField

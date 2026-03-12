@@ -8,6 +8,7 @@ import computer.obscure.piku.core.scripting.api.LuaSpacing
 import computer.obscure.piku.core.scripting.api.LuaText
 import computer.obscure.piku.core.scripting.api.LuaVec2
 import computer.obscure.piku.core.scripting.api.LuaVec3
+import computer.obscure.piku.core.service.PikuService
 import computer.obscure.twine.TwineTable
 import computer.obscure.twine.nativex.TwineEngine
 import computer.obscure.twine.nativex.TwineNative
@@ -22,7 +23,7 @@ import org.luaj.vm2.lib.jse.JseBaseLib
 import org.luaj.vm2.lib.jse.JseMathLib
 import org.luaj.vm2.lib.jse.LuajavaLib
 
-abstract class LuaEngine {
+abstract class LuaEngine : PikuService {
     val engine = TwineEngine()
     open val registeredTables: MutableMap<String, TwineTable> = mutableMapOf()
     open val registeredBaseTables: MutableList<TwineNative> = mutableListOf()
@@ -35,6 +36,12 @@ abstract class LuaEngine {
         registeredBaseTables.clear()
         registeredTables.clear()
         rebuildGlobals()
+    }
+
+    override fun shutdown() {
+        // !!! VERY IMPORTANT
+        // This clears all active scripts upon shutdown
+        activeScripts.clear()
     }
 
     private fun rebuildGlobals() {

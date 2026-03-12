@@ -12,5 +12,11 @@ fun sharedState(
 
     SharedStateManager.addState(state)
 
+    // Send the initial state to the client
+    SharedStateManager.piku.syncStateToOwners(
+        state.owners,
+        state
+    )
+
     return state
 }

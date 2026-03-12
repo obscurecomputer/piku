@@ -1,6 +1,7 @@
 package computer.obscure.piku.mod.common.events
 
 import computer.obscure.piku.core.scheduler.Scheduler
+import computer.obscure.piku.core.scripting.server.SharedStateManager
 import computer.obscure.piku.mod.common.Client
 import computer.obscure.piku.mod.common.Piku
 import computer.obscure.piku.mod.common.ui.UIRenderer
@@ -24,6 +25,11 @@ object ClientPlayConnection {
     }
 
     fun onDisconnect() {
+        SharedStateManager.shutdown()
+        Piku.engine.shutdown()
+        UIRenderer.shutdown()
+        Scheduler.shutdown()
+
         Client.apply {
             customPitch = 0f
             customYaw = 0f
@@ -55,13 +61,5 @@ object ClientPlayConnection {
             customScreenshotMessage = null
             customScreenshotInstance = null
         }
-
-        Piku.engine.shutdown()
-
-        // !!! VERY IMPORTANT
-        // This clears all active scripts upon disconnect
-        Piku.engine.activeScripts.clear()
-        UIRenderer.reset()
-        Scheduler.reset()
     }
 }

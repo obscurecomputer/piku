@@ -1,9 +1,10 @@
 package computer.obscure.piku.core.scheduler
 
+import computer.obscure.piku.core.service.PikuService
 import java.util.UUID
 
 
-object Scheduler {
+object Scheduler : PikuService {
 
     private val tasks = LinkedHashMap<String, ScheduledTask>()
     private val pendingAdd = mutableListOf<Pair<String, ScheduledTask>>()
@@ -12,7 +13,7 @@ object Scheduler {
     private var tick = 0L
     private var ticking = false
 
-    fun reset() {
+    override fun shutdown() {
         tasks.clear()
         pendingAdd.clear()
         pendingRemove.clear()

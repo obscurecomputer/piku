@@ -25,7 +25,11 @@ interface ServerAPI<T> {
     fun sendState(players: List<T>, state: SharedState) =
         players.forEach { sendState(it, state) }
 
-    fun syncStateToOwners(owners: Any, state: SharedState, exemptSyncOwners: Any) {
+    fun syncStateToOwners(
+        owners: Any,
+        state: SharedState,
+        exemptSyncOwners: Any = listOf<Any>()
+    ) {
         val exemptList = when (exemptSyncOwners) {
             is List<*> -> exemptSyncOwners
             else -> listOf(exemptSyncOwners)

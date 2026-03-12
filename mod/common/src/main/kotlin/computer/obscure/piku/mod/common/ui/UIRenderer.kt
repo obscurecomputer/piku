@@ -3,6 +3,7 @@ package computer.obscure.piku.mod.common.ui
 import com.mojang.blaze3d.platform.NativeImage
 import computer.obscure.piku.core.classes.Vec2
 import computer.obscure.piku.core.scripting.api.LuaEventData
+import computer.obscure.piku.core.service.PikuService
 import computer.obscure.piku.core.ui.*
 import computer.obscure.piku.core.ui.classes.*
 import computer.obscure.piku.core.ui.components.*
@@ -20,7 +21,7 @@ import net.minecraft.client.renderer.texture.DynamicTexture
 import net.minecraft.resources.ResourceLocation
 import org.joml.Matrix3x2f
 
-object UIRenderer {
+object UIRenderer : PikuService {
     val currentWindow: UIWindow = UIWindow("main")
 
     private var activeAnimations = mutableListOf<PropertyAnimation<*, *>>()
@@ -60,7 +61,7 @@ object UIRenderer {
         )
     )
 
-    fun reset() {
+    override fun shutdown() {
         debugEnabled = false
         activeAnimations.clear()
         registeredEasings.clear()

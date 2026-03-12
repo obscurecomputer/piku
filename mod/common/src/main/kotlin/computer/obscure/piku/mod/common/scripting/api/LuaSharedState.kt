@@ -5,7 +5,7 @@ import computer.obscure.piku.mod.common.Piku
 import computer.obscure.twine.annotations.TwineNativeFunction
 import computer.obscure.twine.annotations.TwineNativeProperty
 import computer.obscure.twine.nativex.TwineNative
-import computer.obscure.twine.nativex.conversion.Converter.toKotlinType
+import computer.obscure.twine.nativex.conversion.Converter.toLuaValue
 import org.luaj.vm2.LuaValue
 import java.util.UUID
 
@@ -36,5 +36,16 @@ class LuaSharedState(
             value = value,
             clientModifiable = clientModifiable
         )
+    }
+
+    companion object {
+        fun fromSharedState(state: SharedState): LuaSharedState {
+            return LuaSharedState(
+                internalId = state.internalId.toString(),
+                name = state.name,
+                value = state.value.toLuaValue(),
+                clientModifiable = state.clientModifiable
+            )
+        }
     }
 }

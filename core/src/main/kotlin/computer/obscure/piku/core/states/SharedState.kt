@@ -1,6 +1,5 @@
 package computer.obscure.piku.core.states
 
-import computer.obscure.piku.core.scripting.server.ServerAPI
 import computer.obscure.piku.core.scripting.server.SharedStateManager
 import java.util.UUID
 import kotlin.reflect.KProperty

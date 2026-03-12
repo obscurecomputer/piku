@@ -19,6 +19,13 @@ class LuaSharedState(
     @TwineNativeProperty
     var clientModifiable: Boolean,
 ) : TwineNative() {
+    @TwineNativeProperty
+    var onSet: LuaValue = LuaValue.NIL
+        set(value) {
+            field = value
+            Piku.engine.events.stateCallbacks[UUID.fromString(this.internalId)] = value
+        }
+
     @TwineNativeFunction
     fun set(value: Any) {
         if (!clientModifiable) {
@@ -26,6 +33,7 @@ class LuaSharedState(
         }
         val state = this.toSharedState()
         state.value = value
+
         Piku.engine.events.sendState(state)
     }
 

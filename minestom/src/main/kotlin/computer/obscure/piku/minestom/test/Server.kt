@@ -1,23 +1,16 @@
 package computer.obscure.piku.minestom.test
 
 import computer.obscure.piku.core.classes.ScriptSource
-import computer.obscure.piku.core.scripting.api.LuaEventData
-import computer.obscure.piku.core.states.SharedState
-import computer.obscure.piku.core.states.sharedState
+import computer.obscure.piku.minestom.scripting.MinestomAPI
+import computer.obscure.piku.minestom.scripting.states.getState
+import computer.obscure.piku.minestom.scripting.states.sharedState
+import me.znotchill.blossom.command.command
 import me.znotchill.blossom.extensions.addListener
 import me.znotchill.blossom.server.BlossomServer
-import computer.obscure.piku.minestom.scripting.MinestomAPI
-import me.znotchill.blossom.command.command
-import me.znotchill.blossom.extensions.ticks
-import me.znotchill.blossom.scheduler.task
 import net.minestom.server.entity.GameMode
-import net.minestom.server.entity.Player
 import net.minestom.server.event.player.AsyncPlayerConfigurationEvent
-import net.minestom.server.event.player.PlayerChunkLoadEvent
-import net.minestom.server.event.player.PlayerChunkUnloadEvent
 import net.minestom.server.event.player.PlayerLoadedEvent
 import net.minestom.server.instance.InstanceContainer
-import java.util.UUID
 
 class Server : BlossomServer(
     auth = false
@@ -25,8 +18,6 @@ class Server : BlossomServer(
     lateinit var instanceContainer: InstanceContainer
 
     val piku = MinestomAPI(this)
-
-    val states = mutableMapOf<Player, SharedState>()
 
     override fun preLoad() {
         piku.registerEvents()
@@ -50,23 +41,13 @@ class Server : BlossomServer(
         registerCommand(
             command("share") {
                 syntax {
-                    if (states[this] != null)
-                        states[this]!!.destroy()
+                    val player = this
+                    player.getState("hi")?.destroy()
 
-                    val state = sharedState("hi") {
+                    val state = player.sharedState("hi") {
                         value = uuid.toString()
                         clientModifiable = true
-
-                        owners = listOf(
-                            this@syntax
-                        )
-
-                        onSet = { oldValue, newValue ->
-                            sendMessage("$oldValue changed to $newValue!")
-                        }
                     }
-
-                    states[this] = state
                 }
             }
         )
@@ -74,9 +55,8 @@ class Server : BlossomServer(
         registerCommand(
             command("update") {
                 syntax {
-                    if (states[this] == null) return@syntax
-
-                    val state = states[this]!!
+                    val player = this
+                    val state = player.getState("hi") ?: return@syntax
                     state.set(state.get().toString() + "_hi")
                 }
             }

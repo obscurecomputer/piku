@@ -11,6 +11,7 @@ import computer.obscure.piku.mod.common.scripting.events.HeartbeatEvent
 import computer.obscure.twine.nativex.conversion.Converter.toLuaValue
 import dev.architectury.networking.NetworkManager
 import org.luaj.vm2.LuaValue
+import java.util.UUID
 
 class LuaClientEvents : ClientEventBus {
     val customListeners =
@@ -18,6 +19,8 @@ class LuaClientEvents : ClientEventBus {
 
     val baseListeners =
         mutableMapOf<String, LuaEvent>()
+
+    val stateCallbacks: MutableMap<UUID, LuaValue> = mutableMapOf()
 
     fun registerBaseListeners() {
         register(HeartbeatEvent)
@@ -30,6 +33,7 @@ class LuaClientEvents : ClientEventBus {
     fun clear() {
         customListeners.clear()
         baseListeners.clear()
+        stateCallbacks.clear()
     }
 
     // lua > server

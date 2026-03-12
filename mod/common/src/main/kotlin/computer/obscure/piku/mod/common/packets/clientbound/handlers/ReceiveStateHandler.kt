@@ -19,7 +19,16 @@ object ReceiveStateHandler {
                     ),
                     clientModifiable = payload.clientModifiable
                 )
-                SharedStateManager.addState(luaState.toSharedState())
+
+                val state = luaState.toSharedState()
+
+                val callback = Piku.engine.events.stateCallbacks[state.internalId]
+                if (callback != null) {
+                    if (callback.isfunction())
+                        callback.call(payload.value)
+                }
+
+                SharedStateManager.addState(state)
                 Piku.engine.events.fire(
                     "client.update_state",
                     luaState

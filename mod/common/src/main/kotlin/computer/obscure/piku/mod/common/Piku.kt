@@ -3,6 +3,7 @@ package computer.obscure.piku.mod.common
 import computer.obscure.piku.mod.common.events.ClientPlayConnection
 import computer.obscure.piku.mod.common.events.ClientTick
 import computer.obscure.piku.mod.common.packets.serverbound.payloads.SendDataPayload
+import computer.obscure.piku.mod.common.packets.serverbound.payloads.SendStatePayload
 import computer.obscure.piku.mod.common.scripting.engine.ClientLuaEngine
 import computer.obscure.piku.mod.common.ui.UIRenderer
 import dev.architectury.networking.NetworkManager
@@ -43,6 +44,14 @@ class Piku {
                 NetworkManager.clientToServer(),
                 SendDataPayload.TYPE,
                 SendDataPayload.CODEC
+            ) { _, _ ->
+                // Do nothing, since this is C2S
+            }
+
+            NetworkManager.registerReceiver(
+                NetworkManager.clientToServer(),
+                SendStatePayload.TYPE,
+                SendStatePayload.CODEC
             ) { _, _ ->
                 // Do nothing, since this is C2S
             }

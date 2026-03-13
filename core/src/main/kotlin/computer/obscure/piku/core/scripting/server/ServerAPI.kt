@@ -2,6 +2,7 @@ package computer.obscure.piku.core.scripting.server
 
 import computer.obscure.piku.core.classes.ScriptSource
 import computer.obscure.piku.core.scripting.engine.LuaEngine
+import computer.obscure.piku.core.states.SharedState
 import org.luaj.vm2.LuaValue
 import java.io.File
 import java.net.JarURLConnection
@@ -13,14 +14,41 @@ interface ServerAPI<T> {
     fun registerEvents()
 
     fun sendData(player: T, eventId: String, data: Any)
-    fun sendData(players: List<T>, eventId: String, data: Any) {
-        players.forEach {
-            sendData(it, eventId, data)
+    fun sendData(players: Collection<T>, eventId: String, data: Any) =
+        players.forEach { sendData(it, eventId, data) }
+    fun sendData(players: List<T>, eventId: String, data: Any) =
+        players.forEach { sendData(it, eventId, data) }
+
+    fun sendState(player: T, state: SharedState)
+    fun sendState(players: Collection<T>, state: SharedState) =
+        players.forEach { sendState(it, state) }
+    fun sendState(players: List<T>, state: SharedState) =
+        players.forEach { sendState(it, state) }
+
+    fun syncStateToOwners(
+        owners: Any,
+        state: SharedState,
+        exemptSyncOwners: Any = listOf<Any>()
+    ) {
+        val exemptList = when (exemptSyncOwners) {
+            is List<*> -> exemptSyncOwners
+            else -> listOf(exemptSyncOwners)
         }
-    }
-    fun sendData(players: Collection<T>, eventId: String, data: Any) {
-        players.forEach {
-            sendData(it, eventId, data)
+
+        when (owners) {
+            is List<*> -> {
+                val validPlayers = owners.filter { it != null && it !in exemptList }
+                @Suppress("UNCHECKED_CAST")
+                sendState(validPlayers as List<T>, state)
+            }
+            else -> {
+                @Suppress("UNCHECKED_CAST")
+                val player = owners as? T
+
+                if (player != null && player !in exemptList) {
+                    sendState(player, state)
+                }
+            }
         }
     }
 
@@ -125,6 +153,4 @@ interface ServerAPI<T> {
                 }
         }
     }
-
-    fun getPlayerUD(player: T): LuaValue
 }

@@ -2,13 +2,16 @@ package computer.obscure.piku.mod.common.scripting.api
 
 import computer.obscure.piku.core.scripting.api.LuaEventData
 import computer.obscure.piku.core.scripting.base.LuaEvent
+import computer.obscure.piku.core.states.SharedState
 import computer.obscure.piku.core.utils.toJson
 import computer.obscure.piku.mod.common.packets.serverbound.payloads.SendDataPayload
+import computer.obscure.piku.mod.common.packets.serverbound.payloads.SendStatePayload
 import computer.obscure.piku.mod.common.scripting.ClientEventBus
 import computer.obscure.piku.mod.common.scripting.events.HeartbeatEvent
 import computer.obscure.twine.nativex.conversion.Converter.toLuaValue
 import dev.architectury.networking.NetworkManager
 import org.luaj.vm2.LuaValue
+import java.util.UUID
 
 class LuaClientEvents : ClientEventBus {
     val customListeners =
@@ -16,6 +19,8 @@ class LuaClientEvents : ClientEventBus {
 
     val baseListeners =
         mutableMapOf<String, LuaEvent>()
+
+    val stateCallbacks: MutableMap<UUID, LuaValue> = mutableMapOf()
 
     fun registerBaseListeners() {
         register(HeartbeatEvent)
@@ -28,6 +33,7 @@ class LuaClientEvents : ClientEventBus {
     fun clear() {
         customListeners.clear()
         baseListeners.clear()
+        stateCallbacks.clear()
     }
 
     // lua > server
@@ -65,5 +71,14 @@ class LuaClientEvents : ClientEventBus {
 
     fun fire(eventId: String, data: LuaEventData) {
         fire(eventId, data.table)
+    }
+
+    fun sendState(state: SharedState) {
+        val payload = SendStatePayload(
+            internalId = state.internalId.toString(),
+            value = state.value.toLuaValue().toJson()
+        )
+
+        NetworkManager.sendToServer(payload)
     }
 }

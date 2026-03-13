@@ -5,6 +5,8 @@ import me.znotchill.blossom.extensions.addListener
 import me.znotchill.blossom.server.BlossomServer
 import computer.obscure.piku.core.scripting.api.LuaEventData
 import computer.obscure.piku.core.scripting.server.ServerAPI
+import computer.obscure.piku.core.scripting.server.SharedStateManager
+import computer.obscure.piku.core.states.SharedState
 import computer.obscure.piku.core.utils.jsonStringToLua
 import computer.obscure.piku.core.utils.toJson
 import computer.obscure.piku.core.utils.writeString
@@ -16,20 +18,20 @@ import net.minestom.server.event.player.PlayerPluginMessageEvent
 import net.minestom.server.network.NetworkBuffer
 import net.minestom.server.network.packet.server.common.PluginMessagePacket
 import org.luaj.vm2.LuaValue
+import java.util.UUID
 
 class MinestomAPI(val server: BlossomServer) : ServerAPI<Player> {
     override val engine = MinestomLuaEngine()
 
     override fun registerEvents() {
+        SharedStateManager.piku = this
         engine.init()
         server.eventHandler.addListener<PlayerPluginMessageEvent> { event ->
             when (event.identifier) {
                 "piku:send_data" -> {
                     try {
                         val outerBuffer = NetworkBuffer.wrap(event.message, 0, event.message.size)
-
                         val innerBytes = outerBuffer.read(NetworkBuffer.BYTE_ARRAY)
-
                         val innerBuffer = NetworkBuffer.wrap(innerBytes, 0, innerBytes.size)
 
                         val eventId = innerBuffer.read(NetworkBuffer.STRING)
@@ -37,6 +39,34 @@ class MinestomAPI(val server: BlossomServer) : ServerAPI<Player> {
 
                         val luaData = jsonStringToLua(dataJson)
                         engine.events.fire(eventId, luaData, event.player)
+                    } catch (e: Exception) {
+                        error("Failed to decode: ${e.message}")
+                    }
+                }
+                "piku:send_state" -> {
+                    try {
+                        val outerBuffer = NetworkBuffer.wrap(event.message, 0, event.message.size)
+                        val innerBytes = outerBuffer.read(NetworkBuffer.BYTE_ARRAY)
+                        val innerBuffer = NetworkBuffer.wrap(innerBytes, 0, innerBytes.size)
+
+                        val rawInternalId = innerBuffer.read(NetworkBuffer.STRING)
+                        val value = innerBuffer.read(NetworkBuffer.STRING)
+
+                        val internalId = UUID.fromString(rawInternalId)
+
+                        val state = SharedStateManager.getState(internalId)
+                            ?: throw NullPointerException("State with ID '$internalId' does not exist!")
+
+                        if (!state.clientModifiable)
+                            throw IllegalAccessException("SharedState '${state.name}' is not client modifiable!")
+
+                        state.set(
+                            jsonStringToLua(value),
+                            // Do NOT rebroadcast the state update to the client who sent it
+                            exemptSyncOwners = listOf(
+                                event.player
+                            )
+                        )
                     } catch (e: Exception) {
                         error("Failed to decode: ${e.message}")
                     }
@@ -77,9 +107,25 @@ class MinestomAPI(val server: BlossomServer) : ServerAPI<Player> {
         )
     }
 
-    override fun getPlayerUD(player: Player): LuaValue {
-        val playerUd = LuaValue.userdataOf(LuaPlayer(player))
-        return playerUd
+    override fun sendState(player: Player, state: SharedState) {
+        val serializedData: LuaValue = when (val data = state.value) {
+            is LuaEventData -> data.toLuaValue(data)
+            else -> data.toLuaValue()
+        }
+
+        val buf = ByteBufAllocator.DEFAULT.buffer()
+        buf.writeString(state.internalId.toString())
+        buf.writeString(state.name)
+        buf.writeString(serializedData.toJson())
+        buf.writeBoolean(state.clientModifiable)
+
+        val bytes = ByteArray(buf.readableBytes())
+        buf.readBytes(bytes)
+        buf.release()
+
+        player.sendPacket(
+            PluginMessagePacket("piku:receive_state", bytes)
+        )
     }
 
     override fun sendScript(player: Player, name: String, content: String) {

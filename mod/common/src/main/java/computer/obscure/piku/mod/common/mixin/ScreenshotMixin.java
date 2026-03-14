@@ -54,7 +54,7 @@ public class ScreenshotMixin {
 
     @Unique
     private static Component piku$injectOpenFileRecursive(Component component, LuaTextInstance luaInstance, File file) {
-        MutableComponent result = component.copy();
+        MutableComponent result = component.plainCopy().withStyle(component.getStyle());
 
         if (luaInstance != null && "open_file".equalsIgnoreCase(luaInstance.getClickEventType())) {
             result.withStyle(style -> style.withClickEvent(new ClickEvent.OpenFile(file.getAbsoluteFile())));

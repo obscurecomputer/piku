@@ -29,13 +29,32 @@ object InputTracker {
         GLFW.GLFW_KEY_RIGHT -> "right_arrow"
         GLFW.GLFW_KEY_UP -> "up_arrow"
         GLFW.GLFW_KEY_DOWN -> "down_arrow"
+
+        GLFW.GLFW_KEY_ENTER, GLFW.GLFW_KEY_KP_ENTER -> "enter"
+        GLFW.GLFW_KEY_ESCAPE -> "escape"
+        GLFW.GLFW_KEY_SPACE -> "space"
+        GLFW.GLFW_KEY_BACKSPACE -> "backspace"
+        GLFW.GLFW_KEY_DELETE -> "delete"
+        GLFW.GLFW_KEY_INSERT -> "insert"
+
+        GLFW.GLFW_KEY_PAGE_UP -> "page_up"
+        GLFW.GLFW_KEY_PAGE_DOWN -> "page_down"
+        GLFW.GLFW_KEY_HOME -> "home"
+        GLFW.GLFW_KEY_END -> "end"
+
         GLFW.GLFW_KEY_TAB -> "tab"
         GLFW.GLFW_KEY_LEFT_SHIFT, GLFW.GLFW_KEY_RIGHT_SHIFT -> "shift"
         GLFW.GLFW_KEY_LEFT_CONTROL, GLFW.GLFW_KEY_RIGHT_CONTROL -> "ctrl"
         GLFW.GLFW_KEY_LEFT_ALT, GLFW.GLFW_KEY_RIGHT_ALT -> "alt"
         GLFW.GLFW_KEY_CAPS_LOCK -> "caps_lock"
+        GLFW.GLFW_KEY_LEFT_SUPER, GLFW.GLFW_KEY_RIGHT_SUPER -> "os_key"
+
         in GLFW.GLFW_KEY_F1..GLFW.GLFW_KEY_F25 -> "f${key - GLFW.GLFW_KEY_F1 + 1}"
-        else -> GLFW.glfwGetKeyName(key, 0)?.lowercase() ?: "unknown"
+
+        else -> {
+            val name = GLFW.glfwGetKeyName(key, 0)
+            name?.lowercase() ?: "key_$key"
+        }
     }
 
     private fun pollKeyboard(client: Minecraft) {

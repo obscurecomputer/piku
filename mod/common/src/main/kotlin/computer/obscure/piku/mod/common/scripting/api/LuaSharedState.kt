@@ -1,5 +1,6 @@
 package computer.obscure.piku.mod.common.scripting.api
 
+import computer.obscure.piku.core.scripting.server.SharedStateManager
 import computer.obscure.piku.core.states.SharedState
 import computer.obscure.piku.mod.common.Piku
 import computer.obscure.twine.annotations.TwineNativeFunction
@@ -35,6 +36,7 @@ class LuaSharedState(
         state.value = value
 
         Piku.engine.events.sendState(state)
+        SharedStateManager.addState(state)
     }
 
     fun toSharedState(): SharedState {

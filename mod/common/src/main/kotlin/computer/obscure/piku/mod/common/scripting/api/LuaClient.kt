@@ -1,9 +1,9 @@
 package computer.obscure.piku.mod.common.scripting.api
 
-import computer.obscure.piku.mod.common.Client
 import computer.obscure.piku.core.scripting.api.LuaTextInstance
 import computer.obscure.piku.core.scripting.api.LuaVec2Instance
 import computer.obscure.piku.core.scripting.api.LuaVec3Instance
+import computer.obscure.piku.mod.common.Client
 import computer.obscure.piku.mod.common.utils.parseMini
 import computer.obscure.twine.TwineLogger
 import computer.obscure.twine.annotations.TwineNativeFunction
@@ -12,6 +12,10 @@ import computer.obscure.twine.annotations.TwineOverload
 import computer.obscure.twine.nativex.TwineNative
 import net.minecraft.client.CameraType
 import net.minecraft.client.Minecraft
+import net.minecraft.client.resources.sounds.SimpleSoundInstance
+import net.minecraft.resources.ResourceLocation
+import net.minecraft.sounds.SoundEvent
+import net.minecraft.sounds.SoundSource
 import net.minecraft.world.item.ItemStack
 
 class LuaClient : TwineNative("client") {
@@ -178,5 +182,32 @@ class LuaClient : TwineNative("client") {
     @TwineOverload
     fun lockMouseButtons() {
         Client.mouseButtonsLocked = true
+    }
+
+    @TwineNativeFunction
+    @TwineOverload
+    fun playSound(name: String, volume: Float, pitch: Float) {
+        val player = instance.player ?: return
+        val resourceLocation = ResourceLocation.tryParse(name) ?: return
+
+        val soundEvent = SoundEvent.createVariableRangeEvent(resourceLocation)
+        val soundInstance = SimpleSoundInstance(
+            soundEvent,
+            SoundSource.PLAYERS,
+            volume,
+            pitch,
+            player.random,
+            player.x,
+            player.y,
+            player.z
+        )
+
+        instance.soundManager.play(soundInstance)
+    }
+
+    @TwineNativeFunction
+    @TwineOverload
+    fun playSound(name: String) {
+        playSound(name, 1.0f, 1.0f)
     }
 }

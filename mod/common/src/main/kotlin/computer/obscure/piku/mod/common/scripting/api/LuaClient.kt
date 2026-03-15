@@ -186,7 +186,7 @@ class LuaClient : TwineNative("client") {
 
     @TwineNativeFunction
     @TwineOverload
-    fun playSound(name: String, volume: Float, pitch: Float) {
+    fun playSound(name: String, volume: Double, pitch: Double) {
         val player = instance.player ?: return
         val resourceLocation = ResourceLocation.tryParse(name) ?: return
 
@@ -194,8 +194,8 @@ class LuaClient : TwineNative("client") {
         val soundInstance = SimpleSoundInstance(
             soundEvent,
             SoundSource.PLAYERS,
-            volume,
-            pitch,
+            volume.toFloat(),
+            pitch.toFloat(),
             player.random,
             player.x,
             player.y,
@@ -208,6 +208,6 @@ class LuaClient : TwineNative("client") {
     @TwineNativeFunction
     @TwineOverload
     fun playSound(name: String) {
-        playSound(name, 1.0f, 1.0f)
+        playSound(name, 1.0, 1.0)
     }
 }

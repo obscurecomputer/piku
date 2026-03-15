@@ -11,7 +11,11 @@ object ClientTick {
             CameraAnimator.tick(1.0 / 20.0)
 
             if (client.level == null) return@register
-            client.options.hideGui = Client.hideHUD
+
+            // do NOT override if hideHUD is false,
+            // it stops F1 working entirely
+            if (Client.hideHUD)
+                client.options.hideGui = true
 
             Scheduler.tick()
         }

@@ -80,7 +80,10 @@ class LuaClient : TwineNative("client") {
     @TwineNativeProperty
     var hideHUD: Boolean
         get() = Client.hideHUD
-        set(value) { Client.hideHUD = value }
+        set(value) {
+            instance.options.hideGui = value
+            Client.hideHUD = value
+        }
 
     @TwineNativeProperty
     var selectedSlot: Int

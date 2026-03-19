@@ -19,4 +19,17 @@ class LuaUISprite(
         component.props.texturePath = value
         return this
     }
+
+    @TwineNativeProperty
+    var fillScreen: Boolean
+        get() = component.props.fillScreen
+        set(value) {
+            component.props.fillScreen = value
+        }
+
+    @TwineNativeFunction
+    fun fillScreen(): LuaUIComponent {
+        component.props.fillScreen = true
+        return this
+    }
 }

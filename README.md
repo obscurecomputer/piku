@@ -24,9 +24,9 @@ Tasks labeled here may not be worked on in chronological order.
   - [ ] Querying blocks/entities on the client
 - [ ] Client Control
   - [ ] Lock/manipulate/animate FOV
-  - [ ] Disable/Enable bobbing
+  - [x] Disable/Enable bobbing
   - [ ] Changeable bobbing strength
-  - [ ] Querying keybinds on the client
+  - [x] Querying keybinds on the client
 - [ ] Player control
   - [ ] Disabling view of client or other players' limbs/armor
 - [x] Shared states

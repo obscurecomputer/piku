@@ -9,4 +9,6 @@ listen("client.key_update", function(event)
             client.send("client detected state update: " .. tostring(newValue))
         end
     end
+
+    client.getKeybind("key.jump").once()
 end)

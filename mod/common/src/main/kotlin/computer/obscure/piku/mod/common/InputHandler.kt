@@ -1,16 +1,23 @@
 package computer.obscure.piku.mod.common
 
 import computer.obscure.piku.core.scripting.api.LuaEventData
+import computer.obscure.piku.mod.common.scripting.api.LuaKeyBind
 import dev.architectury.event.events.client.ClientTickEvent
 import net.minecraft.client.Minecraft
 import org.lwjgl.glfw.GLFW
 
-object InputTracker {
+object InputHandler {
     private val keyStates = mutableMapOf<Int, Boolean>()
     private val mouseStates = mutableMapOf<Int, Boolean>()
 
+    private val luaInputQueue = mutableListOf<LuaKeyBind>()
+
     fun init() {
         ClientTickEvent.CLIENT_POST.register { client ->
+            luaInputQueue.toList().forEach {
+                it.setDown(false)
+                luaInputQueue.remove(it)
+            }
              if (!Client.connectedToServer) return@register
 
             // player must be in-game (no menus open at all)
@@ -22,6 +29,13 @@ object InputTracker {
             pollMouse(client)
             pollKeyboard(client)
         }
+    }
+
+    /**
+     * Queue a [LuaKeyBind] to be deactivated the tick after.
+     */
+    fun queueInputUp(luaKeyBind: LuaKeyBind) {
+        luaInputQueue.add(luaKeyBind)
     }
 
     fun getKeyName(key: Int): String = when (key) {
@@ -55,6 +69,10 @@ object InputTracker {
             val name = GLFW.glfwGetKeyName(key, 0)
             name?.lowercase() ?: "key_$key"
         }
+    }
+
+    fun getMouseButtonName(button: Int): String {
+        return "mouse_$button"
     }
 
     private fun pollKeyboard(client: Minecraft) {

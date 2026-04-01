@@ -37,7 +37,7 @@ class Piku {
 
         fun initClient() {
             engine.init()
-            InputTracker.init()
+            InputHandler.init()
             UIRenderer.register()
 
             NetworkManager.registerReceiver(

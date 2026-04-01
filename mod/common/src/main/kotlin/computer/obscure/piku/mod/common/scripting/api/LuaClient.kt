@@ -1,9 +1,11 @@
 package computer.obscure.piku.mod.common.scripting.api
 
+import com.mojang.blaze3d.platform.InputConstants
 import computer.obscure.piku.core.scripting.api.LuaTextInstance
 import computer.obscure.piku.core.scripting.api.LuaVec2Instance
 import computer.obscure.piku.core.scripting.api.LuaVec3Instance
 import computer.obscure.piku.mod.common.Client
+import computer.obscure.piku.mod.common.InputHandler
 import computer.obscure.piku.mod.common.utils.parseMini
 import computer.obscure.twine.TwineLogger
 import computer.obscure.twine.annotations.TwineNativeFunction
@@ -209,5 +211,34 @@ class LuaClient : TwineNative("client") {
     @TwineOverload
     fun playSound(name: String) {
         playSound(name, 1.0, 1.0)
+    }
+
+    @TwineNativeFunction
+    fun getKeybind(name: String): LuaKeyBind? {
+        val bind = instance.options.keyMappings.find { it.name == name }
+            ?: return null
+
+        val internalName = bind.saveString()
+
+        val boundName = when {
+            internalName.startsWith("key.keyboard.") -> {
+                val keyCode = InputConstants.getKey(internalName).value
+                InputHandler.getKeyName(keyCode)
+            }
+            internalName.startsWith("key.mouse.") -> {
+                val keyCode = InputConstants.getKey(internalName).value
+                InputHandler.getMouseButtonName(keyCode)
+            }
+            else -> "unknown"
+        }
+
+        return LuaKeyBind(
+            name = bind.name,
+            isDown = bind.isDown,
+            isUnbound = bind.isUnbound,
+            isDefault = bind.isDefault,
+            category = bind.category.id.toString(),
+            boundKey = boundName
+        )
     }
 }

@@ -73,4 +73,7 @@ object Client {
     var customScreenshotMessage: Component? = null
     @JvmField
     var customScreenshotInstance: LuaTextInstance? = null
+
+    @JvmField
+    var bobbingStrength: Float = 0f
 }

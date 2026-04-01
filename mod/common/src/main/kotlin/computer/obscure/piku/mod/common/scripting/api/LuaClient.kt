@@ -241,4 +241,18 @@ class LuaClient : TwineNative("client") {
             boundKey = boundName
         )
     }
+
+    @TwineNativeProperty
+    var bobbing: Boolean
+        get() = instance.options.bobView().get()
+        set(value) {
+            instance.options.bobView().set(value)
+        }
+
+    @TwineNativeProperty
+    var bobbingStrength: Float
+        get() = Client.bobbingStrength
+        set(value) {
+            Client.bobbingStrength = bobbingStrength
+        }
 }

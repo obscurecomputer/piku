@@ -9,6 +9,11 @@ listen("client.key_update", function(event)
             client.send("client detected state update: " .. tostring(newValue))
         end
     end
+    if event.key == "h" and event.action == "press" then
+        client.bobbing = not client.bobbing
+    end
+    if event.key == "j" and event.action == "press" then
+        client.bobbingStrength = 500
+    end
 
-    client.getKeybind("key.jump").once()
 end)

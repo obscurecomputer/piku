@@ -62,6 +62,7 @@ object ClientPlayConnection {
 
             customScreenshotMessage = null
             customScreenshotInstance = null
+            bobbingStrength = 1f
         }
     }
 }

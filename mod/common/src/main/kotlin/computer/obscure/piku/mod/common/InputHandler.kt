@@ -38,6 +38,10 @@ object InputHandler {
         luaInputQueue.add(luaKeyBind)
     }
 
+    fun clearInputQueue() {
+        luaInputQueue.clear()
+    }
+
     fun getKeyName(key: Int): String = when (key) {
         GLFW.GLFW_KEY_LEFT -> "left_arrow"
         GLFW.GLFW_KEY_RIGHT -> "right_arrow"

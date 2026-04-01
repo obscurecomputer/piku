@@ -3,6 +3,7 @@ package computer.obscure.piku.mod.common.events
 import computer.obscure.piku.core.scheduler.Scheduler
 import computer.obscure.piku.core.scripting.server.SharedStateManager
 import computer.obscure.piku.mod.common.Client
+import computer.obscure.piku.mod.common.InputHandler
 import computer.obscure.piku.mod.common.Piku
 import computer.obscure.piku.mod.common.ui.UIRenderer
 import dev.architectury.event.events.client.ClientPlayerEvent
@@ -29,6 +30,7 @@ object ClientPlayConnection {
         Piku.engine.shutdown()
         UIRenderer.shutdown()
         Scheduler.shutdown()
+        InputHandler.clearInputQueue()
 
         Client.apply {
             customPitch = 0f

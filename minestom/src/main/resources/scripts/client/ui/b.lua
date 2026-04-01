@@ -13,7 +13,7 @@ listen("client.key_update", function(event)
         client.bobbing = not client.bobbing
     end
     if event.key == "j" and event.action == "press" then
-        client.bobbingStrength = 500
+        client.bobbingStrength = 0.1
     end
 
 end)

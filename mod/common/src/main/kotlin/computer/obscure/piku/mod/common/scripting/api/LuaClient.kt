@@ -253,6 +253,6 @@ class LuaClient : TwineNative("client") {
     var bobbingStrength: Float
         get() = Client.bobbingStrength
         set(value) {
-            Client.bobbingStrength = bobbingStrength
+            Client.bobbingStrength = value
         }
 }

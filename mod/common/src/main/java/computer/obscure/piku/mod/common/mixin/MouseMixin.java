@@ -9,7 +9,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(MouseHandler.class)
+@Mixin(value = MouseHandler.class, remap = false)
 public class MouseMixin {
     @Inject(method = "turnPlayer", at = @At("HEAD"), cancellable = true)
     private void piku$lockCamera(double d, CallbackInfo ci) {

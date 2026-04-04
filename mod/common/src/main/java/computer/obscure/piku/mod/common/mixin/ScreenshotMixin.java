@@ -18,7 +18,7 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import java.io.File;
 import java.util.function.Consumer;
 
-@Mixin(Screenshot.class)
+@Mixin(value = Screenshot.class, remap = false)
 public class ScreenshotMixin {
     @ModifyVariable(
             method = "grab(Ljava/io/File;Ljava/lang/String;Lcom/mojang/blaze3d/pipeline/RenderTarget;ILjava/util/function/Consumer;)V",

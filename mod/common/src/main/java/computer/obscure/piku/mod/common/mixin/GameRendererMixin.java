@@ -6,7 +6,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
-@Mixin(GameRenderer.class)
+@Mixin(value = GameRenderer.class, remap = false)
 public class GameRendererMixin {
     @ModifyVariable(
             method = "bobView",

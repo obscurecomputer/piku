@@ -42,7 +42,9 @@ dependencies {
     implementation(project(":core"))
     modImplementation(project(":core"))
 
-    "common"(project(path = ":mod:common", configuration = "namedElements")) { isTransitive = false }
+    implementation(project(path = ":mod:common", configuration = "namedElements"))
+    "common"(project(path = ":mod:common", configuration = "namedElements"))
+
     "shadowBundle"(project(path = ":mod:common", configuration = "transformProductionFabric"))
     "shadowBundle"(project(":core"))
 }
@@ -70,7 +72,7 @@ loom {
         }
     }
     mixin {
-        useLegacyMixinAp = true
+        useLegacyMixinAp = false
         add(sourceSets.main.get(), "piku.client.mixins.json")
     }
 }

@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(ItemInHandRenderer.class)
+@Mixin(value = ItemInHandRenderer.class, remap = false)
 public class HeldItemRendererMixin {
     @Shadow private float mainHandHeight;
     @Shadow private float oMainHandHeight;

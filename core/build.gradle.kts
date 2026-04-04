@@ -17,8 +17,8 @@ repositories {
 
 dependencies {
     testImplementation(kotlin("test"))
-    implementation("io.netty:netty-buffer:4.1.111.Final")
-    implementation("io.netty:netty-common:4.1.111.Final")
+    compileOnly("io.netty:netty-buffer:4.1.111.Final")
+    compileOnly("io.netty:netty-common:4.1.111.Final")
     implementation("com.google.code.gson:gson:2.10.1")
     implementation("org.joml:joml:1.10.8")
     implementation("org.luaj:luaj-jse:${project.property("luaj_version")}")

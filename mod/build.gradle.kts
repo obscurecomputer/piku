@@ -1,3 +1,4 @@
+import net.fabricmc.loom.api.LoomGradleExtensionAPI
 import org.gradle.api.tasks.compile.JavaCompile
 
 plugins {
@@ -16,10 +17,6 @@ val archives_name: String by project
 val mod_version: String by project
 val group: String by project
 
-architectury {
-    minecraft = minecraft_version
-}
-
 allprojects {
     group = group
     version = mod_version
@@ -27,7 +24,6 @@ allprojects {
 
 subprojects {
     apply(plugin = "dev.architectury.loom")
-    apply(plugin = "architectury-plugin")
     apply(plugin = "maven-publish")
     apply(plugin = "java-library")
 
@@ -35,9 +31,24 @@ subprojects {
         archivesName.set("$archives_name-${project.name}")
     }
 
+    val isCommon = project.path == ":mod:common"
+
+    apply(plugin = "architectury-plugin")
+    architectury {
+        minecraft = minecraft_version
+        if (isCommon) {
+            common("fabric", "neoforge")
+        }
+    }
+
+    configure<LoomGradleExtensionAPI> {
+        silentMojangMappingsLicense()
+    }
+
     repositories {
         mavenCentral()
         maven { url = uri("https://maven.architectury.dev/") }
+        maven("https://repo.spongepowered.org/repository/maven-public/")
 
         maven {
             name = "Terraformers"
@@ -56,12 +67,18 @@ subprojects {
     }
 
     dependencies {
-        val loom = project.extensions.getByName("loom")
+        val loom = project.extensions.getByType<LoomGradleExtensionAPI>()
 
         "minecraft"("net.minecraft:minecraft:$minecraft_version")
 
-        val mappingsMethod = loom.javaClass.getMethod("officialMojangMappings")
-        "mappings"(mappingsMethod.invoke(loom))
+        println(">>> Setting mappings for ${project.path}")
+        "mappings"(loom.officialMojangMappings())
+        println(">>> Mappings set: ${loom.officialMojangMappings()}")
+
+        if (isCommon) {
+            "compileOnly"("net.fabricmc:fabric-loader:${rootProject.extra["fabric_loader_version"]}")
+            "modCompileOnly"("dev.architectury:architectury:${rootProject.extra["architectury_version"]}")
+        }
     }
 
     extensions.configure<JavaPluginExtension> {

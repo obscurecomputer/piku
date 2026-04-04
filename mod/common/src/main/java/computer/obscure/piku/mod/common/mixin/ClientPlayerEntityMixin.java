@@ -8,7 +8,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(LocalPlayer.class)
+@Mixin(value = LocalPlayer.class, remap = false)
 public abstract class ClientPlayerEntityMixin {
     @Inject(method = "swing", at = @At("HEAD"), cancellable = true)
     void cancelSwing(InteractionHand hand, CallbackInfo ci) {

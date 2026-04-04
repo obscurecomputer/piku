@@ -3,7 +3,7 @@ package computer.obscure.piku.mod.common.packets.serverbound.payloads
 import net.minecraft.network.FriendlyByteBuf
 import net.minecraft.network.codec.StreamCodec
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 
 class SendDataPayload(
     val id: String,
@@ -11,7 +11,7 @@ class SendDataPayload(
 ) : CustomPacketPayload {
 
     companion object {
-        val ID = ResourceLocation.fromNamespaceAndPath("piku", "send_data")
+        val ID = Identifier.fromNamespaceAndPath("piku", "send_data")
         val TYPE = CustomPacketPayload.Type<SendDataPayload>(ID)
 
         val CODEC: StreamCodec<FriendlyByteBuf, SendDataPayload> = StreamCodec.of(

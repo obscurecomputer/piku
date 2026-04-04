@@ -3,7 +3,7 @@ import org.gradle.api.tasks.compile.JavaCompile
 plugins {
     kotlin("jvm")
     kotlin("plugin.serialization")
-    id("dev.architectury.loom") version "1.11-SNAPSHOT" apply false
+    id("dev.architectury.loom") version "1.13.467" apply false
     id("architectury-plugin") version "3.4-SNAPSHOT"
     id("com.gradleup.shadow") version "8.3.6" apply false
     id("com.modrinth.minotaur") version "2.8.7" apply false

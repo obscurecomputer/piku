@@ -15,7 +15,7 @@ import computer.obscure.twine.nativex.TwineNative
 import net.minecraft.client.CameraType
 import net.minecraft.client.Minecraft
 import net.minecraft.client.resources.sounds.SimpleSoundInstance
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 import net.minecraft.sounds.SoundEvent
 import net.minecraft.sounds.SoundSource
 import net.minecraft.world.item.ItemStack
@@ -190,9 +190,9 @@ class LuaClient : TwineNative("client") {
     @TwineOverload
     fun playSound(name: String, volume: Double, pitch: Double) {
         val player = instance.player ?: return
-        val resourceLocation = ResourceLocation.tryParse(name) ?: return
+        val Identifier = Identifier.tryParse(name) ?: return
 
-        val soundEvent = SoundEvent.createVariableRangeEvent(resourceLocation)
+        val soundEvent = SoundEvent.createVariableRangeEvent(Identifier)
         val soundInstance = SimpleSoundInstance(
             soundEvent,
             SoundSource.PLAYERS,

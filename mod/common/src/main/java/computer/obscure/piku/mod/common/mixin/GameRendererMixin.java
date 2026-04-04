@@ -13,7 +13,6 @@ public class GameRendererMixin {
             at = @At("STORE"),
             ordinal = 1
     )
-    // TODO: figure out why this does not work
     private float applyCustomBobStrength(float h) {
         return h * Client.bobbingStrength;
     }

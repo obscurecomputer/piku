@@ -3,15 +3,14 @@ package computer.obscure.piku.mod.common.packets.clientbound.payloads
 import net.minecraft.network.FriendlyByteBuf
 import net.minecraft.network.codec.ByteBufCodecs
 import net.minecraft.network.codec.StreamCodec
-import net.minecraft.network.protocol.common.ClientboundCustomPayloadPacket
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 
 class ReceiveDataPayload(val id: String, val json: String) : CustomPacketPayload {
     override fun type(): CustomPacketPayload.Type<ReceiveDataPayload> = TYPE
 
     companion object {
-        val ID: ResourceLocation = ResourceLocation.fromNamespaceAndPath("piku", "receive_data")
+        val ID: Identifier = Identifier.fromNamespaceAndPath("piku", "receive_data")
         val TYPE = CustomPacketPayload.Type<ReceiveDataPayload>(
             ID
         )

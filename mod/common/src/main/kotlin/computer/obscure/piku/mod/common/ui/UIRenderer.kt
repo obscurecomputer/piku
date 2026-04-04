@@ -18,7 +18,7 @@ import dev.architectury.event.events.client.ClientTickEvent
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.renderer.texture.DynamicTexture
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 import org.joml.Matrix3x2f
 
 object UIRenderer : PikuService {
@@ -512,12 +512,12 @@ object UIRenderer : PikuService {
         }
     }
 
-    fun getIdentifier(path: String): ResourceLocation? {
+    fun getIdentifier(path: String): Identifier? {
         return try {
             if (':' in path) {
-                ResourceLocation.parse(path)
+                Identifier.parse(path)
             } else {
-                ResourceLocation.fromNamespaceAndPath("minecraft", path)
+                Identifier.fromNamespaceAndPath("minecraft", path)
             }
         } catch (e: Exception) {
             null

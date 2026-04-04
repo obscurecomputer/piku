@@ -20,7 +20,7 @@ import net.minecraft.nbt.StringTag
 import net.minecraft.nbt.Tag
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.ComponentSerialization
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.component.CustomData
 import net.minecraft.world.item.component.CustomModelData
@@ -34,7 +34,7 @@ class LuaComponents(
     @TwineNativeFunction("get")
     fun getComponent(id: String): Any? {
         val type = BuiltInRegistries.DATA_COMPONENT_TYPE
-            .get(ResourceLocation.parse(id))
+            .get(Identifier.parse(id))
             .map { it.value() }
             .orElse(null) ?: return null
 
@@ -45,7 +45,7 @@ class LuaComponents(
     @TwineNativeFunction
     fun set(id: String, value: Any?) {
         val type = BuiltInRegistries.DATA_COMPONENT_TYPE
-            .get(ResourceLocation.parse(id))
+            .get(Identifier.parse(id))
             .map { it.value() }
             .orElse(null) ?: return
 
@@ -63,7 +63,7 @@ class LuaComponents(
     @TwineNativeFunction
     fun remove(id: String) {
         val type = BuiltInRegistries.DATA_COMPONENT_TYPE
-            .get(ResourceLocation.parse(id))
+            .get(Identifier.parse(id))
             .map { it.value() }
             .orElse(null) ?: return
 

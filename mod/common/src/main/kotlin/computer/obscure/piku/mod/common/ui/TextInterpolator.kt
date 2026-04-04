@@ -28,7 +28,7 @@ object TextInterpolator {
             mc.gameProfile.name ?: "Unknown"
         }
 
-        register("CLIENT_DIMENSION") { mc.level?.dimension()?.location()?.path ?: "Unknown" }
+        register("CLIENT_DIMENSION") { mc.level?.dimension()?.registry()?.path ?: "Unknown" }
         register("CLIENT_MEMORY") {
             val rt = Runtime.getRuntime()
             val used = (rt.totalMemory() - rt.freeMemory()) / 1024 / 1024
@@ -69,7 +69,7 @@ object TextInterpolator {
             mc.player?.xRot?.toString() ?: "0"
         }
         register("PLAYER_WORLD") {
-            mc.level?.dimension()?.location()?.path ?: "Unknown"
+            mc.level?.dimension()?.registry()?.path ?: "Unknown"
         }
         register("PLAYER_SPEED") {
             mc.player?.deltaMovement?.horizontalDistance()?.toString() ?: "0"
@@ -81,7 +81,7 @@ object TextInterpolator {
 
         register("PLAYER_BIOME") {
             val pos = mc.player?.blockPosition() ?: return@register "Unknown"
-            mc.level?.getBiome(pos)?.unwrapKey()?.get()?.location()?.path ?: "Unknown"
+            mc.level?.getBiome(pos)?.unwrapKey()?.get()?.registry()?.path ?: "Unknown"
         }
 
         register("WORLD_TIME_TICKS") {

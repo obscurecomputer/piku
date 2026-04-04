@@ -4,7 +4,7 @@ import computer.obscure.piku.mod.common.camera.CinematicCamera;
 import net.minecraft.client.Camera;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -26,29 +26,28 @@ public abstract class CameraMixin {
         at = @At("TAIL")
     )
     private void overrideCamera(
-        BlockGetter level,
+        Level level,
         Entity entity,
         boolean detached,
         boolean inverted,
         float partialTick,
         CallbackInfo ci
     ) {if (!CinematicCamera.INSTANCE.getActive()) return;
-        float t = partialTick;
 
         Vec3 pos = new Vec3(
-                Mth.lerp(t, CinematicCamera.INSTANCE.getPrevPos().x, CinematicCamera.INSTANCE.getPos().x),
-                Mth.lerp(t, CinematicCamera.INSTANCE.getPrevPos().y, CinematicCamera.INSTANCE.getPos().y),
-                Mth.lerp(t, CinematicCamera.INSTANCE.getPrevPos().z, CinematicCamera.INSTANCE.getPos().z)
+                Mth.lerp(partialTick, CinematicCamera.INSTANCE.getPrevPos().x, CinematicCamera.INSTANCE.getPos().x),
+                Mth.lerp(partialTick, CinematicCamera.INSTANCE.getPrevPos().y, CinematicCamera.INSTANCE.getPos().y),
+                Mth.lerp(partialTick, CinematicCamera.INSTANCE.getPrevPos().z, CinematicCamera.INSTANCE.getPos().z)
         );
 
         float yaw = (float) Mth.rotLerp(
-                t,
+                partialTick,
                 CinematicCamera.INSTANCE.getPrevYaw(),
                 CinematicCamera.INSTANCE.getYaw()
         );
 
         float pitch = (float) Mth.lerp(
-                t,
+                partialTick,
                 CinematicCamera.INSTANCE.getPrevPitch(),
                 CinematicCamera.INSTANCE.getPitch()
         );

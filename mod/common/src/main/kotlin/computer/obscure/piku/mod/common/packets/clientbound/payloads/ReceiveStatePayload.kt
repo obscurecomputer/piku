@@ -4,7 +4,7 @@ import net.minecraft.network.FriendlyByteBuf
 import net.minecraft.network.codec.ByteBufCodecs
 import net.minecraft.network.codec.StreamCodec
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 import java.util.UUID
 
 class ReceiveStatePayload(
@@ -16,7 +16,7 @@ class ReceiveStatePayload(
     override fun type(): CustomPacketPayload.Type<ReceiveStatePayload> = TYPE
 
     companion object {
-        val ID: ResourceLocation = ResourceLocation.fromNamespaceAndPath("piku", "receive_state")
+        val ID: Identifier = Identifier.fromNamespaceAndPath("piku", "receive_state")
         val TYPE = CustomPacketPayload.Type<ReceiveStatePayload>(
             ID
         )

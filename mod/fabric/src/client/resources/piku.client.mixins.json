@@ -1,6 +1,6 @@
 {
   "required": true,
-  "package": "computer.obscure.piku.mod.common.mixin",
+  "package": "computer.obscure.piku.mod.fabric.mixin",
   "compatibilityLevel": "JAVA_17",
   "client": [
     "CameraMixin",

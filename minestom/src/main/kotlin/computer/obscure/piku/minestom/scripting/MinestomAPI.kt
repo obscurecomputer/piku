@@ -8,10 +8,13 @@ import computer.obscure.piku.core.scripting.server.ServerAPI
 import computer.obscure.piku.core.scripting.server.SharedStateManager
 import computer.obscure.piku.core.states.SharedState
 import computer.obscure.piku.core.utils.jsonStringToLua
+import computer.obscure.piku.core.utils.readString
 import computer.obscure.piku.core.utils.toJson
 import computer.obscure.piku.core.utils.writeString
 import computer.obscure.piku.minestom.scripting.api.LuaPlayer
 import computer.obscure.twine.nativex.conversion.Converter.toLuaValue
+import io.netty.buffer.ByteBuf
+import io.netty.buffer.Unpooled
 import net.minestom.server.entity.Player
 import net.minestom.server.event.player.PlayerLoadedEvent
 import net.minestom.server.event.player.PlayerPluginMessageEvent
@@ -30,14 +33,15 @@ class MinestomAPI(val server: BlossomServer) : ServerAPI<Player> {
             when (event.identifier) {
                 "piku:send_data" -> {
                     try {
-                        val outerBuffer = NetworkBuffer.wrap(event.message, 0, event.message.size)
-                        val innerBytes = outerBuffer.read(NetworkBuffer.BYTE_ARRAY)
-                        val innerBuffer = NetworkBuffer.wrap(innerBytes, 0, innerBytes.size)
+                        val buffer: ByteBuf = Unpooled.wrappedBuffer(event.message)
 
-                        val eventId = innerBuffer.read(NetworkBuffer.STRING)
-                        val dataJson = innerBuffer.read(NetworkBuffer.STRING)
+                        val eventId = buffer.readString()
+                        val data = buffer.readString()
 
-                        val luaData = jsonStringToLua(dataJson)
+                        buffer.release()
+
+                        val luaData = jsonStringToLua(data)
+
                         engine.events.fire(eventId, luaData, event.player)
                     } catch (e: Exception) {
                         error("Failed to decode: ${e.message}")
@@ -45,12 +49,12 @@ class MinestomAPI(val server: BlossomServer) : ServerAPI<Player> {
                 }
                 "piku:send_state" -> {
                     try {
-                        val outerBuffer = NetworkBuffer.wrap(event.message, 0, event.message.size)
-                        val innerBytes = outerBuffer.read(NetworkBuffer.BYTE_ARRAY)
-                        val innerBuffer = NetworkBuffer.wrap(innerBytes, 0, innerBytes.size)
+                        val buffer: ByteBuf = Unpooled.wrappedBuffer(event.message)
 
-                        val rawInternalId = innerBuffer.read(NetworkBuffer.STRING)
-                        val value = innerBuffer.read(NetworkBuffer.STRING)
+                        val rawInternalId = buffer.readString()
+                        val value = buffer.readString()
+
+                        buffer.release()
 
                         val internalId = UUID.fromString(rawInternalId)
 
@@ -62,10 +66,7 @@ class MinestomAPI(val server: BlossomServer) : ServerAPI<Player> {
 
                         state.set(
                             jsonStringToLua(value),
-                            // Do NOT rebroadcast the state update to the client who sent it
-                            exemptSyncOwners = listOf(
-                                event.player
-                            )
+                            exemptSyncOwners = listOf(event.player)
                         )
                     } catch (e: Exception) {
                         error("Failed to decode: ${e.message}")
@@ -94,13 +95,10 @@ class MinestomAPI(val server: BlossomServer) : ServerAPI<Player> {
             else -> data.toLuaValue()
         }
 
-        val buf = ByteBufAllocator.DEFAULT.buffer()
-        buf.writeString(eventId)
-        buf.writeString(serializedData.toJson())
-
-        val bytes = ByteArray(buf.readableBytes())
-        buf.readBytes(bytes)
-        buf.release()
+        val bytes = NetworkBuffer.makeArray { buffer ->
+            buffer.write(NetworkBuffer.STRING, eventId)
+            buffer.write(NetworkBuffer.STRING, serializedData.toJson())
+        }
 
         player.sendPacket(
             PluginMessagePacket("piku:receive_data", bytes)
@@ -113,15 +111,12 @@ class MinestomAPI(val server: BlossomServer) : ServerAPI<Player> {
             else -> data.toLuaValue()
         }
 
-        val buf = ByteBufAllocator.DEFAULT.buffer()
-        buf.writeString(state.internalId.toString())
-        buf.writeString(state.name)
-        buf.writeString(serializedData.toJson())
-        buf.writeBoolean(state.clientModifiable)
-
-        val bytes = ByteArray(buf.readableBytes())
-        buf.readBytes(bytes)
-        buf.release()
+        val bytes = NetworkBuffer.makeArray { buffer ->
+            buffer.write(NetworkBuffer.STRING, state.internalId.toString())
+            buffer.write(NetworkBuffer.STRING, state.name)
+            buffer.write(NetworkBuffer.STRING, serializedData.toJson())
+            buffer.write(NetworkBuffer.BOOLEAN, state.clientModifiable)
+        }
 
         player.sendPacket(
             PluginMessagePacket("piku:receive_state", bytes)

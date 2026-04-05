@@ -15,11 +15,13 @@ import computer.obscure.piku.mod.fabric.ui.UIRenderer
 import net.fabricmc.api.ClientModInitializer
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry
+import net.kyori.adventure.text.minimessage.MiniMessage
 import org.apache.logging.log4j.LogManager
 import org.apache.logging.log4j.Logger
 
 class PikuClient : ClientModInitializer {
     companion object {
+        val miniMessage = MiniMessage.miniMessage()
         const val MOD_ID = "piku"
 
         val engine = ClientLuaEngine()

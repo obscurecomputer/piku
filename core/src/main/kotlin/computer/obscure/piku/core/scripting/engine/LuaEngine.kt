@@ -67,8 +67,6 @@ abstract class LuaEngine : PikuService {
     }
 
     fun runScript(name: String, content: String) {
-        TwineLogger.level = TwineLogger.DEBUG
-
         val env = TwineEnvironment()
         env.register(LuaLogger(name))
         env.register("SCRIPT_NAME", name)

@@ -12,11 +12,12 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import computer.obscure.piku.mod.fabric.utils.ScreenKt;
 
 import java.util.HashMap;
 import java.util.Map;
 
-@Mixin(value = Minecraft.class, remap = false)
+@Mixin(value = Minecraft.class)
 public class MinecraftClientMixin {
 
     @Inject(method = "resizeDisplay", at = @At("TAIL"))
@@ -44,7 +45,7 @@ public class MinecraftClientMixin {
     private void handleGenericScreenClose(Screen screen) {
         Map<String, Object> data = new HashMap<>();
 
-        data.put("name", screen.getClass().getSimpleName());
+        data.put("name", ScreenKt.getRemappedName(screen));
         data.put("class", screen.getClass().getName());
         data.put("title", screen.getTitle().getString());
         data.put("height", screen.height);
@@ -62,7 +63,7 @@ public class MinecraftClientMixin {
     private void handleGenericScreenOpen(Screen screen) {
         Map<String, Object> data = new HashMap<>();
 
-        data.put("name", screen.getClass().getSimpleName());
+        data.put("name", ScreenKt.getRemappedName(screen));
         data.put("class", screen.getClass().getName());
         data.put("title", screen.getTitle().getString());
         data.put("height", screen.height);

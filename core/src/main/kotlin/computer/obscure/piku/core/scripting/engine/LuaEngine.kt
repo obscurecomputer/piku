@@ -3,6 +3,7 @@ package computer.obscure.piku.core.scripting.engine
 import computer.obscure.piku.core.scripting.api.*
 import computer.obscure.piku.core.service.PikuService
 import computer.obscure.twine.TwineEngine
+import computer.obscure.twine.TwineEnvironment
 import computer.obscure.twine.TwineLogger
 import computer.obscure.twine.TwineNative
 
@@ -66,14 +67,15 @@ abstract class LuaEngine : PikuService {
     }
 
     fun runScript(name: String, content: String) {
-        // per-script logger
-//        engine.register(LuaLogger(name))
-
         TwineLogger.level = TwineLogger.DEBUG
+
+        val env = TwineEnvironment()
+        env.register(LuaLogger(name))
+        env.register("SCRIPT_NAME", name)
 
         synchronized(engineLock) {
             if (_engine == null || _engine!!.closed) return
-            val result = engine.runSafe(name, content)
+            val result = engine.runSafe(name, content, env)
             result.onFailure { throw it }
         }
     }

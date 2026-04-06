@@ -1,6 +1,5 @@
 package computer.obscure.piku.minestom.scripting
 
-import computer.obscure.piku.core.scripting.api.LuaEventData
 import computer.obscure.piku.core.scripting.server.ServerAPI
 import computer.obscure.piku.core.scripting.server.SharedStateManager
 import computer.obscure.piku.core.states.SharedState

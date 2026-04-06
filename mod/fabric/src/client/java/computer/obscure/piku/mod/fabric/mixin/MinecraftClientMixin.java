@@ -1,6 +1,5 @@
 package computer.obscure.piku.mod.fabric.mixin;
 
-import computer.obscure.piku.core.scripting.api.LuaEventData;
 import computer.obscure.piku.core.scripting.api.LuaVec2Instance;
 import computer.obscure.piku.mod.fabric.PikuClient;
 import computer.obscure.piku.mod.fabric.scripting.api.screen.LuaScreenButtons;

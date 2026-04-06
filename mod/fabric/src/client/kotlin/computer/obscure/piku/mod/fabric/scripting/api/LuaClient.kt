@@ -21,7 +21,7 @@ import net.minecraft.sounds.SoundSource
 import net.minecraft.world.item.ItemStack
 
 class LuaClient : TwineNative("client") {
-    val instance: Minecraft = Minecraft.getInstance()!!
+    val instance: Minecraft = Minecraft.getInstance()
 
     @TwineNativeFunction
     fun debug(value: Boolean) {

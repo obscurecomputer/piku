@@ -3,10 +3,12 @@ package computer.obscure.piku.mod.fabric.scripting.api
 import computer.obscure.piku.core.scripting.server.SharedStateManager
 import computer.obscure.piku.core.states.SharedState
 import computer.obscure.piku.mod.fabric.PikuClient
+import computer.obscure.piku.mod.fabric.scripting.api.screen.LuaCustomScreen
 import computer.obscure.twine.annotations.TwineNativeFunction
 import computer.obscure.twine.annotations.TwineNativeProperty
 import computer.obscure.twine.nativex.TwineNative
 import computer.obscure.twine.nativex.conversion.Converter.toLuaValue
+import net.minecraft.client.Minecraft
 import org.luaj.vm2.LuaValue
 import java.util.UUID
 

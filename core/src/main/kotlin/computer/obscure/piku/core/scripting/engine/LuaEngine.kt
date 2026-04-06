@@ -9,11 +9,13 @@ import computer.obscure.piku.core.scripting.api.LuaText
 import computer.obscure.piku.core.scripting.api.LuaVec2
 import computer.obscure.piku.core.scripting.api.LuaVec3
 import computer.obscure.piku.core.service.PikuService
+import computer.obscure.twine.TwineLogger
 import computer.obscure.twine.TwineTable
 import computer.obscure.twine.nativex.TwineEngine
 import computer.obscure.twine.nativex.TwineNative
 import org.luaj.vm2.LoadState
 import org.luaj.vm2.LuaError
+import org.luaj.vm2.LuaValue
 import org.luaj.vm2.compiler.LuaC
 import org.luaj.vm2.lib.Bit32Lib
 import org.luaj.vm2.lib.CoroutineLib
@@ -90,13 +92,24 @@ abstract class LuaEngine : PikuService {
     }
 
     fun runScript(name: String, content: String) {
-        val result = engine.runSafe(name, content)
+        val scriptEnv = LuaValue.tableOf()
 
-        // Allocate a new LuaLogger to this script
-        register(LuaLogger(content))
+        val mt = LuaValue.tableOf()
+        mt.set(LuaValue.INDEX, engine.globals)
+        scriptEnv.setmetatable(mt)
 
-        if (result.isFailure) {
-            throw LuaError(result.exceptionOrNull())
+        // bind the logger to the metatable so it fetches first,
+        // and uses the unique script-assigned logger
+
+        val logger = LuaLogger(name)
+        scriptEnv.set("log", logger.table)
+
+        try {
+            val chunk = engine.globals.load(content, name, scriptEnv)
+
+            chunk.call()
+        } catch (e: Exception) {
+            throw LuaError(e)
         }
     }
 }

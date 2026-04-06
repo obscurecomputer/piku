@@ -4,6 +4,7 @@ import computer.obscure.piku.core.scheduler.Scheduler
 import computer.obscure.piku.core.scripting.server.SharedStateManager
 import computer.obscure.piku.mod.fabric.Client
 import computer.obscure.piku.mod.fabric.InputHandler
+import computer.obscure.piku.mod.fabric.MenuConfigs
 import computer.obscure.piku.mod.fabric.PikuClient
 import computer.obscure.piku.mod.fabric.ui.UIRenderer
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents
@@ -63,6 +64,8 @@ object ClientPlayConnection {
             customScreenshotMessage = null
             customScreenshotInstance = null
             bobbingStrength = 1f
+
+            menuConfigs = MenuConfigs()
         }
     }
 }

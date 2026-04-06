@@ -1,16 +1,21 @@
 package computer.obscure.piku.mod.fabric.mixin;
 
-import computer.obscure.piku.core.classes.Vec2;
 import computer.obscure.piku.core.scripting.api.LuaEventData;
+import computer.obscure.piku.core.scripting.api.LuaVec2Instance;
 import computer.obscure.piku.mod.fabric.PikuClient;
+import computer.obscure.piku.mod.fabric.scripting.api.screen.LuaScreenButtons;
 import computer.obscure.piku.mod.fabric.ui.UIRenderer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.dialog.MultiButtonDialogScreen;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @Mixin(value = Minecraft.class, remap = false)
 public class MinecraftClientMixin {
@@ -19,7 +24,6 @@ public class MinecraftClientMixin {
     private void onResolutionChanged(CallbackInfo ci) {
         UIRenderer.INSTANCE.onWindowResized();
     }
-
 
     @Inject(method = "setScreen", at = @At("HEAD"))
     private void onSetScreen(Screen screen, CallbackInfo ci) {
@@ -32,18 +36,22 @@ public class MinecraftClientMixin {
             if (currentScreen instanceof MultiButtonDialogScreen) {
                 this.handleDialogClose(currentScreen);
             }
+        } else if (screen != null) {
+            this.handleGenericScreenOpen(screen);
         }
     }
 
+    @Unique
     private void handleGenericScreenClose(Screen screen) {
-        java.util.Map<String, Object> data = new java.util.HashMap<>();
+        Map<String, Object> data = new HashMap<>();
 
-        data.put("screen_name", screen.getClass().getSimpleName());
-        data.put("screen_class", screen.getClass().getName());
+        data.put("name", screen.getClass().getSimpleName());
+        data.put("class", screen.getClass().getName());
         data.put("title", screen.getTitle().getString());
         data.put("height", screen.height);
         data.put("width", screen.width);
-        data.put("size", new Vec2(screen.width, screen.height));
+        data.put("size", new LuaVec2Instance(screen.width, screen.height));
+        data.put("buttons", new LuaScreenButtons(screen));
 
         PikuClient.Companion.getEngine().getEvents().fire(
                 "client.screen_close",
@@ -51,6 +59,25 @@ public class MinecraftClientMixin {
         );
     }
 
+    @Unique
+    private void handleGenericScreenOpen(Screen screen) {
+        Map<String, Object> data = new HashMap<>();
+
+        data.put("name", screen.getClass().getSimpleName());
+        data.put("class", screen.getClass().getName());
+        data.put("title", screen.getTitle().getString());
+        data.put("height", screen.height);
+        data.put("width", screen.width);
+        data.put("size", new LuaVec2Instance(screen.width, screen.height));
+        data.put("buttons", new LuaScreenButtons(screen));
+
+        PikuClient.Companion.getEngine().getEvents().fire(
+                "client.screen_open",
+                new LuaEventData(data)
+        );
+    }
+
+    @Unique
     private void handleDialogClose(Screen closedScreen) {
         if (closedScreen instanceof MultiButtonDialogScreen) {
             java.util.Map<String, Object> data = new java.util.HashMap<>();

@@ -1,5 +1,6 @@
 package computer.obscure.piku.core.scripting.api
 
+import computer.obscure.twine.nativex.TwineNative
 import org.luaj.vm2.LuaTable
 import org.luaj.vm2.LuaValue
 import kotlin.collections.iterator
@@ -20,6 +21,7 @@ class LuaEventData(fields: Map<String, Any?>) {
 
     fun toLuaValue(value: Any?): LuaValue {
         val result = when (value) {
+            is TwineNative -> value.table
             null -> LuaValue.NIL
             is LuaValue -> value
             is String -> LuaValue.valueOf(value)

@@ -3,8 +3,8 @@ package computer.obscure.piku.mod.fabric.scripting.api
 import com.google.gson.JsonParser
 import com.mojang.serialization.JsonOps
 import computer.obscure.piku.mod.fabric.scripting.api.util.unwrap
-import computer.obscure.twine.annotations.TwineNativeFunction
-import computer.obscure.twine.nativex.TwineNative
+import computer.obscure.twine.annotations.TwineFunction
+import computer.obscure.twine.TwineNative
 import net.minecraft.core.component.DataComponentType
 import net.minecraft.core.component.DataComponents
 import net.minecraft.core.registries.BuiltInRegistries
@@ -31,7 +31,7 @@ class LuaComponents(
     private val stack: ItemStack
 ) : TwineNative() {
 
-    @TwineNativeFunction("get")
+    @TwineFunction("get")
     fun getComponent(id: String): Any? {
         val type = BuiltInRegistries.DATA_COMPONENT_TYPE
             .get(Identifier.parse(id))
@@ -42,7 +42,7 @@ class LuaComponents(
         return valueToLua(value)
     }
 
-    @TwineNativeFunction
+    @TwineFunction
     fun set(id: String, value: Any?) {
         val type = BuiltInRegistries.DATA_COMPONENT_TYPE
             .get(Identifier.parse(id))
@@ -60,7 +60,7 @@ class LuaComponents(
         stack.set(type as DataComponentType<Any>, converted)
     }
 
-    @TwineNativeFunction
+    @TwineFunction
     fun remove(id: String) {
         val type = BuiltInRegistries.DATA_COMPONENT_TYPE
             .get(Identifier.parse(id))

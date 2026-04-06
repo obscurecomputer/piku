@@ -55,7 +55,7 @@ public class MinecraftClientMixin {
 
         PikuClient.Companion.getEngine().getEvents().fire(
                 "client.screen_close",
-                new LuaEventData(data)
+                data
         );
     }
 
@@ -73,7 +73,7 @@ public class MinecraftClientMixin {
 
         PikuClient.Companion.getEngine().getEvents().fire(
                 "client.screen_open",
-                new LuaEventData(data)
+                data
         );
     }
 
@@ -83,11 +83,9 @@ public class MinecraftClientMixin {
             java.util.Map<String, Object> data = new java.util.HashMap<>();
             data.put("type", "multi_button");
 
-            LuaEventData eventData = new LuaEventData(data);
-
             PikuClient.Companion.getEngine().getEvents().fire(
                     "client.dialog_close",
-                    eventData
+                    data
             );
         }
     }

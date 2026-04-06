@@ -1,13 +1,13 @@
 package computer.obscure.piku.core.scripting.api
 
 import computer.obscure.piku.core.ui.classes.Spacing
-import computer.obscure.twine.annotations.TwineNativeFunction
-import computer.obscure.twine.annotations.TwineNativeProperty
-import computer.obscure.twine.nativex.TwineNative
+import computer.obscure.twine.annotations.TwineFunction
+import computer.obscure.twine.annotations.TwineProperty
+import computer.obscure.twine.TwineNative
 
 class LuaSpacing : TwineNative("spacing") {
 //    @TwineOverload
-//    @TwineNativeFunction
+//    @TwineFunction
 //    fun of(all: Double): LuaSpacingInstance {
 //        return LuaSpacingInstance(
 //            left = all,
@@ -18,7 +18,7 @@ class LuaSpacing : TwineNative("spacing") {
 //    }
 //
 //    @TwineOverload
-//    @TwineNativeFunction
+//    @TwineFunction
 //    fun of(x: Double, y: Double): LuaSpacingInstance {
 //        return LuaSpacingInstance(
 //            x = x,
@@ -27,7 +27,7 @@ class LuaSpacing : TwineNative("spacing") {
 //    }
 
 //    @TwineOverload
-    @TwineNativeFunction
+    @TwineFunction
     fun of(left: Double, top: Double, right: Double, bottom: Double): LuaSpacingInstance {
         return LuaSpacingInstance(
             left = left,
@@ -56,22 +56,22 @@ class LuaSpacingInstance(
     var bottom: Double = 0.0
 ) : TwineNative() {
 
-    @TwineNativeProperty("left")
+    @TwineProperty("left")
     var leftValue: Double
         get() = left
         set(value) { left = value }
 
-    @TwineNativeProperty("top")
+    @TwineProperty("top")
     var topValue: Double
         get() = top
         set(value) { top = value }
 
-    @TwineNativeProperty("right")
+    @TwineProperty("right")
     var rightValue: Double
         get() = right
         set(value) { right = value }
 
-    @TwineNativeProperty("bottom")
+    @TwineProperty("bottom")
     var bottomValue: Double
         get() = bottom
         set(value) { bottom = value }
@@ -85,7 +85,7 @@ class LuaSpacingInstance(
         )
     }
 
-    @TwineNativeFunction("tostring")
+    @TwineFunction("tostring")
     override fun toString(): String {
         return "spacing[left=$left, top=$top, right=$right, bottom=$bottom]"
     }

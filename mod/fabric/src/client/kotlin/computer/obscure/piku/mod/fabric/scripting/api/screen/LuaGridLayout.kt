@@ -1,7 +1,7 @@
 package computer.obscure.piku.mod.fabric.scripting.api.screen
 
-import computer.obscure.twine.annotations.TwineNativeFunction
-import computer.obscure.twine.nativex.TwineNative
+import computer.obscure.twine.annotations.TwineFunction
+import computer.obscure.twine.TwineNative
 import net.minecraft.client.gui.layouts.FrameLayout
 import net.minecraft.client.gui.layouts.GridLayout
 
@@ -9,7 +9,7 @@ class LuaGridLayout(val columns: Int, val screen: CustomScreen) : TwineNative(""
     val grid = GridLayout()
     val rowHelper = grid.createRowHelper(columns)
 
-    @TwineNativeFunction
+    @TwineFunction
     fun add(widget: LuaWidget): LuaGridLayout {
         if (widget.spanColumns > 1) {
             rowHelper.addChild(widget.build(), widget.spanColumns)
@@ -19,13 +19,13 @@ class LuaGridLayout(val columns: Int, val screen: CustomScreen) : TwineNative(""
         return this
     }
 
-    @TwineNativeFunction
+    @TwineFunction
     fun padding(all: Int): LuaGridLayout {
         grid.defaultCellSetting().padding(all, all, all, 0)
         return this
     }
 
-    @TwineNativeFunction
+    @TwineFunction
     fun align(x: Double, y: Double): LuaGridLayout {
         screen.onInit {
             grid.arrangeElements()

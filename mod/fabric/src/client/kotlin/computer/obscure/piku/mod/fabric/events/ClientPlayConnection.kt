@@ -6,17 +6,22 @@ import computer.obscure.piku.mod.fabric.Client
 import computer.obscure.piku.mod.fabric.InputHandler
 import computer.obscure.piku.mod.fabric.MenuConfigs
 import computer.obscure.piku.mod.fabric.PikuClient
+import computer.obscure.piku.mod.fabric.packets.clientbound.handlers.ReceiveScriptHandler
 import computer.obscure.piku.mod.fabric.ui.UIRenderer
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents
 
 object ClientPlayConnection {
     fun register() {
-        ClientPlayConnectionEvents.JOIN.register { _, _, _ ->
-            onJoin()
+        ClientPlayConnectionEvents.JOIN.register { _, _, client ->
+            client.execute {
+                onJoin()
+            }
         }
 
-        ClientPlayConnectionEvents.DISCONNECT.register { _, _ ->
-            onDisconnect()
+        ClientPlayConnectionEvents.DISCONNECT.register { _, client ->
+            client.execute {
+                onDisconnect()
+            }
         }
     }
 
@@ -62,7 +67,6 @@ object ClientPlayConnection {
             hideArm = false
 
             customScreenshotMessage = null
-            customScreenshotInstance = null
             bobbingStrength = 1f
 
             menuConfigs = MenuConfigs()

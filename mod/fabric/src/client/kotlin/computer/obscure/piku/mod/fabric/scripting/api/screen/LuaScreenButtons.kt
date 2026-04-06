@@ -1,14 +1,14 @@
 package computer.obscure.piku.mod.fabric.scripting.api.screen
 
-import computer.obscure.twine.annotations.TwineNativeFunction
-import computer.obscure.twine.nativex.TwineNative
+import computer.obscure.twine.annotations.TwineFunction
+import computer.obscure.twine.TwineNative
 import net.minecraft.client.gui.components.Button
 import net.minecraft.client.gui.screens.Screen
 import net.minecraft.network.chat.contents.TranslatableContents
 
 class LuaScreenButtons(val screen: Screen) : TwineNative() {
 
-    @TwineNativeFunction
+    @TwineFunction
     fun has(key: String): Boolean {
         return screen.children().any { listener ->
             listener is Button &&
@@ -17,7 +17,7 @@ class LuaScreenButtons(val screen: Screen) : TwineNative() {
         }
     }
 
-    @TwineNativeFunction
+    @TwineFunction
     fun keys(): List<String> {
         return screen.children().filterIsInstance<Button>()
             .mapNotNull { button ->

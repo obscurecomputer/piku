@@ -1,20 +1,20 @@
 package computer.obscure.piku.mod.fabric.scripting.api
 
 import computer.obscure.piku.mod.fabric.scripting.api.util.unwrap
-import computer.obscure.twine.nativex.TwineNative
-import computer.obscure.twine.annotations.TwineNativeFunction
+import computer.obscure.twine.TwineNative
+import computer.obscure.twine.annotations.TwineFunction
 
 class LuaNbtCompound(
     private val compound: Map<String, Any?>
 ) : TwineNative("nbt") {
 
-    @TwineNativeFunction("get")
+    @TwineFunction("get")
     fun getValue(key: String): Any? = compound[key]?.unwrap()
 
-    @TwineNativeFunction("has")
+    @TwineFunction("has")
     fun has(key: String): Boolean = compound.containsKey(key)
 
-    @TwineNativeFunction("tostring")
+    @TwineFunction("tostring")
     override fun toString(): String {
         if (compound.isEmpty()) return "nbt[]"
 

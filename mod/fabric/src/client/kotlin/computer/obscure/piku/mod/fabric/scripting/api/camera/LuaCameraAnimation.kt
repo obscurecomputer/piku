@@ -4,21 +4,21 @@ import computer.obscure.piku.core.scripting.api.LuaVec3Instance
 import computer.obscure.piku.core.ui.events.ValueAnimation
 import computer.obscure.piku.mod.fabric.camera.CameraAnimator
 import computer.obscure.piku.mod.fabric.camera.CinematicCamera
-import computer.obscure.twine.annotations.TwineNativeFunction
-import computer.obscure.twine.nativex.TwineNative
+import computer.obscure.twine.annotations.TwineFunction
+import computer.obscure.twine.TwineNative
 import net.minecraft.world.phys.Vec3
 
 class LuaCameraAnimation : TwineNative() {
     val storedAnimations: MutableList<ValueAnimation<*>> = mutableListOf()
 
-    @TwineNativeFunction
+    @TwineFunction
     fun play() {
         storedAnimations.forEach {
             CameraAnimator.animate(it)
         }
     }
 
-    @TwineNativeFunction
+    @TwineFunction
     fun move(to: LuaVec3Instance, duration: Double, easing: String): LuaCameraAnimation {
         storedAnimations.add(
             ValueAnimation(
@@ -33,7 +33,7 @@ class LuaCameraAnimation : TwineNative() {
         return this
     }
 
-    @TwineNativeFunction
+    @TwineFunction
     fun rotate(to: LuaVec3Instance, duration: Double, easing: String): LuaCameraAnimation {
         storedAnimations.add(
             ValueAnimation(

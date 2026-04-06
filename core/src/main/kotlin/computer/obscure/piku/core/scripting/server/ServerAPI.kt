@@ -3,7 +3,6 @@ package computer.obscure.piku.core.scripting.server
 import computer.obscure.piku.core.classes.ScriptSource
 import computer.obscure.piku.core.scripting.engine.LuaEngine
 import computer.obscure.piku.core.states.SharedState
-import org.luaj.vm2.LuaValue
 import java.io.File
 import java.net.JarURLConnection
 import java.nio.charset.StandardCharsets

@@ -1,12 +1,12 @@
 package computer.obscure.piku.core.scripting.api
 
-import computer.obscure.twine.annotations.TwineNativeFunction
-import computer.obscure.twine.annotations.TwineNativeProperty
-import computer.obscure.twine.nativex.TwineNative
+import computer.obscure.twine.annotations.TwineFunction
+import computer.obscure.twine.annotations.TwineProperty
+import computer.obscure.twine.TwineNative
 import computer.obscure.piku.core.classes.Vec3
 
 class LuaVec3 : TwineNative("vec3") {
-    @TwineNativeFunction
+    @TwineFunction
     fun of(x: Double, y: Double, z: Double): LuaVec3Instance {
         return LuaVec3Instance(x, y, z)
     }
@@ -27,17 +27,17 @@ class LuaVec3Instance(
     var y: Double,
     var z: Double
 ) : TwineNative() {
-    @TwineNativeProperty("x")
+    @TwineProperty("x")
     var xCoord: Double
         get() = x
         set(value) { x = value }
 
-    @TwineNativeProperty("y")
+    @TwineProperty("y")
     var yCoord: Double
         get() = y
         set(value) { y = value }
 
-    @TwineNativeProperty("z")
+    @TwineProperty("z")
     var zCoord: Double
         get() = z
         set(value) { z = value }
@@ -46,7 +46,7 @@ class LuaVec3Instance(
         return Vec3(x = x, y = y, z = z)
     }
 
-    @TwineNativeFunction
+    @TwineFunction
     fun add(vec3: LuaVec3Instance): LuaVec3Instance {
         return LuaVec3Instance(
             x + vec3.x,
@@ -55,7 +55,7 @@ class LuaVec3Instance(
         )
     }
 
-    @TwineNativeFunction("tostring")
+    @TwineFunction("tostring")
     override fun toString(): String {
         return "vec3[x=$x, y=$y, z=$z]"
     }

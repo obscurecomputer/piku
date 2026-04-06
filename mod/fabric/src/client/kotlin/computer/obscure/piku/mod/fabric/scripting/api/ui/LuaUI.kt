@@ -1,7 +1,7 @@
 package computer.obscure.piku.mod.fabric.scripting.api.ui
 
-import computer.obscure.twine.annotations.TwineNativeFunction
-import computer.obscure.twine.nativex.TwineNative
+import computer.obscure.twine.annotations.TwineFunction
+import computer.obscure.twine.TwineNative
 import computer.obscure.piku.core.ui.components.Box
 import computer.obscure.piku.core.ui.components.Component
 import computer.obscure.piku.core.ui.components.FlowContainer
@@ -27,12 +27,12 @@ import computer.obscure.piku.mod.fabric.ui.UIRenderer
 class LuaUI : TwineNative() {
     val window = UIRenderer.currentWindow
 
-    @TwineNativeFunction
+    @TwineFunction
     fun layout() {
         UIRenderer.layout(window)
     }
 
-    @TwineNativeFunction
+    @TwineFunction
     fun group(name: String = ""): LuaUIGroup {
         val component = Group(
             CollectionProps()
@@ -45,7 +45,7 @@ class LuaUI : TwineNative() {
         )
     }
 
-    @TwineNativeFunction
+    @TwineFunction
     fun flow(name: String = ""): LuaUIFlow {
         val component = FlowContainer(
             FlowProps()
@@ -58,23 +58,23 @@ class LuaUI : TwineNative() {
         )
     }
 
-    @TwineNativeFunction
+    @TwineFunction
     fun clear() {
         window.components.clear()
     }
 
     // cannot be called "get" since it overrides LuaValue's get method
-    @TwineNativeFunction("get")
+    @TwineFunction("get")
     fun getById(name: String): LuaUIComponent? {
         return smartGet(window.components.values, name)
     }
 
-    @TwineNativeFunction("exists")
+    @TwineFunction("exists")
     fun exists(name: String): Boolean {
         return smartGet(window.components.values, name) != null
     }
 
-    @TwineNativeFunction()
+    @TwineFunction()
     fun debug(value: Boolean) {
         UIRenderer.debugEnabled = value
     }

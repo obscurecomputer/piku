@@ -1,48 +1,48 @@
 package computer.obscure.piku.mod.fabric.scripting.api.ui.components
 
-import computer.obscure.twine.annotations.TwineNativeProperty
+import computer.obscure.twine.annotations.TwineProperty
 import computer.obscure.piku.core.scripting.api.LuaColor
 import computer.obscure.piku.core.scripting.api.LuaColorInstance
 import computer.obscure.piku.core.ui.components.Gradient
-import computer.obscure.twine.annotations.TwineNativeFunction
+import computer.obscure.twine.annotations.TwineFunction
 
 class LuaUIGradient(
     override val component: Gradient
 ) : LuaUIComponent(component) {
-    @TwineNativeProperty
+    @TwineProperty
     var from: LuaColorInstance
         get() = LuaColor.fromUIColor(component.props.from)
         set(value) {
             component.props.from = value.toUIColor()
         }
 
-    @TwineNativeFunction
+    @TwineFunction
     fun from(value: LuaColorInstance): LuaUIGradient {
         component.props.from = value.toUIColor()
         return this
     }
 
-    @TwineNativeProperty
+    @TwineProperty
     var to: LuaColorInstance
         get() = LuaColor.fromUIColor(component.props.to)
         set(value) {
             component.props.to = value.toUIColor()
         }
 
-    @TwineNativeFunction
+    @TwineFunction
     fun to(value: LuaColorInstance): LuaUIGradient {
         component.props.to = value.toUIColor()
         return this
     }
 
-    @TwineNativeProperty
+    @TwineProperty
     var fillScreen: Boolean
         get() = component.props.fillScreen
         set(value) {
             component.props.fillScreen = value
         }
 
-    @TwineNativeFunction
+    @TwineFunction
     fun fillScreen(value: Boolean = true): LuaUIGradient {
         component.props.fillScreen = value
         return this

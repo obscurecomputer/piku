@@ -2,70 +2,46 @@ package computer.obscure.piku.core.utils
 
 import com.google.gson.JsonElement
 import com.google.gson.JsonParser
-import org.luaj.vm2.LuaTable
-import org.luaj.vm2.LuaValue
 
-fun LuaValue.toJson(): String {
-    return when {
-        istable() -> {
-            val table = checktable()
-            val entries = mutableListOf<String>()
-
-            var k = LuaValue.NIL
-            while (true) {
-                val n = table.next(k)
-                if (n.arg1().isnil()) break
-                k = n.arg1()
-                val v = n.arg(2)
-
-                entries += "\"${k.tojstring()}\":${v.toJson()}"
+fun Any?.toJson(): String {
+    return when (this) {
+        null -> "null"
+        is String -> "\"${this}\""
+        is Number -> this.toString()
+        is Boolean -> this.toString()
+        is Map<*, *> -> {
+            val entries = this.entries.joinToString(",") { (k, v) ->
+                "\"$k\":${v.toJson()}"
             }
-
-            "{${entries.joinToString(",")}}"
+            "{$entries}"
         }
-
-        isstring() -> "\"${tojstring()}\""
-        isnumber() -> tojstring()
-        isboolean() -> toboolean().toString()
-        isnil() -> "null"
-        else -> "\"${tojstring()}\""
+        is List<*> -> {
+            val entries = this.joinToString(",") { it.toJson() }
+            "[$entries]"
+        }
+        else -> "\"${this}\""
     }
 }
 
-fun jsonToLua(value: JsonElement): LuaValue {
+fun jsonToKotlin(value: JsonElement): Any? {
     return when {
-        value.isJsonObject -> {
-            val table = LuaTable()
-            for ((k, v) in value.asJsonObject.entrySet()) {
-                table[k] = jsonToLua(v)
-            }
-            table
-        }
-
-        value.isJsonArray -> {
-            val table = LuaTable()
-            value.asJsonArray.forEachIndexed { i, v ->
-                table[i + 1] = jsonToLua(v)
-            }
-            table
-        }
-
-        value.isJsonPrimitive -> {
-            val p = value.asJsonPrimitive
+        value.isJsonObject -> value.asJsonObject.entrySet()
+            .associate { (k, v) -> k to jsonToKotlin(v) }
+        value.isJsonArray -> value.asJsonArray
+            .map { jsonToKotlin(it) }
+        value.isJsonPrimitive -> value.asJsonPrimitive.let { p ->
             when {
-                p.isBoolean -> LuaValue.valueOf(p.asBoolean)
-                p.isNumber -> LuaValue.valueOf(p.asDouble)
-                p.isString -> LuaValue.valueOf(p.asString)
-                else -> LuaValue.NIL
+                p.isBoolean -> p.asBoolean
+                p.isNumber -> p.asDouble
+                p.isString -> p.asString
+                else -> null
             }
         }
-
-        value.isJsonNull -> LuaValue.NIL
-        else -> LuaValue.NIL
+        value.isJsonNull -> null
+        else -> null
     }
 }
 
-fun jsonStringToLua(json: String): LuaValue {
-    val element = JsonParser.parseString(json)
-    return jsonToLua(element)
+fun jsonStringToKotlin(json: String): Any? {
+    return jsonToKotlin(JsonParser.parseString(json))
 }

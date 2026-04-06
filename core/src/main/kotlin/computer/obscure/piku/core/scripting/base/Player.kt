@@ -1,6 +1,6 @@
 package computer.obscure.piku.core.scripting.base
 
-import computer.obscure.twine.nativex.TwineNative
+import computer.obscure.twine.TwineNative
 
 abstract class Player : TwineNative() {
 

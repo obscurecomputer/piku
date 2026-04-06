@@ -1,19 +1,14 @@
 package computer.obscure.piku.mod.fabric.scripting.api.ui
 
 import computer.obscure.piku.mod.fabric.ui.UIRenderer
-import computer.obscure.twine.annotations.TwineNativeFunction
-import computer.obscure.twine.annotations.TwineNativeProperty
-import computer.obscure.twine.nativex.TwineNative
-import org.luaj.vm2.LuaValue
+import computer.obscure.twine.annotations.TwineFunction
+import computer.obscure.twine.annotations.TwineProperty
+import computer.obscure.twine.TwineNative
 
 class LuaEasing : TwineNative("easing") {
-    @TwineNativeFunction
-    fun new(id: String, function: (time: Double) -> LuaValue): LuaEasingInstance {
-        val instance = LuaEasingInstance(id) { t ->
-            // avoids class org.luaj.vm2.LuaDouble cannot be cast to class java.lang.Number
-            // in UIRenderer.kt:158
-            function(t).todouble()
-        }
+    @TwineFunction
+    fun new(id: String): LuaEasingInstance {
+        val instance = LuaEasingInstance(id)
         UIRenderer.registerEasing(instance)
         return instance
     }
@@ -21,9 +16,15 @@ class LuaEasing : TwineNative("easing") {
 
 class LuaEasingInstance(
     val internalId: String,
-    val function: (time: Double) -> Double
-) : TwineNative() {
-    @TwineNativeProperty
-    val id: String
-        get() = internalId
+    var function: ((Double) -> Double) = { _ -> 0.0 }
+) : TwineNative("easingInstance") {
+    @TwineProperty
+    val id: String get() = internalId
+
+    fun withFunction(fn: (Double) -> Double): LuaEasingInstance {
+        function = fn
+        return this
+    }
+
+    fun evaluate(t: Double): Double = function.invoke(t)
 }

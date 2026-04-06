@@ -1,7 +1,7 @@
 package computer.obscure.piku.minestom.scripting.api
 
-import computer.obscure.twine.annotations.TwineNativeFunction
-import computer.obscure.twine.annotations.TwineNativeProperty
+import computer.obscure.twine.annotations.TwineFunction
+import computer.obscure.twine.annotations.TwineProperty
 import computer.obscure.piku.core.scripting.base.Player
 import net.kyori.adventure.text.minimessage.MiniMessage
 
@@ -11,16 +11,16 @@ class LuaPlayer(
 
     private val mm = MiniMessage.miniMessage()
 
-    @TwineNativeFunction
+    @TwineFunction
     override fun send(message: String) {
         player.sendMessage(mm.deserialize(message))
     }
 
-    @TwineNativeProperty
+    @TwineProperty
     override val uuid: String
         get() = player.uuid.toString()
 
-    @TwineNativeProperty
+    @TwineProperty
     override val username: String
         get() = player.username
 }

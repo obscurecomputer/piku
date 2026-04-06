@@ -1,115 +1,80 @@
 package computer.obscure.piku.core.scripting.engine
 
-import computer.obscure.piku.core.scripting.api.LuaColor
-import computer.obscure.piku.core.scripting.api.LuaLogger
-import computer.obscure.piku.core.scripting.api.LuaMath
-import computer.obscure.piku.core.scripting.api.LuaScheduler
-import computer.obscure.piku.core.scripting.api.LuaSpacing
-import computer.obscure.piku.core.scripting.api.LuaText
-import computer.obscure.piku.core.scripting.api.LuaVec2
-import computer.obscure.piku.core.scripting.api.LuaVec3
+import computer.obscure.piku.core.scripting.api.*
 import computer.obscure.piku.core.service.PikuService
+import computer.obscure.twine.TwineEngine
 import computer.obscure.twine.TwineLogger
-import computer.obscure.twine.TwineTable
-import computer.obscure.twine.nativex.TwineEngine
-import computer.obscure.twine.nativex.TwineNative
-import org.luaj.vm2.LoadState
-import org.luaj.vm2.LuaError
-import org.luaj.vm2.LuaValue
-import org.luaj.vm2.compiler.LuaC
-import org.luaj.vm2.lib.Bit32Lib
-import org.luaj.vm2.lib.CoroutineLib
-import org.luaj.vm2.lib.PackageLib
-import org.luaj.vm2.lib.TableLib
-import org.luaj.vm2.lib.jse.JseBaseLib
-import org.luaj.vm2.lib.jse.JseMathLib
-import org.luaj.vm2.lib.jse.LuajavaLib
+import computer.obscure.twine.TwineNative
 
 abstract class LuaEngine : PikuService {
-    val engine = TwineEngine()
-    open val registeredTables: MutableMap<String, TwineTable> = mutableMapOf()
-    open val registeredBaseTables: MutableList<TwineNative> = mutableListOf()
-    open val activeScripts: MutableMap<String, String> = mutableMapOf()
+    private var _engine: TwineEngine? = null
 
-    open var resourceFinder = EngineResourceFinder(activeScripts)
+    val engine: TwineEngine
+        get() = _engine ?: throw IllegalStateException("Engine not initialized")
+
+    private val registeredNatives: MutableMap<String, TwineNative> = mutableMapOf()
+    open val activeScripts: MutableMap<String, String> = mutableMapOf()
+    private val engineLock = Any()
 
     open fun init() {
-        engine.clear()
-        registeredBaseTables.clear()
-        registeredTables.clear()
-        rebuildGlobals()
+        shutdown()
+        // attach a completely fresh instance of the engine,
+        // since LuaStates will persist over disconnects, meaning your game will crash
+        // if you try to join another server after in the same session.
+        // avoids a JVM crash
+//        _engine?.close()
+        val freshEngine = TwineEngine()
+        _engine = freshEngine
+
+        _engine!!.moduleLoader = { name ->
+            activeScripts[name]
+                ?: activeScripts["$name.luau"]
+                ?: activeScripts["$name.lua"]
+        }
+        _engine!!.enableRequire()
+
+        registeredNatives.clear()
+        registerCommons()
     }
 
     override fun shutdown() {
-        // !!! VERY IMPORTANT
-        // This clears all active scripts upon shutdown
-        activeScripts.clear()
-    }
-
-    private fun rebuildGlobals() {
-        engine.clear()
-
-        engine.load(JseBaseLib())
-        engine.load(PackageLib())
-        engine.load(Bit32Lib())
-        engine.load(TableLib())
-        engine.load(CoroutineLib())
-        engine.load(JseMathLib())
-        engine.load(LuajavaLib())
-
-        engine.globals.finder = resourceFinder
-
-        LoadState.install(engine.globals)
-        LuaC.install(engine.globals)
-
-        // re-register natives
-        registeredTables.values.forEach {
-            engine.set(it.valueName, it.table)
-        }
-        registeredBaseTables.forEach {
-            engine.setBase(it)
+        synchronized(engineLock) {
+            activeScripts.clear()
+            _engine?.close()
+            _engine = null
         }
     }
 
     fun registerCommons() {
-        register(LuaVec2())
-        register(LuaVec3())
-        register(LuaColor())
-        register(LuaSpacing())
-        register(LuaScheduler())
-        registerBase(LuaMath())
-        register(LuaText())
+        engine.register(LuaVec2())
+        engine.register(LuaVec3())
+        engine.register(LuaColor())
+        engine.register(LuaSpacing())
+        engine.register(LuaScheduler())
+        engine.register(LuaMath())
+        engine.register(LuaText())
     }
 
-    fun register(table: TwineTable) {
-        registeredTables[table.valueName] = table
-        engine.set(table.valueName, table.table)
+    fun register(native: TwineNative) {
+        registeredNatives[native.resolvedName] = native
+        engine.register(native)
     }
 
     fun registerBase(native: TwineNative) {
-        registeredBaseTables.add(native)
+        registeredNatives[native.resolvedName] = native
         engine.setBase(native)
     }
 
     fun runScript(name: String, content: String) {
-        val scriptEnv = LuaValue.tableOf()
+        // per-script logger
+//        engine.register(LuaLogger(name))
 
-        val mt = LuaValue.tableOf()
-        mt.set(LuaValue.INDEX, engine.globals)
-        scriptEnv.setmetatable(mt)
+        TwineLogger.level = TwineLogger.DEBUG
 
-        // bind the logger to the metatable so it fetches first,
-        // and uses the unique script-assigned logger
-
-        val logger = LuaLogger(name)
-        scriptEnv.set("log", logger.table)
-
-        try {
-            val chunk = engine.globals.load(content, name, scriptEnv)
-
-            chunk.call()
-        } catch (e: Exception) {
-            throw LuaError(e)
+        synchronized(engineLock) {
+            if (_engine == null || _engine!!.closed) return
+            val result = engine.runSafe(name, content)
+            result.onFailure { throw it }
         }
     }
 }

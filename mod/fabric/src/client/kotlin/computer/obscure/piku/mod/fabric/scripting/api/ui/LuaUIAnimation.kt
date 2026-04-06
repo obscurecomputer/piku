@@ -9,8 +9,8 @@ import computer.obscure.piku.core.ui.components.Component
 import computer.obscure.piku.core.ui.components.Line
 import computer.obscure.piku.core.ui.components.ProgressBar
 import computer.obscure.piku.core.ui.events.*
-import computer.obscure.twine.annotations.TwineNativeFunction
-import computer.obscure.twine.nativex.TwineNative
+import computer.obscure.twine.annotations.TwineFunction
+import computer.obscure.twine.TwineNative
 
 class LuaUIAnimation(
     val component: Component
@@ -28,14 +28,14 @@ class LuaUIAnimation(
         )
     }
 
-    @TwineNativeFunction
+    @TwineFunction
     fun play() {
         storedEvents.forEach {
             UIEventQueue.enqueueNow(it)
         }
     }
 
-    @TwineNativeFunction
+    @TwineFunction
     fun move(to: LuaVec2Instance, duration: Double, easing: String): LuaUIAnimation {
         storedEvents.add(
             MoveEvent(
@@ -50,7 +50,7 @@ class LuaUIAnimation(
         return this
     }
 
-    @TwineNativeFunction
+    @TwineFunction
     fun size(to: LuaVec2Instance, duration: Double, easing: String): LuaUIAnimation {
         storedEvents.add(
             SizeEvent(
@@ -65,7 +65,7 @@ class LuaUIAnimation(
         return this
     }
 
-    @TwineNativeFunction
+    @TwineFunction
     fun scale(to: LuaVec2Instance, duration: Double, easing: String): LuaUIAnimation {
         storedEvents.add(
             ScaleEvent(
@@ -80,7 +80,7 @@ class LuaUIAnimation(
         return this
     }
 
-    @TwineNativeFunction
+    @TwineFunction
     fun rotate(to: Int, duration: Double, easing: String): LuaUIAnimation {
         storedEvents.add(
             RotateEvent(
@@ -95,7 +95,7 @@ class LuaUIAnimation(
         return this
     }
 
-    @TwineNativeFunction
+    @TwineFunction
     fun opacity(to: Float, duration: Double, easing: String): LuaUIAnimation {
         storedEvents.add(
             OpacityEvent(
@@ -110,7 +110,7 @@ class LuaUIAnimation(
         return this
     }
 
-    @TwineNativeFunction
+    @TwineFunction
     fun padding(to: LuaSpacingInstance, duration: Double, easing: String): LuaUIAnimation {
         storedEvents.add(
             PaddingEvent(
@@ -125,7 +125,7 @@ class LuaUIAnimation(
         return this
     }
 
-    @TwineNativeFunction
+    @TwineFunction
     fun progress(to: Float, duration: Double, easing: String): LuaUIAnimation {
         if (component !is ProgressBar)
             invalidComponent("progress", "ProgressBar")
@@ -143,7 +143,7 @@ class LuaUIAnimation(
         return this
     }
 
-    @TwineNativeFunction
+    @TwineFunction
     fun to(to: LuaVec2Instance, duration: Double, easing: String): LuaUIAnimation {
         if (component !is Line)
             invalidComponent("to", "Line")
@@ -161,7 +161,7 @@ class LuaUIAnimation(
         return this
     }
 
-    @TwineNativeFunction
+    @TwineFunction
     fun from(to: LuaVec2Instance, duration: Double, easing: String): LuaUIAnimation {
         if (component !is Line)
             invalidComponent("from", "Line")

@@ -1,22 +1,22 @@
 package computer.obscure.piku.mod.fabric.scripting.api
 
-import computer.obscure.twine.annotations.TwineNativeFunction
-import computer.obscure.twine.nativex.TwineNative
+import computer.obscure.twine.annotations.TwineFunction
+import computer.obscure.twine.TwineNative
 import computer.obscure.piku.mod.fabric.scripting.ClientEventBus
-import org.luaj.vm2.LuaValue
+import computer.obscure.twine.LuaCallback
 
-class LuaClientEventListener : TwineNative() {
+class LuaClientEventListener : TwineNative("events") {
     lateinit var bus: ClientEventBus
 
-    @TwineNativeFunction
-    fun listen(id: String, callback: Function1<LuaValue, Unit>) {
+    @TwineFunction
+    fun listen(id: String, callback: LuaCallback) {
         bus.listen(id) { data ->
             callback.invoke(data)
         }
     }
 
-    @TwineNativeFunction
-    fun send(id: String, data: LuaValue) {
-        bus.send(id, data)
+    @TwineFunction
+    fun send(id: String, data: String) {
+        bus.send(id, mapOf("data" to data))
     }
 }

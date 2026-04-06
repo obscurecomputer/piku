@@ -8,19 +8,13 @@ import computer.obscure.piku.mod.fabric.packets.serverbound.payloads.SendDataPay
 import computer.obscure.piku.mod.fabric.packets.serverbound.payloads.SendStatePayload
 import computer.obscure.piku.mod.fabric.scripting.ClientEventBus
 import computer.obscure.piku.mod.fabric.scripting.events.HeartbeatEvent
-import computer.obscure.twine.nativex.conversion.Converter.toLuaValue
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking
-import org.luaj.vm2.LuaValue
 import java.util.UUID
 
 class LuaClientEvents : ClientEventBus {
-    val customListeners =
-        mutableMapOf<String, MutableList<(LuaValue) -> Unit>>()
-
-    val baseListeners =
-        mutableMapOf<String, LuaEvent>()
-
-    val stateCallbacks: MutableMap<UUID, LuaValue> = mutableMapOf()
+    val customListeners = mutableMapOf<String, MutableList<(Map<String, Any?>) -> Unit>>()
+    val baseListeners = mutableMapOf<String, LuaEvent>()
+    val stateCallbacks: MutableMap<UUID, (Map<String, Any?>) -> Unit> = mutableMapOf()
 
     fun registerBaseListeners() {
         register(HeartbeatEvent)
@@ -36,49 +30,33 @@ class LuaClientEvents : ClientEventBus {
         stateCallbacks.clear()
     }
 
-    // lua > server
-    override fun send(eventId: String, data: LuaValue) {
-        val json = data.toJson()
-
+    override fun send(eventId: String, data: Map<String, Any?>) {
         val payload = SendDataPayload(
             id = eventId,
-            json = json
+            json = data.toJson()
         )
-
         ClientPlayNetworking.send(payload)
     }
 
-    fun send(eventId: String, data: Any) {
-        send(eventId, data.toLuaValue())
+    override fun listen(eventId: String, callback: (Map<String, Any?>) -> Unit) {
+        customListeners.computeIfAbsent(eventId) { mutableListOf() }.add(callback)
     }
 
-    // lua > local register
-    override fun listen(eventId: String, callback: (LuaValue) -> Unit) {
-        customListeners.computeIfAbsent(eventId) { mutableListOf() }
-            .add(callback)
-    }
-
-    // minecraft > lua
-    override fun fire(eventId: String, data: LuaValue) {
+    override fun fire(eventId: String, data: Map<String, Any?>) {
         customListeners[eventId]?.forEach { callback ->
             try {
-                callback(data)
+                callback.invoke(data)
             } catch (e: Exception) {
                 println("[Lua error] in event $eventId: ${e.message}")
             }
         }
     }
 
-    fun fire(eventId: String, data: LuaEventData) {
-        fire(eventId, data.table)
-    }
-
     fun sendState(state: SharedState) {
         val payload = SendStatePayload(
             internalId = state.internalId.toString(),
-            value = state.value.toLuaValue().toJson()
+            value = state.value.toJson()
         )
-
         ClientPlayNetworking.send(payload)
     }
 }

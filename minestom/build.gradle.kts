@@ -34,7 +34,7 @@ dependencies {
     implementation("net.kyori:adventure-api:${project.property("adventure_version")}")
     implementation("ch.qos.logback:logback-classic:1.5.6")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.9.0")
-    implementation("org.luaj:luaj-jse:${project.property("luaj_version")}")
+//    implementation("org.luaj:luaj-jse:${project.property("luaj_version")}")
     implementation("computer.obscure:twine:${project.property("twine_version")}")
 }
 
@@ -46,6 +46,9 @@ java {
     withJavadocJar()
 }
 
+kotlin {
+    jvmToolchain(25)
+}
 
 
 publishing {

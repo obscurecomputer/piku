@@ -9,9 +9,7 @@ repositories {
 }
 
 subprojects {
-    val targetVersion =
-        if (project.path.contains("minestom") || project.name.contains("minestom")) 25
-        else 21
+    val targetVersion = 25
 
     tasks.withType<JavaCompile>().configureEach {
         options.release.set(targetVersion)

@@ -1,10 +1,10 @@
 package computer.obscure.piku.mod.fabric.scripting.api.screen
 
-import computer.obscure.twine.annotations.TwineNativeFunction
-import computer.obscure.twine.nativex.TwineNative
+import computer.obscure.twine.LuaCallback
+import computer.obscure.twine.annotations.TwineFunction
+import computer.obscure.twine.TwineNative
 import net.minecraft.client.gui.components.Button
 import net.minecraft.network.chat.Component
-import org.luaj.vm2.LuaFunction
 
 class LuaWidget : TwineNative("") {
     var spanColumns = 1
@@ -12,16 +12,19 @@ class LuaWidget : TwineNative("") {
     var translationKey = ""
     var literalText = ""
     var customLabel: Component? = null
-    var clickHandler: LuaFunction? = null
+    var clickHandler: (() -> Unit)? = null
 
-    @TwineNativeFunction
+    @TwineFunction
     fun width(w: Int): LuaWidget { buttonWidth = w; return this }
 
-    @TwineNativeFunction
+    @TwineFunction
     fun span(cols: Int): LuaWidget { spanColumns = cols; return this }
 
-    @TwineNativeFunction
-    fun onClick(fn: LuaFunction): LuaWidget { clickHandler = fn; return this }
+    @TwineFunction
+    fun onClick(fn: LuaCallback): LuaWidget {
+        clickHandler = { fn.invoke() }
+        return this
+    }
 
     fun build(): Button {
         val label = customLabel
@@ -29,7 +32,7 @@ class LuaWidget : TwineNative("") {
             else Component.translatable(translationKey)
 
         return Button.builder(label) {
-            clickHandler?.call()
+            clickHandler?.invoke()
         }.width(buttonWidth).build()
     }
 }

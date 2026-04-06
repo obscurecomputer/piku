@@ -49,7 +49,7 @@ public class ScreenshotMixin {
                 .getOrThrow(error ->
                         new RuntimeException("Failed to parse Component: " + error));
 
-        return piku$injectOpenFileRecursive(minecraft != null ? minecraft.copy() : Component.empty(), Client.customScreenshotInstance, file);
+        return piku$injectOpenFileRecursive(minecraft.copy(), Client.customScreenshotInstance, file);
     }
 
     @Unique

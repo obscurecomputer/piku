@@ -4,8 +4,8 @@ import computer.obscure.piku.core.scheduler.ScheduledTask
 import computer.obscure.piku.core.scheduler.Scheduler
 import computer.obscure.piku.core.scripting.engine.EngineError
 import computer.obscure.piku.core.scripting.engine.EngineErrorCode
-import computer.obscure.twine.annotations.TwineNativeFunction
-import computer.obscure.twine.nativex.TwineNative
+import computer.obscure.twine.annotations.TwineFunction
+import computer.obscure.twine.TwineNative
 
 class LuaTaskBuilder(
     private val fn: (LuaTask) -> Unit
@@ -25,20 +25,20 @@ class LuaTaskBuilder(
         }
     }
 
-    @TwineNativeFunction
+    @TwineFunction
     fun delay(ticks: Long): LuaTaskBuilder {
         task.delay(ticks)
         return this
     }
 
-    @TwineNativeFunction
+    @TwineFunction
     // repeat appears to be a reserved keyword in lua??
     fun loop(ticks: Int): LuaTaskBuilder {
         task.repeat(ticks.toLong())
         return this
     }
 
-    @TwineNativeFunction
+    @TwineFunction
     fun run() {
         Scheduler.submit(task)
     }

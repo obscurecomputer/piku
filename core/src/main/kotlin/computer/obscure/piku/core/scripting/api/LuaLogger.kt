@@ -1,29 +1,26 @@
 package computer.obscure.piku.core.scripting.api
 
-import computer.obscure.twine.annotations.TwineNativeFunction
-import computer.obscure.twine.nativex.TwineNative
-import computer.obscure.twine.nativex.conversion.Converter.toKotlinType
-import computer.obscure.twine.nativex.conversion.Converter.toKotlinValue
-import org.luaj.vm2.LuaTable
+import computer.obscure.twine.annotations.TwineFunction
+import computer.obscure.twine.TwineNative
 
 class LuaLogger(
     val scriptName: String
 ) : TwineNative("log") {
-    @TwineNativeFunction
+    @TwineFunction
     fun info(message: Any) {
         println(
             getMessage(LogLevel.INFO, message)
         )
     }
 
-    @TwineNativeFunction
+    @TwineFunction
     fun warn(message: Any) {
         println(
             getMessage(LogLevel.WARN, message)
         )
     }
 
-    @TwineNativeFunction
+    @TwineFunction
     fun error(message: Any) {
         println(
             getMessage(LogLevel.ERROR, message)
@@ -32,12 +29,6 @@ class LuaLogger(
 
     fun getMessage(level: LogLevel, message: Any): String {
         val fixedMessage = when (message) {
-            is LuaTable -> {
-                val actualValue = message.toKotlinValue(message.toKotlinType())
-                println(actualValue)
-                println("hello")
-                "hi"
-            }
             else -> message
         }
         return "[$level] $scriptName -- $fixedMessage"

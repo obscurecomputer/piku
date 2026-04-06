@@ -1,22 +1,13 @@
 package computer.obscure.piku.core.scripting.engine
 
-import org.luaj.vm2.lib.ResourceFinder
-import java.io.ByteArrayInputStream
-import java.io.InputStream
+import computer.obscure.twine.TwineNative
+import computer.obscure.twine.annotations.TwineFunction
 
-class EngineResourceFinder(private val scripts: Map<String, String>) : ResourceFinder {
-    override fun findResource(filename: String): InputStream? {
-        var content = scripts[filename]
-
-        if (content == null) {
-            content = scripts[filename.removeSuffix(".lua")]
-        }
-
-        if (content == null) {
-            val dotted = filename.removeSuffix(".lua").replace("/", ".")
-            content = scripts[dotted]
-        }
-
-        return content?.let { ByteArrayInputStream(it.toByteArray()) }
+class ScriptLoader(private val scripts: Map<String, String>) : TwineNative("require") {
+    @TwineFunction
+    fun load(name: String): String {
+        return scripts[name]
+            ?: scripts[name.replace(".", "/")]
+            ?: error("Script not found: $name")
     }
 }

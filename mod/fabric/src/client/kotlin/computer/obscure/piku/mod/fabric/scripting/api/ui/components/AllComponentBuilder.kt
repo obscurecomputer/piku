@@ -18,7 +18,7 @@ import computer.obscure.piku.core.ui.components.props.ProgressBarProps
 import computer.obscure.piku.core.ui.components.props.SpriteProps
 import computer.obscure.piku.core.ui.components.props.TextProps
 import computer.obscure.piku.mod.fabric.ui.UIRenderer
-import computer.obscure.twine.annotations.TwineNativeFunction
+import computer.obscure.twine.annotations.TwineFunction
 
 open class AllComponentBuilder(
     override val component: Component
@@ -31,28 +31,28 @@ open class AllComponentBuilder(
         return newComponent
     }
 
-    @TwineNativeFunction
+    @TwineFunction
     fun group(name: String): LuaUIGroup = LuaUIGroup(setup(Group(CollectionProps()), name))
 
-    @TwineNativeFunction
+    @TwineFunction
     fun text(name: String): LuaUIText = LuaUIText(setup(Text(TextProps()), name))
 
-    @TwineNativeFunction
+    @TwineFunction
     fun box(name: String): LuaUIBox = LuaUIBox(setup(Box(BoxProps()), name))
 
-    @TwineNativeFunction
+    @TwineFunction
     fun sprite(name: String): LuaUISprite = LuaUISprite(setup(Sprite(SpriteProps()), name))
 
-    @TwineNativeFunction
+    @TwineFunction
     fun gradient(name: String): LuaUIGradient = LuaUIGradient(setup(Gradient(GradientProps()), name))
 
-    @TwineNativeFunction
+    @TwineFunction
     fun progressBar(name: String): LuaUIProgressBar = LuaUIProgressBar(setup(ProgressBar(ProgressBarProps()), name))
 
-    @TwineNativeFunction
+    @TwineFunction
     fun line(name: String): LuaUILine = LuaUILine(setup(Line(LineProps()), name))
 
-    @TwineNativeFunction
+    @TwineFunction
     fun flow(name: String): LuaUIFlow {
         val newComponent = setup(FlowContainer(FlowProps()), name)
         val wrapper = LuaUIFlow(newComponent)

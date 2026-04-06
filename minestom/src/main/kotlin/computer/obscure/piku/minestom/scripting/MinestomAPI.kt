@@ -1,27 +1,21 @@
 package computer.obscure.piku.minestom.scripting
 
-import io.netty.buffer.ByteBufAllocator
-import me.znotchill.blossom.extensions.addListener
-import me.znotchill.blossom.server.BlossomServer
 import computer.obscure.piku.core.scripting.api.LuaEventData
 import computer.obscure.piku.core.scripting.server.ServerAPI
 import computer.obscure.piku.core.scripting.server.SharedStateManager
 import computer.obscure.piku.core.states.SharedState
-import computer.obscure.piku.core.utils.jsonStringToLua
+import computer.obscure.piku.core.utils.jsonStringToKotlin
 import computer.obscure.piku.core.utils.readString
 import computer.obscure.piku.core.utils.toJson
-import computer.obscure.piku.core.utils.writeString
-import computer.obscure.piku.minestom.scripting.api.LuaPlayer
-import computer.obscure.twine.nativex.conversion.Converter.toLuaValue
 import io.netty.buffer.ByteBuf
 import io.netty.buffer.Unpooled
+import me.znotchill.blossom.extensions.addListener
+import me.znotchill.blossom.server.BlossomServer
 import net.minestom.server.entity.Player
-import net.minestom.server.event.player.PlayerLoadedEvent
 import net.minestom.server.event.player.PlayerPluginMessageEvent
 import net.minestom.server.network.NetworkBuffer
 import net.minestom.server.network.packet.server.common.PluginMessagePacket
-import org.luaj.vm2.LuaValue
-import java.util.UUID
+import java.util.*
 
 class MinestomAPI(val server: BlossomServer) : ServerAPI<Player> {
     override val engine = MinestomLuaEngine()
@@ -40,7 +34,9 @@ class MinestomAPI(val server: BlossomServer) : ServerAPI<Player> {
 
                         buffer.release()
 
-                        val luaData = jsonStringToLua(data)
+                        val decoded = jsonStringToKotlin(data)
+                        @Suppress("UNCHECKED_CAST")
+                        val luaData = (decoded as? Map<String, Any?>) ?: emptyMap()
 
                         engine.events.fire(eventId, luaData, event.player)
                     } catch (e: Exception) {
@@ -65,7 +61,7 @@ class MinestomAPI(val server: BlossomServer) : ServerAPI<Player> {
                             throw IllegalAccessException("SharedState '${state.name}' is not client modifiable!")
 
                         state.set(
-                            jsonStringToLua(value),
+                            jsonStringToKotlin(value)!!,
                             exemptSyncOwners = listOf(event.player)
                         )
                     } catch (e: Exception) {
@@ -74,47 +70,26 @@ class MinestomAPI(val server: BlossomServer) : ServerAPI<Player> {
                 }
             }
         }
-
-        server.eventHandler.addListener<PlayerLoadedEvent> { event ->
-            val player = event.player
-
-            engine.events.fire(
-                "server.player_loaded",
-                LuaEventData(
-                    mapOf(
-                        "player" to LuaPlayer(player).table
-                    )
-                ).table
-            )
-        }
     }
 
     override fun sendData(player: Player, eventId: String, data: Any) {
-        val serializedData: LuaValue = when (data) {
-            is LuaEventData -> data.toLuaValue(data)
-            else -> data.toLuaValue()
-        }
+        val jsonString = data.toJson()
 
         val bytes = NetworkBuffer.makeArray { buffer ->
             buffer.write(NetworkBuffer.STRING, eventId)
-            buffer.write(NetworkBuffer.STRING, serializedData.toJson())
+            buffer.write(NetworkBuffer.STRING, jsonString)
         }
 
-        player.sendPacket(
-            PluginMessagePacket("piku:receive_data", bytes)
-        )
+        player.sendPacket(PluginMessagePacket("piku:receive_data", bytes))
     }
 
     override fun sendState(player: Player, state: SharedState) {
-        val serializedData: LuaValue = when (val data = state.value) {
-            is LuaEventData -> data.toLuaValue(data)
-            else -> data.toLuaValue()
-        }
+        val serializedData = state.value.toJson()
 
         val bytes = NetworkBuffer.makeArray { buffer ->
             buffer.write(NetworkBuffer.STRING, state.internalId.toString())
             buffer.write(NetworkBuffer.STRING, state.name)
-            buffer.write(NetworkBuffer.STRING, serializedData.toJson())
+            buffer.write(NetworkBuffer.STRING, serializedData)
             buffer.write(NetworkBuffer.BOOLEAN, state.clientModifiable)
         }
 

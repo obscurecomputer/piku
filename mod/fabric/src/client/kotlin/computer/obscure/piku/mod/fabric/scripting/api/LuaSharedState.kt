@@ -3,61 +3,48 @@ package computer.obscure.piku.mod.fabric.scripting.api
 import computer.obscure.piku.core.scripting.server.SharedStateManager
 import computer.obscure.piku.core.states.SharedState
 import computer.obscure.piku.mod.fabric.PikuClient
-import computer.obscure.piku.mod.fabric.scripting.api.screen.LuaCustomScreen
-import computer.obscure.twine.annotations.TwineNativeFunction
-import computer.obscure.twine.annotations.TwineNativeProperty
-import computer.obscure.twine.nativex.TwineNative
-import computer.obscure.twine.nativex.conversion.Converter.toLuaValue
-import net.minecraft.client.Minecraft
-import org.luaj.vm2.LuaValue
-import java.util.UUID
+import computer.obscure.twine.TwineNative
+import computer.obscure.twine.annotations.TwineFunction
+import computer.obscure.twine.annotations.TwineProperty
+import java.util.*
 
 class LuaSharedState(
-    @TwineNativeProperty
-    var internalId: String,
-    @TwineNativeProperty
-    var name: String,
-    @TwineNativeProperty
-    var value: LuaValue,
-    @TwineNativeProperty
-    var clientModifiable: Boolean,
-) : TwineNative() {
-    @TwineNativeProperty
-    var onSet: LuaValue = LuaValue.NIL
+    @TwineProperty var internalId: String,
+    @TwineProperty var name: String,
+    @TwineProperty var value: Any?,
+    @TwineProperty var clientModifiable: Boolean,
+) : TwineNative("sharedState") {
+
+    var onSet: ((Map<String, Any?>) -> Unit)? = null
         set(value) {
             field = value
-            PikuClient.engine.events.stateCallbacks[UUID.fromString(this.internalId)] = value
+            if (value != null) {
+                PikuClient.engine.events.stateCallbacks[UUID.fromString(internalId)] = value
+            }
         }
 
-    @TwineNativeFunction
+    @TwineFunction
     fun set(value: Any) {
-        if (!clientModifiable) {
-            throw IllegalAccessException("SharedState '$name' is not client modifiable!")
-        }
-        val state = this.toSharedState()
+        if (!clientModifiable) throw IllegalAccessException("SharedState '$name' is not client modifiable!")
+        val state = toSharedState()
         state.value = value
-
         PikuClient.engine.events.sendState(state)
         SharedStateManager.addState(state)
     }
 
-    fun toSharedState(): SharedState {
-        return SharedState(
-            internalId = UUID.fromString(internalId),
-            name = name,
-            value = value,
-            clientModifiable = clientModifiable
-        )
-    }
+    fun toSharedState() = SharedState(
+        internalId = UUID.fromString(internalId),
+        name = name,
+        value = value,
+        clientModifiable = clientModifiable
+    )
 
     companion object {
-        fun fromSharedState(state: SharedState): LuaSharedState {
-            return LuaSharedState(
-                internalId = state.internalId.toString(),
-                name = state.name,
-                value = state.value.toLuaValue(),
-                clientModifiable = state.clientModifiable
-            )
-        }
+        fun fromSharedState(state: SharedState) = LuaSharedState(
+            internalId = state.internalId.toString(),
+            name = state.name,
+            value = state.value,
+            clientModifiable = state.clientModifiable
+        )
     }
 }

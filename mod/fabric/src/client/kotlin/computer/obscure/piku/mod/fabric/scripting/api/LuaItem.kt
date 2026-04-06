@@ -1,7 +1,7 @@
 package computer.obscure.piku.mod.fabric.scripting.api
 
-import computer.obscure.twine.annotations.TwineNativeProperty
-import computer.obscure.twine.nativex.TwineNative
+import computer.obscure.twine.annotations.TwineProperty
+import computer.obscure.twine.TwineNative
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.world.item.ItemStack
 
@@ -15,15 +15,15 @@ class LuaItem : TwineNative() {
         return this
     }
 
-    @TwineNativeProperty
+    @TwineProperty
     val id: String
         get() = BuiltInRegistries.ITEM.getKey(stack.item).toString()
 
-    @TwineNativeProperty
+    @TwineProperty
     val count: Int
         get() = stack.count
 
-    @TwineNativeProperty
+    @TwineProperty
     val data: LuaComponents
         get() = LuaComponents(stack)
 }

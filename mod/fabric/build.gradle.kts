@@ -85,13 +85,26 @@ dependencies {
     modImplementation("net.fabricmc.fabric-api:fabric-api:${project.property("fabric_api_version")}")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.9.0")
     modImplementation("com.terraformersmc:modmenu:${project.property("modmenu_version")}")
-    implementation("org.luaj:luaj-jse:${project.property("luaj_version")}")
-    include("org.luaj:luaj-jse:${project.property("luaj_version")}")
     implementation("computer.obscure:twine:${project.property("twine_version")}")
     include("computer.obscure:twine:${project.property("twine_version")}")
     implementation("net.kyori:adventure-text-minimessage:${project.property("adventure_version")}")
     implementation("net.kyori:adventure-api:${project.property("adventure_version")}")
     modImplementation(include("net.kyori:adventure-platform-fabric:6.7.0")!!)
+
+    val luauVersion = "1.0.1"
+    val luauNativeVersion = "1.0.1-debug"
+
+    implementation("dev.hollowcube:luau:$luauVersion")
+    include("dev.hollowcube:luau:$luauVersion")
+    implementation("dev.hollowcube:luau-natives-macos-x64:1.0.0")
+    include("dev.hollowcube:luau-natives-macos-x64:1.0.0")
+
+    val platforms = listOf("windows-x64", "linux-x64", "macos-arm64")
+    platforms.forEach { platform ->
+        val dep = "dev.hollowcube:luau-natives-$platform:$luauNativeVersion"
+        implementation(dep)
+        include(dep)
+    }
 }
 
 tasks.processResources {

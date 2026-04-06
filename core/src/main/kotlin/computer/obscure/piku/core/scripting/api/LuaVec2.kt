@@ -1,12 +1,12 @@
 package computer.obscure.piku.core.scripting.api
 
-import computer.obscure.twine.annotations.TwineNativeFunction
-import computer.obscure.twine.annotations.TwineNativeProperty
-import computer.obscure.twine.nativex.TwineNative
+import computer.obscure.twine.annotations.TwineFunction
+import computer.obscure.twine.annotations.TwineProperty
+import computer.obscure.twine.TwineNative
 import computer.obscure.piku.core.classes.Vec2
 
 class LuaVec2 : TwineNative("vec2") {
-    @TwineNativeFunction
+    @TwineFunction
     fun of(x: Double, y: Double): LuaVec2Instance {
         return LuaVec2Instance(x, y)
     }
@@ -25,12 +25,12 @@ class LuaVec2Instance(
     var x: Double,
     var y: Double
 ) : TwineNative() {
-    @TwineNativeProperty("x")
+    @TwineProperty("x")
     var xCoord: Double
         get() = x
         set(value) { x = value }
 
-    @TwineNativeProperty("y")
+    @TwineProperty("y")
     var yCoord: Double
         get() = y
         set(value) { y = value }
@@ -39,7 +39,7 @@ class LuaVec2Instance(
         return Vec2(x = x, y = y)
     }
 
-    @TwineNativeFunction("tostring")
+    @TwineFunction("tostring")
     override fun toString(): String {
         return "vec2[x=$x, y=$y]"
     }

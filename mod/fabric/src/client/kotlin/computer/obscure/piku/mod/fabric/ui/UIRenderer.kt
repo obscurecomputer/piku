@@ -115,15 +115,13 @@ object UIRenderer : PikuService {
                     drawComponent(context, it)
                 }
 
-                val event = LuaEventData(
-                    mapOf(
+                val event = mapOf(
                         "rendered_components" to sorted.size,
                         "last_frame_delta" to deltaSeconds,
                         "current_time" to currentTime,
                         "active_animations" to activeAnimations.size
                     )
-                )
-                PikuClient.engine.events.fire("client.ui_render", event.table)
+                PikuClient.engine.events.fire("client.ui_render", event)
             }
         }
     }

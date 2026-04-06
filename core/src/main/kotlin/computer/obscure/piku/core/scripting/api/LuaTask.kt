@@ -1,8 +1,8 @@
 package computer.obscure.piku.core.scripting.api
 
 import computer.obscure.piku.core.scheduler.Scheduler
-import computer.obscure.twine.annotations.TwineNativeFunction
-import computer.obscure.twine.nativex.TwineNative
+import computer.obscure.twine.annotations.TwineFunction
+import computer.obscure.twine.TwineNative
 
 class LuaTask : TwineNative() {
 
@@ -12,7 +12,7 @@ class LuaTask : TwineNative() {
         taskId = id
     }
 
-    @TwineNativeFunction
+    @TwineFunction
     fun cancel() {
         val id = taskId ?: return
         Scheduler.get(id)?.cancel()

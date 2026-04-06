@@ -4,12 +4,12 @@ import computer.obscure.piku.core.scripting.api.LuaVec3Instance
 import computer.obscure.piku.core.scripting.engine.EngineError
 import computer.obscure.piku.core.scripting.engine.EngineErrorCode
 import computer.obscure.piku.mod.fabric.camera.CinematicCamera
-import computer.obscure.twine.annotations.TwineNativeFunction
-import computer.obscure.twine.nativex.TwineNative
+import computer.obscure.twine.annotations.TwineFunction
+import computer.obscure.twine.TwineNative
 import net.minecraft.world.phys.Vec3
 
 class LuaCamera : TwineNative() {
-    @TwineNativeFunction
+    @TwineFunction
     fun enable() {
         if (CinematicCamera.active)
             throw EngineError(
@@ -19,7 +19,7 @@ class LuaCamera : TwineNative() {
         CinematicCamera.enable()
     }
 
-    @TwineNativeFunction
+    @TwineFunction
     fun disable() {
         if (!CinematicCamera.active)
             throw EngineError(
@@ -29,23 +29,23 @@ class LuaCamera : TwineNative() {
         CinematicCamera.disable()
     }
 
-    @TwineNativeFunction
+    @TwineFunction
     fun toggle() {
         if (CinematicCamera.active) CinematicCamera.disable()
         else CinematicCamera.enable()
     }
 
-    @TwineNativeFunction
+    @TwineFunction
     fun move(to: LuaVec3Instance) {
         CinematicCamera.pos = Vec3(to.x, to.y, to.z)
     }
 
-    @TwineNativeFunction
+    @TwineFunction
     fun rotate(to: LuaVec3Instance) {
         CinematicCamera.rotation = Vec3(to.x, to.y, to.z)
     }
 
-    @TwineNativeFunction
+    @TwineFunction
     fun animate(): LuaCameraAnimation {
         return LuaCameraAnimation()
     }

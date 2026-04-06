@@ -4,24 +4,24 @@ import computer.obscure.piku.core.scripting.api.LuaColor
 import computer.obscure.piku.core.scripting.api.LuaColorInstance
 import computer.obscure.piku.core.ui.components.Group
 import computer.obscure.piku.mod.fabric.scripting.api.ui.LuaUI
-import computer.obscure.twine.annotations.TwineNativeFunction
-import computer.obscure.twine.annotations.TwineNativeProperty
+import computer.obscure.twine.annotations.TwineFunction
+import computer.obscure.twine.annotations.TwineProperty
 
 class LuaUIGroup(
     override val component: Group
 ) : AllComponentBuilder(component) {
-    @TwineNativeFunction("get")
+    @TwineFunction("get")
     fun getByName(name: String): LuaUIComponent? {
         val found = component.props.components.find { it.name == name }
         return found?.let { LuaUI.wrap(it) }
     }
 
-    @TwineNativeFunction
+    @TwineFunction
     fun exists(name: String): Boolean {
         return component.props.components.any { it.name == name }
     }
 
-    @TwineNativeProperty
+    @TwineProperty
     var backgroundColor: LuaColorInstance?
         get() {
             if (component.props.backgroundColor == null) return null
@@ -32,7 +32,7 @@ class LuaUIGroup(
             component.props.backgroundColor = value.toUIColor()
         }
 
-    @TwineNativeFunction
+    @TwineFunction
     fun backgroundColor(value: LuaColorInstance): LuaUIComponent {
         component.props.backgroundColor = value.toUIColor()
         return this

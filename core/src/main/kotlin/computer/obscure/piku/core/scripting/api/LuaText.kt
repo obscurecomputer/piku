@@ -1,44 +1,33 @@
 package computer.obscure.piku.core.scripting.api
 
-import computer.obscure.twine.annotations.TwineNativeFunction
-import computer.obscure.twine.annotations.TwineNativeProperty
-import computer.obscure.twine.nativex.TwineNative
+import computer.obscure.twine.annotations.TwineFunction
+import computer.obscure.twine.annotations.TwineProperty
+import computer.obscure.twine.TwineNative
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.event.HoverEvent
 import net.kyori.adventure.text.format.TextDecoration
 
 class LuaText : TwineNative("text") {
-    @TwineNativeFunction
+    @TwineFunction
     fun literal(text: String): LuaTextInstance {
         return LuaTextInstance("text", text)
     }
 
-    @TwineNativeFunction
+    @TwineFunction
     fun keybind(text: String): LuaTextInstance {
         return LuaTextInstance("keybind", text)
     }
 }
 
 class LuaTextInstance(
-    @TwineNativeProperty
     var type: String,
-    @TwineNativeProperty
     var literalText: String = "",
-    @TwineNativeProperty
     var textBold: Boolean = false,
-    @TwineNativeProperty
     var textItalic: Boolean = false,
-    @TwineNativeProperty
     var textUnderline: Boolean = false,
-    @TwineNativeProperty
     var clickEventType: String? = null,
-    @TwineNativeProperty
     var clickEvent: String? = null,
-
-    @TwineNativeProperty
     var hoverText: LuaTextInstance? = null,
-
-    @TwineNativeProperty
     var textColor: LuaColorInstance? = null
 ) : TwineNative() {
 
@@ -76,33 +65,33 @@ class LuaTextInstance(
 //            .shadowColor(textShadowColor?.toShadowColor())
     }
 
-    @TwineNativeFunction
+    @TwineFunction
     fun bold(): LuaTextInstance = apply {
         textBold = true
     }
 
-    @TwineNativeFunction
+    @TwineFunction
     fun italic(): LuaTextInstance = apply {
         textItalic = true
     }
 
-    @TwineNativeFunction
+    @TwineFunction
     fun underline(): LuaTextInstance = apply {
         textUnderline = true
     }
 
-    @TwineNativeFunction
+    @TwineFunction
     fun color(value: LuaColorInstance): LuaTextInstance = apply {
         textColor = value
     }
 
-    @TwineNativeFunction
+    @TwineFunction
     fun clickEvent(type: String, value: String): LuaTextInstance = apply {
         clickEventType = type
         clickEvent = value
     }
 
-    @TwineNativeFunction
+    @TwineFunction
     /**
      * This function can only ever be used in screenshot events.
      */
@@ -111,17 +100,17 @@ class LuaTextInstance(
         clickEvent = ""
     }
 
-    @TwineNativeFunction
+    @TwineFunction
     fun hoverText(value: LuaTextInstance): LuaTextInstance = apply {
         hoverText = value
     }
 
-    @TwineNativeFunction
+    @TwineFunction
     fun append(value: LuaTextInstance): LuaTextInstance = apply {
         children.add(value)
     }
 
-    @TwineNativeFunction("tostring")
+    @TwineFunction("tostring")
     override fun toString(): String {
         return "text[literal=\"$literalText\", bold=$textBold, italic=$textItalic, underline=$textUnderline]"
     }

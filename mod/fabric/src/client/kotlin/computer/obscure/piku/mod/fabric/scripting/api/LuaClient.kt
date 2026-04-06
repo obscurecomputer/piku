@@ -55,13 +55,13 @@ class LuaClient : TwineNative("client") {
         }
 
     @TwineFunction
-    fun sendActionbar(message: String) {
-        instance.player?.displayClientMessage(parseMini(message), true)
+    fun sendActionbar(message: Any) {
+        instance.player?.displayClientMessage(parseMini(message.toString()), true)
     }
 
     @TwineFunction
-    fun send(message: String) {
-        instance.player?.displayClientMessage(parseMini(message), false)
+    fun send(message: Any) {
+        instance.player?.displayClientMessage(parseMini(message.toString()), false)
     }
 
     @TwineFunction

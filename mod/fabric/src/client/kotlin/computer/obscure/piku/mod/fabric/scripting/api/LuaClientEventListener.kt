@@ -16,7 +16,7 @@ class LuaClientEventListener : TwineNative("events") {
     }
 
     @TwineFunction
-    fun send(id: String, data: String) {
+    fun send(id: String, data: Any) {
         bus.send(id, mapOf("data" to data))
     }
 }

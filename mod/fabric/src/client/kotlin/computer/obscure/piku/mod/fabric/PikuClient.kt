@@ -1,5 +1,6 @@
 package computer.obscure.piku.mod.fabric
 
+import computer.obscure.piku.mod.fabric.events.ClientHudRender
 import computer.obscure.piku.mod.fabric.events.ClientPlayConnection
 import computer.obscure.piku.mod.fabric.events.ClientTick
 import computer.obscure.piku.mod.fabric.packets.clientbound.handlers.ReceiveDataHandler
@@ -11,7 +12,6 @@ import computer.obscure.piku.mod.fabric.packets.clientbound.payloads.ReceiveStat
 import computer.obscure.piku.mod.fabric.packets.serverbound.payloads.SendDataPayload
 import computer.obscure.piku.mod.fabric.packets.serverbound.payloads.SendStatePayload
 import computer.obscure.piku.mod.fabric.scripting.engine.ClientLuaEngine
-import computer.obscure.piku.mod.fabric.ui.UIRenderer
 import net.fabricmc.api.ClientModInitializer
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry
@@ -44,7 +44,6 @@ class PikuClient : ClientModInitializer {
     override fun onInitializeClient() {
         engine.init()
         InputHandler.init()
-        UIRenderer.register()
 
         PayloadTypeRegistry.playS2C().register(ReceiveScriptPayload.TYPE, ReceiveScriptPayload.STREAM_CODEC)
         PayloadTypeRegistry.playS2C().register(ReceiveDataPayload.TYPE, ReceiveDataPayload.STREAM_CODEC)
@@ -65,6 +64,7 @@ class PikuClient : ClientModInitializer {
         }
         ClientPlayConnection.register()
         ClientTick.register()
+        ClientHudRender.register()
 
         LOGGER.info("Piku Client Initialized")
     }

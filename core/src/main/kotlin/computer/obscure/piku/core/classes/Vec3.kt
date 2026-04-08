@@ -5,9 +5,13 @@ data class Vec3(
     val y: Double = 0.0,
     val z: Double = 0.0
 ) {
-    constructor(x: Float, y: Float, z: Float) : this(
+    constructor(x: Number, y: Number, z: Number) : this(
         x.toDouble(),
         y.toDouble(),
         z.toDouble()
     )
+
+    companion object {
+        val ZERO = Vec3(0.0, 0.0, 0.0)
+    }
 }

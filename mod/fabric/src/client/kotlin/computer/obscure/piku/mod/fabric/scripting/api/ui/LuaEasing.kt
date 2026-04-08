@@ -1,14 +1,15 @@
 package computer.obscure.piku.mod.fabric.scripting.api.ui
 
 import computer.obscure.piku.mod.fabric.ui.UIRenderer
+import computer.obscure.twine.LuaCallback
 import computer.obscure.twine.annotations.TwineFunction
 import computer.obscure.twine.annotations.TwineProperty
 import computer.obscure.twine.TwineNative
 
 class LuaEasing : TwineNative("easing") {
     @TwineFunction
-    fun new(id: String): LuaEasingInstance {
-        val instance = LuaEasingInstance(id)
+    fun new(id: String, function: LuaCallback): LuaEasingInstance {
+        val instance = LuaEasingInstance(id, function)
         UIRenderer.registerEasing(instance)
         return instance
     }
@@ -16,15 +17,10 @@ class LuaEasing : TwineNative("easing") {
 
 class LuaEasingInstance(
     val internalId: String,
-    var function: ((Double) -> Double) = { _ -> 0.0 }
+    var function: LuaCallback
 ) : TwineNative("easingInstance") {
     @TwineProperty
     val id: String get() = internalId
 
-    fun withFunction(fn: (Double) -> Double): LuaEasingInstance {
-        function = fn
-        return this
-    }
-
-    fun evaluate(t: Double): Double = function.invoke(t)
+    fun evaluate(t: Double): Double = function.call(t) as Double
 }

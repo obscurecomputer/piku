@@ -1,12 +1,12 @@
 package computer.obscure.piku.mod.fabric.scripting.api.camera
 
+import computer.obscure.piku.core.classes.Vec3
 import computer.obscure.piku.core.scripting.api.LuaVec3Instance
 import computer.obscure.piku.core.ui.events.ValueAnimation
 import computer.obscure.piku.mod.fabric.camera.CameraAnimator
 import computer.obscure.piku.mod.fabric.camera.CinematicCamera
 import computer.obscure.twine.annotations.TwineFunction
 import computer.obscure.twine.TwineNative
-import net.minecraft.world.phys.Vec3
 
 class LuaCameraAnimation : TwineNative() {
     val storedAnimations: MutableList<ValueAnimation<*>> = mutableListOf()

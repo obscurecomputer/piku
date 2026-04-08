@@ -6,6 +6,7 @@ import computer.obscure.piku.core.scripting.api.LuaVec2Instance
 import computer.obscure.piku.core.scripting.api.LuaVec3Instance
 import computer.obscure.piku.mod.fabric.Client
 import computer.obscure.piku.mod.fabric.InputHandler
+import computer.obscure.piku.mod.fabric.scripting.api.camera.LuaClientCamera
 import computer.obscure.piku.mod.fabric.utils.parseMini
 import computer.obscure.twine.TwineLogger
 import computer.obscure.twine.TwineNative
@@ -21,6 +22,9 @@ import net.minecraft.world.item.ItemStack
 
 class LuaClient : TwineNative("client") {
     val instance: Minecraft = Minecraft.getInstance()
+
+    @TwineProperty
+    val camera = LuaClientCamera()
 
     @TwineFunction
     fun debug(value: Boolean) {
@@ -44,15 +48,6 @@ class LuaClient : TwineNative("client") {
 
             val v = p.getEyePosition(1.0f)
             return LuaVec3Instance(v.x, v.y, v.z)
-        }
-
-    @TwineProperty
-    val headRot: LuaVec3Instance
-        get() {
-            val p = instance.player
-                ?: return LuaVec3Instance(0.0, 0.0, 0.0)
-
-            return LuaVec3Instance(p.xRot.toDouble(), p.yRot.toDouble(), 0.0)
         }
 
     @TwineFunction

@@ -19,6 +19,8 @@ class LuaVec3 : TwineNative("vec3") {
                 vec3.z
             )
         }
+
+        val ZERO = LuaVec3Instance(0.0, 0.0, 0.0)
     }
 }
 

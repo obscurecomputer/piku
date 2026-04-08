@@ -32,12 +32,13 @@ public abstract class CameraMixin {
         boolean inverted,
         float partialTick,
         CallbackInfo ci
-    ) {if (!CinematicCamera.INSTANCE.getActive()) return;
+    ) {
+        if (!CinematicCamera.INSTANCE.getActive()) return;
 
         Vec3 pos = new Vec3(
-                Mth.lerp(partialTick, CinematicCamera.INSTANCE.getPrevPos().x, CinematicCamera.INSTANCE.getPos().x),
-                Mth.lerp(partialTick, CinematicCamera.INSTANCE.getPrevPos().y, CinematicCamera.INSTANCE.getPos().y),
-                Mth.lerp(partialTick, CinematicCamera.INSTANCE.getPrevPos().z, CinematicCamera.INSTANCE.getPos().z)
+                Mth.lerp(partialTick, CinematicCamera.INSTANCE.getPrevPos().getX(), CinematicCamera.INSTANCE.getPos().getX()),
+                Mth.lerp(partialTick, CinematicCamera.INSTANCE.getPrevPos().getY(), CinematicCamera.INSTANCE.getPos().getY()),
+                Mth.lerp(partialTick, CinematicCamera.INSTANCE.getPrevPos().getZ(), CinematicCamera.INSTANCE.getPos().getZ())
         );
 
         float yaw = (float) Mth.rotLerp(

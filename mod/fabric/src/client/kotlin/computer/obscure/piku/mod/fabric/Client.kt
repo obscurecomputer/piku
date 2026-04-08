@@ -1,5 +1,6 @@
 package computer.obscure.piku.mod.fabric
 
+import computer.obscure.piku.core.classes.Vec3
 import computer.obscure.piku.core.scripting.api.LuaTextInstance
 import net.kyori.adventure.text.Component
 import net.minecraft.client.CameraType
@@ -7,11 +8,7 @@ import net.minecraft.client.Minecraft
 
 object Client {
     @JvmField
-    var customPitch = 0f
-    @JvmField
-    var customYaw = 0f
-    @JvmField
-    var customRoll = 0f
+    var rotation: Vec3 = Vec3.ZERO
 
     @JvmField
     var targetFov: Float = -1f

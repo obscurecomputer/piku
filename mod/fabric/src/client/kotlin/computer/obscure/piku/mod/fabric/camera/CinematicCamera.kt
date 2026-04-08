@@ -1,7 +1,8 @@
 package computer.obscure.piku.mod.fabric.camera
 
+import computer.obscure.piku.core.classes.Vec3
+import computer.obscure.piku.mod.fabric.utils.toCoreVec3
 import net.minecraft.client.Minecraft
-import net.minecraft.world.phys.Vec3
 
 object CinematicCamera {
     var active = false
@@ -31,7 +32,7 @@ object CinematicCamera {
         val client = Minecraft.getInstance()
         val player = client.player ?: return
 
-        pos = player.getEyePosition(1f)
+        pos = player.getEyePosition(1f).toCoreVec3()
         yaw = player.yRot.toDouble()
         pitch = player.xRot.toDouble()
         fov = client.options.fov().get()

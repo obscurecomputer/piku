@@ -9,10 +9,12 @@ import computer.obscure.piku.core.ui.classes.*
 import computer.obscure.piku.core.ui.components.*
 import computer.obscure.piku.core.ui.events.*
 import computer.obscure.piku.mod.fabric.PikuClient
+import computer.obscure.piku.mod.fabric.animation.AnimationUtil
 import computer.obscure.piku.mod.fabric.animation.AnimationUtil.lerp
 import computer.obscure.piku.mod.fabric.scripting.api.ui.LuaEasingInstance
 import computer.obscure.piku.mod.fabric.ui.components.*
 import computer.obscure.piku.mod.fabric.ui.events.*
+import computer.obscure.twine.LuaCallback
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback
 import net.minecraft.client.Minecraft
@@ -24,8 +26,8 @@ import org.joml.Matrix3x2f
 object UIRenderer : PikuService {
     val currentWindow: UIWindow = UIWindow("main")
 
-    private var activeAnimations = mutableListOf<PropertyAnimation<*, *>>()
-    val registeredEasings = mutableMapOf<String, (time: Double) -> Double>()
+    var activeAnimations = mutableListOf<PropertyAnimation<*, *>>()
+    val registeredEasings = mutableMapOf<String, LuaCallback>()
 
     var debugEnabled: Boolean = false
 
@@ -91,42 +93,7 @@ object UIRenderer : PikuService {
         layout(currentWindow)
     }
 
-    fun register() {
-        PikuClient.LOGGER.info("Registering UIRenderer events")
-        ClientTickEvents.END_CLIENT_TICK.register {
-            handleUpdateRender()
-        }
-
-        var lastTimeNano = System.nanoTime()
-        HudRenderCallback.EVENT.register { context, tickDelta ->
-            val currentTime = System.nanoTime()
-            val deltaSeconds = (currentTime - lastTimeNano) / 1_000_000_000.0
-            lastTimeNano = currentTime
-
-            tickAnimations(deltaSeconds)
-
-            currentWindow.let { window ->
-                layoutIfNeeded(window)
-
-                val sorted = window.components.values.toList().sortedBy {
-                    it.props.zIndex
-                }
-                sorted.forEach {
-                    drawComponent(context, it)
-                }
-
-                val event = mapOf(
-                        "rendered_components" to sorted.size,
-                        "last_frame_delta" to deltaSeconds,
-                        "current_time" to currentTime,
-                        "active_animations" to activeAnimations.size
-                    )
-                PikuClient.engine.events.fire("client.ui_render", event)
-            }
-        }
-    }
-
-    private fun layoutIfNeeded(window: UIWindow) {
+    fun layoutIfNeeded(window: UIWindow) {
         window.components.values.forEach { component ->
             layoutComponentIfDirty(component, window)
         }
@@ -171,7 +138,7 @@ object UIRenderer : PikuService {
         }
     }
 
-    private fun drawComponent(context: GuiGraphics, component: Component) {
+    fun drawComponent(context: GuiGraphics, component: Component) {
         if (!component.props.visible) return
         component.draw(context)
     }
@@ -214,14 +181,7 @@ object UIRenderer : PikuService {
 
             val t = (anim.elapsed / anim.durationSeconds).coerceIn(0.0, 1.0)
 
-            val easedT: Double = try {
-                ((registeredEasings[anim.easing]?.invoke(t)
-                    ?: Easing.valueOf(anim.easing.uppercase()).getValue(t)))
-                    .coerceIn(0.0, 1.0)
-            } catch (_: Exception) {
-                PikuClient.warn("Unknown easing \"${anim.easing}\". Falling back to LINEAR.")
-                Easing.LINEAR.getValue(t)
-            }
+            val easedT = AnimationUtil.resolveEasing(anim.easing, t, registeredEasings)
 
             @Suppress("UNCHECKED_CAST")
             val typedGetter = anim.getter as (Component) -> Any?

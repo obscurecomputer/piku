@@ -1,14 +1,14 @@
 package computer.obscure.piku.mod.fabric.scripting.api.camera
 
+import computer.obscure.piku.core.classes.Vec3
 import computer.obscure.piku.core.scripting.api.LuaVec3Instance
 import computer.obscure.piku.core.scripting.engine.EngineError
 import computer.obscure.piku.core.scripting.engine.EngineErrorCode
 import computer.obscure.piku.mod.fabric.camera.CinematicCamera
 import computer.obscure.twine.annotations.TwineFunction
 import computer.obscure.twine.TwineNative
-import net.minecraft.world.phys.Vec3
 
-class LuaCamera : TwineNative() {
+class LuaCinematicCamera : TwineNative() {
     @TwineFunction
     fun enable() {
         if (CinematicCamera.active)
@@ -48,16 +48,5 @@ class LuaCamera : TwineNative() {
     @TwineFunction
     fun animate(): LuaCameraAnimation {
         return LuaCameraAnimation()
-    }
-
-    companion object {
-        internal fun requireActive() {
-            if (!CinematicCamera.active) {
-                throw EngineError(
-                    EngineErrorCode.CAMERA_INACTIVE,
-                    "The cinematic camera is not active!"
-                )
-            }
-        }
     }
 }

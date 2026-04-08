@@ -5,6 +5,7 @@
   "client": [
     "CameraMixin",
     "ClientPlayerEntityMixin",
+    "GameRendererMixin",
     "HeldItemRendererMixin",
     "InGameHudMixin",
     "MinecraftClientMixin",

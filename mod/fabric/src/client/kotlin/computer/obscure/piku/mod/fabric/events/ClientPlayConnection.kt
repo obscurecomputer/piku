@@ -7,6 +7,7 @@ import computer.obscure.piku.mod.fabric.Client
 import computer.obscure.piku.mod.fabric.InputHandler
 import computer.obscure.piku.mod.fabric.MenuConfigs
 import computer.obscure.piku.mod.fabric.PikuClient
+import computer.obscure.piku.mod.fabric.animation.AnimationManager
 import computer.obscure.piku.mod.fabric.ui.UIRenderer
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents
 import net.minecraft.client.Minecraft
@@ -35,6 +36,7 @@ object ClientPlayConnection {
     fun onDisconnect() {
         SharedStateManager.shutdown()
         PikuClient.engine.shutdown()
+        AnimationManager.shutdown()
         UIRenderer.shutdown()
         Scheduler.shutdown()
         InputHandler.clearInputQueue()

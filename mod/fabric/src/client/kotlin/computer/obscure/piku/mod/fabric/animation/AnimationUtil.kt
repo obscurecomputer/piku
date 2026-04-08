@@ -13,9 +13,9 @@ object AnimationUtil {
         custom: Map<String, LuaCallback>
     ): Double {
         return try {
-            val eased = (custom[easing]?.call(t)
+            val eased = (custom[easing]?.call<Double>(t)
                 ?: Easing.valueOf(easing.uppercase()).getValue(t))
-            (eased as Double).coerceIn(0.0, 1.0)
+            eased.coerceIn(0.0, 1.0)
         } catch (e: Exception) {
             e.printStackTrace()
             PikuClient.LOGGER.warn("Invalid easing \"$easing\"! Defaulting to LINEAR")

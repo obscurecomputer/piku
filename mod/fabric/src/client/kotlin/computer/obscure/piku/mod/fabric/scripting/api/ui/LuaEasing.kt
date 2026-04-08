@@ -18,9 +18,9 @@ class LuaEasing : TwineNative("easing") {
 class LuaEasingInstance(
     val internalId: String,
     var function: LuaCallback
-) : TwineNative("easingInstance") {
+) : TwineNative() {
     @TwineProperty
     val id: String get() = internalId
 
-    fun evaluate(t: Double): Double = function.call(t) as Double
+    fun evaluate(t: Double): Double = function.call<Double>(t)
 }

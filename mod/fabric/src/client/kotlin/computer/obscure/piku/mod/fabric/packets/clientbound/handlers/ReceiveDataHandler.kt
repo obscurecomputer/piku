@@ -10,7 +10,7 @@ object ReceiveDataHandler {
         Minecraft.getInstance().execute {
             try {
                 val data = jsonStringToKotlin(payload.json) as? Map<String, Any?> ?: emptyMap()
-                PikuClient.engine.events.fire(payload.id, data)
+                PikuClient.engine!!.events.fire(payload.id, data)
             } catch (e: Exception) {
                 e.printStackTrace()
             }

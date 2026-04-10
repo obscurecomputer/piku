@@ -19,7 +19,7 @@ class LuaSharedState(
         set(value) {
             field = value
             if (value != null) {
-                PikuClient.engine.events.stateCallbacks[UUID.fromString(internalId)] = value
+                PikuClient.engine!!.events.stateCallbacks[UUID.fromString(internalId)] = value
             }
         }
 
@@ -28,7 +28,7 @@ class LuaSharedState(
         if (!clientModifiable) throw IllegalAccessException("SharedState '$name' is not client modifiable!")
         val state = toSharedState()
         state.value = value
-        PikuClient.engine.events.sendState(state)
+        PikuClient.engine!!.events.sendState(state)
         SharedStateManager.addState(state)
     }
 

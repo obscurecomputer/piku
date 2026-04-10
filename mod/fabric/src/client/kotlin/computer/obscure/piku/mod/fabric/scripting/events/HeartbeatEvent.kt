@@ -7,6 +7,6 @@ object HeartbeatEvent : LuaEvent() {
     override val id = ""
     override val onClientReceive: () -> Unit
         get() = {
-            PikuClient.engine.events.send(id, mapOf("alive" to true))
+            PikuClient.engine!!.events.send(id, mapOf("alive" to true))
         }
 }

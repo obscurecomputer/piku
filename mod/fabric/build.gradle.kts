@@ -72,6 +72,7 @@ repositories {
     }
     maven("https://jitpack.io")
     maven("https://repo.obscure.computer/repository/maven-releases/")
+    maven("https://repo.znotchill.me/repository/maven-releases/")
 }
 
 dependencies {
@@ -92,18 +93,39 @@ dependencies {
     modImplementation(include("net.kyori:adventure-platform-fabric:6.7.0")!!)
 
     val luauVersion = "1.0.1"
-    val luauNativeVersion = "1.0.1-debug"
-
-    implementation("dev.hollowcube:luau:$luauVersion")
+    val luauNativeVersion = "1.0.1-patch2"
+    implementation("dev.hollowcube:luau:${luauVersion}")
+    modImplementation("dev.hollowcube:luau:${luauVersion}")
     include("dev.hollowcube:luau:$luauVersion")
-    implementation("dev.hollowcube:luau-natives-macos-x64:1.0.0")
-    include("dev.hollowcube:luau-natives-macos-x64:1.0.0")
 
-    val platforms = listOf("windows-x64", "linux-x64", "macos-arm64")
+    val platforms = listOf("windows-x64", "linux-x64", "macos-arm64", "macos-x64")
     platforms.forEach { platform ->
-        val dep = "dev.hollowcube:luau-natives-$platform:$luauNativeVersion"
+        val dep = "me.znotchill.luau:luau-natives-$platform:$luauNativeVersion"
         implementation(dep)
         include(dep)
+    }
+}
+
+tasks.jar {
+    val nativeFiles = project.provider {
+        configurations.runtimeClasspath.get()
+            .filter { it.name.contains("luau-natives") }
+            .map { zipTree(it) }
+    }
+
+    from(nativeFiles) {
+        include("net/hollowcube/luau/**")
+        duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    }
+
+    from("LICENSE") {
+        rename { "${it}_${project.base.archivesName}" }
+    }
+
+    manifest {
+        attributes(
+            "MixinConfigs" to "piku.client.mixins.json"
+        )
     }
 }
 
@@ -134,17 +156,6 @@ tasks.withType<JavaCompile>().configureEach {
 
 tasks.withType<KotlinCompile>().configureEach {
     compilerOptions.jvmTarget.set(JvmTarget.fromTarget(targetJavaVersion.toString()))
-}
-
-tasks.jar {
-    from("LICENSE") {
-        rename { "${it}_${project.base.archivesName}" }
-    }
-    manifest {
-        attributes(
-            "MixinConfigs" to "piku.mixins.json"
-        )
-    }
 }
 
 // configure the maven publication

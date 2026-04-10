@@ -30,12 +30,12 @@ object ClientPlayConnection {
     fun onJoin() {
         Client.connectedToServer = true
         Client.serverRunsPiku = true // TODO: change this
-        PikuClient.engine.init()
+        PikuClient.engine!!.init()
     }
 
     fun onDisconnect() {
         SharedStateManager.shutdown()
-        PikuClient.engine.shutdown()
+        PikuClient.engine!!.shutdown()
         AnimationManager.shutdown()
         UIRenderer.shutdown()
         Scheduler.shutdown()

@@ -12,12 +12,12 @@ object ReceiveScriptHandler {
                 if (PikuClient.engine !== engineRef) return@execute
                 if (payload.name == "END_OF_SCRIPT_LOADING") {
                     PikuClient.LOGGER.debug("Server sent EOSL")
-                    engineRef.activeScripts.forEach { script ->
+                    engineRef!!.activeScripts.forEach { script ->
                         engineRef.runScript(script.key, script.value)
                     }
                     return@execute
                 }
-                PikuClient.engine.activeScripts[payload.name] = payload.fileContents
+                PikuClient.engine!!.activeScripts[payload.name] = payload.fileContents
             } catch (e: Exception) {
                 e.printStackTrace()
             }

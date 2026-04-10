@@ -33,7 +33,7 @@ object ClientHudRender {
                     "current_time" to currentTime,
                     "active_animations" to UIRenderer.activeAnimations.size
                 )
-                PikuClient.engine.events.fire("client.ui_render", event)
+                PikuClient.engine!!.events.fire("client.ui_render", event)
             }
         }
     }

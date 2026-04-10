@@ -27,7 +27,7 @@ class LuaClientCamera : TwineNative() {
                 getter = { Client.rotation },
                 setter = { Client.rotation = it },
                 onFinish = {
-                    if (!PikuClient.engine.twine.closed)
+                    if (!PikuClient.engine!!.twine.closed)
                         onFinish?.invoke()
                 }
             )

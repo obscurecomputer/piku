@@ -21,12 +21,12 @@ object ReceiveStateHandler {
 
                 val state = luaState.toSharedState()
 
-                PikuClient.engine.events.stateCallbacks[state.internalId]?.invoke(
+                PikuClient.engine!!.events.stateCallbacks[state.internalId]?.invoke(
                     mapOf("value" to payload.value)
                 )
 
                 SharedStateManager.addState(state)
-                PikuClient.engine.events.fire(
+                PikuClient.engine!!.events.fire(
                     "client.update_state",
                     mapOf(
                         "internalId" to luaState.internalId,

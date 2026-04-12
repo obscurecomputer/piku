@@ -1,6 +1,7 @@
 package computer.obscure.piku.core.ui.components.props
 
 import computer.obscure.piku.core.ui.classes.DirtyFlag
+import computer.obscure.piku.core.ui.classes.UIColor
 
 open class SpriteProps : BaseProps() {
 
@@ -20,4 +21,6 @@ open class SpriteProps : BaseProps() {
                 mark(DirtyFlag.LAYOUT)
             }
         }
+
+    var color: UIColor = UIColor(255, 255, 255)
 }

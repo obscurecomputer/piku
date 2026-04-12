@@ -1,5 +1,6 @@
 package computer.obscure.piku.mod.fabric.scripting.api.ui.components
 
+import computer.obscure.piku.core.scripting.api.LuaColorInstance
 import computer.obscure.twine.annotations.TwineProperty
 import computer.obscure.piku.core.ui.components.Sprite
 import computer.obscure.twine.annotations.TwineFunction
@@ -17,6 +18,12 @@ class LuaUISprite(
     @TwineFunction
     fun texture(value: String): LuaUISprite {
         component.props.texturePath = value
+        return this
+    }
+
+    @TwineFunction
+    fun color(value: LuaColorInstance): LuaUISprite {
+        component.props.color = value.toUIColor()
         return this
     }
 

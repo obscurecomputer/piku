@@ -80,15 +80,23 @@ class LuaUI : TwineNative() {
     }
 
     companion object {
-        fun smartGet(components: Collection<Component>, name: String): LuaUIComponent? {
+        fun smartGet(components: Collection<Component>, query: String): LuaUIComponent? {
             for (component in components) {
-                if (component.name == name) {
+                // check if either name OR internalId match
+                val idMatches = component.internalId.equals(query, ignoreCase = true)
+                val nameMatches = component.name == query
+
+                if (nameMatches || idMatches) {
                     return wrap(component)
                 }
 
-                // recurse
+                // recurse into groups or flow containers
                 if (component is Group) {
-                    smartGet(component.props.components, name)?.let {
+                    smartGet(component.props.components, query)?.let {
+                        return it
+                    }
+                } else if (component is FlowContainer) {
+                    smartGet(component.props.components, query)?.let {
                         return it
                     }
                 }

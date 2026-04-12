@@ -24,9 +24,11 @@ class SpriteRenderer : UIComponent<Sprite>() {
 
         val unscaledCompHeight = component.height() / props.scale.y
         val yOffset = (unscaledCompHeight - drawHeight) / 2.0
+        val finalAlpha = (props.color.a * props.opacity)
+            .coerceIn(0f, 255f)
+            .toInt()
 
-        val alpha = (props.opacity * 255).toInt().coerceIn(0, 255)
-        val color = (alpha shl 24) or 0xFFFFFF
+        val colorArgb = props.color.copy(a = finalAlpha).toArgb()
 
         context.blit(
             RenderPipelines.GUI_TEXTURED,
@@ -36,7 +38,7 @@ class SpriteRenderer : UIComponent<Sprite>() {
             0f, 0f,
             drawWidth, drawHeight,
             drawWidth, drawHeight,
-            color
+            colorArgb
         )
     }
 }

@@ -52,6 +52,7 @@ abstract class LuaEngine : PikuService {
         twine.register(LuaSpacing())
         twine.register(LuaScheduler())
         twine.register(LuaMath())
+        twine.register(LuaNoise())
         twine.register(LuaText())
     }
 

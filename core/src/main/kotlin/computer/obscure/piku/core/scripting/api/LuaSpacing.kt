@@ -5,30 +5,43 @@ import computer.obscure.twine.annotations.TwineFunction
 import computer.obscure.twine.annotations.TwineProperty
 import computer.obscure.twine.TwineNative
 
+// This follows all the rules of CSS' padding order
+// https://developer.mozilla.org/en-US/docs/Web/CSS/Reference/Properties/padding
 class LuaSpacing : TwineNative("spacing") {
-//    @TwineOverload
-//    @TwineFunction
-//    fun of(all: Double): LuaSpacingInstance {
-//        return LuaSpacingInstance(
-//            left = all,
-//            top = all,
-//            right = all,
-//            bottom = all
-//        )
-//    }
-//
-//    @TwineOverload
-//    @TwineFunction
-//    fun of(x: Double, y: Double): LuaSpacingInstance {
-//        return LuaSpacingInstance(
-//            x = x,
-//            y = y
-//        )
-//    }
-
-//    @TwineOverload
     @TwineFunction
-    fun of(left: Double, top: Double, right: Double, bottom: Double): LuaSpacingInstance {
+    fun of(all: Double): LuaSpacingInstance {
+        return LuaSpacingInstance(
+            left = all,
+            top = all,
+            right = all,
+            bottom = all
+        )
+    }
+
+    @TwineFunction
+    fun of(x: Double, y: Double): LuaSpacingInstance {
+        return LuaSpacingInstance(
+            left = y, right = y,
+            top = x, bottom = x
+        )
+    }
+
+    @TwineFunction
+    fun of(x: Double, y: Double, z: Double): LuaSpacingInstance {
+        return LuaSpacingInstance(
+            top = x,
+            right = y, left = y,
+            bottom = z
+        )
+    }
+
+    @TwineFunction
+    fun of(
+        top: Double,
+        right: Double,
+        bottom: Double,
+        left: Double
+    ): LuaSpacingInstance {
         return LuaSpacingInstance(
             left = left,
             top = top,

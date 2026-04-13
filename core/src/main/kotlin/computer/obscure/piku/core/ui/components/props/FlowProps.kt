@@ -20,4 +20,12 @@ open class FlowProps : CollectionProps() {
                 mark(DirtyFlag.LAYOUT)
             }
         }
+
+    var reversed: Boolean = false
+        set(value) {
+            if (field != value) {
+                field = value
+                mark(DirtyFlag.LAYOUT)
+            }
+        }
 }

@@ -51,6 +51,12 @@ class LuaUIFlow(
     }
 
     @TwineFunction
+    fun reversed(value: Boolean): LuaUIFlow {
+        flowComponent.props.reversed = value
+        return this
+    }
+
+    @TwineFunction
     fun gap(value: Double): LuaUIFlow {
         flowComponent.props.gap = value
         return this

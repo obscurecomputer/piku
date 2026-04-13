@@ -25,10 +25,12 @@ open class LuaUIComponent(open val component: Component) : TwineNative() {
     var size: LuaVec2Instance
         get() = LuaVec2.fromVec2(component.props.size)
         set(value) {
-            println(value.toString())
-            println(value.toVec2())
             component.props.size = value.toVec2()
         }
+
+    @TwineProperty
+    val type: String
+        get() = component.compType.name.lowercase()
 
     @TwineFunction
     fun size(value: LuaVec2Instance): LuaUIComponent {

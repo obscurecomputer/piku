@@ -2,21 +2,22 @@ package computer.obscure.piku.mod.fabric.ui
 
 import com.mojang.blaze3d.platform.NativeImage
 import computer.obscure.piku.core.classes.Vec2
-import computer.obscure.piku.core.scripting.api.LuaEventData
 import computer.obscure.piku.core.service.PikuService
-import computer.obscure.piku.core.ui.*
-import computer.obscure.piku.core.ui.classes.*
+import computer.obscure.piku.core.ui.Anchor
+import computer.obscure.piku.core.ui.UIEventQueue
+import computer.obscure.piku.core.ui.UIWindow
+import computer.obscure.piku.core.ui.classes.DirtyFlag
+import computer.obscure.piku.core.ui.classes.FlowDirection
+import computer.obscure.piku.core.ui.classes.RelativePosition
+import computer.obscure.piku.core.ui.classes.Spacing
 import computer.obscure.piku.core.ui.components.*
 import computer.obscure.piku.core.ui.events.*
-import computer.obscure.piku.mod.fabric.PikuClient
 import computer.obscure.piku.mod.fabric.animation.AnimationUtil
 import computer.obscure.piku.mod.fabric.animation.AnimationUtil.lerp
 import computer.obscure.piku.mod.fabric.scripting.api.ui.LuaEasingInstance
 import computer.obscure.piku.mod.fabric.ui.components.*
 import computer.obscure.piku.mod.fabric.ui.events.*
 import computer.obscure.twine.LuaCallback
-import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents
-import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.renderer.texture.DynamicTexture
@@ -289,28 +290,41 @@ object UIRenderer : PikuService {
             }
             is FlowContainer -> {
                 val props = component.props
-                var offsetX = props.padding.left
-                var offsetY = props.padding.top
+                val isVertical = props.direction == FlowDirection.VERTICAL
+                val isReverse = props.reversed
 
-                component.props.components.forEachIndexed { _, child ->
+                var offsetX = if (isReverse && !isVertical)
+                    props.size.x - props.padding.right
+                else props.padding.left
+
+                var offsetY = if (isReverse && isVertical)
+                    props.size.y - props.padding.bottom
+                else props.padding.top
+
+                component.props.components.forEach { child ->
                     val margin = child.props.margin
 
-                    child.computedPos = Vec2(
-                        offsetX + margin.left,
-                        offsetY + margin.top
-                    )
+                    if (isVertical && isReverse) {
+                        offsetY -= (child.height() + margin.bottom)
+                    }
+                    if (!isVertical && isReverse) {
+                        offsetX -= (child.width() + margin.right)
+                    }
 
+                    child.computedPos = Vec2(offsetX, offsetY)
                     child.screenX = (component.screenX + child.computedPos!!.x).toInt()
                     child.screenY = (component.screenY + child.computedPos!!.y).toInt()
+
                     layoutComponent(child, window, component.computedScale)
 
-                    when (props.direction) {
-                        FlowDirection.HORIZONTAL -> {
-                            offsetX += child.width() + margin.left + margin.right + props.gap
-                        }
-                        FlowDirection.VERTICAL -> {
-                            offsetY += child.height() + margin.top + margin.bottom + props.gap
-                        }
+                    if (isVertical && !isReverse) {
+                        offsetY += child.height() + margin.bottom + props.gap
+                    } else if (!isVertical && !isReverse) {
+                        offsetX += child.width() + margin.right + props.gap
+                    } else if (isVertical) {
+                        offsetY -= (margin.top + props.gap)
+                    } else {
+                        offsetX -= (margin.left + props.gap)
                     }
                 }
 
@@ -320,8 +334,6 @@ object UIRenderer : PikuService {
                     if (props.direction == FlowDirection.VERTICAL)
                         offsetY + props.padding.bottom else component.height()
                 )
-
-                return
             }
 
             else -> {}

@@ -22,5 +22,7 @@ open class SpriteProps : BaseProps() {
             }
         }
 
+    var tiled: Boolean = false
     var color: UIColor = UIColor(255, 255, 255)
+    var backgroundColor: UIColor = UIColor(255, 255, 255, 0)
 }

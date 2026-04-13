@@ -9,36 +9,74 @@ import net.minecraft.client.renderer.RenderPipelines
 class SpriteRenderer : UIComponent<Sprite>() {
     override fun drawContent(component: Sprite, context: GuiGraphics, instance: Minecraft) {
         val props = component.props
-        val texture = UIRenderer.getIdentifier(props.texturePath) ?: return
-        val texWidth = component.computedSize?.x?.toInt() ?: 16
-        val texHeight = component.computedSize?.y?.toInt() ?: 16
 
-        var drawWidth = props.size.x.toInt().takeIf { it > 0 } ?: texWidth
-        var drawHeight = props.size.y.toInt().takeIf { it > 0 } ?: texHeight
-
-        if (props.fillScreen) {
-            val window = instance.window
-            drawWidth = window.guiScaledWidth
-            drawHeight = window.guiScaledHeight
+        if (props.backgroundColor.a > 0) {
+            val bgColor = props.backgroundColor.copy(a = (props.backgroundColor.a * props.opacity).toInt()).toArgb()
+            context.fill(0, 0, component.width().toInt(), component.height().toInt(), bgColor)
         }
 
-        val unscaledCompHeight = component.height() / props.scale.y
-        val yOffset = (unscaledCompHeight - drawHeight) / 2.0
-        val finalAlpha = (props.color.a * props.opacity)
-            .coerceIn(0f, 255f)
-            .toInt()
+        val texture = UIRenderer.getIdentifier(props.texturePath) ?: return
 
+        val texWidth = component.computedSize?.x?.toInt() ?: 16
+        val texHeight = component.computedSize?.y?.toInt() ?: 16
+        val containerWidth = component.width().toInt()
+        val containerHeight = component.height().toInt()
+
+        val finalAlpha = (props.color.a * props.opacity).coerceIn(0f, 255f).toInt()
         val colorArgb = props.color.copy(a = finalAlpha).toArgb()
+        if (props.fillScreen) {
+            context.pose().pushMatrix()
+            context.pose().identity()
 
-        context.blit(
-            RenderPipelines.GUI_TEXTURED,
-            texture,
-            0,
-            yOffset.toInt(),
-            0f, 0f,
-            drawWidth, drawHeight,
-            drawWidth, drawHeight,
-            colorArgb
-        )
+            val drawWidth = instance.window.guiScaledWidth
+            val drawHeight = instance.window.guiScaledHeight
+
+            context.blit(
+                RenderPipelines.GUI_TEXTURED,
+                texture,
+                0, 0,
+                0f, 0f,
+                drawWidth, drawHeight,
+                drawWidth, drawHeight,
+                colorArgb
+            )
+
+            context.pose().popMatrix()
+        } else if (props.tiled) {
+            for (x in 0 until containerWidth step texWidth) {
+                for (y in 0 until containerHeight step texHeight) {
+                    val drawW = minOf(texWidth, containerWidth - x)
+                    val drawH = minOf(texHeight, containerHeight - y)
+
+                    context.blit(
+                        RenderPipelines.GUI_TEXTURED,
+                        texture,
+                        x, y,
+                        0f, 0f,
+                        drawW, drawH,
+                        texWidth, texHeight,
+                        colorArgb
+                    )
+                }
+            }
+        } else {
+            var drawWidth = props.size.x.toInt().takeIf { it > 0 } ?: texWidth
+            var drawHeight = props.size.y.toInt().takeIf { it > 0 } ?: texHeight
+
+            if (props.fillScreen) {
+                drawWidth = instance.window.guiScaledWidth
+                drawHeight = instance.window.guiScaledHeight
+            }
+
+            context.blit(
+                RenderPipelines.GUI_TEXTURED,
+                texture,
+                0, 0,
+                0f, 0f,
+                drawWidth, drawHeight,
+                drawWidth, drawHeight,
+                colorArgb
+            )
+        }
     }
 }

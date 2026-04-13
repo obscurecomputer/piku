@@ -39,4 +39,16 @@ class LuaUISprite(
         component.props.fillScreen = true
         return this
     }
+
+    @TwineFunction
+    fun tiled(value: Boolean): LuaUISprite {
+        component.props.tiled = value
+        return this
+    }
+
+    @TwineFunction
+    fun backgroundColor(value: LuaColorInstance): LuaUISprite {
+        component.props.backgroundColor = value.toUIColor()
+        return this
+    }
 }

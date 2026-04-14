@@ -9,6 +9,12 @@ fun Vec3.toCoreVec3(): computer.obscure.piku.core.classes.Vec3 {
     )
 }
 
+fun Vec3.toLua(): LuaVec3Instance {
+    return LuaVec3Instance(
+        this.x, this.y, this.z
+    )
+}
+
 fun LuaVec3Instance.toMCVec3(): Vec3 {
     return Vec3(
         this.x, this.y, this.z

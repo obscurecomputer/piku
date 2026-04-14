@@ -1,7 +1,7 @@
 package computer.obscure.piku.mod.fabric.camera
 
 import computer.obscure.piku.core.classes.Vec3
-import computer.obscure.piku.mod.fabric.utils.toCoreVec3
+import computer.obscure.piku.mod.fabric.scripting.api.util.minecraft.toCoreVec3
 import net.minecraft.client.Minecraft
 
 object CinematicCamera {

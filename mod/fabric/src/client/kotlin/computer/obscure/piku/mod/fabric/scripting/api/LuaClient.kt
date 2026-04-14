@@ -47,11 +47,9 @@ class LuaClient : TwineNative("client") {
             val player = Minecraft.getInstance().player
                 ?: return LuaVec3.ZERO
 
-            return LuaVec3Instance(
-                player.xRot.toDouble(),
-                player.yRot.toDouble(),
-                0.0
-            )
+            val vec = player.getViewVector(1.0f)
+
+            return LuaVec3Instance(vec.x, vec.y, vec.z)
         }
 
     @TwineProperty

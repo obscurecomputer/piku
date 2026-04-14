@@ -4,73 +4,82 @@ import net.minecraft.client.Minecraft
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
 import net.minecraft.world.entity.Entity
+import net.minecraft.world.level.ClipContext
 import net.minecraft.world.level.Level
 import net.minecraft.world.phys.AABB
+import net.minecraft.world.phys.BlockHitResult
+import net.minecraft.world.phys.HitResult
 import net.minecraft.world.phys.Vec3
-import kotlin.math.absoluteValue
+import net.minecraft.world.phys.shapes.CollisionContext
 
 object Raycast {
+
     fun shoot(
         level: Level,
         start: Vec3,
         direction: Vec3,
         maxDistance: Double = 200.0,
-        travelStep: Double = 0.05,
         nearbyEntityRadius: Double = 3.0,
         entityFilter: (Entity) -> Boolean = { true }
     ): RaycastResult {
-        val dir = direction.normalize()
-        val maxSteps = (maxDistance / travelStep).toInt()
+        val end = start.add(direction.normalize().scale(maxDistance))
 
-        for (step in 0..maxSteps) {
-            val rayPos = start.add(dir.scale(step * travelStep))
-            val blockPos = BlockPos.containing(rayPos)
+        val blockContext = ClipContext(
+            start,
+            end,
+            ClipContext.Block.COLLIDER,
+            ClipContext.Fluid.NONE,
+            CollisionContext.empty()
+        )
 
-            if (!level.hasChunkAt(blockPos)) {
-                return createEmptyResult(rayPos, hitUnloadedChunk = true)
-            }
+        val blockHit: BlockHitResult = level.clip(blockContext)
+        val hitDistSq = if (blockHit.type != HitResult.Type.MISS) {
+            blockHit.location.distanceToSqr(start)
+        } else {
+            Double.MAX_VALUE
+        }
 
-            val searchBox = AABB.unitCubeFromLowerCorner(rayPos).inflate(nearbyEntityRadius)
-            val entities = level.getEntities(null, searchBox) { entityFilter(it) }
-            
-            val hitEntity = entities.find { it.boundingBox.inflate(0.3).contains(rayPos) }
-            if (hitEntity != null) {
-                return createEntityResult(rayPos, hitEntity)
-            }
+        val searchBox = AABB(start, end).inflate(nearbyEntityRadius)
+        val entities = level.getEntities(null, searchBox) { entityFilter(it) }
 
-            val state = level.getBlockState(blockPos)
-            if (!state.isAir && state.isSolid) {
-                val blockCenter = Vec3.atCenterOf(blockPos)
-                val offset = rayPos.subtract(blockCenter)
-                val epsilon = 0.005
+        var closestEntity: Entity? = null
+        var entityHitVec: Vec3? = null
+        var closestEntityDistSq = hitDistSq
 
-                val hitFace = when {
-                    offset.x.absoluteValue + epsilon > offset.y.absoluteValue &&
-                    offset.x.absoluteValue + epsilon > offset.z.absoluteValue ->
-                        if (offset.x > 0) Direction.EAST else Direction.WEST
-                    offset.y.absoluteValue + epsilon > offset.x.absoluteValue &&
-                    offset.y.absoluteValue + epsilon > offset.z.absoluteValue ->
-                        if (offset.y > 0) Direction.UP else Direction.DOWN
-                    else ->
-                        if (offset.z > 0) Direction.SOUTH else Direction.NORTH
+        for (entity in entities) {
+            val aabb = entity.boundingBox.inflate(0.3)
+            val clip = aabb.clip(start, end)
+            if (clip.isPresent) {
+                val distSq = start.distanceToSqr(clip.get())
+                if (distSq < closestEntityDistSq) {
+                    closestEntityDistSq = distSq
+                    closestEntity = entity
+                    entityHitVec = clip.get()
                 }
+            }
+        }
 
-                return RaycastResult(
+        return when {
+            closestEntity != null -> {
+                createEntityResult(entityHitVec!!, closestEntity)
+            }
+            blockHit.type != HitResult.Type.MISS -> {
+                val pos = blockHit.blockPos
+                RaycastResult(
                     hitBlock = true,
-                    hitBlockPosition = blockPos,
-                    hitBlockState = state,
+                    hitBlockPosition = pos,
+                    hitBlockState = level.getBlockState(pos),
                     hitEntity = false,
                     entityHit = null,
                     hitUnloadedChunk = false,
                     hitMaxDistance = false,
-                    hitPosition = rayPos,
-                    relativeHitPosition = offset,
-                    hitFace = hitFace
+                    hitPosition = blockHit.location,
+                    relativeHitPosition = blockHit.location.subtract(Vec3.atCenterOf(pos)),
+                    hitFace = blockHit.direction
                 )
             }
+            else -> createEmptyResult(end, hitMaxDistance = true)
         }
-
-        return createEmptyResult(start.add(dir.scale(maxDistance)), hitMaxDistance = true)
     }
 
     fun createEmptyResult(

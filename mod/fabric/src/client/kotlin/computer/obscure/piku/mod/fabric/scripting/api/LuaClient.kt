@@ -3,6 +3,7 @@ package computer.obscure.piku.mod.fabric.scripting.api
 import com.mojang.blaze3d.platform.InputConstants
 import computer.obscure.piku.core.scripting.api.LuaTextInstance
 import computer.obscure.piku.core.scripting.api.LuaVec2Instance
+import computer.obscure.piku.core.scripting.api.LuaVec3
 import computer.obscure.piku.core.scripting.api.LuaVec3Instance
 import computer.obscure.piku.mod.fabric.Client
 import computer.obscure.piku.mod.fabric.InputHandler
@@ -38,6 +39,19 @@ class LuaClient : TwineNative("client") {
                 ?: return LuaVec3Instance(0.0, 0.0, 0.0)
 
             return LuaVec3Instance(p.x, p.y, p.z)
+        }
+
+    @TwineProperty
+    val rotation: LuaVec3Instance
+        get() {
+            val player = Minecraft.getInstance().player
+                ?: return LuaVec3.ZERO
+
+            return LuaVec3Instance(
+                player.xRot.toDouble(),
+                player.yRot.toDouble(),
+                0.0
+            )
         }
 
     @TwineProperty

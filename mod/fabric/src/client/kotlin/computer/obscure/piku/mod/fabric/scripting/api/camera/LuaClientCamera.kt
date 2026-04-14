@@ -37,14 +37,6 @@ class LuaClientCamera : TwineNative() {
     @TwineProperty
     val rotation: LuaVec3Instance
         get() {
-//            val player = Minecraft.getInstance().player
-//                ?: return LuaVec3.ZERO
-//
-//            return LuaVec3Instance(
-//                player.xRot.toDouble(),
-//                player.yRot.toDouble(),
-//                0.0
-//            )
             return LuaVec3.fromVec3(Client.rotation)
         }
 }

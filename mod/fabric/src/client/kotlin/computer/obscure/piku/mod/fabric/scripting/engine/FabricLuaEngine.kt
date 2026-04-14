@@ -9,6 +9,7 @@ import computer.obscure.piku.mod.fabric.scripting.api.LuaClientEvents
 import computer.obscure.piku.mod.fabric.scripting.api.LuaGame
 import computer.obscure.piku.mod.fabric.scripting.api.LuaScreens
 import computer.obscure.piku.mod.fabric.scripting.api.LuaWidgets
+import computer.obscure.piku.mod.fabric.scripting.api.raycast.LuaRaycast
 import computer.obscure.piku.mod.fabric.scripting.api.ui.LuaEasing
 import computer.obscure.twine.TwineEnum.Companion.toTwineEnum
 
@@ -32,6 +33,7 @@ class ClientLuaEngine : LuaEngine() {
         register(LuaStateManager())
         register(LuaScreens())
         register(LuaWidgets())
+        register(LuaRaycast())
         super.registerCommons()
 
         val eventListener = LuaClientEventListener()

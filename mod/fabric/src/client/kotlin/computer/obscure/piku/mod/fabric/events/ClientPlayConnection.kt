@@ -28,6 +28,11 @@ object ClientPlayConnection {
     }
 
     fun onJoin() {
+        if (Client.connectedToServer) {
+            // transferred between servers (on a network/transfer packet)
+            // so onDisconnect won't ever be called otherwise
+            onDisconnect()
+        }
         Client.connectedToServer = true
         Client.serverRunsPiku = true // TODO: change this
         PikuClient.engine!!.init()

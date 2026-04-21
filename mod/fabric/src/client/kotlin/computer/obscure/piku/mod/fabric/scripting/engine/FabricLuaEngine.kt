@@ -2,6 +2,7 @@ package computer.obscure.piku.mod.fabric.scripting.engine
 
 import computer.obscure.piku.core.scripting.engine.LuaEngine
 import computer.obscure.piku.core.ui.Anchor
+import computer.obscure.piku.mod.fabric.PikuClient
 import computer.obscure.piku.mod.fabric.scripting.LuaStateManager
 import computer.obscure.piku.mod.fabric.scripting.api.LuaClient
 import computer.obscure.piku.mod.fabric.scripting.api.LuaClientEventListener
@@ -18,6 +19,7 @@ class ClientLuaEngine : LuaEngine() {
         private set
 
     override fun shutdown() {
+        PikuClient.info("Engine shut down")
         super.shutdown()
         events.clear()
     }

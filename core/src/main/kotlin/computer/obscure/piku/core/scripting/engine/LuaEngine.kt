@@ -10,7 +10,8 @@ abstract class LuaEngine : PikuService {
     private var _engine: TwineEngine? = null
 
     val twine: TwineEngine
-        get() = _engine ?: throw IllegalStateException("Engine not initialized")
+        get() = _engine ?: TwineEngine()
+
 
     private val registeredNatives: MutableMap<String, TwineNative> = mutableMapOf()
     open val activeScripts: MutableMap<String, String> = mutableMapOf()
@@ -22,7 +23,7 @@ abstract class LuaEngine : PikuService {
         // since LuaStates will persist over disconnects, meaning your game will crash
         // if you try to join another server after in the same session.
         // avoids a JVM crash
-//        _engine?.close()
+        _engine?.close()
         val freshEngine = TwineEngine()
         _engine = freshEngine
 

@@ -17,12 +17,13 @@ class LuaTaskBuilder(
 
         try {
             fn.invoke(luaTask)
+        } catch (e: IllegalStateException) {
         } catch (e: Exception) {
             val error = EngineError(
                 EngineErrorCode.GENERIC_ERROR,
                 e.message ?: "Unknown"
             )
-            error.printStackTrace() // do NOT crash the game
+            error.printStackTrace()
         }
     }
 

@@ -1,5 +1,6 @@
 package computer.obscure.piku.minestom.scripting
 
+import computer.obscure.piku.core.scripting.server.HotReloadListener
 import computer.obscure.piku.core.scripting.server.ServerAPI
 import computer.obscure.piku.core.scripting.server.SharedStateManager
 import computer.obscure.piku.core.states.SharedState
@@ -18,6 +19,7 @@ import java.util.*
 
 class MinestomAPI(val server: BlossomServer) : ServerAPI<Player> {
     override val engine = MinestomLuaEngine()
+    override val hotReloadListeners: MutableList<HotReloadListener<Player>> = mutableListOf()
 
     override fun registerEvents() {
         SharedStateManager.piku = this
@@ -67,6 +69,14 @@ class MinestomAPI(val server: BlossomServer) : ServerAPI<Player> {
                         error("Failed to decode: ${e.message}")
                     }
                 }
+                "piku:finished_unloading_scripts" -> {
+                    if (hotReloadListeners.isNotEmpty()) {
+                        hotReloadListeners.forEach { it ->
+                            this.sendAllScripts(event.player, it.source, it.recurse)
+                            it.onSuccessfulReload(listOf(event.player))
+                        }
+                    }
+                }
             }
         }
     }
@@ -105,6 +115,16 @@ class MinestomAPI(val server: BlossomServer) : ServerAPI<Player> {
 
         player.sendPacket(
             PluginMessagePacket("piku:receive_script", bytes)
+        )
+    }
+
+    override fun unloadScripts(player: Player) {
+        val bytes = NetworkBuffer.makeArray { buffer ->
+            buffer.write(NetworkBuffer.BOOLEAN, true)
+        }
+
+        player.sendPacket(
+            PluginMessagePacket("piku:unload_scripts", bytes)
         )
     }
 }

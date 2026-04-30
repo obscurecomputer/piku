@@ -1,14 +1,27 @@
 package computer.obscure.piku.core.scripting.server
 
 import computer.obscure.piku.core.classes.ScriptSource
+import computer.obscure.piku.core.scripting.base.Player
 import computer.obscure.piku.core.scripting.engine.LuaEngine
 import computer.obscure.piku.core.states.SharedState
 import java.io.File
 import java.net.JarURLConnection
 import java.nio.charset.StandardCharsets
+import java.nio.file.FileSystems
+import java.nio.file.Files
+import java.nio.file.StandardWatchEventKinds
+
+data class HotReloadListener<T>(
+    val players: () -> List<T>,
+    val source: ScriptSource,
+    val recurse: Boolean = true,
+    val debounceMs: Long = 300,
+    val onSuccessfulReload: (List<T>) -> Unit
+)
 
 interface ServerAPI<T> {
     val engine: LuaEngine
+    val hotReloadListeners: MutableList<HotReloadListener<T>>
 
     fun registerEvents()
 
@@ -23,6 +36,12 @@ interface ServerAPI<T> {
         players.forEach { sendState(it, state) }
     fun sendState(players: List<T>, state: SharedState) =
         players.forEach { sendState(it, state) }
+
+    fun unloadScripts(player: T)
+    fun unloadScripts(players: Collection<T>) =
+        players.forEach { unloadScripts(it) }
+    fun unloadScripts(players: List<T>) =
+        players.forEach { unloadScripts(it) }
 
     fun syncStateToOwners(
         owners: Any,
@@ -117,6 +136,16 @@ interface ServerAPI<T> {
     }
 
     fun sendAllScripts(
+        players: List<T>,
+        source: ScriptSource,
+        recurse: Boolean = true
+    ) = players.forEach { sendAllScripts(it, source, recurse) }
+    fun sendAllScripts(
+        players: Collection<T>,
+        source: ScriptSource,
+        recurse: Boolean = true
+    ) = players.forEach { sendAllScripts(it, source, recurse) }
+    fun sendAllScripts(
         player: T,
         source: ScriptSource,
         recurse: Boolean = true
@@ -150,6 +179,73 @@ interface ServerAPI<T> {
                 forEachResourceScript(source.path, recurse) { name, content ->
                     engine.runScript(name, content)
                 }
+        }
+    }
+
+
+    private fun runHotReload(
+        players: () -> List<T>,
+        source: ScriptSource,
+        recurse: Boolean = true,
+        onSuccessfulReload: (List<T>) -> Unit
+    ) {
+        val playerList = players.invoke()
+        unloadScripts(playerList)
+    }
+
+    fun hotReload(
+        players: () -> List<T>,
+        source: ScriptSource,
+        recurse: Boolean = true,
+        debounceMs: Long = 300,
+        onSuccessfulReload: (List<T>) -> Unit
+    ) {
+        val dir = when (source) {
+            is ScriptSource.Directory -> source.dir.toPath()
+            // jar resources can not be watched
+            is ScriptSource.Resource -> return
+        }
+
+        hotReloadListeners.add(
+            HotReloadListener(
+                players = players,
+                source = source,
+                recurse = recurse,
+                debounceMs = debounceMs,
+                onSuccessfulReload = onSuccessfulReload
+            )
+        )
+
+        Thread {
+            val watcher = FileSystems.getDefault().newWatchService()
+
+            if (recurse) {
+                Files.walk(dir)
+                    .filter { Files.isDirectory(it) }
+                    .forEach { it.register(watcher, StandardWatchEventKinds.ENTRY_MODIFY) }
+            } else {
+                dir.register(watcher, StandardWatchEventKinds.ENTRY_MODIFY)
+            }
+
+            var lastReload = 0L
+
+            while (true) {
+                val key = watcher.take()
+                key.pollEvents()
+
+                val now = System.currentTimeMillis()
+                if (now - lastReload > debounceMs) {
+                    lastReload = now
+                    runHotReload(players, source, recurse, onSuccessfulReload)
+                }
+
+                // dir no longer accessible
+                if (!key.reset()) break
+            }
+        }.apply {
+            isDaemon = true
+            name = "script-watcher"
+            start()
         }
     }
 }

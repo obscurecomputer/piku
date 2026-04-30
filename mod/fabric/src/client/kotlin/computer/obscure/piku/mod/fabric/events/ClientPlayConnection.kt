@@ -38,7 +38,9 @@ object ClientPlayConnection {
         PikuClient.engine!!.init()
     }
 
-    fun onDisconnect() {
+    fun onDisconnect(
+        onFinish: () -> Unit = {}
+    ) {
         SharedStateManager.shutdown()
         PikuClient.engine!!.shutdown()
         AnimationManager.shutdown()
@@ -78,5 +80,7 @@ object ClientPlayConnection {
 
             menuConfigs = MenuConfigs()
         }
+
+        onFinish()
     }
 }

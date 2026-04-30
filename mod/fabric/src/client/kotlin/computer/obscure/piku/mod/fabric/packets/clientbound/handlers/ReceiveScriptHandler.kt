@@ -9,7 +9,10 @@ object ReceiveScriptHandler {
         val engineRef = PikuClient.engine
         Minecraft.getInstance().execute {
             try {
-                if (PikuClient.engine !== engineRef) return@execute
+                if (PikuClient.engine !== engineRef) {
+                    PikuClient.LOGGER.error("Cannot load script ${payload.name}: Engine reference lost!")
+                    return@execute
+                }
                 if (payload.name == "END_OF_SCRIPT_LOADING") {
                     PikuClient.LOGGER.debug("Server sent EOSL")
                     engineRef!!.activeScripts.forEach { script ->
@@ -17,6 +20,7 @@ object ReceiveScriptHandler {
                     }
                     return@execute
                 }
+                PikuClient.LOGGER.debug("Loading script ${payload.name}: ${payload.fileContents.length} bytes")
                 PikuClient.engine!!.activeScripts[payload.name] = payload.fileContents
             } catch (e: Exception) {
                 e.printStackTrace()

@@ -8,6 +8,7 @@ import computer.obscure.piku.mod.fabric.scripting.api.LuaClient
 import computer.obscure.piku.mod.fabric.scripting.api.LuaClientEventListener
 import computer.obscure.piku.mod.fabric.scripting.api.LuaClientEvents
 import computer.obscure.piku.mod.fabric.scripting.api.LuaGame
+import computer.obscure.piku.mod.fabric.scripting.api.LuaLevel
 import computer.obscure.piku.mod.fabric.scripting.api.LuaScreens
 import computer.obscure.piku.mod.fabric.scripting.api.LuaWidgets
 import computer.obscure.piku.mod.fabric.scripting.api.raycast.LuaRaycast
@@ -36,6 +37,7 @@ class ClientLuaEngine : LuaEngine() {
         register(LuaScreens())
         register(LuaWidgets())
         register(LuaRaycast())
+        register(LuaLevel())
         super.registerCommons()
 
         val eventListener = LuaClientEventListener()

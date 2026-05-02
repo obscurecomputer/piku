@@ -1,6 +1,5 @@
 package computer.obscure.piku.mod.fabric
 
-import computer.obscure.piku.core.scripting.api.LuaEventData
 import computer.obscure.piku.mod.fabric.scripting.api.LuaKeyBind
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents
 import net.minecraft.client.Minecraft

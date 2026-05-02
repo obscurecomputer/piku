@@ -1,7 +1,6 @@
 package computer.obscure.piku.core.scripting.api
 
 import computer.obscure.twine.annotations.TwineFunction
-import computer.obscure.twine.annotations.TwineProperty
 import computer.obscure.twine.TwineNative
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.event.HoverEvent

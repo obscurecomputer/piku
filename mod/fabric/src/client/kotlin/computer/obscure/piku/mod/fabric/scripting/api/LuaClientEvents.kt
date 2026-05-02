@@ -1,6 +1,5 @@
 package computer.obscure.piku.mod.fabric.scripting.api
 
-import computer.obscure.piku.core.scripting.api.LuaEventData
 import computer.obscure.piku.core.scripting.base.LuaEvent
 import computer.obscure.piku.core.states.SharedState
 import computer.obscure.piku.core.utils.toJson

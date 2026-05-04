@@ -10,6 +10,7 @@ import me.znotchill.blossom.extensions.addListener
 import me.znotchill.blossom.server.BlossomServer
 import net.kyori.adventure.audience.Audience
 import net.kyori.adventure.audience.Audiences
+import net.minestom.server.Auth
 import net.minestom.server.entity.GameMode
 import net.minestom.server.event.player.AsyncPlayerConfigurationEvent
 import net.minestom.server.event.player.PlayerLoadedEvent
@@ -17,7 +18,7 @@ import net.minestom.server.instance.InstanceContainer
 import java.io.File
 
 class Server : BlossomServer(
-    auth = false
+    auth = Auth.Offline()
 ) {
     lateinit var instanceContainer: InstanceContainer
 

@@ -1,5 +1,11 @@
 # piku
 
+<p align="center">
+    <picture>
+        <img src="assets/piku-logomark.svg" alt="Piku Logomark" width="500">
+    </picture>
+</p>
+
 ![common](https://img.shields.io/teamcity/build/e/piku_common_Build?server=https%3A%2F%2Fci.obscure.computer&label=common%20build&link=https%3A%2F%2Fci.obscure.computer%2Fproject%2Fpiku%3Fmode%3Dbuilds)
 ![fabric](https://img.shields.io/teamcity/build/e/piku_fabric_Build?server=https%3A%2F%2Fci.obscure.computer&label=fabric%20build&link=https%3A%2F%2Fci.obscure.computer%2Fproject%2Fpiku%3Fmode%3Dbuilds)
 ![minestom](https://img.shields.io/teamcity/build/e/piku_minestom_Build?server=https%3A%2F%2Fci.obscure.computer&label=minestom%20build&link=https%3A%2F%2Fci.obscure.computer%2Fproject%2Fpiku%3Fmode%3Dbuilds)

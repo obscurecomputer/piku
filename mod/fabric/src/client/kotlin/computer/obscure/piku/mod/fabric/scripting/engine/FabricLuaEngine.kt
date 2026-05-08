@@ -29,6 +29,8 @@ class ClientLuaEngine : LuaEngine() {
         events = LuaClientEvents()
         super.init()
 
+        events.registerBaseListeners()
+
         register(LuaGame())
         register(LuaClient())
         register(Anchor::class.toTwineEnum())

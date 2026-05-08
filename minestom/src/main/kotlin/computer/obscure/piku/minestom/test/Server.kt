@@ -2,14 +2,12 @@ package computer.obscure.piku.minestom.test
 
 import computer.obscure.piku.core.classes.ScriptSource
 import computer.obscure.piku.minestom.scripting.MinestomAPI
-import computer.obscure.piku.minestom.scripting.states.getState
-import computer.obscure.piku.minestom.scripting.states.sharedState
+import computer.obscure.piku.minestom.scripting.utils.piku
 import me.znotchill.blossom.command.command
 import me.znotchill.blossom.component.component
 import me.znotchill.blossom.extensions.addListener
 import me.znotchill.blossom.server.BlossomServer
 import net.kyori.adventure.audience.Audience
-import net.kyori.adventure.audience.Audiences
 import net.minestom.server.Auth
 import net.minestom.server.entity.GameMode
 import net.minestom.server.event.player.AsyncPlayerConfigurationEvent
@@ -60,25 +58,9 @@ class Server : BlossomServer(
         }
 
         registerCommand(
-            command("share") {
+            command("piku") {
                 syntax {
-                    val player = this
-                    player.getState("hi")?.destroy()
-
-                    val state = player.sharedState("hi") {
-                        value = uuid.toString()
-                        clientModifiable = true
-                    }
-                }
-            }
-        )
-
-        registerCommand(
-            command("update") {
-                syntax {
-                    val player = this
-                    val state = player.getState("hi") ?: return@syntax
-                    state.set(state.get().toString() + "_hi")
+                    sendMessage("using piku?: ${this.piku.usingPiku}")
                 }
             }
         )

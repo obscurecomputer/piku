@@ -6,7 +6,7 @@ import computer.obscure.piku.core.utils.toJson
 import computer.obscure.piku.mod.fabric.packets.serverbound.SendDataPacket
 import computer.obscure.piku.mod.fabric.packets.serverbound.SendStatePacket
 import computer.obscure.piku.mod.fabric.scripting.ClientEventBus
-import computer.obscure.piku.mod.fabric.scripting.events.HeartbeatEvent
+import computer.obscure.piku.mod.fabric.scripting.events.BrandEvent
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking
 import java.util.UUID
 
@@ -16,7 +16,7 @@ class LuaClientEvents : ClientEventBus {
     val stateCallbacks: MutableMap<UUID, (Map<String, Any?>) -> Unit> = mutableMapOf()
 
     fun registerBaseListeners() {
-        register(HeartbeatEvent)
+        register(BrandEvent)
     }
 
     private fun register(luaEvent: LuaEvent) {
@@ -47,6 +47,13 @@ class LuaClientEvents : ClientEventBus {
                 callback.invoke(data)
             } catch (e: Exception) {
                 println("[Lua error] in event $eventId: ${e.message}")
+            }
+        }
+        baseListeners[eventId]?.let { event ->
+            try {
+                event.onClientReceive(data)
+            } catch (e: Exception) {
+                println("[Lua error] in base event $eventId: ${e.message}")
             }
         }
     }

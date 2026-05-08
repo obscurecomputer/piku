@@ -1,6 +1,8 @@
 package computer.obscure.piku.minestom.scripting
 
 import computer.obscure.piku.core.scripting.server.HotReloadListener
+import computer.obscure.piku.core.scripting.server.PikuPlayer
+import computer.obscure.piku.core.scripting.server.PlayerStorage
 import computer.obscure.piku.core.scripting.server.ServerAPI
 import computer.obscure.piku.core.scripting.server.SharedStateManager
 import computer.obscure.piku.core.states.SharedState
@@ -12,6 +14,8 @@ import io.netty.buffer.Unpooled
 import me.znotchill.blossom.extensions.addListener
 import me.znotchill.blossom.server.BlossomServer
 import net.minestom.server.entity.Player
+import net.minestom.server.event.player.PlayerDisconnectEvent
+import net.minestom.server.event.player.PlayerLoadedEvent
 import net.minestom.server.event.player.PlayerPluginMessageEvent
 import net.minestom.server.network.NetworkBuffer
 import net.minestom.server.network.packet.server.common.PluginMessagePacket
@@ -78,6 +82,21 @@ class MinestomAPI(val server: BlossomServer) : ServerAPI<Player> {
                     }
                 }
             }
+        }
+
+        engine.events.listen("piku.brand") { data, player ->
+            val p = PlayerStorage.get<Player>(player.uuid)
+                ?: throw NullPointerException("Can not access non-existent player storage!")
+            p.usingPiku = true
+        }
+
+        server.eventHandler.addListener<PlayerLoadedEvent> { event ->
+            PlayerStorage.add(event.player.uuid, PikuPlayer)
+            sendData(event.player, "piku.brand", true)
+        }
+
+        server.eventHandler.addListener<PlayerDisconnectEvent> { event ->
+            PlayerStorage.remove(event.player.uuid)
         }
     }
 

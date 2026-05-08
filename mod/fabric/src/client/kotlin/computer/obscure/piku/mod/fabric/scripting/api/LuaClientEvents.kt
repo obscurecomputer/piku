@@ -3,8 +3,8 @@ package computer.obscure.piku.mod.fabric.scripting.api
 import computer.obscure.piku.core.scripting.base.LuaEvent
 import computer.obscure.piku.core.states.SharedState
 import computer.obscure.piku.core.utils.toJson
-import computer.obscure.piku.mod.fabric.packets.serverbound.payloads.SendDataPayload
-import computer.obscure.piku.mod.fabric.packets.serverbound.payloads.SendStatePayload
+import computer.obscure.piku.mod.fabric.packets.serverbound.SendDataPacket
+import computer.obscure.piku.mod.fabric.packets.serverbound.SendStatePacket
 import computer.obscure.piku.mod.fabric.scripting.ClientEventBus
 import computer.obscure.piku.mod.fabric.scripting.events.HeartbeatEvent
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking
@@ -30,7 +30,7 @@ class LuaClientEvents : ClientEventBus {
     }
 
     override fun send(eventId: String, data: Map<String, Any?>) {
-        val payload = SendDataPayload(
+        val payload = SendDataPacket(
             id = eventId,
             json = data.toJson()
         )
@@ -52,7 +52,7 @@ class LuaClientEvents : ClientEventBus {
     }
 
     fun sendState(state: SharedState) {
-        val payload = SendStatePayload(
+        val payload = SendStatePacket(
             internalId = state.internalId.toString(),
             value = state.value.toJson()
         )

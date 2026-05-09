@@ -19,7 +19,7 @@ val pikuSerializableTypes: Map<String, KSerializer<out PikuSerializable>> = mapO
 
 fun Any?.toJson(): String = when (this) {
     null -> "null"
-    is String -> "\"${this}\""
+    is String -> JsonPrimitive(this).toString()
     is Number -> this.toString()
     is Boolean -> this.toString()
     is PikuSerializable -> this.toJsonElement().toString()
@@ -31,7 +31,7 @@ fun Any?.toJson(): String = when (this) {
         val entries = this.joinToString(",") { it.toJson() }
         "[$entries]"
     }
-    else -> "\"${this}\""
+    else -> JsonPrimitive(this.toString()).toString()
 }
 
 fun jsonToKotlin(value: JsonElement): Any? {

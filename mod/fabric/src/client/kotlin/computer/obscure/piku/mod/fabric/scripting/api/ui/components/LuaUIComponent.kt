@@ -23,6 +23,9 @@ open class LuaUIComponent(open val component: Component) : TwineNative() {
     @TwineProperty
     val id: String
         get() = component.internalId
+    @TwineProperty
+    val name: String
+        get() = component.name
 
     @TwineFunction
     fun onLayout(callback: LuaCallback): LuaUIComponent {
@@ -72,6 +75,19 @@ open class LuaUIComponent(open val component: Component) : TwineNative() {
     @TwineFunction
     fun opacity(value: Float): LuaUIComponent {
         component.props.opacity = value
+        return this
+    }
+
+    @TwineProperty
+    var zIndex: Int
+        get() = component.props.zIndex
+        set(value) {
+            component.props.zIndex = value
+        }
+
+    @TwineFunction
+    fun zIndex(value: Int): LuaUIComponent {
+        component.props.zIndex = value
         return this
     }
 
@@ -219,7 +235,9 @@ open class LuaUIComponent(open val component: Component) : TwineNative() {
         get() = LuaVec2Instance(component.screenX.toDouble(), component.screenY.toDouble())
 
     @TwineFunction
-    fun getTouchingComponents(x: Float, y: Float): List<LuaUIComponent> {
+    fun getTouchingComponents(): List<LuaUIComponent> {
+        val x = screenPos.x
+        val y = screenPos.y
         return UIRenderer.allComponents()
             .filter { c ->
                 x >= c.screenX && x <= c.screenX + c.width() &&

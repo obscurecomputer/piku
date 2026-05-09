@@ -25,8 +25,10 @@ class FlowContainerRenderer : UIComponent<FlowContainer>() {
             )
         }
 
+        context.pose().popMatrix()
         props.components.forEach { child ->
             child.draw(context)
         }
+        context.pose().pushMatrix()
     }
 }

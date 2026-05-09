@@ -18,6 +18,7 @@ import computer.obscure.piku.mod.fabric.scripting.api.ui.LuaEasingInstance
 import computer.obscure.piku.mod.fabric.ui.components.*
 import computer.obscure.piku.mod.fabric.ui.events.*
 import computer.obscure.twine.LuaCallback
+import net.kyori.adventure.platform.modcommon.MinecraftClientAudiences
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.renderer.texture.DynamicTexture
@@ -263,17 +264,21 @@ object UIRenderer : PikuService {
                 // and the position
                 // additionally, handle multiline strings
                 val renderer = Minecraft.getInstance().font
-
                 val interpolated = TextInterpolator.interpolate(component.props.rawText)
 
                 if (component.cachedText != interpolated) {
                     component.cachedText = interpolated
 
-                    val lines = interpolated.split("\n")
-                    val widestLine = lines.maxOfOrNull { renderer.width(it) }?.toFloat() ?: 0f
+                    val maxWidth = component.props.maxWidth ?: Int.MAX_VALUE
+                    val mcText = MinecraftClientAudiences.of().asNative(
+                        net.kyori.adventure.text.Component.text(interpolated)
+                    )
+                    val lines = renderer.split(mcText, maxWidth)
 
                     component.cachedTextSize = Vec2(
-                        widestLine.toDouble(),
+                        (if (component.props.maxWidth != null) maxWidth.toFloat()
+                        else if (lines.isEmpty()) 0f
+                        else lines.maxOf { renderer.width(it).toFloat() }).toDouble(),
                         (renderer.lineHeight * lines.size).toDouble()
                     )
                 }

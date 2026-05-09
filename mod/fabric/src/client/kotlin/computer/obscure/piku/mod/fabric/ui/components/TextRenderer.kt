@@ -22,21 +22,26 @@ class TextRenderer : UIComponent<Text>() {
         val mcText = MinecraftClientAudiences
             .of()
             .asNative(text)
+        val maxWidth = props.maxWidth ?: Int.MAX_VALUE
 
-        // measure and get the widest line
-        val textWidth = renderer.width(mcText).toFloat()
-        val textHeight = renderer.lineHeight.toFloat()
+        val lines = renderer.split(mcText, maxWidth)
+        val totalHeight = renderer.lineHeight * lines.size
 
         val scaleX = props.textScale.x
         val scaleY = props.textScale.y
 
-        val scaledTextWidth = textWidth * scaleX
-        val scaledTextHeight = textHeight * scaleY
-
         val padding = props.padding
 
-        val bgWidth = scaledTextWidth + padding.left + padding.right
-        val bgHeight = scaledTextHeight + padding.top + padding.bottom
+        val contentWidth: Float = if (props.maxWidth != null) {
+            maxWidth.toFloat()
+        } else if (lines.isEmpty()) {
+            0f
+        } else {
+            lines.maxOf { renderer.width(it).toFloat() } * scaleX.toFloat()
+        }
+
+        val bgWidth = contentWidth + padding.left + padding.right
+        val bgHeight = totalHeight * scaleY + padding.top + padding.bottom
 
         props.backgroundColor?.let { bg ->
             context.fill(
@@ -62,14 +67,16 @@ class TextRenderer : UIComponent<Text>() {
                 a = (props.color.a * props.opacity).coerceIn(0f, 255f).toInt()
             ).toArgb()
 
-        context.drawString(
-            renderer,
-            mcText,
-            0,
-            0,
-            0xFFFFFFFF.toInt(),
-            props.shadow
-        )
+        lines.forEachIndexed { i, line ->
+            context.drawString(
+                renderer,
+                line,
+                0,
+                i * renderer.lineHeight,
+                color,
+                props.shadow
+            )
+        }
 
         context.pose().popMatrix()
     }

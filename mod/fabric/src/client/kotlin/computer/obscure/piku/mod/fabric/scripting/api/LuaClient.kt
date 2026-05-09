@@ -53,6 +53,14 @@ class LuaClient : TwineNative("client") {
         }
 
     @TwineProperty
+    val yaw: Float
+        get() = Minecraft.getInstance().player?.yRot ?: 0f
+
+    @TwineProperty
+    val pitch: Float
+        get() = Minecraft.getInstance().player?.xRot ?: 0f
+
+    @TwineProperty
     val headPos: LuaVec3Instance
         get() {
             val p = instance.player
@@ -143,6 +151,20 @@ class LuaClient : TwineNative("client") {
             val y = instance.window.height.toDouble()
             return LuaVec2Instance(x, y)
         }
+
+    @TwineProperty
+    val hudSize: LuaVec2Instance
+        get() {
+            val mc = Minecraft.getInstance()
+            return LuaVec2Instance(
+                mc.window.guiScaledWidth.toDouble(),
+                mc.window.guiScaledHeight.toDouble()
+            )
+        }
+
+    @TwineProperty
+    val guiScale: Int
+        get() = instance.window.guiScale
 
     @TwineFunction
     fun screenshotMessage(value: LuaTextInstance) {

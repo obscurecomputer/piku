@@ -15,6 +15,13 @@ open class TextProps : BaseProps() {
                 mark(DirtyFlag.LAYOUT)
             }
         }
+    var maxWidth: Int? = null
+        set(value) {
+            if (field != value) {
+                field = value
+                mark(DirtyFlag.LAYOUT)
+            }
+        }
 
     var rawText: String = ""
         private set

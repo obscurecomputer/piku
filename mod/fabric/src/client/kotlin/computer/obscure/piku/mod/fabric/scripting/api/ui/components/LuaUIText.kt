@@ -26,6 +26,12 @@ class LuaUIText(
         return this
     }
 
+    @TwineFunction
+    fun maxWidth(value: Int): LuaUIText {
+        component.props.maxWidth = value
+        return this
+    }
+
     @TwineProperty
     var color: LuaColorInstance
         get() = LuaColor.fromUIColor(component.props.color)

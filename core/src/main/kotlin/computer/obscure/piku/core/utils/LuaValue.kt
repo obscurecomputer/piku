@@ -1,27 +1,32 @@
 package computer.obscure.piku.core.utils
 
+import com.google.gson.Gson
 import com.google.gson.JsonElement
 import com.google.gson.JsonParser
 
-fun Any?.toJson(): String {
-    return when (this) {
-        null -> "null"
-        is String -> "\"${this}\""
-        is Number -> this.toString()
-        is Boolean -> this.toString()
-        is Map<*, *> -> {
-            val entries = this.entries.joinToString(",") { (k, v) ->
-                "\"$k\":${v.toJson()}"
-            }
-            "{$entries}"
-        }
-        is List<*> -> {
-            val entries = this.joinToString(",") { it.toJson() }
-            "[$entries]"
-        }
-        else -> "\"${this}\""
-    }
-}
+private val gson = Gson()
+
+fun Any?.toJson(): String = gson.toJson(this)
+
+//fun Any?.toJson(): String {
+//    return when (this) {
+//        null -> "null"
+//        is String -> "\"${this}\""
+//        is Number -> this.toString()
+//        is Boolean -> this.toString()
+//        is Map<*, *> -> {
+//            val entries = this.entries.joinToString(",") { (k, v) ->
+//                "\"$k\":${v.toJson()}"
+//            }
+//            "{$entries}"
+//        }
+//        is List<*> -> {
+//            val entries = this.joinToString(",") { it.toJson() }
+//            "[$entries]"
+//        }
+//        else -> "\"${this}\""
+//    }
+//}
 
 fun jsonToKotlin(value: JsonElement): Any? {
     return when {

@@ -1,9 +1,20 @@
 package computer.obscure.piku.core.classes
 
+import computer.obscure.piku.core.scripting.api.LuaColor
+import computer.obscure.piku.core.scripting.api.LuaVec2
+import computer.obscure.piku.core.serialization.PikuSerializable
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+
+@Serializable
+@SerialName("vec2")
 data class Vec2(
     val x: Double = 0.0,
     val y: Double = 0.0
-) {
+): PikuSerializable() {
+    override val typeName = "vec2"
+    override fun toLuaInstance() = LuaVec2.fromVec2(this)
+
     fun add(vec2: Vec2): Vec2 {
         return Vec2(x + vec2.x, y + vec2.y)
     }

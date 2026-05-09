@@ -45,7 +45,7 @@ class LuaColorInstance(
     var b: Int,
     @TwineProperty
     var a: Int = 255
-) : TwineNative() {
+) : TwineNative("color") {
 
     fun toUIColor(): UIColor = UIColor(r, g, b, a)
 

@@ -3,6 +3,7 @@ import org.gradle.kotlin.dsl.publishing
 plugins {
     `maven-publish`
     kotlin("jvm")
+    kotlin("plugin.serialization")
 }
 
 group = project.property("group")!!
@@ -11,6 +12,7 @@ version = project.property("common_version")!!
 repositories {
     mavenLocal()
     mavenCentral()
+    maven("https://repo.znotchill.me/repository/maven-releases/")
     maven("https://jitpack.io")
     maven("https://repo.obscure.computer/repository/maven-releases/")
 }
@@ -19,7 +21,8 @@ dependencies {
     testImplementation(kotlin("test"))
     compileOnly("io.netty:netty-buffer:4.1.111.Final")
     compileOnly("io.netty:netty-common:4.1.111.Final")
-    implementation("com.google.code.gson:gson:2.10.1")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.3")
+//    implementation("com.google.code.gson:gson:2.10.1")
     implementation("org.joml:joml:1.10.8")
 //    implementation("org.luaj:luaj-jse:${project.property("luaj_version")}")
     implementation("computer.obscure:twine:${project.property("twine_version")}")

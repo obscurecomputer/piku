@@ -24,7 +24,7 @@ class LuaVec2 : TwineNative("vec2") {
 class LuaVec2Instance(
     var x: Double,
     var y: Double
-) : TwineNative() {
+) : TwineNative("vec2") {
     @TwineProperty("x")
     var xCoord: Double
         get() = x

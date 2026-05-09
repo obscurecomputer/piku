@@ -47,14 +47,15 @@ abstract class LuaEngine : PikuService {
     }
 
     fun registerCommons() {
-        twine.register(LuaVec2())
-        twine.register(LuaVec3())
-        twine.register(LuaColor())
-        twine.register(LuaSpacing())
-        twine.register(LuaScheduler())
-        twine.register(LuaMath())
-        twine.register(LuaNoise())
-        twine.register(LuaText())
+        registerBase(LuaBaseGenerics())
+        register(LuaVec2())
+        register(LuaVec3())
+        register(LuaColor())
+        register(LuaSpacing())
+        register(LuaScheduler())
+        register(LuaMath())
+        register(LuaNoise())
+        register(LuaText())
     }
 
     fun register(native: TwineNative) {

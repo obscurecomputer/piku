@@ -1,52 +1,62 @@
 package computer.obscure.piku.core.utils
 
-import com.google.gson.Gson
-import com.google.gson.JsonElement
-import com.google.gson.JsonParser
+import computer.obscure.piku.core.classes.Vec2
+import computer.obscure.piku.core.classes.Vec3
+import computer.obscure.piku.core.serialization.PikuSerializable
+import computer.obscure.piku.core.ui.classes.UIColor
+import kotlinx.serialization.KSerializer
+import kotlinx.serialization.json.*
 
-private val gson = Gson()
+val json = Json { ignoreUnknownKeys = true }
 
-fun Any?.toJson(): String = gson.toJson(this)
+// todo: move this / make it better
+val pikuSerializableTypes: Map<String, KSerializer<out PikuSerializable>> = mapOf(
+    "color" to UIColor.serializer(),
+    "vec2" to Vec2.serializer(),
+    "vec3" to Vec3.serializer(),
+)
 
-//fun Any?.toJson(): String {
-//    return when (this) {
-//        null -> "null"
-//        is String -> "\"${this}\""
-//        is Number -> this.toString()
-//        is Boolean -> this.toString()
-//        is Map<*, *> -> {
-//            val entries = this.entries.joinToString(",") { (k, v) ->
-//                "\"$k\":${v.toJson()}"
-//            }
-//            "{$entries}"
-//        }
-//        is List<*> -> {
-//            val entries = this.joinToString(",") { it.toJson() }
-//            "[$entries]"
-//        }
-//        else -> "\"${this}\""
-//    }
-//}
+
+fun Any?.toJson(): String = when (this) {
+    null -> "null"
+    is String -> "\"${this}\""
+    is Number -> this.toString()
+    is Boolean -> this.toString()
+    is PikuSerializable -> this.toJsonElement().toString()
+    is Map<*, *> -> {
+        val entries = this.entries.joinToString(",") { (k, v) -> "\"$k\":${v.toJson()}" }
+        "{$entries}"
+    }
+    is List<*> -> {
+        val entries = this.joinToString(",") { it.toJson() }
+        "[$entries]"
+    }
+    else -> "\"${this}\""
+}
 
 fun jsonToKotlin(value: JsonElement): Any? {
     return when {
-        value.isJsonObject -> value.asJsonObject.entrySet()
-            .associate { (k, v) -> k to jsonToKotlin(v) }
-        value.isJsonArray -> value.asJsonArray
-            .map { jsonToKotlin(it) }
-        value.isJsonPrimitive -> value.asJsonPrimitive.let { p ->
-            when {
-                p.isBoolean -> p.asBoolean
-                p.isNumber -> p.asDouble
-                p.isString -> p.asString
-                else -> null
+        value is JsonObject -> {
+            val typeName = value["__type"]?.jsonPrimitive?.contentOrNull
+            val target = typeName?.let { pikuSerializableTypes[it] }
+            if (target != null) {
+                json.decodeFromJsonElement(target, value).toLuaInstance()
+            } else {
+                value.entries.associate { (k, v) -> k to jsonToKotlin(v) }
             }
         }
-        value.isJsonNull -> null
+        value is JsonArray -> value.map { jsonToKotlin(it) }
+        value is JsonPrimitive -> when {
+            value.isString -> value.content
+            value.booleanOrNull != null -> value.boolean
+            value.doubleOrNull != null -> value.double
+            else -> null
+        }
+        value is JsonNull -> null
         else -> null
     }
 }
 
 fun jsonStringToKotlin(json: String): Any? {
-    return jsonToKotlin(JsonParser.parseString(json))
+    return jsonToKotlin(Json.parseToJsonElement(json))
 }

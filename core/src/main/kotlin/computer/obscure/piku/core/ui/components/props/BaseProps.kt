@@ -8,6 +8,11 @@ import computer.obscure.piku.core.ui.classes.DirtyProps
 import computer.obscure.piku.core.ui.classes.Spacing
 import computer.obscure.piku.core.ui.components.Component
 
+data class TransitionProps(
+    val duration: Double,
+    val easing: String
+)
+
 open class BaseProps : DirtyProps() {
 
     var components: MutableList<Component> = mutableListOf()
@@ -15,6 +20,9 @@ open class BaseProps : DirtyProps() {
             field = value
             mark(DirtyFlag.LAYOUT)
         }
+    var onLayout: (() -> Unit)? = null
+    var beforeLayout: (() -> Unit)? = null
+    var transition: TransitionProps? = null
 
     var pos: Vec2 = Vec2(0.0, 0.0)
         set(value) {
@@ -64,7 +72,7 @@ open class BaseProps : DirtyProps() {
             }
         }
 
-    var rotation: Int = 0
+    var rotation: Float = 0f
         set(value) {
             if (field != value) {
                 field = value

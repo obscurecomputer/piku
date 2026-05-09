@@ -17,6 +17,7 @@ import computer.obscure.piku.core.ui.components.props.LineProps
 import computer.obscure.piku.core.ui.components.props.ProgressBarProps
 import computer.obscure.piku.core.ui.components.props.SpriteProps
 import computer.obscure.piku.core.ui.components.props.TextProps
+import computer.obscure.piku.mod.fabric.scripting.api.ui.LuaUI
 import computer.obscure.piku.mod.fabric.ui.UIRenderer
 import computer.obscure.twine.annotations.TwineFunction
 
@@ -29,6 +30,11 @@ open class AllComponentBuilder(
         component.props.components.add(newComponent)
         UIRenderer.currentWindow.registerRecursive(newComponent)
         return newComponent
+    }
+
+    @TwineFunction
+    fun children(): List<LuaUIComponent> {
+        return component.props.components.mapNotNull { LuaUI.wrap(it) }
     }
 
     @TwineFunction

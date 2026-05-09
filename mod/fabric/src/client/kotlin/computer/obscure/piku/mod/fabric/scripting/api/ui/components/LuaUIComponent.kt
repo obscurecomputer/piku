@@ -1,5 +1,6 @@
 package computer.obscure.piku.mod.fabric.scripting.api.ui.components
 
+import computer.obscure.piku.core.animation.AnimationManager
 import computer.obscure.piku.core.scripting.api.LuaSpacing
 import computer.obscure.piku.core.scripting.api.LuaSpacingInstance
 import computer.obscure.twine.annotations.TwineFunction
@@ -10,16 +11,34 @@ import computer.obscure.piku.core.scripting.api.LuaVec2Instance
 import computer.obscure.piku.core.scripting.engine.EngineError
 import computer.obscure.piku.core.scripting.engine.EngineErrorCode
 import computer.obscure.piku.core.ui.Anchor
-import computer.obscure.piku.core.ui.UIEventQueue
 import computer.obscure.piku.core.ui.classes.RelativePosition
 import computer.obscure.piku.core.ui.components.*
+import computer.obscure.piku.core.ui.components.props.TransitionProps
+import computer.obscure.piku.mod.fabric.scripting.api.ui.LuaUI
 import computer.obscure.piku.mod.fabric.scripting.api.ui.LuaUIAnimation
 import computer.obscure.piku.mod.fabric.ui.UIRenderer
+import computer.obscure.twine.LuaCallback
 
 open class LuaUIComponent(open val component: Component) : TwineNative() {
     @TwineProperty
     val id: String
         get() = component.internalId
+
+    @TwineFunction
+    fun onLayout(callback: LuaCallback): LuaUIComponent {
+        component.props.onLayout = { callback.call<Unit>() }
+        return this
+    }
+    @TwineFunction
+    fun beforeLayout(callback: LuaCallback): LuaUIComponent {
+        component.props.beforeLayout = { callback.call<Unit>() }
+        return this
+    }
+    @TwineFunction
+    fun transition(duration: Double, easing: String): LuaUIComponent {
+        component.props.transition = TransitionProps(duration, easing)
+        return this
+    }
 
     @TwineProperty
     var size: LuaVec2Instance
@@ -27,6 +46,11 @@ open class LuaUIComponent(open val component: Component) : TwineNative() {
         set(value) {
             component.props.size = value.toVec2()
         }
+
+    @TwineProperty
+    val computedSize: LuaVec2Instance
+        get() = LuaVec2Instance(component.computedSize?.x ?: component.props.size.x,
+            component.computedSize?.y ?: component.props.size.y)
 
     @TwineProperty
     val type: String
@@ -61,6 +85,19 @@ open class LuaUIComponent(open val component: Component) : TwineNative() {
     @TwineFunction
     fun pos(value: LuaVec2Instance): LuaUIComponent {
         component.props.pos = value.toVec2()
+        return this
+    }
+
+    @TwineProperty
+    var rotation: Float
+        get() = component.props.rotation
+        set(value) {
+            component.props.rotation = component.props.rotation
+        }
+
+    @TwineFunction
+    fun rotate(value: Float): LuaUIComponent {
+        component.props.rotation = value
         return this
     }
 
@@ -145,16 +182,49 @@ open class LuaUIComponent(open val component: Component) : TwineNative() {
 
     @TwineProperty
     val isAnimating: Boolean
-        get() = UIRenderer.animations().find { it.targetId == component.internalId } != null
+        get() = AnimationManager.isAnimating(component.internalId)
 
     @TwineFunction
     fun cancelAnimations() {
-        UIEventQueue.clear()
-        UIRenderer.cancelAnimations()
+        AnimationManager.cancelFor(component.internalId)
     }
 
     @TwineFunction
     fun remove() {
-        UIRenderer.currentWindow.components.remove(this.component.internalId)
+        // try root window first
+        if (UIRenderer.currentWindow.components.remove(this.component.internalId) != null) return
+
+        // otherwise search through all containers
+        UIRenderer.allComponents().forEach { parent ->
+            when (parent) {
+                is Group -> parent.props.components.removeIf { it.internalId == component.internalId }
+                is FlowContainer -> parent.props.components.removeIf { it.internalId == component.internalId }
+                else -> {}
+            }
+        }
+
+        UIRenderer.currentWindow.unregisterRecursive(component.internalId)
+        UIRenderer.layout(UIRenderer.currentWindow)
+    }
+
+    @TwineFunction
+    fun contains(x: Float, y: Float): Boolean {
+        val sx = component.screenX.toFloat()
+        val sy = component.screenY.toFloat()
+        return x >= sx && x <= sx + component.width() && y >= sy && y <= sy + component.height()
+    }
+
+    @TwineProperty
+    val screenPos: LuaVec2Instance
+        get() = LuaVec2Instance(component.screenX.toDouble(), component.screenY.toDouble())
+
+    @TwineFunction
+    fun getTouchingComponents(x: Float, y: Float): List<LuaUIComponent> {
+        return UIRenderer.allComponents()
+            .filter { c ->
+                x >= c.screenX && x <= c.screenX + c.width() &&
+                        y >= c.screenY && y <= c.screenY + c.height()
+            }
+            .mapNotNull { LuaUI.wrap(it) }
     }
 }

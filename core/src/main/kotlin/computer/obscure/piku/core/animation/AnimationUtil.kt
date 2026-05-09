@@ -1,0 +1,40 @@
+package computer.obscure.piku.core.animation
+
+import computer.obscure.piku.core.classes.Vec3
+import computer.obscure.piku.core.ui.classes.Easing
+import computer.obscure.twine.LuaCallback
+
+object AnimationUtil {
+
+    fun resolveEasing(
+        easing: String,
+        t: Double,
+        custom: Map<String, LuaCallback>
+    ): Double {
+        return try {
+            val eased = (custom[easing]?.call<Double>(t)
+                ?: Easing.valueOf(easing.uppercase()).getValue(t))
+            eased.coerceIn(0.0, 1.0)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            Easing.LINEAR.getValue(t)
+        }
+    }
+
+    fun lerp(start: Float, end: Float, t: Double): Float =
+        start + ((end - start) * t).toFloat()
+
+    fun lerp(start: Double, end: Double, t: Double): Double =
+        start + (end - start) * t
+
+    fun lerp(
+        start: Vec3,
+        end: Vec3,
+        t: Double
+    ): Vec3 =
+        Vec3(
+            lerp(start.x, end.x, t),
+            lerp(start.y, end.y, t),
+            lerp(start.z, end.z, t)
+        )
+}

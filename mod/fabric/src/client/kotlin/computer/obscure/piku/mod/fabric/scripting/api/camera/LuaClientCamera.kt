@@ -4,8 +4,8 @@ import computer.obscure.piku.core.scripting.api.LuaVec3
 import computer.obscure.piku.core.scripting.api.LuaVec3Instance
 import computer.obscure.piku.mod.fabric.Client
 import computer.obscure.piku.mod.fabric.PikuClient
-import computer.obscure.piku.mod.fabric.animation.Animation
-import computer.obscure.piku.mod.fabric.animation.AnimationManager
+import computer.obscure.piku.core.animation.Animation
+import computer.obscure.piku.core.animation.AnimationManager
 import computer.obscure.twine.LuaCallback
 import computer.obscure.twine.TwineNative
 import computer.obscure.twine.annotations.TwineFunction

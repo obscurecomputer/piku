@@ -1,26 +1,24 @@
 package computer.obscure.piku.mod.fabric.scripting.api.ui
 
+import computer.obscure.piku.core.animation.Animation
+import computer.obscure.piku.core.animation.AnimationManager
 import computer.obscure.piku.core.scripting.api.LuaSpacingInstance
 import computer.obscure.piku.core.scripting.api.LuaVec2Instance
 import computer.obscure.piku.core.scripting.engine.EngineError
 import computer.obscure.piku.core.scripting.engine.EngineErrorCode
-import computer.obscure.piku.core.ui.UIEventQueue
 import computer.obscure.piku.core.ui.components.Component
 import computer.obscure.piku.core.ui.components.Line
 import computer.obscure.piku.core.ui.components.ProgressBar
-import computer.obscure.piku.core.ui.events.*
+import computer.obscure.twine.LuaCallback
 import computer.obscure.twine.annotations.TwineFunction
 import computer.obscure.twine.TwineNative
 
-class LuaUIAnimation(
-    val component: Component
-) : TwineNative() {
-    val storedEvents: MutableList<UIEvent> = mutableListOf()
+class LuaUIAnimation(val component: Component) : TwineNative() {
+    val stored: MutableList<Animation<*>> = mutableListOf()
+    private var onStartCallback: LuaCallback? = null
+    private var onFinishCallback: LuaCallback? = null
 
-    private fun invalidComponent(
-        function: String,
-        expected: String
-    ): Nothing {
+    private fun invalidComponent(function: String, expected: String): Nothing {
         throw EngineError(
             EngineErrorCode.INVALID_COMPONENT,
             "$function() is only supported on $expected components " +
@@ -30,98 +28,108 @@ class LuaUIAnimation(
 
     @TwineFunction
     fun play() {
-        storedEvents.forEach {
-            UIEventQueue.enqueueNow(it)
-        }
+        stored.forEach { AnimationManager.animate(it) }
+    }
+
+    @TwineFunction
+    fun onStart(callback: LuaCallback): LuaUIAnimation {
+        onStartCallback = callback
+        return this
+    }
+
+    @TwineFunction
+    fun onFinish(callback: LuaCallback): LuaUIAnimation {
+        onFinishCallback = callback
+        return this
     }
 
     @TwineFunction
     fun move(to: LuaVec2Instance, duration: Double, easing: String): LuaUIAnimation {
-        storedEvents.add(
-            MoveEvent(
-                targetId = component.internalId,
-                delay = 0,
-                position = to.toVec2(),
-                durationSeconds = duration,
-                easing = easing
-            )
-        )
-
-        return this
-    }
-
-    @TwineFunction
-    fun size(to: LuaVec2Instance, duration: Double, easing: String): LuaUIAnimation {
-        storedEvents.add(
-            SizeEvent(
-                targetId = component.internalId,
-                delay = 0,
-                size = to.toVec2(),
-                durationSeconds = duration,
-                easing = easing
-            )
-        )
-
-        return this
-    }
-
-    @TwineFunction
-    fun scale(to: LuaVec2Instance, duration: Double, easing: String): LuaUIAnimation {
-        storedEvents.add(
-            ScaleEvent(
-                targetId = component.internalId,
-                delay = 0,
-                scale = to.toVec2(),
-                durationSeconds = duration,
-                easing = easing
-            )
-        )
-
-        return this
-    }
-
-    @TwineFunction
-    fun rotate(to: Int, duration: Double, easing: String): LuaUIAnimation {
-        storedEvents.add(
-            RotateEvent(
-                targetId = component.internalId,
-                delay = 0,
-                rotation = to,
-                durationSeconds = duration,
-                easing = easing
-            )
-        )
-
+        stored.add(Animation(
+            targetId = component.internalId,
+            durationSeconds = duration,
+            easing = easing,
+            getter = { component.props.pos },
+            setter = { component.props.pos = it },
+            to = to.toVec2(),
+            onStart = { onStartCallback?.call<Unit>() },
+            onFinish = { onFinishCallback?.call<Unit>() }
+        ))
         return this
     }
 
     @TwineFunction
     fun opacity(to: Float, duration: Double, easing: String): LuaUIAnimation {
-        storedEvents.add(
-            OpacityEvent(
-                targetId = component.internalId,
-                delay = 0,
-                opacity = to,
-                durationSeconds = duration,
-                easing = easing
-            )
-        )
+        stored.add(Animation(
+            targetId = component.internalId,
+            durationSeconds = duration,
+            easing = easing,
+            getter = { component.props.opacity },
+            setter = { component.props.opacity = it },
+            to = to,
+            onStart = { onStartCallback?.call<Unit>() },
+            onFinish = { onFinishCallback?.call<Unit>() }
+        ))
+        return this
+    }
 
+    @TwineFunction
+    fun size(to: LuaVec2Instance, duration: Double, easing: String): LuaUIAnimation {
+        stored.add(Animation(
+            targetId = component.internalId,
+            durationSeconds = duration,
+            easing = easing,
+            getter = { component.props.size },
+            setter = { component.props.size = it },
+            to = to.toVec2(),
+            onStart = { onStartCallback?.call<Unit>() },
+            onFinish = { onFinishCallback?.call<Unit>() }
+        ))
+        return this
+    }
+
+    @TwineFunction
+    fun scale(to: LuaVec2Instance, duration: Double, easing: String): LuaUIAnimation {
+        stored.add(Animation(
+            targetId = component.internalId,
+            durationSeconds = duration,
+            easing = easing,
+            getter = { component.props.scale },
+            setter = { component.props.scale = it },
+            to = to.toVec2(),
+            onStart = { onStartCallback?.call<Unit>() },
+            onFinish = { onFinishCallback?.call<Unit>() }
+        ))
+        return this
+    }
+
+    @TwineFunction
+    fun rotate(to: Float, duration: Double, easing: String): LuaUIAnimation {
+        stored.add(Animation(
+            targetId = component.internalId,
+            durationSeconds = duration,
+            easing = easing,
+            getter = { component.props.rotation },
+            setter = { component.props.rotation = it },
+            to = to,
+            onStart = { onStartCallback?.call<Unit>() },
+            onFinish = { onFinishCallback?.call<Unit>() }
+        ))
         return this
     }
 
     @TwineFunction
     fun padding(to: LuaSpacingInstance, duration: Double, easing: String): LuaUIAnimation {
-        storedEvents.add(
-            PaddingEvent(
-                targetId = component.internalId,
-                delay = 0,
-                padding = to.toSpacing(),
-                durationSeconds = duration,
-                easing = easing
-            )
-        )
-
+        stored.add(Animation(
+            targetId = component.internalId,
+            durationSeconds = duration,
+            easing = easing,
+            getter = { component.props.padding },
+            setter = { component.props.padding = it },
+            to = to.toSpacing(),
+            onStart = { onStartCallback?.call<Unit>() },
+            onFinish = { onFinishCallback?.call<Unit>() }
+        ))
         return this
     }
 
@@ -129,17 +137,16 @@ class LuaUIAnimation(
     fun progress(to: Float, duration: Double, easing: String): LuaUIAnimation {
         if (component !is ProgressBar)
             invalidComponent("progress", "ProgressBar")
-
-        storedEvents.add(
-            ProgressEvent(
-                targetId = component.internalId,
-                delay = 0,
-                progress = to,
-                durationSeconds = duration,
-                easing = easing
-            )
-        )
-
+        stored.add(Animation(
+            targetId = component.internalId,
+            durationSeconds = duration,
+            easing = easing,
+            getter = { component.props.progress },
+            setter = { component.props.progress = it },
+            to = to,
+            onStart = { onStartCallback?.call<Unit>() },
+            onFinish = { onFinishCallback?.call<Unit>() }
+        ))
         return this
     }
 
@@ -147,17 +154,16 @@ class LuaUIAnimation(
     fun to(to: LuaVec2Instance, duration: Double, easing: String): LuaUIAnimation {
         if (component !is Line)
             invalidComponent("to", "Line")
-
-        storedEvents.add(
-            LineToEvent(
-                targetId = component.internalId,
-                delay = 0,
-                position = to.toVec2(),
-                durationSeconds = duration,
-                easing = easing
-            )
-        )
-
+        stored.add(Animation(
+            targetId = component.internalId,
+            durationSeconds = duration,
+            easing = easing,
+            getter = { component.props.to },
+            setter = { component.props.to = it },
+            to = to.toVec2(),
+            onStart = { onStartCallback?.call<Unit>() },
+            onFinish = { onFinishCallback?.call<Unit>() }
+        ))
         return this
     }
 
@@ -165,17 +171,16 @@ class LuaUIAnimation(
     fun from(to: LuaVec2Instance, duration: Double, easing: String): LuaUIAnimation {
         if (component !is Line)
             invalidComponent("from", "Line")
-
-        storedEvents.add(
-            LineFromEvent(
-                targetId = component.internalId,
-                delay = 0,
-                position = to.toVec2(),
-                durationSeconds = duration,
-                easing = easing
-            )
-        )
-
+        stored.add(Animation(
+            targetId = component.internalId,
+            durationSeconds = duration,
+            easing = easing,
+            getter = { component.props.from },
+            setter = { component.props.from = it },
+            to = to.toVec2(),
+            onStart = { onStartCallback?.call<Unit>() },
+            onFinish = { onFinishCallback?.call<Unit>() }
+        ))
         return this
     }
 }

@@ -1,6 +1,7 @@
-package computer.obscure.piku.mod.fabric.animation
+package computer.obscure.piku.core.animation
 
 data class Animation<T>(
+    val targetId: String = "",
     val durationSeconds: Double,
     val easing: String,
     val to: T,

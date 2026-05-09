@@ -1,22 +1,18 @@
 package computer.obscure.piku.mod.fabric.ui
 
 import com.mojang.blaze3d.platform.NativeImage
+import computer.obscure.piku.core.animation.Animation
+import computer.obscure.piku.core.animation.AnimationManager
 import computer.obscure.piku.core.classes.Vec2
 import computer.obscure.piku.core.service.PikuService
 import computer.obscure.piku.core.ui.Anchor
-import computer.obscure.piku.core.ui.UIEventQueue
 import computer.obscure.piku.core.ui.UIWindow
 import computer.obscure.piku.core.ui.classes.DirtyFlag
 import computer.obscure.piku.core.ui.classes.FlowDirection
 import computer.obscure.piku.core.ui.classes.RelativePosition
-import computer.obscure.piku.core.ui.classes.Spacing
 import computer.obscure.piku.core.ui.components.*
-import computer.obscure.piku.core.ui.events.*
-import computer.obscure.piku.mod.fabric.animation.AnimationUtil
-import computer.obscure.piku.mod.fabric.animation.AnimationUtil.lerp
 import computer.obscure.piku.mod.fabric.scripting.api.ui.LuaEasingInstance
 import computer.obscure.piku.mod.fabric.ui.components.*
-import computer.obscure.piku.mod.fabric.ui.events.*
 import computer.obscure.twine.LuaCallback
 import net.kyori.adventure.platform.modcommon.MinecraftClientAudiences
 import net.minecraft.client.Minecraft
@@ -27,30 +23,9 @@ import org.joml.Matrix3x2f
 
 object UIRenderer : PikuService {
     val currentWindow: UIWindow = UIWindow("main")
-
-    var activeAnimations = mutableListOf<PropertyAnimation<*, *>>()
     val registeredEasings = mutableMapOf<String, LuaCallback>()
 
     var debugEnabled: Boolean = false
-
-    val eventDispatcher = UIEventDispatcher(
-        handlers = mapOf(
-            MoveEvent::class.java to MoveEventHandler(),
-            OpacityEvent::class.java to OpacityEventHandler(),
-            DestroyEvent::class.java to DestroyEventHandler(),
-            RotateEvent::class.java to RotateEventHandler(),
-            PaddingEvent::class.java to PaddingEventHandler(),
-            ProgressEvent::class.java to ProgressEventHandler(),
-            SizeEvent::class.java to SizeEventHandler(),
-            ScaleEvent::class.java to ScaleEventHandler(),
-            LineToEvent::class.java to LineToEventHandler(),
-            LineFromEvent::class.java to LineFromEventHandler()
-        ),
-        context = UIEventContext(
-            currentWindow = { currentWindow },
-            enqueueAnimation = { anim -> enqueueAnimation(anim) }
-        )
-    )
 
     val componentRenderer = UIComponentRenderer(
         handlers = mapOf(
@@ -67,17 +42,20 @@ object UIRenderer : PikuService {
 
     override fun shutdown() {
         debugEnabled = false
-        activeAnimations.clear()
         registeredEasings.clear()
         currentWindow.components.clear()
     }
 
-    fun cancelAnimations() {
-        activeAnimations.clear()
+    fun allComponents(): List<Component> {
+        return currentWindow.components.values.flatMap { flattenComponent(it) }
     }
 
-    fun animations(): List<PropertyAnimation<*, *>> {
-        return activeAnimations
+    private fun flattenComponent(component: Component): List<Component> {
+        return when (component) {
+            is Group -> listOf(component) + component.props.components.flatMap { flattenComponent(it) }
+            is FlowContainer -> listOf(component) + component.props.components.flatMap { flattenComponent(it) }
+            else -> listOf(component)
+        }
     }
 
     fun registerEasing(easing: LuaEasingInstance) {
@@ -143,80 +121,6 @@ object UIRenderer : PikuService {
     fun drawComponent(context: GuiGraphics, component: Component) {
         if (!component.props.visible) return
         component.draw(context)
-    }
-
-    /**
-     * Handles the first render or a re-render of a UI.
-     */
-//    fun handleFreshRender(window: UIWindow) {
-//        setWindow(window)
-//    }
-
-    /**
-     * Handles UI updates for an already rendered UI.
-     * Handles animations.
-     */
-    fun handleUpdateRender() {
-        UIEventQueue.tick().forEach { event ->
-            eventDispatcher.applyEvent(event)
-        }
-    }
-
-    fun <C : Component, T> enqueueAnimation(event: PropertyAnimation<C, T>) {
-        val comp = currentWindow.getComponentByIdDeep(event.targetId) ?: return
-        event.target = comp as C
-
-        if (event.from == null) {
-            event.from = (event.getter as (Component) -> T)(comp)
-        }
-
-        activeAnimations += event
-    }
-
-    fun tickAnimations(deltaSeconds: Double) {
-        val iterator = activeAnimations.iterator()
-        while (iterator.hasNext()) {
-            val anim = iterator.next()
-
-            val comp = anim.target ?: continue
-            anim.elapsed += deltaSeconds
-
-            val t = (anim.elapsed / anim.durationSeconds).coerceIn(0.0, 1.0)
-
-            val easedT = AnimationUtil.resolveEasing(anim.easing, t, registeredEasings)
-
-            @Suppress("UNCHECKED_CAST")
-            val typedGetter = anim.getter as (Component) -> Any?
-            @Suppress("UNCHECKED_CAST")
-            val typedSetter = anim.setter as (Component, Any?) -> Unit
-
-            val start = anim.from ?: typedGetter(comp)
-            val end = anim.to
-
-            // Get the result no matter what data type it may be
-            val result = when (start) {
-                is Float -> lerp(start, end as Float, easedT)
-                is Int -> lerp(start.toFloat(), (end as Int).toFloat(), easedT).toInt()
-                is Vec2 -> Vec2(
-                    lerp(start.x, (end as Vec2).x, easedT),
-                    lerp(start.y, end.y, easedT)
-                )
-                is Spacing -> {
-                    val target = anim.to as Spacing
-                    Spacing(
-                        left = lerp(start.left, target.left, easedT),
-                        top = lerp(start.top, target.top, easedT),
-                        right = lerp(start.right, target.right, easedT),
-                        bottom = lerp(start.bottom, target.bottom, easedT)
-                    )
-                }
-
-                else -> end
-            }
-
-            typedSetter(comp, result)
-            if (t >= 1.0) iterator.remove()
-        }
     }
 
     /**
@@ -295,8 +199,13 @@ object UIRenderer : PikuService {
             }
             is FlowContainer -> {
                 val props = component.props
+                val oldPositions = component.props.components.associate {
+                    it.internalId to Pair(it.screenX, it.screenY)
+                }
+
                 val isVertical = props.direction == FlowDirection.VERTICAL
                 val isReverse = props.reversed
+
 
                 var offsetX = if (isReverse && !isVertical)
                     props.size.x - props.padding.right
@@ -339,6 +248,27 @@ object UIRenderer : PikuService {
                     if (props.direction == FlowDirection.VERTICAL)
                         offsetY + props.padding.bottom else component.height()
                 )
+
+                component.props.components.forEach { child ->
+                    val old = oldPositions[child.internalId] ?: return@forEach
+                    if (old.first == 0 && old.second == 0) return@forEach  // skip first layout
+                    if (old.first == child.screenX && old.second == child.screenY) return@forEach  // didn't move
+
+                    val transition = child.props.transition ?: return@forEach
+
+                    val deltaX = (old.first - child.screenX).toDouble()
+                    val deltaY = (old.second - child.screenY).toDouble()
+
+//                    AnimationManager.cancelFor(child.internalId)
+                    AnimationManager.animate(Animation(
+                        targetId = child.internalId,
+                        durationSeconds = transition.duration,
+                        easing = transition.easing,
+                        getter = { child.props.pos },
+                        setter = { child.props.pos = it },
+                        to = Vec2(child.props.pos.x, child.props.pos.y)
+                    ).also { it.from = Vec2(child.props.pos.x + deltaX, child.props.pos.y + deltaY) })
+                }
             }
 
             else -> {}
@@ -367,7 +297,8 @@ object UIRenderer : PikuService {
         context.pose().translate(component.screenX.toFloat(), component.screenY.toFloat())
         context.pose().translate(pivotX.toFloat(), pivotY.toFloat())
         context.pose().scale(scale.x.toFloat(), scale.y.toFloat())
-        context.pose().mul(Matrix3x2f().rotation(rotation.toFloat()))
+        // use radians for rotation, converted from the degree rotation
+        context.pose().mul(Matrix3x2f().rotation(Math.toRadians(rotation.toDouble()).toFloat()))
         context.pose().translate(-pivotX.toFloat(), -pivotY.toFloat())
     }
 

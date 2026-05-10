@@ -13,6 +13,7 @@ import computer.obscure.twine.TwineLogger
 import computer.obscure.twine.TwineNative
 import computer.obscure.twine.annotations.TwineFunction
 import computer.obscure.twine.annotations.TwineProperty
+import net.fabricmc.loader.api.FabricLoader
 import net.minecraft.client.CameraType
 import net.minecraft.client.Minecraft
 import net.minecraft.client.resources.sounds.SimpleSoundInstance
@@ -281,4 +282,9 @@ class LuaClient : TwineNative("client") {
         set(value) {
             Client.bobbingStrength = value
         }
+
+    @TwineFunction
+    fun hasMod(modId: String): Boolean {
+        return FabricLoader.getInstance().isModLoaded(modId)
+    }
 }

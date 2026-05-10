@@ -6,6 +6,7 @@ import computer.obscure.piku.mod.fabric.events.ClientTick
 import computer.obscure.piku.mod.fabric.packets.CustomPacket
 import computer.obscure.piku.mod.fabric.packets.clientbound.ReceiveDataPacket
 import computer.obscure.piku.mod.fabric.packets.clientbound.ReceiveScriptPacket
+import computer.obscure.piku.mod.fabric.packets.clientbound.ReceiveStatePacket
 import computer.obscure.piku.mod.fabric.packets.clientbound.UnloadScriptsPacket
 import computer.obscure.piku.mod.fabric.packets.serverbound.SendDataPacket
 import computer.obscure.piku.mod.fabric.packets.serverbound.SendStatePacket
@@ -62,6 +63,7 @@ class PikuClient : ClientModInitializer {
 
         s2c(ReceiveDataPacket.TYPE, ReceiveDataPacket.STREAM_CODEC)
         s2c(ReceiveScriptPacket.TYPE, ReceiveScriptPacket.STREAM_CODEC)
+        s2c(ReceiveStatePacket.TYPE, ReceiveStatePacket.STREAM_CODEC)
         s2c(UnloadScriptsPacket.TYPE, UnloadScriptsPacket.STREAM_CODEC)
 
         c2s(SendDataPacket.TYPE, SendDataPacket.STREAM_CODEC)

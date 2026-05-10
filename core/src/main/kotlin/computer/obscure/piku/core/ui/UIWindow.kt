@@ -1,5 +1,6 @@
 package computer.obscure.piku.core.ui
 import computer.obscure.piku.core.ui.components.Component
+import computer.obscure.piku.core.ui.components.FlowContainer
 import computer.obscure.piku.core.ui.components.Group
 
 class UIWindow(val id: String) {
@@ -11,14 +12,14 @@ class UIWindow(val id: String) {
 
     fun registerRecursive(component: Component) {
         idCache[component.internalId] = component
-        if (component is Group) {
+        if (component is Group || component is FlowContainer) {
             component.props.components.forEach { registerRecursive(it) }
         }
     }
 
     fun unregisterRecursive(id: String) {
         val comp = idCache.remove(id)
-        if (comp is Group) {
+        if (comp is Group || comp is FlowContainer) {
             comp.props.components.forEach { unregisterRecursive(it.internalId) }
         }
     }
@@ -42,7 +43,7 @@ class UIWindow(val id: String) {
         fun search(list: List<Component>): Component? {
             for (c in list) {
                 if (c.internalId == id) return c
-                if (c is Group) {
+                if (c is Group || c is FlowContainer) {
                     search(c.props.components)?.let { return it }
                 }
             }

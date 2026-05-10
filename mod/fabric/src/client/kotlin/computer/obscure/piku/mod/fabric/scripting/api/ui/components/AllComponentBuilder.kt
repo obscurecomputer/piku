@@ -27,6 +27,7 @@ open class AllComponentBuilder(
 
     private fun <T : Component> setup(newComponent: T, name: String): T {
         newComponent.name = name
+        newComponent.parent = component
         component.props.components.add(newComponent)
         UIRenderer.currentWindow.registerRecursive(newComponent)
         return newComponent

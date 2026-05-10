@@ -11,6 +11,7 @@ import computer.obscure.piku.core.scripting.api.LuaVec2Instance
 import computer.obscure.piku.core.scripting.engine.EngineError
 import computer.obscure.piku.core.scripting.engine.EngineErrorCode
 import computer.obscure.piku.core.ui.Anchor
+import computer.obscure.piku.core.ui.classes.DirtyFlag
 import computer.obscure.piku.core.ui.classes.RelativePosition
 import computer.obscure.piku.core.ui.components.*
 import computer.obscure.piku.core.ui.components.props.TransitionProps
@@ -207,16 +208,17 @@ open class LuaUIComponent(open val component: Component) : TwineNative() {
 
     @TwineFunction
     fun remove() {
-        // try root window first
-        if (UIRenderer.currentWindow.components.remove(this.component.internalId) != null) return
+        val parent = component.parent
 
-        // otherwise search through all containers
-        UIRenderer.allComponents().forEach { parent ->
-            when (parent) {
-                is Group -> parent.props.components.removeIf { it.internalId == component.internalId }
-                is FlowContainer -> parent.props.components.removeIf { it.internalId == component.internalId }
-                else -> {}
-            }
+        // MUST be marked dirty in order for the component
+        // to stop rendering
+        parent?.props?.mark(DirtyFlag.LAYOUT)
+
+        when (parent) {
+            is Group -> parent.props.components.remove(component)
+            is FlowContainer -> parent.props.components.remove(component)
+            null -> UIRenderer.currentWindow.components.remove(component.internalId)
+            else -> {}
         }
 
         UIRenderer.currentWindow.unregisterRecursive(component.internalId)

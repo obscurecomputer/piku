@@ -7,6 +7,8 @@ import computer.obscure.piku.core.ui.components.props.BaseProps
 import java.util.*
 
 sealed class Component {
+    var parent: Component? = null
+
     var name: String = ""
     val internalId: String = UUID.randomUUID().toString()
     var relativeTo: String? = null

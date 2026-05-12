@@ -16,24 +16,25 @@ class LuaClientCameraAnimation : LuaAnimatable() {
         easing: String,
         onFinish: LuaCallback? = null
     ): LuaClientCameraAnimation {
-        queue.add(
+        val anim =
             Animation(
                 targetId = "client_fov",
                 durationSeconds = duration,
                 easing = easing,
                 to = to,
-                getter = { Client.currentFov },
-                setter = { Client.currentFov = it },
-                onStart = { Client.fovControlled = true },
+                getter = { Client.vanillaFov },
+                setter = { Client.animatedFov = it },
+                onStart = {
+                    Client.fovControlled = true
+                },
                 onFinish = {
                     Client.fovControlled = false
-                    Client.currentFov = to
-                    Client.targetFov = to
+                    Client.animatedFov = to
                     if (!PikuClient.engine!!.twine.closed)
                         onFinish?.invoke()
                 }
             )
-        )
+        queue.add(anim)
         return this
     }
 

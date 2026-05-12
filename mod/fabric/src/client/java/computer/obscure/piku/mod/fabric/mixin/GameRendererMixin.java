@@ -25,17 +25,17 @@ public class GameRendererMixin {
 
     @Inject(method = "getFov", at = @At("RETURN"), cancellable = true)
     void onGetFov(Camera camera, float tickDelta, boolean changingFov, CallbackInfoReturnable<Float> ci) {
-        float vanillaFov = ci.getReturnValue();
 
-        // the anim system isn't touching the fov so
-        // grant full control back to vanilla/other mods
-        if (!Client.lockFov && !Client.fovControlled) {
-            Client.currentFov = vanillaFov;
-            return;
-        }
         if (!changingFov) return;
 
-        ci.setReturnValue(Client.currentFov);
+        Client.vanillaFov = ci.getReturnValue();
+
+        boolean controlled = Client.fovControlled;
+        float animated = Client.animatedFov;
+
+        if (controlled) {
+            ci.setReturnValue(animated);
+        }
     }
 
     @Inject(method = "bobHurt", at = @At("HEAD"))

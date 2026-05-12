@@ -15,6 +15,10 @@ object Client {
     @JvmField
     var currentFov: Float = Minecraft.getInstance().options.fov().get().toFloat()
     @JvmField
+    var animatedFov: Float = -1f
+    @JvmField
+    var vanillaFov: Float = -1f
+    @JvmField
     var lockFov: Boolean = false
     @JvmField
     var isInterpolatingFov: Boolean = false

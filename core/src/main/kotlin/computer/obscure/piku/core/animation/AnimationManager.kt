@@ -6,8 +6,8 @@ import computer.obscure.piku.core.service.PikuService
 import computer.obscure.piku.core.ui.classes.Spacing
 
 object AnimationManager : PikuService {
-    private val animations: MutableList<Animation<*>> = mutableListOf()
-    private val pending: MutableList<Animation<*>> = mutableListOf()
+    private val animations: MutableList<Animation<Any>> = mutableListOf()
+    private val pending: MutableList<Animation<Any>> = mutableListOf()
 
     var easingResolver: (String, Double) -> Double = { _, t -> t }
 
@@ -29,8 +29,8 @@ object AnimationManager : PikuService {
     }
 
     fun <T> animate(anim: Animation<T>) {
-        if (anim.from == null) anim.from = anim.getter()
-        pending += anim
+        @Suppress("UNCHECKED_CAST")
+        pending += anim as Animation<Any>
     }
 
     fun tick(deltaSeconds: Double) {
@@ -43,13 +43,15 @@ object AnimationManager : PikuService {
             if (!anim.started) {
                 anim.started = true
                 anim.onStart()
+                if (anim.from == null)
+                    anim.from = anim.getter()
             }
             anim.elapsed = (anim.elapsed + deltaSeconds).coerceAtMost(anim.durationSeconds)
 
             val t = anim.elapsed / anim.durationSeconds
             val eased = easingResolver(anim.easing, t)
-            val from = anim.from as Any
-            val to = anim.to as Any
+            val from = anim.from
+            val to = anim.to
 
             val value = when (from) {
                 is Float -> AnimationUtil.lerp(from, to as Float, eased)

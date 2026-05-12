@@ -1,7 +1,6 @@
 package computer.obscure.piku.mod.fabric.scripting.api.ui
 
 import computer.obscure.piku.core.animation.Animation
-import computer.obscure.piku.core.animation.AnimationManager
 import computer.obscure.piku.core.scripting.api.LuaSpacingInstance
 import computer.obscure.piku.core.scripting.api.LuaVec2Instance
 import computer.obscure.piku.core.scripting.engine.EngineError
@@ -9,12 +8,11 @@ import computer.obscure.piku.core.scripting.engine.EngineErrorCode
 import computer.obscure.piku.core.ui.components.Component
 import computer.obscure.piku.core.ui.components.Line
 import computer.obscure.piku.core.ui.components.ProgressBar
+import computer.obscure.piku.mod.fabric.scripting.api.animation.LuaAnimatable
 import computer.obscure.twine.LuaCallback
 import computer.obscure.twine.annotations.TwineFunction
-import computer.obscure.twine.TwineNative
 
-class LuaUIAnimation(val component: Component) : TwineNative() {
-    val stored: MutableList<Animation<*>> = mutableListOf()
+class LuaUIAnimation(val component: Component) : LuaAnimatable() {
     private var onStartCallback: LuaCallback? = null
     private var onFinishCallback: LuaCallback? = null
 
@@ -24,11 +22,6 @@ class LuaUIAnimation(val component: Component) : TwineNative() {
             "$function() is only supported on $expected components " +
                     "(got ${component.javaClass.simpleName}, id=${component.internalId})"
         )
-    }
-
-    @TwineFunction
-    fun play() {
-        stored.forEach { AnimationManager.animate(it) }
     }
 
     @TwineFunction
@@ -45,7 +38,7 @@ class LuaUIAnimation(val component: Component) : TwineNative() {
 
     @TwineFunction
     fun move(to: LuaVec2Instance, duration: Double, easing: String): LuaUIAnimation {
-        stored.add(Animation(
+        queue.add(Animation(
             targetId = component.internalId,
             durationSeconds = duration,
             easing = easing,
@@ -60,7 +53,7 @@ class LuaUIAnimation(val component: Component) : TwineNative() {
 
     @TwineFunction
     fun opacity(to: Float, duration: Double, easing: String): LuaUIAnimation {
-        stored.add(Animation(
+        queue.add(Animation(
             targetId = component.internalId,
             durationSeconds = duration,
             easing = easing,
@@ -75,7 +68,7 @@ class LuaUIAnimation(val component: Component) : TwineNative() {
 
     @TwineFunction
     fun size(to: LuaVec2Instance, duration: Double, easing: String): LuaUIAnimation {
-        stored.add(Animation(
+        queue.add(Animation(
             targetId = component.internalId,
             durationSeconds = duration,
             easing = easing,
@@ -90,7 +83,7 @@ class LuaUIAnimation(val component: Component) : TwineNative() {
 
     @TwineFunction
     fun scale(to: LuaVec2Instance, duration: Double, easing: String): LuaUIAnimation {
-        stored.add(Animation(
+        queue.add(Animation(
             targetId = component.internalId,
             durationSeconds = duration,
             easing = easing,
@@ -105,7 +98,7 @@ class LuaUIAnimation(val component: Component) : TwineNative() {
 
     @TwineFunction
     fun rotate(to: Float, duration: Double, easing: String): LuaUIAnimation {
-        stored.add(Animation(
+        queue.add(Animation(
             targetId = component.internalId,
             durationSeconds = duration,
             easing = easing,
@@ -120,7 +113,7 @@ class LuaUIAnimation(val component: Component) : TwineNative() {
 
     @TwineFunction
     fun padding(to: LuaSpacingInstance, duration: Double, easing: String): LuaUIAnimation {
-        stored.add(Animation(
+        queue.add(Animation(
             targetId = component.internalId,
             durationSeconds = duration,
             easing = easing,
@@ -137,7 +130,7 @@ class LuaUIAnimation(val component: Component) : TwineNative() {
     fun progress(to: Float, duration: Double, easing: String): LuaUIAnimation {
         if (component !is ProgressBar)
             invalidComponent("progress", "ProgressBar")
-        stored.add(Animation(
+        queue.add(Animation(
             targetId = component.internalId,
             durationSeconds = duration,
             easing = easing,
@@ -154,7 +147,7 @@ class LuaUIAnimation(val component: Component) : TwineNative() {
     fun to(to: LuaVec2Instance, duration: Double, easing: String): LuaUIAnimation {
         if (component !is Line)
             invalidComponent("to", "Line")
-        stored.add(Animation(
+        queue.add(Animation(
             targetId = component.internalId,
             durationSeconds = duration,
             easing = easing,
@@ -171,7 +164,7 @@ class LuaUIAnimation(val component: Component) : TwineNative() {
     fun from(to: LuaVec2Instance, duration: Double, easing: String): LuaUIAnimation {
         if (component !is Line)
             invalidComponent("from", "Line")
-        stored.add(Animation(
+        queue.add(Animation(
             targetId = component.internalId,
             durationSeconds = duration,
             easing = easing,

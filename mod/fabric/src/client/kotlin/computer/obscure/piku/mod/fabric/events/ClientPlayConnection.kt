@@ -55,12 +55,12 @@ object ClientPlayConnection {
         Client.apply {
             rotation = Vec3.ZERO
             targetFov = -1f
-            currentFov = Minecraft.getInstance().options.fov().get()
+            currentFov = Minecraft.getInstance().options.fov().get().toFloat()
             lockFov = false
             isInterpolatingFov = false
             fovAnimTicks = 5
             animateFov = false
-            previousFov = -1f
+            previousFov = -1
             fovTicksRemaining = 0
 
             cameraOffsetX = 0f

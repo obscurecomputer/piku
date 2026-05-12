@@ -2,6 +2,7 @@ package computer.obscure.piku.mod.fabric.mixin;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import computer.obscure.piku.mod.fabric.Client;
+import net.minecraft.client.Camera;
 import net.minecraft.client.renderer.GameRenderer;
 import org.joml.Quaternionf;
 import org.spongepowered.asm.mixin.Mixin;
@@ -9,6 +10,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(value = GameRenderer.class, remap = false)
 public class GameRendererMixin {
@@ -19,6 +21,21 @@ public class GameRendererMixin {
     )
     private float applyCustomBobStrength(float h) {
         return h * Client.bobbingStrength;
+    }
+
+    @Inject(method = "getFov", at = @At("RETURN"), cancellable = true)
+    void onGetFov(Camera camera, float tickDelta, boolean changingFov, CallbackInfoReturnable<Float> ci) {
+        float vanillaFov = ci.getReturnValue();
+
+        // the anim system isn't touching the fov so
+        // grant full control back to vanilla/other mods
+        if (!Client.lockFov && !Client.fovControlled) {
+            Client.currentFov = vanillaFov;
+            return;
+        }
+        if (!changingFov) return;
+
+        ci.setReturnValue(Client.currentFov);
     }
 
     @Inject(method = "bobHurt", at = @At("HEAD"))

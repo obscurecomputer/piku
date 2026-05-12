@@ -13,17 +13,20 @@ object Client {
     @JvmField
     var targetFov: Float = -1f
     @JvmField
-    var currentFov: Int = Minecraft.getInstance().options.fov().get()
+    var currentFov: Float = Minecraft.getInstance().options.fov().get().toFloat()
     @JvmField
     var lockFov: Boolean = false
     @JvmField
     var isInterpolatingFov: Boolean = false
     @JvmField
+    // true = animation system owns currentFov
+    var fovControlled: Boolean = false
+    @JvmField
     var fovAnimTicks: Int = 5
     @JvmField
     var animateFov: Boolean = false
     @JvmField
-    var previousFov: Float = -1f
+    var previousFov: Int = -1
     @JvmField
     var fovTicksRemaining: Int = 0
 
@@ -48,12 +51,6 @@ object Client {
 
     @JvmField
     var perspectiveLocked: Boolean = false
-    var currentPerspective: CameraType
-        get() = Minecraft.getInstance().options.cameraType
-        set(value) {
-            Minecraft.getInstance().options.cameraType = value
-        }
-
     @JvmField
     var connectedToServer: Boolean = false
     @JvmField

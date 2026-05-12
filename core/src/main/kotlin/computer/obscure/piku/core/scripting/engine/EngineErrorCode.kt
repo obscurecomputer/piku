@@ -7,5 +7,6 @@ enum class EngineErrorCode {
     INVALID_ANCHOR,
     CAMERA_ACTIVE,
     CAMERA_INACTIVE,
-    GENERIC_ERROR
+    GENERIC_ERROR,
+    INVALID_CALLBACK
 }

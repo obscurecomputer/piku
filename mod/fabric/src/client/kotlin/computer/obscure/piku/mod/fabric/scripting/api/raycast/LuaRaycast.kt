@@ -1,8 +1,9 @@
 package computer.obscure.piku.mod.fabric.scripting.api.raycast
 
 import computer.obscure.piku.core.scripting.api.LuaVec3Instance
+import computer.obscure.piku.core.scripting.engine.EngineError
+import computer.obscure.piku.core.scripting.engine.EngineErrorCode
 import computer.obscure.piku.mod.fabric.raycast.Raycast
-import computer.obscure.piku.mod.fabric.scripting.PikuError
 import computer.obscure.piku.mod.fabric.scripting.api.LuaEntity
 import computer.obscure.piku.mod.fabric.scripting.api.util.minecraft.toMCVec3
 import computer.obscure.twine.LuaCallback
@@ -56,9 +57,15 @@ class LuaRaycastBuilder : TwineNative() {
     fun entityFilter(value: LuaCallback): LuaRaycastBuilder {
         this.entityFilter = { entity ->
             val results = value.call(LuaEntity(entity))
-            if (results.size != 1) throw PikuError("entityFilter return size should be 1")
+            if (results.size != 1) throw EngineError(
+                EngineErrorCode.INVALID_CALLBACK,
+                "entityFilter return size should be 1"
+            )
             val result = results.first()!!
-            if (result !is Boolean) throw PikuError("entityFilter should return a boolean")
+            if (result !is Boolean) throw EngineError(
+                EngineErrorCode.INVALID_CALLBACK,
+                "entityFilter should return a boolean"
+            )
             result
         }
         return this

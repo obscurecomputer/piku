@@ -74,6 +74,4 @@ object Client {
     @JvmField
     var bobbingStrength: Float = 0f
 
-    @JvmField
-    var menuConfigs: MenuConfigs = MenuConfigs()
 }

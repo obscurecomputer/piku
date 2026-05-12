@@ -25,13 +25,13 @@ Tasks labeled here may not be worked on in chronological order.
 - [x] Camera System
   - [x] Movement/rotation + easing
   - [x] All 3 axes of rotation
-- [ ] World Interaction
-  - [ ] Raycasts
-  - [ ] Querying blocks/entities on the client
+- [x] World Interaction
+  - [x] Raycasts
+  - [x] Querying blocks/entities on the client
 - [ ] Client Control
   - [ ] Lock/manipulate/animate FOV
   - [x] Disable/Enable bobbing
-  - [ ] Changeable bobbing strength
+  - [x] Changeable bobbing strength
   - [x] Querying keybinds on the client
 - [ ] Player control
   - [ ] Disabling view of client or other players' limbs/armor

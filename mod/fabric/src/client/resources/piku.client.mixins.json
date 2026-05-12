@@ -10,8 +10,6 @@
     "InGameHudMixin",
     "MinecraftClientMixin",
     "MouseMixin",
-    "PauseScreenMixin",
-    "ScreenAccessor",
     "ScreenshotMixin"
   ],
   "injectors": {

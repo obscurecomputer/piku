@@ -35,6 +35,14 @@ class LuaVec2Instance(
         get() = y
         set(value) { y = value }
 
+    @TwineFunction
+    fun set(x: Double, y: Double): LuaVec2Instance {
+        return apply {
+            this.x = x
+            this.y = y
+        }
+    }
+
     fun toVec2(): Vec2 {
         return Vec2(x = x, y = y)
     }

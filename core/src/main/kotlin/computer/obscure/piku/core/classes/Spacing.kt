@@ -1,4 +1,4 @@
-package computer.obscure.piku.core.ui.classes
+package computer.obscure.piku.core.classes
 
 class Spacing(
     var left: Double = 0.0,
@@ -7,4 +7,9 @@ class Spacing(
     var bottom: Double = 0.0
 ) {
     constructor(all: Double) : this(all, all, all, all)
+
+    companion object {
+        val ZERO = Spacing(0.0)
+        val ONE = Spacing(1.0,)
+    }
 }

@@ -1,7 +1,6 @@
 package computer.obscure.piku.mod.fabric.scripting.engine
 
 import computer.obscure.piku.core.scripting.engine.LuaEngine
-import computer.obscure.piku.core.ui.Anchor
 import computer.obscure.piku.mod.fabric.PikuClient
 import computer.obscure.piku.mod.fabric.scripting.LuaStateManager
 import computer.obscure.piku.mod.fabric.scripting.api.LuaClient
@@ -12,7 +11,6 @@ import computer.obscure.piku.mod.fabric.scripting.api.LuaLevel
 import computer.obscure.piku.mod.fabric.scripting.api.LuaScreens
 import computer.obscure.piku.mod.fabric.scripting.api.LuaWidgets
 import computer.obscure.piku.mod.fabric.scripting.api.raycast.LuaRaycast
-import computer.obscure.piku.mod.fabric.scripting.api.ui.LuaEasing
 import computer.obscure.twine.TwineEnum.Companion.toTwineEnum
 
 class ClientLuaEngine : LuaEngine() {
@@ -33,8 +31,8 @@ class ClientLuaEngine : LuaEngine() {
 
         register(LuaGame())
         register(LuaClient())
-        register(Anchor::class.toTwineEnum())
-        register(LuaEasing())
+//        register(Anchor::class.toTwineEnum())
+//        register(LuaEasing())
         register(LuaStateManager())
         register(LuaScreens())
         register(LuaWidgets())

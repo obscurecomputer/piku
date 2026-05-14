@@ -3,7 +3,7 @@ package computer.obscure.piku.mod.fabric.mixin;
 import computer.obscure.piku.core.scripting.api.LuaVec2Instance;
 import computer.obscure.piku.mod.fabric.PikuClient;
 import computer.obscure.piku.mod.fabric.scripting.api.screen.LuaScreenButtons;
-import computer.obscure.piku.mod.fabric.ui.UIRenderer;
+//import computer.obscure.piku.mod.fabric.ui.UIRenderer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.dialog.MultiButtonDialogScreen;
@@ -26,8 +26,8 @@ public abstract class MinecraftClientMixin {
 
     @Inject(method = "resizeDisplay", at = @At("TAIL"))
     private void onResolutionChanged(CallbackInfo ci) {
-        if (this.isMultiplayerServer())
-            UIRenderer.INSTANCE.onWindowResized();
+//        if (this.isMultiplayerServer())
+//            UIRenderer.INSTANCE.onWindowResized();
     }
 
     @Inject(method = "setScreen", at = @At("HEAD"))

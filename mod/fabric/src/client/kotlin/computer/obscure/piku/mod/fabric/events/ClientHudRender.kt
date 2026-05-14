@@ -1,8 +1,6 @@
 package computer.obscure.piku.mod.fabric.events
 
-import computer.obscure.piku.mod.fabric.PikuClient
 import computer.obscure.piku.core.animation.AnimationManager
-import computer.obscure.piku.mod.fabric.ui.UIRenderer
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback
 
 object ClientHudRender {
@@ -15,25 +13,6 @@ object ClientHudRender {
             lastTimeNano = currentTime
 
             AnimationManager.tick(deltaSeconds)
-
-            UIRenderer.currentWindow.let { window ->
-                UIRenderer.layoutIfNeeded(window)
-
-                val sorted = window.components.values.toList().sortedBy {
-                    it.props.zIndex
-                }
-                sorted.forEach {
-                    UIRenderer.drawComponent(context, it)
-                }
-
-                val event = mapOf(
-                    "rendered_components" to sorted.size,
-                    "last_frame_delta" to deltaSeconds,
-                    "current_time" to currentTime,
-                    "active_animations" to AnimationManager.animations().size
-                )
-                PikuClient.engine!!.events.fire("client.ui_render", event)
-            }
         }
     }
 }

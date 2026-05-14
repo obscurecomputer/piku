@@ -1,4 +1,4 @@
-package computer.obscure.piku.core.ui.classes
+package computer.obscure.piku.core.classes
 
 import kotlin.math.*
 

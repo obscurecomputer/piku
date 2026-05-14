@@ -1,9 +1,9 @@
 package computer.obscure.piku.core.animation
 
+import computer.obscure.piku.core.classes.Spacing
 import computer.obscure.piku.core.classes.Vec2
 import computer.obscure.piku.core.classes.Vec3
 import computer.obscure.piku.core.service.PikuService
-import computer.obscure.piku.core.ui.classes.Spacing
 
 object AnimationManager : PikuService {
     private val animations: MutableList<Animation<Any>> = mutableListOf()

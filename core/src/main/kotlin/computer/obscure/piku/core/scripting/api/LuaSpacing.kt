@@ -1,6 +1,6 @@
 package computer.obscure.piku.core.scripting.api
 
-import computer.obscure.piku.core.ui.classes.Spacing
+import computer.obscure.piku.core.classes.Spacing
 import computer.obscure.twine.annotations.TwineFunction
 import computer.obscure.twine.annotations.TwineProperty
 import computer.obscure.twine.TwineNative

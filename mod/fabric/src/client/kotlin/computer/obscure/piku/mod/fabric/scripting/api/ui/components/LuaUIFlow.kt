@@ -6,7 +6,6 @@ import computer.obscure.piku.core.ui.classes.FlowDirection
 import computer.obscure.piku.core.ui.components.FlowContainer
 import computer.obscure.piku.mod.fabric.scripting.api.ui.LuaUI
 import computer.obscure.twine.annotations.TwineFunction
-import computer.obscure.twine.annotations.TwineProperty
 
 class LuaUIFlow(
     val flowComponent: FlowContainer
@@ -23,16 +22,11 @@ class LuaUIFlow(
         return flowComponent.props.components.any { it.name == name }
     }
 
-    @TwineProperty
-    var backgroundColor: LuaColorInstance?
-        get() {
-            if (flowComponent.props.backgroundColor == null) return null
-            return LuaColor.fromUIColor(flowComponent.props.backgroundColor!!)
-        }
-        set(value) {
-            if (value == null) return
-            flowComponent.props.backgroundColor = value.toUIColor()
-        }
+    @TwineFunction
+    fun backgroundColor(): LuaColorInstance? {
+        if (flowComponent.props.backgroundColor == null) return null
+        return LuaColor.fromUIColor(flowComponent.props.backgroundColor!!)
+    }
 
     @TwineFunction
     fun backgroundColor(value: LuaColorInstance): LuaUIFlow {

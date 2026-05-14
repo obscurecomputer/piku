@@ -21,16 +21,11 @@ class LuaUIGroup(
         return component.props.components.any { it.name == name }
     }
 
-    @TwineProperty
-    var backgroundColor: LuaColorInstance?
-        get() {
-            if (component.props.backgroundColor == null) return null
-            return LuaColor.fromUIColor(component.props.backgroundColor!!)
-        }
-        set(value) {
-            if (value == null) return
-            component.props.backgroundColor = value.toUIColor()
-        }
+    @TwineFunction
+    fun backgroundColor(): LuaColorInstance? {
+        if (component.props.backgroundColor == null) return null
+        return LuaColor.fromUIColor(component.props.backgroundColor!!)
+    }
 
     @TwineFunction
     fun backgroundColor(value: LuaColorInstance): LuaUIComponent {

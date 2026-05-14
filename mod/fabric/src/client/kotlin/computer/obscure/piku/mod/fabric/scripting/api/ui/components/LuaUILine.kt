@@ -6,17 +6,12 @@ import computer.obscure.piku.core.scripting.api.LuaVec2
 import computer.obscure.piku.core.scripting.api.LuaVec2Instance
 import computer.obscure.piku.core.ui.components.Line
 import computer.obscure.twine.annotations.TwineFunction
-import computer.obscure.twine.annotations.TwineProperty
 
 class LuaUILine (
     override val component: Line
 ) : LuaUIComponent(component) {
-    @TwineProperty
-    var to: LuaVec2Instance
-        get() = LuaVec2.fromVec2(component.props.to)
-        set(value) {
-            component.props.to = value.toVec2()
-        }
+    @TwineFunction
+    fun to(): LuaVec2Instance = LuaVec2.fromVec2(component.props.to)
 
     @TwineFunction
     fun to(value: LuaVec2Instance): LuaUILine {
@@ -24,12 +19,8 @@ class LuaUILine (
         return this
     }
 
-    @TwineProperty
-    var from: LuaVec2Instance
-        get() = LuaVec2.fromVec2(component.props.from)
-        set(value) {
-            component.props.to = value.toVec2()
-        }
+    @TwineFunction
+    fun from(): LuaVec2Instance = LuaVec2.fromVec2(component.props.from)
 
     @TwineFunction
     fun from(value: LuaVec2Instance): LuaUILine {
@@ -37,12 +28,8 @@ class LuaUILine (
         return this
     }
 
-    @TwineProperty
-    var color: LuaColorInstance
-        get() = LuaColor.fromUIColor(component.props.color)
-        set(value) {
-            component.props.color = value.toUIColor()
-        }
+    @TwineFunction
+    fun color(): LuaColorInstance = LuaColor.fromUIColor(component.props.color)
 
     @TwineFunction
     fun color(value: LuaColorInstance): LuaUILine {
@@ -50,12 +37,8 @@ class LuaUILine (
         return this
     }
 
-    @TwineProperty
-    var pointSize: LuaVec2Instance
-        get() = LuaVec2.fromVec2(component.props.pointSize)
-        set(value) {
-            component.props.pointSize = value.toVec2()
-        }
+    @TwineFunction
+    fun pointSize(): LuaVec2Instance = LuaVec2.fromVec2(component.props.pointSize)
 
     @TwineFunction
     fun pointSize(value: LuaVec2Instance): LuaUILine {

@@ -61,17 +61,16 @@ open class LuaUIComponent(open val component: Component) : TwineNative() {
         get() = component.compType.name.lowercase()
 
     @TwineFunction
+    fun size(): LuaVec2Instance = LuaVec2.fromVec2(component.props.size)
+
+    @TwineFunction
     fun size(value: LuaVec2Instance): LuaUIComponent {
         component.props.size = value.toVec2()
         return this
     }
 
-    @TwineProperty
-    var opacity: Float
-        get() = component.props.opacity
-        set(value) {
-            component.props.opacity = value
-        }
+    @TwineFunction
+    fun opacity(): Float = component.props.opacity
 
     @TwineFunction
     fun opacity(value: Float): LuaUIComponent {
@@ -79,12 +78,8 @@ open class LuaUIComponent(open val component: Component) : TwineNative() {
         return this
     }
 
-    @TwineProperty
-    var zIndex: Int
-        get() = component.props.zIndex
-        set(value) {
-            component.props.zIndex = value
-        }
+    @TwineFunction
+    fun zIndex(): Int = component.props.zIndex
 
     @TwineFunction
     fun zIndex(value: Int): LuaUIComponent {
@@ -92,12 +87,8 @@ open class LuaUIComponent(open val component: Component) : TwineNative() {
         return this
     }
 
-    @TwineProperty
-    var position: LuaVec2Instance
-        get() = LuaVec2.fromVec2(component.props.pos)
-        set(value) {
-            component.props.pos = value.toVec2()
-        }
+    @TwineFunction
+    fun pos(): LuaVec2Instance = LuaVec2.fromVec2(component.props.pos)
 
     @TwineFunction
     fun pos(value: LuaVec2Instance): LuaUIComponent {
@@ -118,18 +109,15 @@ open class LuaUIComponent(open val component: Component) : TwineNative() {
         return this
     }
 
-    @TwineProperty
-    var padding: LuaSpacingInstance
-        get() = LuaSpacing.fromSpacing(component.props.padding)
-        set(value) {
-            component.props.padding = value.toSpacing()
-        }
+    @TwineFunction
+    fun scale(): LuaVec2Instance = LuaVec2.fromVec2(component.props.scale)
+
+    @TwineFunction
+    fun padding(): LuaSpacingInstance = LuaSpacing.fromSpacing(component.props.padding)
 
     @TwineFunction
     fun padding(value: LuaSpacingInstance): LuaUIComponent {
         component.props.padding = value.toSpacing()
-//        println(value.toSpacing())
-//        println(component.props.padding)
         return this
     }
 
@@ -144,13 +132,6 @@ open class LuaUIComponent(open val component: Component) : TwineNative() {
 
         return this
     }
-
-    @TwineProperty
-    var scale: LuaVec2Instance
-        get() = LuaVec2.fromVec2(component.props.scale)
-        set(value) {
-            component.props.scale = value.toVec2()
-        }
 
     @TwineFunction
     fun scale(value: LuaVec2Instance): LuaUIComponent {

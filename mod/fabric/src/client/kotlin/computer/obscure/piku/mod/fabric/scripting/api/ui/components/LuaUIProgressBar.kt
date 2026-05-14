@@ -6,17 +6,12 @@ import computer.obscure.piku.core.ui.classes.FillDirection
 import computer.obscure.piku.core.ui.classes.UIColor
 import computer.obscure.piku.core.ui.components.ProgressBar
 import computer.obscure.twine.annotations.TwineFunction
-import computer.obscure.twine.annotations.TwineProperty
 
 class LuaUIProgressBar (
     override val component: ProgressBar
 ) : LuaUIComponent(component) {
-    @TwineProperty
-    var progress: Float
-        get() = component.props.progress
-        set(value) {
-            component.props.progress = value
-        }
+    @TwineFunction
+    fun progress(): Float = component.props.progress
 
     @TwineFunction
     fun progress(value: Float): LuaUIProgressBar {
@@ -24,12 +19,9 @@ class LuaUIProgressBar (
         return this
     }
 
-    @TwineProperty
-    var fillColor: LuaColorInstance
-        get() = LuaColor.fromUIColor(component.props.fillColor ?: UIColor.BLACK)
-        set(value) {
-            component.props.fillColor = value.toUIColor()
-        }
+    @TwineFunction
+    fun fillColor(): LuaColorInstance =
+        LuaColor.fromUIColor(component.props.fillColor ?: UIColor.BLACK)
 
     @TwineFunction
     fun fillColor(value: LuaColorInstance): LuaUIProgressBar {
@@ -37,12 +29,9 @@ class LuaUIProgressBar (
         return this
     }
 
-    @TwineProperty
-    var emptyColor: LuaColorInstance
-        get() = LuaColor.fromUIColor(component.props.emptyColor ?: UIColor.BLACK)
-        set(value) {
-            component.props.emptyColor = value.toUIColor()
-        }
+    @TwineFunction
+    fun emptyColor(): LuaColorInstance =
+        LuaColor.fromUIColor(component.props.emptyColor ?: UIColor.BLACK)
 
     @TwineFunction
     fun emptyColor(value: LuaColorInstance): LuaUIProgressBar {

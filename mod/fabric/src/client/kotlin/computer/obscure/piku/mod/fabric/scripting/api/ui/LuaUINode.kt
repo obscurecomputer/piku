@@ -110,6 +110,9 @@ open class LuaUINode(open val node: UINode) : TwineNative() {
     }
 
     @TwineFunction
+    fun name(): String? = node.name
+
+    @TwineFunction
     fun name(value: String): LuaUINode {
         node.name = value
         return this

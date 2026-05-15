@@ -9,7 +9,21 @@ import net.minecraft.client.renderer.RenderPipelines
 import net.minecraft.client.renderer.texture.DynamicTexture
 import net.minecraft.resources.Identifier
 
-class SpriteNode(var texturePath: String) : UINode() {
+class SpriteNode() : UINode() {
+    var texturePath: String = ""
+        set(value) {
+            if (field != value) {
+                field = value
+                resolved = false
+                resolvedTexture = null
+                textureId = null
+            }
+        }
+
+    constructor(texturePath: String) : this() {
+        this.texturePath = texturePath
+    }
+
     private var resolvedTexture: DynamicTexture? = null
     private var textureId: Identifier? = null
     private var resolved = false

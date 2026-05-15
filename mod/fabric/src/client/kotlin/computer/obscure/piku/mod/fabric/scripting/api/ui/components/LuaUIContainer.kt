@@ -42,8 +42,8 @@ open class LuaUIContainer(node: UINode) : LuaUINode(node) {
     }
 
     @TwineFunction
-    fun addSprite(path: String): LuaUISprite {
-        val child = SpriteNode(path)
+    fun addSprite(): LuaUISprite {
+        val child = SpriteNode("")
         node.children.add(child)
         return LuaUISprite(child)
     }

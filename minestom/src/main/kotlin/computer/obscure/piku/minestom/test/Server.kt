@@ -38,14 +38,7 @@ class Server : BlossomServer(
                 this.players.toList()
             },
             source = ScriptSource.Directory(dir = File("minestom/test/scripts/client")),
-            onSuccessfulReload = { players ->
-                val audience = Audience.audience(players)
-                audience.sendMessage(
-                    component {
-                        text("Hot reloaded!")
-                    }
-                )
-            }
+            onSuccessfulReload = {}
         )
 
 

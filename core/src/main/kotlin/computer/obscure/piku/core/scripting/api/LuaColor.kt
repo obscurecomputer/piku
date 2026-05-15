@@ -81,7 +81,7 @@ class LuaColorInstance(
 
     @TwineProperty
     val value: Int
-        get() = color.rgba
+        get() = color.argb
 
     @TwineProperty
     val hue: Float

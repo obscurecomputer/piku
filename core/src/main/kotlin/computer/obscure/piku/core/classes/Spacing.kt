@@ -13,3 +13,10 @@ class Spacing(
         val ONE = Spacing(1.0,)
     }
 }
+
+val Spacing.horizontal get() = (left + right).toFloat()
+val Spacing.vertical get() = (top + bottom).toFloat()
+val Spacing.leftF get() = left.toFloat()
+val Spacing.topF get() = top.toFloat()
+val Spacing.rightF get() = right.toFloat()
+val Spacing.bottomF get() = bottom.toFloat()

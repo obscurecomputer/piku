@@ -8,6 +8,7 @@ import computer.obscure.piku.mod.fabric.InputHandler
 import computer.obscure.piku.mod.fabric.PikuClient
 import computer.obscure.piku.core.animation.AnimationManager
 import computer.obscure.piku.core.animation.AnimationUtil
+import computer.obscure.piku.mod.fabric.ui.UIRenderer
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents
 import net.minecraft.client.Minecraft
 
@@ -36,9 +37,9 @@ object ClientPlayConnection {
         Client.serverRunsPiku = true // TODO: change this
         PikuClient.engine!!.init()
 
-//        AnimationManager.easingResolver = { easing, t ->
-//            AnimationUtil.resolveEasing(easing, t, UIRenderer.registeredEasings)
-//        }
+        AnimationManager.easingResolver = { easing, t ->
+            AnimationUtil.resolveEasing(easing, t, UIRenderer.registeredEasings)
+        }
     }
 
     fun onDisconnect(
@@ -47,7 +48,7 @@ object ClientPlayConnection {
         SharedStateManager.shutdown()
         PikuClient.engine!!.shutdown()
         AnimationManager.shutdown()
-//        UIRenderer.shutdown()
+        UIRenderer.shutdown()
         Scheduler.shutdown()
         InputHandler.clearInputQueue()
 

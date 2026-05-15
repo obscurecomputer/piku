@@ -1,6 +1,7 @@
 package computer.obscure.piku.mod.fabric.events
 
 import computer.obscure.piku.core.animation.AnimationManager
+import computer.obscure.piku.mod.fabric.ui.UIRenderer
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback
 
 object ClientHudRender {
@@ -13,6 +14,7 @@ object ClientHudRender {
             lastTimeNano = currentTime
 
             AnimationManager.tick(deltaSeconds)
+            UIRenderer.render(context)
         }
     }
 }

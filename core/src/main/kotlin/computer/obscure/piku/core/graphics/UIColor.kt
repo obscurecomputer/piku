@@ -7,19 +7,19 @@ import kotlin.random.Random
 
 @JvmInline
 value class UIColor(
-    val rgba: Int
+    val argb: Int
 ) {
     val r: Int
-        get() = (rgba shr 16) and 0xFF
+        get() = (argb shr 16) and 0xFF
 
     val g: Int
-        get() = (rgba shr 8) and 0xFF
+        get() = (argb shr 8) and 0xFF
 
     val b: Int
-        get() = rgba and 0xFF
+        get() = argb and 0xFF
 
     val a: Int
-        get() = (rgba ushr 24) and 0xFF
+        get() = (argb ushr 24) and 0xFF
 
     val hue: Float
         get() = hsvArray()[0] * 360f
@@ -239,10 +239,10 @@ value class UIColor(
         rotateHue(180f)
 
     fun copy(): UIColor =
-        UIColor(rgba)
+        UIColor(argb)
 
     fun hex(): String =
-        "#%08X".format(rgba)
+        "#%08X".format(argb)
 
     override fun toString(): String {
         return buildString {

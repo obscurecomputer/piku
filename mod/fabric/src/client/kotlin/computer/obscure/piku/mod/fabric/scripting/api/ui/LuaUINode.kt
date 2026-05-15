@@ -1,5 +1,6 @@
 package computer.obscure.piku.mod.fabric.scripting.api.ui
 
+import computer.obscure.piku.core.animation.AnimationManager
 import computer.obscure.piku.core.classes.Spacing
 import computer.obscure.piku.core.scripting.api.LuaColorInstance
 import computer.obscure.piku.core.scripting.api.LuaSpacingInstance
@@ -128,6 +129,35 @@ open class LuaUINode(open val node: UINode) : TwineNative() {
     private fun removeFromTree(parent: UINode, target: UINode) {
         parent.children.remove(target)
         parent.children.forEach { removeFromTree(it, target) }
+    }
+
+    @TwineFunction
+    fun exists(name: String): Boolean {
+        return node.children.any { searchTree(it, name) != null }
+    }
+
+    @TwineFunction("get")
+    fun getByName(name: String): LuaUINode? {
+        return searchTree(node, name)?.let { wrap(it) }
+    }
+
+    private fun searchTree(node: UINode, name: String): UINode? {
+        if (node.name == name) return node
+        return node.children.firstNotNullOfOrNull { searchTree(it, name) }
+    }
+
+    @TwineFunction
+    fun animate(): LuaUIAnimation {
+        return LuaUIAnimation(this.node)
+    }
+
+    @TwineProperty
+    val isAnimating: Boolean
+        get() = AnimationManager.isAnimating(node.id)
+
+    @TwineFunction
+    fun cancelAnimations() {
+        AnimationManager.cancelFor(node.id)
     }
 
     companion object {

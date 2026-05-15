@@ -9,4 +9,10 @@ class LuaUISprite(override val node: SpriteNode) : LuaUIContainer(node) {
         node.texturePath = value
         return this
     }
+
+    @TwineFunction
+    fun fillScreen(value: Boolean): LuaUISprite {
+        node.fillScreen = value
+        return this
+    }
 }

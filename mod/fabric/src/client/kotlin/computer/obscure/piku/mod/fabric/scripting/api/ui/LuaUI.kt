@@ -44,6 +44,11 @@ class LuaUI : TwineNative() {
     }
 
     @TwineFunction
+    fun exists(name: String): Boolean {
+        return UIRenderer.findByName(name) != null
+    }
+
+    @TwineFunction
     fun clear() {
         UIRenderer.clearRoots()
     }

@@ -14,6 +14,15 @@ class SpriteNode(var texturePath: String) : UINode() {
     private var textureId: Identifier? = null
     private var resolved = false
 
+    var fillScreen: Boolean = false
+        set(value) {
+            field = value
+            if (value) {
+                width = Dimension.Fill
+                height = Dimension.Fill
+            }
+        }
+
     private fun resolveOnce() {
         if (resolved) return
         resolved = true

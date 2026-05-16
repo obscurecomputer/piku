@@ -13,6 +13,7 @@ import computer.obscure.piku.mod.fabric.packets.serverbound.SendStatePacket
 import computer.obscure.piku.mod.fabric.packets.serverbound.SendUnloadedPacket
 import computer.obscure.piku.mod.fabric.scripting.engine.ClientLuaEngine
 import net.fabricmc.api.ClientModInitializer
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry
 import net.kyori.adventure.text.minimessage.MiniMessage
@@ -60,6 +61,9 @@ class PikuClient : ClientModInitializer {
 
         LOGGER.info("Piku Client Initialized successfully!")
         InputHandler.init()
+        ClientLifecycleEvents.CLIENT_STARTED.register { client ->
+            InputHandler.registerCallbacks(client.window.handle())
+        }
 
         s2c(ReceiveDataPacket.TYPE, ReceiveDataPacket.STREAM_CODEC)
         s2c(ReceiveScriptPacket.TYPE, ReceiveScriptPacket.STREAM_CODEC)

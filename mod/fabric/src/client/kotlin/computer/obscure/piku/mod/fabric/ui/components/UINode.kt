@@ -105,7 +105,7 @@ abstract class UINode {
         children.forEach { it.layoutSelf(childCtx) }
     }
 
-    fun drawSelf(graphics: GuiGraphics, ctx: MeasureContext) {
+    open fun drawSelf(graphics: GuiGraphics, ctx: MeasureContext) {
         if (!visible) return
         background?.let {
             graphics.fill(layoutX.toInt(), layoutY.toInt(),

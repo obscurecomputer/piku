@@ -41,6 +41,10 @@ open class LuaUIFlow(override val node: FlowNode) : LuaUIContainer(node) {
     val scrollOffset: Float
         get() = -node.clampedScroll
 
+    @TwineProperty
+    val maxScroll: Float
+        get() = node.maxScrollExtent
+
     @TwineFunction
     fun gap(value: Double): LuaUIFlow {
         node.gap = value.toFloat()

@@ -5,6 +5,7 @@ import computer.obscure.piku.core.scripting.engine.EngineError
 import computer.obscure.piku.core.scripting.engine.EngineErrorCode
 import computer.obscure.piku.mod.fabric.scripting.api.animation.LuaAnimatable
 import computer.obscure.piku.mod.fabric.ui.Dimension
+import computer.obscure.piku.mod.fabric.ui.components.FlowNode
 import computer.obscure.piku.mod.fabric.ui.components.ProgressBarNode
 import computer.obscure.piku.mod.fabric.ui.components.UINode
 import computer.obscure.twine.LuaCallback
@@ -68,6 +69,24 @@ class LuaUIAnimation(val node: UINode) : LuaAnimatable() {
             getter = { node.value },
             setter = { node.value = it },
             to = to,
+            onStart = { onStartCallback?.call<Unit>() },
+            onFinish = { onFinishCallback?.call<Unit>() }
+        ))
+        return this
+    }
+
+    @TwineFunction
+    fun scroll(to: Float, duration: Double, easing: String): LuaUIAnimation {
+        if (node !is FlowNode)
+            throw EngineError(EngineErrorCode.INVALID_COMPONENT,
+                "scroll() is only supported on Row/Column nodes")
+        queue.add(Animation(
+            targetId = node.id,
+            durationSeconds = duration,
+            easing = easing,
+            getter = { node.scrollOffset },
+            setter = { node.scrollOffset = it },
+            to = -to, // negative because scroll is inverted internally
             onStart = { onStartCallback?.call<Unit>() },
             onFinish = { onFinishCallback?.call<Unit>() }
         ))

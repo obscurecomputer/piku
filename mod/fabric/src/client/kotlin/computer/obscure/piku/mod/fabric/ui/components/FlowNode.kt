@@ -17,6 +17,7 @@ abstract class FlowNode(var gap: Float = 0f) : UINode() {
     var scrollable: Boolean = false
     var scrollOffset: Float = 0f
     var clampedScroll: Float = 0f
+    var maxScrollExtent: Float = 0f
 
     abstract val axis: FlowAxis
 
@@ -56,6 +57,11 @@ abstract class FlowNode(var gap: Float = 0f) : UINode() {
             scrollOffset = clamped
             clamped
         } else 0f
+
+        maxScrollExtent = when (axis) {
+            FlowAxis.VERTICAL -> (total - innerH).coerceAtLeast(0f)
+            FlowAxis.HORIZONTAL -> (total - innerW).coerceAtLeast(0f)
+        }
 
         val mainStart = when (axis) {
             FlowAxis.VERTICAL -> layoutY + padding.topF
@@ -133,15 +139,21 @@ abstract class FlowNode(var gap: Float = 0f) : UINode() {
             )
         }
         drawContent(graphics, ctx)
-        children.forEach { it.drawSelf(graphics, ctx) }
+        children.forEach { child ->
+            if (scrollable && !isChildVisible(child)) return@forEach
+            child.drawSelf(graphics, ctx)
+        }
         if (scrollable) graphics.disableScissor()
     }
 
-    fun onScroll(mouseX: Float, mouseY: Float, delta: Float): Boolean {
-        if (!scrollable) return false
-        if (mouseX < layoutX || mouseX > layoutX + measuredWidth) return false
-        if (mouseY < layoutY || mouseY > layoutY + measuredHeight) return false
-        scrollOffset += delta * 12f
-        return true
+    private fun isChildVisible(child: UINode): Boolean {
+        val nodeBottom = layoutY + measuredHeight
+        val nodeRight = layoutX + measuredWidth
+        val childBottom = child.layoutY + child.measuredHeight
+        val childRight = child.layoutX + child.measuredWidth
+        return child.layoutX < nodeRight &&
+                childRight > layoutX &&
+                child.layoutY < nodeBottom &&
+                childBottom > layoutY
     }
 }

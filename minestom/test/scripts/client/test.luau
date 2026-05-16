@@ -133,6 +133,12 @@ listen("client.mouse_update", function(event)
     end
 end)
 
+local scrollTargets = {0, 0, 0}
+
 listen("client.scroll", function(event)
-    containers[selected].scroll(event.deltaY * 12)
+    scrollTargets[selected] = scrollTargets[selected] + event.deltaY * -12
+    scrollTargets[selected] = math.max(0, math.min(scrollTargets[selected], containers[selected].maxScroll))
+    containers[selected].animate()
+        .scroll(scrollTargets[selected], 0.15, "EASE_OUT")
+        .play()
 end)

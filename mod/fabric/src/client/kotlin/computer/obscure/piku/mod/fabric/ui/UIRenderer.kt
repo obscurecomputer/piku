@@ -58,7 +58,12 @@ object UIRenderer : PikuService {
         val screenH = instance.window.guiScaledHeight
         val scale = instance.window.guiScale.toFloat()
         val measureCtx = MeasureContext(instance.font, screenW.toFloat(), screenH.toFloat(), scale)
-        val layoutCtx = LayoutContext(x = 0f, y = 0f, parentWidth = screenW.toFloat(), parentHeight = screenH.toFloat())
+        val layoutCtx = LayoutContext(
+            x = 0f,
+            y = 0f,
+            parentWidth = screenW.toFloat(),
+            parentHeight = screenH.toFloat()
+        )
 
         roots.forEach { root ->
             root.measureSelf(measureCtx)

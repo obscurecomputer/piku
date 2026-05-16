@@ -42,7 +42,12 @@ class SpriteNode() : UINode() {
         resolved = true
         resolvedTexture = UIRenderer.getTexture(texturePath)
         resolvedTexture?.let {
-            val id = Identifier.fromNamespaceAndPath("piku", "sprite_${texturePath.replace(":", "_").replace("/", "_")}")
+            val path = texturePath
+                .replace(":", "_")
+                .replace("/", "_")
+            val id = Identifier.fromNamespaceAndPath(
+                "piku",
+                "sprite_${path}")
             Minecraft.getInstance().textureManager.register(id, it)
             textureId = id
             val img = it.pixels

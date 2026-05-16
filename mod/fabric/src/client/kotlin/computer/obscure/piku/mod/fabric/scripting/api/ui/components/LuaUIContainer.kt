@@ -3,9 +3,11 @@ package computer.obscure.piku.mod.fabric.scripting.api.ui.components
 import computer.obscure.piku.mod.fabric.scripting.api.ui.LuaUINode
 import computer.obscure.piku.mod.fabric.ui.components.BoxNode
 import computer.obscure.piku.mod.fabric.ui.components.ColumnNode
+import computer.obscure.piku.mod.fabric.ui.components.DividerNode
 import computer.obscure.piku.mod.fabric.ui.components.GradientNode
 import computer.obscure.piku.mod.fabric.ui.components.ProgressBarNode
 import computer.obscure.piku.mod.fabric.ui.components.RowNode
+import computer.obscure.piku.mod.fabric.ui.components.ScrollbarNode
 import computer.obscure.piku.mod.fabric.ui.components.SpriteNode
 import computer.obscure.piku.mod.fabric.ui.components.TextNode
 import computer.obscure.piku.mod.fabric.ui.components.UINode
@@ -60,6 +62,20 @@ open class LuaUIContainer(node: UINode) : LuaUINode(node) {
         val child = ProgressBarNode()
         node.children.add(child)
         return LuaUIProgressBar(child)
+    }
+
+    @TwineFunction
+    fun addDivider(): LuaUIDivider {
+        val child = DividerNode()
+        node.children.add(child)
+        return LuaUIDivider(child)
+    }
+
+    @TwineFunction
+    fun addScrollbar(): LuaUIScrollbar {
+        val child = ScrollbarNode()
+        node.children.add(child)
+        return LuaUIScrollbar(child)
     }
 
     @TwineFunction

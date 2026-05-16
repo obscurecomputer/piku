@@ -12,7 +12,8 @@ class GradientNode(
 
     enum class GradientDirection { HORIZONTAL, VERTICAL }
 
-    override fun measureContent(ctx: MeasureContext) = 0f to 0f // purely sized by width/height
+    // default height is 0px
+    override fun measureContent(ctx: MeasureContext) = 0f to 0f
 
     override fun drawContent(graphics: GuiGraphics, ctx: MeasureContext) {
         val x1 = layoutX.toInt()

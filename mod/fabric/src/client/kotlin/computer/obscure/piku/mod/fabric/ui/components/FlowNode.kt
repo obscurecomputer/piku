@@ -5,6 +5,7 @@ import computer.obscure.piku.core.classes.leftF
 import computer.obscure.piku.core.classes.topF
 import computer.obscure.piku.core.classes.vertical
 import computer.obscure.piku.mod.fabric.ui.CrossAxisAlignment
+import computer.obscure.piku.mod.fabric.ui.Dimension
 import computer.obscure.piku.mod.fabric.ui.MainAxisAlignment
 import computer.obscure.piku.mod.fabric.ui.MeasureContext
 import net.minecraft.client.gui.GuiGraphics
@@ -32,13 +33,44 @@ abstract class FlowNode(var gap: Float = 0f) : UINode() {
 
     override fun measureContent(ctx: MeasureContext): Pair<Float, Float> {
         return when (axis) {
-            FlowAxis.VERTICAL -> {
-                val w = children.maxOfOrNull { it.measuredWidth + it.margin.horizontal } ?: 0f
-                w to totalMainSize()
-            }
+            // TODO: reduce duplication here, too lazy
             FlowAxis.HORIZONTAL -> {
+                val fillChildren = children.filter { it.width == Dimension.Fill }
+                val nonFillChildren = children.filter { it.width != Dimension.Fill }
+
+                val fixedW = nonFillChildren.sumOf { (it.measuredWidth + it.margin.horizontal).toDouble() }.toFloat() +
+                        gap * (children.size - 1).coerceAtLeast(0)
+
+                val remaining = (ctx.parentWidth - fixedW - padding.horizontal).coerceAtLeast(0f)
+                val fillW = if (fillChildren.isNotEmpty()) remaining / fillChildren.size else 0f
+
+                fillChildren.forEach { child ->
+                    child.measureSelf(ctx.copy(parentWidth = (fillW - child.margin.horizontal).coerceAtLeast(0f)))
+                }
+
+                val w = children.sumOf { (it.measuredWidth + it.margin.horizontal).toDouble() }.toFloat() +
+                        gap * (children.size - 1).coerceAtLeast(0)
                 val h = children.maxOfOrNull { it.measuredHeight + it.margin.vertical } ?: 0f
-                totalMainSize() to h
+                w to h
+            }
+            FlowAxis.VERTICAL -> {
+                val fillChildren = children.filter { it.height == Dimension.Fill }
+                val nonFillChildren = children.filter { it.height != Dimension.Fill }
+
+                val fixedH = nonFillChildren.sumOf { (it.measuredHeight + it.margin.vertical).toDouble() }.toFloat() +
+                        gap * (children.size - 1).coerceAtLeast(0)
+
+                val remaining = (ctx.parentHeight - fixedH - padding.vertical).coerceAtLeast(0f)
+                val fillH = if (fillChildren.isNotEmpty()) remaining / fillChildren.size else 0f
+
+                fillChildren.forEach { child ->
+                    child.measureSelf(ctx.copy(parentHeight = (fillH - child.margin.vertical).coerceAtLeast(0f)))
+                }
+
+                val w = children.maxOfOrNull { it.measuredWidth + it.margin.horizontal } ?: 0f
+                val h = children.sumOf { (it.measuredHeight + it.margin.vertical).toDouble() }.toFloat() +
+                        gap * (children.size - 1).coerceAtLeast(0)
+                w to h
             }
         }
     }

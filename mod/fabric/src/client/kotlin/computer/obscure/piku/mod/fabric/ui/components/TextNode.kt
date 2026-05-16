@@ -4,6 +4,7 @@ import computer.obscure.piku.core.classes.leftF
 import computer.obscure.piku.core.classes.topF
 import computer.obscure.piku.core.graphics.UIColor
 import computer.obscure.piku.mod.fabric.ui.MeasureContext
+import computer.obscure.piku.mod.fabric.ui.TextInterpolator
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.network.chat.Component
 
@@ -24,9 +25,10 @@ class TextNode(var text: Component) : UINode() {
     }
 
     override fun drawContent(graphics: GuiGraphics, ctx: MeasureContext) {
+        val interpolated = TextInterpolator.interpolate(text)
         graphics.drawString(
             ctx.textRenderer,
-            text,
+            interpolated,
             (layoutX + padding.leftF).toInt(),
             (layoutY + padding.topF).toInt(),
             color.argb,

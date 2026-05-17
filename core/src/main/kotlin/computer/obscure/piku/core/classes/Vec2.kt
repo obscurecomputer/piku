@@ -1,6 +1,5 @@
 package computer.obscure.piku.core.classes
 
-import computer.obscure.piku.core.scripting.api.LuaColor
 import computer.obscure.piku.core.scripting.api.LuaVec2
 import computer.obscure.piku.core.serialization.PikuSerializable
 import kotlinx.serialization.SerialName
@@ -55,5 +54,10 @@ data class Vec2(
         }
 
         return points
+    }
+
+    companion object {
+        val ZERO = Vec2(0.0, 0.0)
+        val ONE = Vec2(1.0, 1.0)
     }
 }

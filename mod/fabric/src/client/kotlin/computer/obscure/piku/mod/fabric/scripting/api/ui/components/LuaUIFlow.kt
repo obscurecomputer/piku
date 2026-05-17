@@ -1,58 +1,65 @@
 package computer.obscure.piku.mod.fabric.scripting.api.ui.components
 
-import computer.obscure.piku.core.scripting.api.LuaColor
-import computer.obscure.piku.core.scripting.api.LuaColorInstance
-import computer.obscure.piku.core.ui.classes.FlowDirection
-import computer.obscure.piku.core.ui.components.FlowContainer
-import computer.obscure.piku.mod.fabric.scripting.api.ui.LuaUI
+import computer.obscure.piku.mod.fabric.scripting.api.util.Axis
+import computer.obscure.piku.mod.fabric.ui.components.FlowNode
 import computer.obscure.twine.annotations.TwineFunction
+import computer.obscure.twine.annotations.TwineProperty
 
-class LuaUIFlow(
-    val flowComponent: FlowContainer
-) : AllComponentBuilder(flowComponent) {
-
-    @TwineFunction("get")
-    fun getByName(name: String): LuaUIComponent? {
-        val found = flowComponent.props.components.find { it.name == name }
-        return found?.let { LuaUI.wrap(it) }
-    }
+open class LuaUIFlow(override val node: FlowNode) : LuaUIContainer(node) {
 
     @TwineFunction
-    fun exists(name: String): Boolean {
-        return flowComponent.props.components.any { it.name == name }
-    }
-
-    @TwineFunction
-    fun backgroundColor(): LuaColorInstance? {
-        if (flowComponent.props.backgroundColor == null) return null
-        return LuaColor.fromUIColor(flowComponent.props.backgroundColor!!)
-    }
-
-    @TwineFunction
-    fun backgroundColor(value: LuaColorInstance): LuaUIFlow {
-        flowComponent.props.backgroundColor = value.toUIColor()
+    fun scrollable(value: Boolean): LuaUIFlow {
+        node.scrollable = value
         return this
     }
 
     @TwineFunction
-    fun direction(value: String): LuaUIFlow {
-        flowComponent.props.direction = when (value) {
-            "h", "horizontal" -> FlowDirection.HORIZONTAL
-            "v", "vertical" -> FlowDirection.VERTICAL
-            else -> FlowDirection.HORIZONTAL
-        }
+    fun scroll(pixels: Float): LuaUIFlow {
+        node.scrollOffset += pixels
         return this
     }
 
     @TwineFunction
-    fun reversed(value: Boolean): LuaUIFlow {
-        flowComponent.props.reversed = value
+    fun scrollTo(pixels: Float): LuaUIFlow {
+        node.scrollOffset = -pixels
         return this
     }
+
+    @TwineFunction
+    fun scrollToTop(): LuaUIFlow {
+        node.scrollOffset = 0f
+        return this
+    }
+
+    @TwineFunction
+    fun scrollToBottom(): LuaUIFlow {
+        node.scrollOffset = -Float.MAX_VALUE
+        return this
+    }
+
+    @TwineProperty
+    val scrollOffset: Float
+        get() = -node.clampedScroll
+
+    @TwineProperty
+    val maxScroll: Float
+        get() = node.maxScrollExtent
 
     @TwineFunction
     fun gap(value: Double): LuaUIFlow {
-        flowComponent.props.gap = value
+        node.gap = value.toFloat()
+        return this
+    }
+
+    @TwineFunction
+    fun mainAxis(value: String): LuaUIFlow {
+        node.mainAxis = Axis.parseMainAxis(value)
+        return this
+    }
+
+    @TwineFunction
+    fun crossAxis(value: String): LuaUIFlow {
+        node.crossAxis = Axis.parseCrossAxis(value)
         return this
     }
 }

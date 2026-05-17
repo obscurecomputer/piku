@@ -1,80 +1,50 @@
 package computer.obscure.piku.mod.fabric.scripting.api.ui.components
 
-import computer.obscure.piku.core.scripting.api.*
-import computer.obscure.piku.core.ui.classes.UIColor
-import computer.obscure.piku.core.ui.components.Text
+import computer.obscure.piku.core.scripting.api.LuaColorInstance
+import computer.obscure.piku.core.scripting.api.LuaTextInstance
+import computer.obscure.piku.mod.fabric.ui.components.TextNode
+import computer.obscure.piku.mod.fabric.ui.toMcComponent
 import computer.obscure.twine.annotations.TwineFunction
+import net.minecraft.network.chat.Component
 
-class LuaUIText(
-    override val component: Text
-) : LuaUIComponent(component) {
-    val currentText: LuaTextInstance = LuaTextInstance("text", "")
+class LuaUIText(override val node: TextNode) : LuaUIContainer(node) {
+    private var currentTextInstance: LuaTextInstance = LuaTextInstance("")
 
     @TwineFunction
-    fun text(): LuaTextInstance = currentText
+    fun text(): LuaTextInstance = currentTextInstance
+
+    @TwineFunction
+    fun text(value: String): LuaUIText {
+        node.text = Component.literal(value)
+        currentTextInstance = LuaTextInstance(value)
+        return this
+    }
 
     @TwineFunction
     fun text(value: LuaTextInstance): LuaUIText {
-        component.props.text = value.toComponent()
+        node.text = value.toMcComponent()
+        currentTextInstance = value
         return this
     }
 
     @TwineFunction
-    fun text(value: Any): LuaUIText {
-        val instance = LuaTextInstance("text", value.toString())
-        component.props.text = instance.toComponent()
+    fun setText(value: String): LuaUIText {
+        // mutate the MC component's text only
+        val current = node.text
+        node.text = Component.literal(value)
+            .withStyle(current.style)
         return this
     }
-
-    @TwineFunction
-    fun maxWidth(value: Int): LuaUIText {
-        component.props.maxWidth = value
-        return this
-    }
-
-    @TwineFunction
-    fun color(): LuaColorInstance = LuaColor.fromUIColor(component.props.color)
 
     @TwineFunction
     fun color(value: LuaColorInstance): LuaUIText {
-        component.props.color = value.toUIColor()
+        node.color = value.toUIColor()
         return this
     }
-
-    @TwineFunction
-    fun shadow(): Boolean = component.props.shadow
 
     @TwineFunction
     fun shadow(value: Boolean): LuaUIText {
-        component.props.shadow = value
-        return this
-    }
-
-    @TwineFunction
-    fun backgroundColor(): LuaColorInstance =
-        LuaColor.fromUIColor(component.props.backgroundColor ?: UIColor.BLACK)
-
-    @TwineFunction
-    fun backgroundColor(value: LuaColorInstance): LuaUIText {
-        component.props.backgroundColor = value.toUIColor()
-        return this
-    }
-
-    @TwineFunction
-    fun textScale(): LuaVec2Instance = LuaVec2.fromVec2(component.props.textScale)
-
-    @TwineFunction
-    fun textScale(value: LuaVec2Instance): LuaUIText {
-        component.props.textScale = value.toVec2()
-        return this
-    }
-
-    @TwineFunction
-    fun backgroundScale(): LuaVec2Instance = LuaVec2.fromVec2(component.props.backgroundScale)
-
-    @TwineFunction
-    fun backgroundScale(value: LuaVec2Instance): LuaUIText {
-        component.props.backgroundScale = value.toVec2()
+        node.shadow = value
         return this
     }
 }

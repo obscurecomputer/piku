@@ -1,7 +1,7 @@
 package computer.obscure.piku.core.animation
 
 import computer.obscure.piku.core.classes.Vec3
-import computer.obscure.piku.core.ui.classes.Easing
+import computer.obscure.piku.core.classes.Easing
 import computer.obscure.twine.LuaCallback
 
 object AnimationUtil {

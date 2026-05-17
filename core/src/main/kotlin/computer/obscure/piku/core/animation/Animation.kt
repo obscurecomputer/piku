@@ -1,6 +1,6 @@
 package computer.obscure.piku.core.animation
 
-import computer.obscure.piku.core.ui.classes.Easing
+import computer.obscure.piku.core.classes.Easing
 
 data class Animation<T>(
     val targetId: String = "",

@@ -6,9 +6,9 @@ import net.minecraft.client.Minecraft
 import org.lwjgl.glfw.GLFW
 
 object InputHandler {
+
     private val keyStates = mutableMapOf<Int, Boolean>()
     private val mouseStates = mutableMapOf<Int, Boolean>()
-
     private val luaInputQueue = mutableListOf<LuaKeyBind>()
 
     fun init() {
@@ -17,29 +17,75 @@ object InputHandler {
                 it.setDown(false)
                 luaInputQueue.remove(it)
             }
-             if (!Client.connectedToServer) return@register
-
-            // player must be in-game (no menus open at all)
-            if (client.screen != null) return@register
-
-            // client's player entity must exist
-            if (client.player == null) return@register
-
-            pollMouse(client)
-            pollKeyboard(client)
         }
     }
 
-    /**
-     * Queue a [LuaKeyBind] to be deactivated the tick after.
-     */
-    fun queueInputUp(luaKeyBind: LuaKeyBind) {
-        luaInputQueue.add(luaKeyBind)
+    fun registerCallbacks(windowHandle: Long) {
+        // save minecraft's existing callbacks because glfw only allows
+        // one callback per event :/
+        val prevKeyCallback = GLFW.glfwSetKeyCallback(windowHandle, null)
+        val prevMouseCallback = GLFW.glfwSetMouseButtonCallback(windowHandle, null)
+        val prevScrollCallback = GLFW.glfwSetScrollCallback(windowHandle, null)
+
+        GLFW.glfwSetKeyCallback(windowHandle) { window, key, scancode, action, mods ->
+            prevKeyCallback?.invoke(window, key, scancode, action, mods)
+            if (!shouldHandleInput()) return@glfwSetKeyCallback
+            val pressed = action == GLFW.GLFW_PRESS || action == GLFW.GLFW_REPEAT
+            val prev = keyStates[key] ?: false
+            if (pressed != prev || action == GLFW.GLFW_REPEAT) {
+                keyStates[key] = pressed
+                val data = mapOf<String, Any?>(
+                    "key" to getKeyName(key),
+                    "action" to when (action) {
+                        GLFW.GLFW_PRESS -> "press"
+                        GLFW.GLFW_RELEASE -> "release"
+                        GLFW.GLFW_REPEAT -> "repeat"
+                        else -> "unknown"
+                    }
+                )
+                PikuClient.engine!!.events.fire("client.key_update", data)
+            }
+        }
+
+        GLFW.glfwSetMouseButtonCallback(windowHandle) { window, button, action, mods ->
+            prevMouseCallback?.invoke(window, button, action, mods)
+            if (!shouldHandleInput()) return@glfwSetMouseButtonCallback
+            val pressed = action == GLFW.GLFW_PRESS
+            val prev = mouseStates[button] ?: false
+            if (pressed != prev) {
+                mouseStates[button] = pressed
+                val mc = Minecraft.getInstance()
+                val data = mapOf(
+                    "button" to button,
+                    "action" to if (pressed) "press" else "release",
+                    "x" to mc.mouseHandler.xpos(),
+                    "y" to mc.mouseHandler.ypos()
+                )
+                PikuClient.engine!!.events.fire("client.mouse_update", data)
+            }
+        }
+
+        GLFW.glfwSetScrollCallback(windowHandle) { window, deltaX, deltaY ->
+            prevScrollCallback?.invoke(window, deltaX, deltaY)
+            val mc = Minecraft.getInstance()
+            if (!shouldHandleInput()) return@glfwSetScrollCallback
+            val data = mapOf(
+                "deltaX" to deltaX,
+                "deltaY" to deltaY,
+                "x" to mc.mouseHandler.xpos(),
+                "y" to mc.mouseHandler.ypos()
+            )
+            PikuClient.engine!!.events.fire("client.scroll", data)
+        }
     }
 
-    fun clearInputQueue() {
-        luaInputQueue.clear()
+    private fun shouldHandleInput(): Boolean {
+        val mc = Minecraft.getInstance()
+        return Client.connectedToServer && mc.screen == null && mc.player != null
     }
+
+    fun queueInputUp(luaKeyBind: LuaKeyBind) { luaInputQueue.add(luaKeyBind) }
+    fun clearInputQueue() { luaInputQueue.clear() }
 
     fun getKeyName(key: Int): String = when (key) {
         GLFW.GLFW_KEY_LEFT -> "left_arrow"
@@ -76,44 +122,5 @@ object InputHandler {
 
     fun getMouseButtonName(button: Int): String {
         return "mouse_$button"
-    }
-
-    private fun pollKeyboard(client: Minecraft) {
-        val window = client.window.handle()
-
-        for (key in 32..GLFW.GLFW_KEY_LAST) {
-            val pressed = GLFW.glfwGetKey(window, key) == GLFW.GLFW_PRESS
-            val prev = keyStates[key] ?: false
-
-            if (pressed != prev) {
-                keyStates[key] = pressed
-                val data = mapOf<String, Any?>(
-                    "key" to getKeyName(key),
-                    "action" to if (pressed) "press" else "release"
-                )
-
-                PikuClient.engine!!.events.fire("client.key_update", data)
-            }
-        }
-    }
-
-    private fun pollMouse(client: Minecraft) {
-        val window = client.window.handle()
-        for (button in 0..7) {
-            val pressed = GLFW.glfwGetMouseButton(window, button) == GLFW.GLFW_PRESS
-            val prev = mouseStates[button] ?: false
-
-            if (pressed != prev) {
-                mouseStates[button] = pressed
-                val data = mapOf(
-                    "button" to button,
-                    "action" to if (pressed) "press" else "release",
-                    "x" to client.mouseHandler.xpos(),
-                    "y" to client.mouseHandler.ypos()
-                )
-
-                PikuClient.engine!!.events.fire("client.mouse_update", data)
-            }
-        }
     }
 }

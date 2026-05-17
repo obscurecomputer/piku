@@ -1,13 +1,12 @@
 package computer.obscure.piku.mod.fabric.ui
 
-import net.kyori.adventure.text.Component
-import net.kyori.adventure.text.TextReplacementConfig
 import net.minecraft.client.Minecraft
+import net.minecraft.network.chat.Component
+import net.minecraft.network.chat.MutableComponent
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.phys.EntityHitResult
 import net.minecraft.world.phys.HitResult
 import oshi.SystemInfo
-
 
 object TextInterpolator {
     private val mc get() = Minecraft.getInstance()
@@ -266,34 +265,37 @@ object TextInterpolator {
         return output
     }
 
-
-
-    fun interpolate(component: Component): Component {
+    fun interpolate(component: Component): MutableComponent {
         val regex = Regex("\\{([A-Z_]+)(?::R(\\d+))?}")
 
-        return component.replaceText(
-            TextReplacementConfig.builder()
-                .match(regex.toPattern())
-                .replacement { match, _ ->
-                    val key = match.group(1)
-                    val rounding = match.group(2)
+        fun process(text: String): String {
+            return regex.replace(text) { match ->
+                val key = match.groupValues[1]
+                val rounding = match.groupValues[2]
 
-                    val provider = providers[key] ?: return@replacement Component.text(match.group())
+                val provider = providers[key] ?: return@replace match.value
+                val value = provider()
 
-                    val value = provider()
+                if (rounding.isEmpty()) return@replace value
 
-                    val finalValue =
-                        if (rounding != null) {
-                            val digits = rounding
-                            val number = value.toDoubleOrNull()
-                            if (number != null)
-                                "%.${digits}f".format(number)
-                            else value
-                        } else value
+                val digits = rounding.toIntOrNull() ?: return@replace value
+                val number = value.toDoubleOrNull() ?: return@replace value
 
-                    Component.text(finalValue)
-                }
-                .build()
-        )
+                "%.${digits}f".format(number)
+            }
+        }
+
+        fun recurse(comp: Component): MutableComponent {
+            val newComp = Component.literal(process(comp.string))
+                .setStyle(comp.style)
+
+            comp.siblings.forEach {
+                newComp.append(recurse(it))
+            }
+
+            return newComp
+        }
+
+        return recurse(component)
     }
 }

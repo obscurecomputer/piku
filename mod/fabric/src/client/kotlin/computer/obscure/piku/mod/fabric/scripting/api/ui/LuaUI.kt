@@ -1,120 +1,60 @@
 package computer.obscure.piku.mod.fabric.scripting.api.ui
 
-import computer.obscure.twine.annotations.TwineFunction
-import computer.obscure.twine.TwineNative
-import computer.obscure.piku.core.ui.components.Box
-import computer.obscure.piku.core.ui.components.Component
-import computer.obscure.piku.core.ui.components.FlowContainer
-import computer.obscure.piku.core.ui.components.Gradient
-import computer.obscure.piku.core.ui.components.Group
-import computer.obscure.piku.core.ui.components.Line
-import computer.obscure.piku.core.ui.components.ProgressBar
-import computer.obscure.piku.core.ui.components.Sprite
-import computer.obscure.piku.core.ui.components.Text
-import computer.obscure.piku.core.ui.components.props.CollectionProps
-import computer.obscure.piku.core.ui.components.props.FlowProps
 import computer.obscure.piku.mod.fabric.scripting.api.ui.components.LuaUIBox
-import computer.obscure.piku.mod.fabric.scripting.api.ui.components.LuaUIComponent
-import computer.obscure.piku.mod.fabric.scripting.api.ui.components.LuaUIFlow
-import computer.obscure.piku.mod.fabric.scripting.api.ui.components.LuaUIGradient
-import computer.obscure.piku.mod.fabric.scripting.api.ui.components.LuaUIGroup
-import computer.obscure.piku.mod.fabric.scripting.api.ui.components.LuaUILine
-import computer.obscure.piku.mod.fabric.scripting.api.ui.components.LuaUIProgressBar
-import computer.obscure.piku.mod.fabric.scripting.api.ui.components.LuaUISprite
-import computer.obscure.piku.mod.fabric.scripting.api.ui.components.LuaUIText
+import computer.obscure.piku.mod.fabric.scripting.api.ui.components.LuaUIColumn
+import computer.obscure.piku.mod.fabric.scripting.api.ui.components.LuaUIRow
 import computer.obscure.piku.mod.fabric.ui.UIRenderer
+import computer.obscure.piku.mod.fabric.ui.components.BoxNode
+import computer.obscure.piku.mod.fabric.ui.components.ColumnNode
+import computer.obscure.piku.mod.fabric.ui.components.RowNode
+import computer.obscure.twine.TwineNative
+import computer.obscure.twine.annotations.TwineFunction
 
 class LuaUI : TwineNative() {
-    val window = UIRenderer.currentWindow
 
     @TwineFunction
-    fun layout() {
-        UIRenderer.layout(window)
+    fun column(): LuaUIColumn {
+        val node = ColumnNode()
+        UIRenderer.addRoot(node)
+        return LuaUIColumn(node)
     }
 
     @TwineFunction
-    fun group(name: String = ""): LuaUIGroup {
-        val component = Group(
-            CollectionProps()
-        )
-        component.name = name
-        window.add(component)
-
-        return LuaUIGroup(
-            component
-        )
+    fun row(): LuaUIRow {
+        val node = RowNode()
+        UIRenderer.addRoot(node)
+        return LuaUIRow(node)
     }
 
     @TwineFunction
-    fun flow(name: String = ""): LuaUIFlow {
-        val component = FlowContainer(
-            FlowProps()
-        )
-        component.name = name
-        window.add(component)
+    fun box(): LuaUIBox {
+        val node = BoxNode()
+        UIRenderer.addRoot(node)
+        return LuaUIBox(node)
+    }
 
-        return LuaUIFlow(
-            component
-        )
+    @TwineFunction("get")
+    fun getByName(name: String): LuaUINode? {
+        return UIRenderer.findByName(name)?.let { LuaUINode.wrap(it) }
+    }
+
+    @TwineFunction
+    fun getById(id: String): LuaUINode? {
+        return UIRenderer.findById(id)?.let { LuaUINode.wrap(it) }
+    }
+
+    @TwineFunction
+    fun exists(name: String): Boolean {
+        return UIRenderer.findByName(name) != null
+    }
+
+    @TwineFunction
+    fun existsById(id: String): Boolean {
+        return UIRenderer.findById(id) != null
     }
 
     @TwineFunction
     fun clear() {
-        window.components.clear()
-    }
-
-    // cannot be called "get" since it overrides LuaValue's get method
-    @TwineFunction("get")
-    fun getById(name: String): LuaUIComponent? {
-        return smartGet(window.components.values, name)
-    }
-
-    @TwineFunction("exists")
-    fun exists(name: String): Boolean {
-        return smartGet(window.components.values, name) != null
-    }
-
-    @TwineFunction()
-    fun debug(value: Boolean) {
-        UIRenderer.debugEnabled = value
-    }
-
-    companion object {
-        fun smartGet(components: Collection<Component>, query: String): LuaUIComponent? {
-            for (component in components) {
-                // check if either name OR internalId match
-                val idMatches = component.internalId.equals(query, ignoreCase = true)
-                val nameMatches = component.name == query
-
-                if (nameMatches || idMatches) {
-                    return wrap(component)
-                }
-
-                // recurse into groups or flow containers
-                if (component is Group) {
-                    smartGet(component.props.components, query)?.let {
-                        return it
-                    }
-                } else if (component is FlowContainer) {
-                    smartGet(component.props.components, query)?.let {
-                        return it
-                    }
-                }
-            }
-            return null
-        }
-
-        fun wrap(component: Component): LuaUIComponent? =
-            when (component) {
-                is Text -> LuaUIText(component)
-                is Group -> LuaUIGroup(component)
-                is Box -> LuaUIBox(component)
-                is Sprite -> LuaUISprite(component)
-                is Gradient -> LuaUIGradient(component)
-                is ProgressBar -> LuaUIProgressBar(component)
-                is Line -> LuaUILine(component)
-                is FlowContainer -> LuaUIFlow(component)
-                else -> null
-            }
+        UIRenderer.clearRoots()
     }
 }

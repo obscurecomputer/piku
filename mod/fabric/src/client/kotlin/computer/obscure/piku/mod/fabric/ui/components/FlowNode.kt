@@ -4,10 +4,10 @@ import computer.obscure.piku.core.classes.horizontal
 import computer.obscure.piku.core.classes.leftF
 import computer.obscure.piku.core.classes.topF
 import computer.obscure.piku.core.classes.vertical
-import computer.obscure.piku.mod.fabric.ui.CrossAxisAlignment
-import computer.obscure.piku.mod.fabric.ui.Dimension
-import computer.obscure.piku.mod.fabric.ui.MainAxisAlignment
-import computer.obscure.piku.mod.fabric.ui.MeasureContext
+import computer.obscure.piku.mod.fabric.ui.classes.alignment.CrossAxisAlignment
+import computer.obscure.piku.mod.fabric.ui.classes.Dimension
+import computer.obscure.piku.mod.fabric.ui.classes.alignment.MainAxisAlignment
+import computer.obscure.piku.mod.fabric.ui.classes.context.MeasureContext
 import net.minecraft.client.gui.GuiGraphics
 
 enum class FlowAxis { HORIZONTAL, VERTICAL }

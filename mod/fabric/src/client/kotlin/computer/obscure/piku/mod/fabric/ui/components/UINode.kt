@@ -9,10 +9,10 @@ import computer.obscure.piku.core.classes.rightF
 import computer.obscure.piku.core.classes.topF
 import computer.obscure.piku.core.classes.vertical
 import computer.obscure.piku.core.graphics.UIColor
-import computer.obscure.piku.mod.fabric.ui.Anchor
-import computer.obscure.piku.mod.fabric.ui.Dimension
-import computer.obscure.piku.mod.fabric.ui.LayoutContext
-import computer.obscure.piku.mod.fabric.ui.MeasureContext
+import computer.obscure.piku.mod.fabric.ui.classes.Anchor
+import computer.obscure.piku.mod.fabric.ui.classes.Dimension
+import computer.obscure.piku.mod.fabric.ui.classes.context.LayoutContext
+import computer.obscure.piku.mod.fabric.ui.classes.context.MeasureContext
 import net.minecraft.client.gui.GuiGraphics
 import java.util.UUID
 

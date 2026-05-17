@@ -1,4 +1,4 @@
-package computer.obscure.piku.mod.fabric.ui
+package computer.obscure.piku.mod.fabric.ui.classes
 
 enum class Anchor {
     TOP_LEFT, TOP_CENTER, TOP_RIGHT,

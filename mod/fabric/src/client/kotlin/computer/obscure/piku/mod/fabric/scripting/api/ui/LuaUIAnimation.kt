@@ -4,7 +4,7 @@ import computer.obscure.piku.core.animation.Animation
 import computer.obscure.piku.core.scripting.engine.EngineError
 import computer.obscure.piku.core.scripting.engine.EngineErrorCode
 import computer.obscure.piku.mod.fabric.scripting.api.animation.LuaAnimatable
-import computer.obscure.piku.mod.fabric.ui.Dimension
+import computer.obscure.piku.mod.fabric.ui.classes.Dimension
 import computer.obscure.piku.mod.fabric.ui.components.FlowNode
 import computer.obscure.piku.mod.fabric.ui.components.ProgressBarNode
 import computer.obscure.piku.mod.fabric.ui.components.UINode

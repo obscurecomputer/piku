@@ -1,4 +1,4 @@
-package computer.obscure.piku.mod.fabric.ui
+package computer.obscure.piku.mod.fabric.utils
 
 import computer.obscure.piku.core.scripting.api.LuaTextInstance
 import net.kyori.adventure.platform.modcommon.MinecraftClientAudiences

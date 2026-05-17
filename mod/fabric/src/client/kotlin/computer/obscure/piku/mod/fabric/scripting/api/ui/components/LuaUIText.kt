@@ -3,7 +3,7 @@ package computer.obscure.piku.mod.fabric.scripting.api.ui.components
 import computer.obscure.piku.core.scripting.api.LuaColorInstance
 import computer.obscure.piku.core.scripting.api.LuaTextInstance
 import computer.obscure.piku.mod.fabric.ui.components.TextNode
-import computer.obscure.piku.mod.fabric.ui.toMcComponent
+import computer.obscure.piku.mod.fabric.utils.toMcComponent
 import computer.obscure.twine.annotations.TwineFunction
 import net.minecraft.network.chat.Component
 

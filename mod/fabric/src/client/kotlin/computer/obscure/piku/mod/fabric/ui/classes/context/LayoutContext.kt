@@ -1,4 +1,4 @@
-package computer.obscure.piku.mod.fabric.ui
+package computer.obscure.piku.mod.fabric.ui.classes.context
 
 data class LayoutContext(
     val x: Float,

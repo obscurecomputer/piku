@@ -3,8 +3,8 @@ package computer.obscure.piku.mod.fabric.ui.components
 import computer.obscure.piku.core.classes.leftF
 import computer.obscure.piku.core.classes.topF
 import computer.obscure.piku.core.graphics.UIColor
-import computer.obscure.piku.mod.fabric.ui.MeasureContext
-import computer.obscure.piku.mod.fabric.ui.TextInterpolator
+import computer.obscure.piku.mod.fabric.ui.classes.context.MeasureContext
+import computer.obscure.piku.mod.fabric.ui.text.TextInterpolator
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.network.chat.Component
 

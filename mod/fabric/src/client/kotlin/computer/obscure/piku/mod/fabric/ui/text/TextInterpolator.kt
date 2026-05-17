@@ -1,4 +1,4 @@
-package computer.obscure.piku.mod.fabric.ui
+package computer.obscure.piku.mod.fabric.ui.text
 
 import net.minecraft.client.Minecraft
 import net.minecraft.network.chat.Component

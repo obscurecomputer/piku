@@ -16,8 +16,8 @@ import computer.obscure.piku.mod.fabric.scripting.api.ui.components.LuaUIRow
 import computer.obscure.piku.mod.fabric.scripting.api.ui.components.LuaUIScrollbar
 import computer.obscure.piku.mod.fabric.scripting.api.ui.components.LuaUISprite
 import computer.obscure.piku.mod.fabric.scripting.api.ui.components.LuaUIText
-import computer.obscure.piku.mod.fabric.ui.Anchor
-import computer.obscure.piku.mod.fabric.ui.Dimension
+import computer.obscure.piku.mod.fabric.ui.classes.Anchor
+import computer.obscure.piku.mod.fabric.ui.classes.Dimension
 import computer.obscure.piku.mod.fabric.ui.UIRenderer
 import computer.obscure.piku.mod.fabric.ui.components.BoxNode
 import computer.obscure.piku.mod.fabric.ui.components.ColumnNode

@@ -1,7 +1,7 @@
 package computer.obscure.piku.mod.fabric.ui.components
 
 import computer.obscure.piku.core.graphics.UIColor
-import computer.obscure.piku.mod.fabric.ui.MeasureContext
+import computer.obscure.piku.mod.fabric.ui.classes.context.MeasureContext
 import net.minecraft.client.gui.GuiGraphics
 
 class GradientNode(

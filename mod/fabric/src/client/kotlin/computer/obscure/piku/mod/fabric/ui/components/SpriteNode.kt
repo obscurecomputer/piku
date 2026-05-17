@@ -1,7 +1,7 @@
 package computer.obscure.piku.mod.fabric.ui.components
 
-import computer.obscure.piku.mod.fabric.ui.Dimension
-import computer.obscure.piku.mod.fabric.ui.MeasureContext
+import computer.obscure.piku.mod.fabric.ui.classes.Dimension
+import computer.obscure.piku.mod.fabric.ui.classes.context.MeasureContext
 import computer.obscure.piku.mod.fabric.ui.UIRenderer
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphics

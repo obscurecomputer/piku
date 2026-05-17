@@ -20,7 +20,7 @@ data class HotReloadListener<T>(
 )
 
 interface ServerAPI<T> {
-    val engine: LuaEngine
+    val events: ServerEventBus<T>
     val hotReloadListeners: MutableList<HotReloadListener<T>>
 
     fun registerEvents()
@@ -83,7 +83,7 @@ interface ServerAPI<T> {
                     file.isDirectory && recurse ->
                         walk(file, "$prefix${file.name}/")
 
-                    file.isFile ->
+                    file.isFile && file.extension in setOf("lua", "luau") ->
                         consumer(
                             "$prefix${file.name}",
                             file.readText(StandardCharsets.UTF_8)
@@ -165,24 +165,6 @@ interface ServerAPI<T> {
         sendScript(player, "END_OF_SCRIPT_LOADING", "")
     }
 
-    fun runAllScripts(
-        source: ScriptSource,
-        recurse: Boolean = true
-    ) {
-        when (source) {
-            is ScriptSource.Directory ->
-                forEachFileScript(source.dir, recurse) { name, content ->
-                    engine.runScript(name, content)
-                }
-
-            is ScriptSource.Resource ->
-                forEachResourceScript(source.path, recurse) { name, content ->
-                    engine.runScript(name, content)
-                }
-        }
-    }
-
-
     private fun runHotReload(
         players: () -> List<T>,
         source: ScriptSource,
@@ -191,6 +173,8 @@ interface ServerAPI<T> {
     ) {
         val playerList = players.invoke()
         unloadScripts(playerList)
+        sendAllScripts(playerList, source, recurse)
+        onSuccessfulReload(playerList)
     }
 
     fun hotReload(

@@ -37,7 +37,7 @@ class LuaMath : TwineNative("math") {
     }
 
     // rounding
-    @TwineFunction fun round(x: Double): Double = kotlin.math.round(x).toDouble()
+    @TwineFunction fun round(x: Double): Double = kotlin.math.round(x)
     @TwineFunction fun floor(x: Double): Double = kotlin.math.floor(x)
     @TwineFunction fun ceil(x: Double): Double = kotlin.math.ceil(x)
     @TwineFunction fun trunc(x: Double): Double = truncate(x)

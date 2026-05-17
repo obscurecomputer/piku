@@ -4,6 +4,7 @@ import computer.obscure.piku.core.scripting.server.HotReloadListener
 import computer.obscure.piku.core.scripting.server.PikuPlayer
 import computer.obscure.piku.core.scripting.server.PlayerStorage
 import computer.obscure.piku.core.scripting.server.ServerAPI
+import computer.obscure.piku.core.scripting.server.ServerEvents
 import computer.obscure.piku.core.scripting.server.SharedStateManager
 import computer.obscure.piku.core.states.SharedState
 import computer.obscure.piku.core.utils.jsonStringToKotlin
@@ -22,12 +23,11 @@ import net.minestom.server.network.packet.server.common.PluginMessagePacket
 import java.util.*
 
 class MinestomAPI(val server: BlossomServer) : ServerAPI<Player> {
-    override val engine = MinestomLuaEngine()
+    override val events = ServerEvents<Player>()
     override val hotReloadListeners: MutableList<HotReloadListener<Player>> = mutableListOf()
 
     override fun registerEvents() {
         SharedStateManager.piku = this
-        engine.init()
         server.eventHandler.addListener<PlayerPluginMessageEvent> { event ->
             when (event.identifier) {
                 "piku:send_data" -> {
@@ -43,7 +43,7 @@ class MinestomAPI(val server: BlossomServer) : ServerAPI<Player> {
                         @Suppress("UNCHECKED_CAST")
                         val luaData = (decoded as? Map<String, Any?>) ?: emptyMap()
 
-                        engine.events.fire(eventId, luaData, event.player)
+                        events.fire(eventId, luaData, event.player)
                     } catch (e: Exception) {
                         error("Failed to decode: ${e.message}")
                     }
@@ -75,7 +75,7 @@ class MinestomAPI(val server: BlossomServer) : ServerAPI<Player> {
                 }
                 "piku:finished_unloading_scripts" -> {
                     if (hotReloadListeners.isNotEmpty()) {
-                        hotReloadListeners.forEach { it ->
+                        hotReloadListeners.forEach {
                             this.sendAllScripts(event.player, it.source, it.recurse)
                             it.onSuccessfulReload(listOf(event.player))
                         }
@@ -84,7 +84,7 @@ class MinestomAPI(val server: BlossomServer) : ServerAPI<Player> {
             }
         }
 
-        engine.events.listen("piku.brand") { data, player ->
+        events.listen("piku.brand") { _, player ->
             val p = PlayerStorage.get<Player>(player.uuid)
                 ?: throw NullPointerException("Can not access non-existent player storage!")
             p.usingPiku = true

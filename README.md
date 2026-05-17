@@ -25,11 +25,11 @@ Players are **not required to use it** on Piku servers **by default**, and is ty
 
 ## Platforms
 
-| Platform 	 | Client 	 | Server |
-|------------|----------|--------|
-| Fabric   	 | ✅      	 | ❌      |
-| Minestom 	 | ❌      	 | ✅      |
-| Paper    	 | ❌      	 | ❌      |
+| Platform 	 | Client 	 | Server | Server (drop-in jar) |
+|------------|----------|--------|----------------------|
+| Fabric   	 | ✅      	 | ❌      | ❌                    |
+| Minestom 	 | ❌      	 | ✅      | ❌                    |
+| Paper    	 | ❌      	 | ✅      | ✅                    |
 
 ## Current Features
 - **Input Handling**

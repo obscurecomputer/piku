@@ -10,5 +10,6 @@ pluginManagement {
 
 rootProject.name = "piku"
 include("core")
-include("minestom")
+include("server:minestom")
+include("server:paper")
 include("mod:fabric")

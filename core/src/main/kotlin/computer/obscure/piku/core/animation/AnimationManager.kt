@@ -75,7 +75,7 @@ object AnimationManager : PikuService {
             }
 
             @Suppress("UNCHECKED_CAST")
-            (anim.setter as (Any) -> Unit)(value)
+            anim.setter(value)
             anim.onTick(deltaSeconds, t)
 
             if (anim.elapsed >= anim.durationSeconds) {

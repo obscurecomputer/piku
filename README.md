@@ -1,18 +1,63 @@
-# piku
-
 <p align="center">
     <picture>
         <img src="assets/piku-logomark.svg" alt="Piku Logomark" width="500">
     </picture>
 </p>
 
-![common](https://img.shields.io/teamcity/build/e/piku_common_Build?server=https%3A%2F%2Fci.obscure.computer&label=common%20build&link=https%3A%2F%2Fci.obscure.computer%2Fproject%2Fpiku%3Fmode%3Dbuilds)
-![fabric](https://img.shields.io/teamcity/build/e/piku_fabric_Build?server=https%3A%2F%2Fci.obscure.computer&label=fabric%20build&link=https%3A%2F%2Fci.obscure.computer%2Fproject%2Fpiku%3Fmode%3Dbuilds)
-![minestom](https://img.shields.io/teamcity/build/e/piku_minestom_Build?server=https%3A%2F%2Fci.obscure.computer&label=minestom%20build&link=https%3A%2F%2Fci.obscure.computer%2Fproject%2Fpiku%3Fmode%3Dbuilds)
+<p align="center">
+    <img src="assets/java25.svg" alt="" width="144">
+    <img src="assets/kotlin.svg" alt="" width="144">
+    <img src="assets/fabric-language-kotlin.svg" alt="" width="265">
+    <a href="https://discord.gg/DeTbNe6UyY">
+        <img src="assets/discord.svg" alt="" width="192">
+    </a>
+</p>
 
-Client & Server scripting mod for Fabric and Minestom. 
+**[📖 Docs](https://docs.obscure.computer/project.piku/)** · **[💻 GitHub](https://github.com/obscurecomputer/piku)**
 
-More info on [docs.obscure.computer](https://docs.obscure.computer/project.piku/).
+**Piku** is a Fabric mod that brings **Luau scripting** to servers!
+You can build custom UI, cameras systems, and run client-side logic without Java, shader work or extra server load!
+
+## Usage
+
+Piku is a **client-side mod**.
+Players are **not required to use it** on Piku servers **by default**, and is typically used to expand server functionality.
+
+## Platforms
+
+| Platform 	 | Client 	 | Server |
+|------------|----------|--------|
+| Fabric   	 | ✅      	 | ❌      |
+| Minestom 	 | ❌      	 | ✅      |
+| Paper    	 | ❌      	 | ❌      |
+
+## Current Features
+- **Input Handling**
+    - listening to player's inputs (keyboard, mouse)
+- **UI System**
+    - build complex UIs using the 8+ UI components
+- **Camera System**
+    - manipulate the player's camera using a **full 3-axis movement** (roll included), with easings
+- **Cinematic Camera System**
+    - manipulate a decoupled camera using 3 axis movement with various movement and animation controls
+- **Scheduler**
+    - time-based events and delays
+- **Shared States**
+    - sync data between the server and the client
+- **Client Control**
+    - tinker with the client using various controls
+        - hotbar visibility
+        - perspective
+        - inventory items
+        - nbt
+        - play sounds
+        - view bobbing
+- **Debugging**
+    - built-in script independent logging
+- **Raycasting**
+    - client-side raycasting with powerful entity filters and customisation options
+- **NBT & Components**
+    - read & write data components of items and entities
 
 # To-do List / Roadmap
 Tasks labeled here may not be worked on in chronological order.

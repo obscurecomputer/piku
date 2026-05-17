@@ -1,6 +1,6 @@
 <p align="center">
     <picture>
-        <img src="assets/piku-logomark.svg" alt="Piku Logomark" width="500">
+        <img src="assets/piku-logomark.svg" alt="Piku Logomark" height="256">
     </picture>
 </p>
 

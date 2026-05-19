@@ -2,6 +2,8 @@ package computer.obscure.piku.paper.scripting
 
 import com.github.retrooper.packetevents.PacketEvents
 import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerPluginMessage
+import computer.obscure.piku.core.buffers.readVarIntString
+import computer.obscure.piku.core.buffers.writeVarIntString
 import computer.obscure.piku.core.classes.ScriptSource
 import computer.obscure.piku.core.scripting.server.HotReloadListener
 import computer.obscure.piku.core.scripting.server.PikuPlayer
@@ -97,8 +99,8 @@ class PaperAPI(
     override fun sendScript(player: Player, name: String, content: String) {
         try {
             val out = ByteArrayOutputStream()
-            writeVarIntString(out, name)
-            writeVarIntString(out, content)
+            out.writeVarIntString(name)
+            out.writeVarIntString(content)
             send(player, "piku:receive_script", out)
         } catch (e: Exception) {
             e.printStackTrace()
@@ -107,16 +109,16 @@ class PaperAPI(
 
     override fun sendData(player: Player, eventId: String, data: Any) {
         val out = ByteArrayOutputStream()
-        writeVarIntString(out, eventId)
-        writeVarIntString(out, data.toJson())
+        out.writeVarIntString(eventId)
+        out.writeVarIntString(data.toJson())
         send(player, "piku:receive_data", out)
     }
 
     override fun sendState(player: Player, state: SharedState) {
         val out = ByteArrayOutputStream()
-        writeVarIntString(out, state.internalId.toString())
-        writeVarIntString(out, state.name)
-        writeVarIntString(out, state.value.toJson())
+        out.writeVarIntString(state.internalId.toString())
+        out.writeVarIntString(state.name)
+        out.writeVarIntString(state.value.toJson())
         out.write(if (state.clientModifiable) 1 else 0)
         send(player, "piku:receive_state", out)
     }
@@ -125,31 +127,5 @@ class PaperAPI(
         val out = ByteArrayOutputStream()
         out.write(1)
         send(player, "piku:unload_scripts", out)
-    }
-
-    private fun writeVarIntString(out: ByteArrayOutputStream, value: String) {
-        val bytes = value.toByteArray(Charsets.UTF_8)
-        writeVarInt(out, bytes.size)
-        out.write(bytes)
-    }
-
-    private fun writeVarInt(out: ByteArrayOutputStream, value: Int) {
-        var v = value
-        while (true) {
-            if (v and 0x7F.inv() == 0) { out.write(v); break }
-            out.write((v and 0x7F) or 0x80)
-            v = v ushr 7
-        }
-    }
-
-    private fun ByteArrayInputStream.readVarInt(): Int {
-        var result = 0; var shift = 0; var b: Int
-        do { b = read(); result = result or ((b and 0x7F) shl shift); shift += 7 } while (b and 0x80 != 0)
-        return result
-    }
-
-    private fun ByteArrayInputStream.readVarIntString(): String {
-        val len = readVarInt()
-        return String(readNBytes(len), Charsets.UTF_8)
     }
 }

@@ -37,7 +37,7 @@ class Server : BlossomServer(
             players = {
                 this.players.toList()
             },
-            source = ScriptSource.Directory(dir = File("minestom/test/scripts/client")),
+            source = ScriptSource.Directory(dir = File("server/minestom/test/scripts/client")),
             onSuccessfulReload = {}
         )
 
@@ -45,7 +45,7 @@ class Server : BlossomServer(
         eventHandler.addListener<PlayerLoadedEvent> { event ->
             piku.sendAllScripts(
                 player = event.player,
-                source = ScriptSource.Directory(dir = File("minestom/test/scripts/client")),
+                source = ScriptSource.Directory(dir = File("server/minestom/test/scripts/client")),
                 recurse = true
             )
         }

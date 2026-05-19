@@ -1,11 +1,8 @@
 package computer.obscure.piku.mod.fabric.ui.components
 
-import computer.obscure.piku.core.classes.horizontal
-import computer.obscure.piku.core.classes.leftF
-import computer.obscure.piku.core.classes.topF
-import computer.obscure.piku.core.classes.vertical
-import computer.obscure.piku.mod.fabric.ui.classes.alignment.CrossAxisAlignment
+import computer.obscure.piku.mod.fabric.ui.classes.Axis
 import computer.obscure.piku.mod.fabric.ui.classes.Dimension
+import computer.obscure.piku.mod.fabric.ui.classes.alignment.CrossAxisAlignment
 import computer.obscure.piku.mod.fabric.ui.classes.alignment.MainAxisAlignment
 import computer.obscure.piku.mod.fabric.ui.classes.context.MeasureContext
 import net.minecraft.client.gui.GuiGraphics
@@ -21,139 +18,112 @@ abstract class FlowNode(var gap: Float = 0f) : UINode() {
     var maxScrollExtent: Float = 0f
 
     abstract val axis: FlowAxis
+    private val ax get() =
+        if (axis == FlowAxis.HORIZONTAL)
+            Axis.Horizontal
+        else Axis.Vertical
 
-    // total size of all children along the main axis
     private fun totalMainSize(): Float {
         val count = (children.size - 1).coerceAtLeast(0)
-        return when (axis) {
-            FlowAxis.VERTICAL -> children.sumOf { (it.measuredHeight + it.margin.vertical).toDouble() }.toFloat() + gap * count
-            FlowAxis.HORIZONTAL -> children.sumOf { (it.measuredWidth + it.margin.horizontal).toDouble() }.toFloat() + gap * count
-        }
+        return children
+            .sumOf { (ax.mainMeasured(it) + ax.mainMargin(it)).toDouble() }
+            .toFloat() + gap * count
     }
 
     override fun measureContent(ctx: MeasureContext): Pair<Float, Float> {
-        return when (axis) {
-            // TODO: reduce duplication here, too lazy
-            FlowAxis.HORIZONTAL -> {
-                val fillChildren = children.filter { it.width == Dimension.Fill }
-                val nonFillChildren = children.filter { it.width != Dimension.Fill }
-
-                val fixedW = nonFillChildren.sumOf { (it.measuredWidth + it.margin.horizontal).toDouble() }.toFloat() +
-                        gap * (children.size - 1).coerceAtLeast(0)
-
-                val remaining = (ctx.parentWidth - fixedW - padding.horizontal).coerceAtLeast(0f)
-                val fillW = if (fillChildren.isNotEmpty()) remaining / fillChildren.size else 0f
-
-                fillChildren.forEach { child ->
-                    child.measureSelf(ctx.copy(parentWidth = (fillW - child.margin.horizontal).coerceAtLeast(0f)))
-                }
-
-                val w = children.sumOf { (it.measuredWidth + it.margin.horizontal).toDouble() }.toFloat() +
-                        gap * (children.size - 1).coerceAtLeast(0)
-                val h = children.maxOfOrNull { it.measuredHeight + it.margin.vertical } ?: 0f
-                w to h
-            }
-            FlowAxis.VERTICAL -> {
-                val fillChildren = children.filter { it.height == Dimension.Fill }
-                val nonFillChildren = children.filter { it.height != Dimension.Fill }
-
-                val fixedH = nonFillChildren.sumOf { (it.measuredHeight + it.margin.vertical).toDouble() }.toFloat() +
-                        gap * (children.size - 1).coerceAtLeast(0)
-
-                val remaining = (ctx.parentHeight - fixedH - padding.vertical).coerceAtLeast(0f)
-                val fillH = if (fillChildren.isNotEmpty()) remaining / fillChildren.size else 0f
-
-                fillChildren.forEach { child ->
-                    child.measureSelf(ctx.copy(parentHeight = (fillH - child.margin.vertical).coerceAtLeast(0f)))
-                }
-
-                val w = children.maxOfOrNull { it.measuredWidth + it.margin.horizontal } ?: 0f
-                val h = children.sumOf { (it.measuredHeight + it.margin.vertical).toDouble() }.toFloat() +
-                        gap * (children.size - 1).coerceAtLeast(0)
-                w to h
-            }
+        val fillChildren = children.filter {
+            ax.mainDimension(it) == Dimension.Fill
         }
+        val nonFillChildren = children.filter {
+            ax.mainDimension(it) != Dimension.Fill
+        }
+
+        // fixed children are measured first to know how
+        // much space is left for fillChildren
+        val fixedMain = nonFillChildren
+            .sumOf { (ax.mainMeasured(it) + ax.mainMargin(it)).toDouble() }
+            .toFloat() + gap * (children.size - 1).coerceAtLeast(0)
+
+        // divide the remaining space equally across fillChildren
+        val remaining = (ax.parentMain(ctx) - fixedMain - ax.mainPadding(padding))
+            .coerceAtLeast(0f)
+
+        val fillSize = if (fillChildren.isNotEmpty())
+            remaining / fillChildren.size
+        else 0f
+
+        // main axis - sum all children widths
+        // cross axis - tallest child
+        fillChildren.forEach { child ->
+            val childMain = (fillSize - ax.mainMargin(child)).coerceAtLeast(0f)
+            child.measureSelf(ax.withMain(ctx, childMain))
+        }
+
+        val main = children
+            .sumOf { (ax.mainMeasured(it) + ax.mainMargin(it)).toDouble() }
+            .toFloat() + gap * (children.size - 1).coerceAtLeast(0)
+        val cross = children.maxOfOrNull {
+            ax.crossMeasured(it) + ax.crossMargin(it)
+        } ?: 0f
+
+        return ax.toSize(main, cross)
     }
 
     override fun layoutChildren() {
-        val innerW = measuredWidth - padding.horizontal
-        val innerH = measuredHeight - padding.vertical
+        val innerMain = ax.innerMain(this)
+        val innerCross = ax.innerCross(this)
         val total = totalMainSize()
 
+        // clamp the scroll
         clampedScroll = if (scrollable) {
-            val overflow = when (axis) {
-                FlowAxis.VERTICAL -> (total - innerH).coerceAtLeast(0f)
-                FlowAxis.HORIZONTAL -> (total - innerW).coerceAtLeast(0f)
-            }
-            val clamped = scrollOffset.coerceIn(-overflow, 0f)
-            scrollOffset = clamped
-            clamped
+            val overflow = (total - innerMain).coerceAtLeast(0f)
+            scrollOffset = scrollOffset.coerceIn(-overflow, 0f)
+            scrollOffset
         } else 0f
 
-        maxScrollExtent = when (axis) {
-            FlowAxis.VERTICAL -> (total - innerH).coerceAtLeast(0f)
-            FlowAxis.HORIZONTAL -> (total - innerW).coerceAtLeast(0f)
-        }
+        maxScrollExtent = (total - innerMain).coerceAtLeast(0f)
 
-        val mainStart = when (axis) {
-            FlowAxis.VERTICAL -> layoutY + padding.topF
-            FlowAxis.HORIZONTAL -> layoutX + padding.leftF
-        }
-
-        val cursor0 = mainStart + clampedScroll + when (mainAxis) {
+        // how far to shift the first child from the start edge
+        // based on main axis alignment
+        val mainOffset = when (mainAxis) {
             MainAxisAlignment.Start -> 0f
-            MainAxisAlignment.Center -> when (axis) {
-                FlowAxis.VERTICAL -> (innerH - total) / 2f
-                FlowAxis.HORIZONTAL -> (innerW - total) / 2f
-            }
-            MainAxisAlignment.End -> when (axis) {
-                FlowAxis.VERTICAL -> innerH - total
-                FlowAxis.HORIZONTAL -> innerW - total
-            }
+            MainAxisAlignment.Center -> (innerMain - total) / 2f
+            MainAxisAlignment.End -> innerMain - total
             MainAxisAlignment.SpaceBetween -> 0f
-            MainAxisAlignment.SpaceAround -> when (axis) {
-                FlowAxis.VERTICAL -> (innerH - total) / children.size / 2f
-                FlowAxis.HORIZONTAL -> (innerW - total) / children.size / 2f
-            }
+            MainAxisAlignment.SpaceAround -> (innerMain - total) / children.size / 2f
         }
 
-        val spaceBetween = if (mainAxis == MainAxisAlignment.SpaceBetween && children.size > 1) {
-            val inner = if (axis == FlowAxis.VERTICAL) innerH else innerW
-            (inner - total) / (children.size - 1)
-        } else 0f
+        // extra space inserted when using "SpaceBetween" or
+        // "SpaceAround"s
+        val spaceBetween = when {
+            mainAxis == MainAxisAlignment.SpaceBetween && children.size > 1 ->
+                (innerMain - total) / (children.size - 1)
+            else -> 0f
+        }
 
-        val spaceAround = if (mainAxis == MainAxisAlignment.SpaceAround) {
-            val inner = if (axis == FlowAxis.VERTICAL) innerH else innerW
-            (inner - total) / children.size
-        } else 0f
+        val spaceAround = when (mainAxis) {
+            MainAxisAlignment.SpaceAround -> (innerMain - total) / children.size
+            else -> 0f
+        }
 
-        var cursor = cursor0
+        var cursor = ax.mainStart(this) + clampedScroll + mainOffset
 
         children.forEach { child ->
-            when (axis) {
-                FlowAxis.VERTICAL -> {
-                    val childX = layoutX + padding.leftF + child.margin.leftF + when (crossAxis) {
-                        CrossAxisAlignment.Start -> 0f
-                        CrossAxisAlignment.Center -> (innerW - child.measuredWidth - child.margin.horizontal) / 2f
-                        CrossAxisAlignment.End -> innerW - child.measuredWidth - child.margin.horizontal
-                    }
-                    child.layoutX = childX
-                    child.layoutY = cursor + child.margin.topF
-                    child.layoutChildren()
-                    cursor += child.measuredHeight + child.margin.vertical + gap + spaceBetween + spaceAround
-                }
-                FlowAxis.HORIZONTAL -> {
-                    val childY = layoutY + padding.topF + child.margin.topF + when (crossAxis) {
-                        CrossAxisAlignment.Start -> 0f
-                        CrossAxisAlignment.Center -> (innerH - child.measuredHeight - child.margin.vertical) / 2f
-                        CrossAxisAlignment.End -> innerH - child.measuredHeight - child.margin.vertical
-                    }
-                    child.layoutX = cursor + child.margin.leftF
-                    child.layoutY = childY
-                    child.layoutChildren()
-                    cursor += child.measuredWidth + child.margin.horizontal + gap + spaceBetween + spaceAround
-                }
+            val crossOffset = when (crossAxis) {
+                CrossAxisAlignment.Start -> 0f
+                CrossAxisAlignment.Center ->
+                    (innerCross - ax.crossMeasured(child) - ax.crossMargin(child)) / 2f
+                CrossAxisAlignment.End ->
+                    innerCross - ax.crossMeasured(child) - ax.crossMargin(child)
             }
+
+            val crossPos = ax.crossStart(this) + ax.crossMarginStart(child) + crossOffset
+            val mainPos = cursor + ax.mainMarginStart(child)
+
+            ax.setLayout(child, mainPos, crossPos)
+            child.layoutChildren()
+
+            cursor += ax.mainMeasured(child) + ax.mainMargin(child) + gap + spaceBetween + spaceAround
         }
     }
 
@@ -178,6 +148,7 @@ abstract class FlowNode(var gap: Float = 0f) : UINode() {
         if (scrollable) graphics.disableScissor()
     }
 
+    // cull children that are outside the node's bounds
     private fun isChildVisible(child: UINode): Boolean {
         val nodeBottom = layoutY + measuredHeight
         val nodeRight = layoutX + measuredWidth

@@ -23,7 +23,7 @@ class ScrollbarNode(var target: FlowNode? = null) : UINode() {
         val w = measuredWidth.toInt()
         val h = measuredHeight.toInt()
 
-        graphics.fill(x, y, x + w, y + h, trackColor.argb)
+        graphics.fill(x, y, x + w, y + h, trackColor.withOpacity(computedOpacity).argb)
 
         val maxScroll = t.maxScrollExtent
         if (maxScroll <= 0f) return
@@ -35,13 +35,13 @@ class ScrollbarNode(var target: FlowNode? = null) : UINode() {
                 val total = maxScroll + h
                 val thumbH = ((h.toFloat() / total) * h).coerceAtLeast(16f).toInt()
                 val thumbY = y + ((h - thumbH) * scrollFraction).toInt()
-                graphics.fill(x, thumbY, x + w, thumbY + thumbH, thumbColor.argb)
+                graphics.fill(x, thumbY, x + w, thumbY + thumbH, thumbColor.withOpacity(computedOpacity).argb)
             }
             ScrollbarDirection.HORIZONTAL -> {
                 val total = maxScroll + w
                 val thumbW = ((w.toFloat() / total) * w).coerceAtLeast(16f).toInt()
                 val thumbX = x + ((w - thumbW) * scrollFraction).toInt()
-                graphics.fill(thumbX, y, thumbX + thumbW, y + h, thumbColor.argb)
+                graphics.fill(thumbX, y, thumbX + thumbW, y + h, thumbColor.withOpacity(computedOpacity).argb)
             }
         }
     }

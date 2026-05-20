@@ -36,8 +36,24 @@ import computer.obscure.twine.annotations.TwineProperty
 open class LuaUINode(open val node: UINode) : TwineNative() {
 
     @TwineFunction
+    fun visible(): Boolean {
+        return node.visible
+    }
+
+    @TwineFunction
     fun visible(value: Boolean): LuaUINode {
         node.visible = value
+        return this
+    }
+
+    @TwineFunction
+    fun opacity(): Float {
+        return node.opacity
+    }
+
+    @TwineFunction
+    fun opacity(value: Float): LuaUINode {
+        node.opacity = value
         return this
     }
 

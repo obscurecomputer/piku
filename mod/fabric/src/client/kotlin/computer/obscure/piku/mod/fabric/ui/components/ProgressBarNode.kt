@@ -18,7 +18,16 @@ class ProgressBarNode(
         val w = measuredWidth.toInt()
         val h = measuredHeight.toInt()
 
-        graphics.fill(x, y, x + w, y + h, track.argb)
-        graphics.fill(x, y, x + (w * value.coerceIn(0f, 1f)).toInt(), y + h, foreground.argb)
+        graphics.fill(
+            x, y,
+            x + w, y + h,
+            track.withOpacity(computedOpacity).argb
+        )
+        graphics.fill(
+            x, y,
+            x + (w * value.coerceIn(0f, 1f)).toInt(),
+            y + h,
+            foreground.withOpacity(computedOpacity).argb
+        )
     }
 }

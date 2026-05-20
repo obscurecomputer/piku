@@ -28,6 +28,21 @@ class LuaUIAnimation(val node: UINode) : LuaAnimatable() {
     }
 
     @TwineFunction
+    fun opacity(to: Float, duration: Double, easing: String): LuaUIAnimation {
+        queue.add(Animation(
+            targetId = node.id,
+            durationSeconds = duration,
+            easing = easing,
+            getter = { node.opacity },
+            setter = { node.opacity = it },
+            to = to,
+            onStart = { onStartCallback?.call<Unit>() },
+            onFinish = { onFinishCallback?.call<Unit>() }
+        ))
+        return this
+    }
+
+    @TwineFunction
     fun width(to: Float, duration: Double, easing: String): LuaUIAnimation {
         queue.add(Animation(
             targetId = node.id,

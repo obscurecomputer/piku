@@ -72,6 +72,11 @@ value class UIColor(
     fun alpha(value: Int): UIColor =
         withAlpha(value)
 
+    fun withOpacity(opacity: Float): UIColor {
+        val newAlpha = (a * opacity.coerceIn(0f, 1f)).toInt()
+        return withAlpha(newAlpha)
+    }
+
     fun darken(amount: Float): UIColor =
         brighten(-amount)
 

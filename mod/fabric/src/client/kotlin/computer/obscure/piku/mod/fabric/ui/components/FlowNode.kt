@@ -127,12 +127,14 @@ abstract class FlowNode(var gap: Float = 0f) : UINode() {
         }
     }
 
-    override fun drawSelf(graphics: GuiGraphics, ctx: MeasureContext) {
-        if (!visible) return
+    override fun drawSelf(graphics: GuiGraphics, ctx: MeasureContext, parentOpacity: Float) {
+        if (!visible || opacity == 0f) return
+
+        computedOpacity = opacity * parentOpacity
         background?.let {
             graphics.fill(layoutX.toInt(), layoutY.toInt(),
                 (layoutX + measuredWidth).toInt(), (layoutY + measuredHeight).toInt(),
-                it.argb)
+                it.withOpacity(computedOpacity).argb)
         }
         if (scrollable) {
             graphics.enableScissor(
@@ -143,7 +145,7 @@ abstract class FlowNode(var gap: Float = 0f) : UINode() {
         drawContent(graphics, ctx)
         children.forEach { child ->
             if (scrollable && !isChildVisible(child)) return@forEach
-            child.drawSelf(graphics, ctx)
+            child.drawSelf(graphics, ctx, computedOpacity)
         }
         if (scrollable) graphics.disableScissor()
     }

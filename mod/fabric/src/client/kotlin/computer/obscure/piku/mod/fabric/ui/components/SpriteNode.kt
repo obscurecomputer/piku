@@ -70,6 +70,7 @@ class SpriteNode() : UINode() {
         val id = textureId ?: return
         val w = measuredWidth.toInt()
         val h = measuredHeight.toInt()
+
         graphics.blit(
             RenderPipelines.GUI_TEXTURED,
             id,
@@ -77,7 +78,8 @@ class SpriteNode() : UINode() {
             layoutY.toInt(),
             0f, 0f,
             w, h,
-            w, h
+            w, h,
+            color.withOpacity(computedOpacity).argb
         )
     }
 }

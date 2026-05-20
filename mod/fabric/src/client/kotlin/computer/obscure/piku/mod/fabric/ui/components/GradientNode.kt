@@ -23,7 +23,12 @@ class GradientNode(
 
         when (direction) {
             GradientDirection.HORIZONTAL ->
-                graphics.fillGradient(x1, y1, x2, y2, colorStart.argb, colorEnd.argb)
+                graphics.fillGradient(
+                    x1, y1,
+                    x2, y2,
+                    colorStart.withOpacity(computedOpacity).argb,
+                    colorEnd.withOpacity(computedOpacity).argb
+                )
             GradientDirection.VERTICAL -> {
                 // TODO: find a vertical implementation of this?
                 // could not find one?

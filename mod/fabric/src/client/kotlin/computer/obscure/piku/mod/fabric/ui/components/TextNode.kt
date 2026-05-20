@@ -2,14 +2,12 @@ package computer.obscure.piku.mod.fabric.ui.components
 
 import computer.obscure.piku.core.classes.leftF
 import computer.obscure.piku.core.classes.topF
-import computer.obscure.piku.core.graphics.UIColor
 import computer.obscure.piku.mod.fabric.ui.classes.context.MeasureContext
 import computer.obscure.piku.mod.fabric.ui.text.TextInterpolator
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.network.chat.Component
 
 class TextNode(var text: Component) : UINode() {
-    var color: UIColor = UIColor.WHITE
     var shadow: Boolean = false
 
     constructor(text: String) : this(Component.literal(text))
@@ -31,7 +29,7 @@ class TextNode(var text: Component) : UINode() {
             interpolated,
             (layoutX + padding.leftF).toInt(),
             (layoutY + padding.topF).toInt(),
-            color.argb,
+            color.withOpacity(computedOpacity).argb,
             shadow
         )
     }

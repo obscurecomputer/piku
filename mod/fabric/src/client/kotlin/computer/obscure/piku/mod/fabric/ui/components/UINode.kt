@@ -31,15 +31,19 @@ abstract class UINode {
     var margin: Spacing = Spacing.ZERO
 
     var background: UIColor? = null
+    var color: UIColor = UIColor.WHITE
 
     // COMPUTED LAYOUT
     var layoutX: Float = 0f
+
     var layoutY: Float = 0f
-
     var measuredWidth: Float = 0f
-    var measuredHeight: Float = 0f
 
+    var measuredHeight: Float = 0f
     var visible: Boolean = true
+    var opacity: Float = 1f
+
+    var computedOpacity: Float = 1f
 
     val children = mutableListOf<UINode>()
 
@@ -105,15 +109,21 @@ abstract class UINode {
         children.forEach { it.layoutSelf(childCtx) }
     }
 
-    open fun drawSelf(graphics: GuiGraphics, ctx: MeasureContext) {
-        if (!visible) return
+    open fun drawSelf(graphics: GuiGraphics, ctx: MeasureContext, parentOpacity: Float = 1f) {
+        if (!visible || opacity == 0f) return
+
+        computedOpacity = opacity * parentOpacity
+
         background?.let {
-            graphics.fill(layoutX.toInt(), layoutY.toInt(),
+            graphics.fill(
+                layoutX.toInt(), layoutY.toInt(),
                 (layoutX + measuredWidth).toInt(), (layoutY + measuredHeight).toInt(),
-                it.argb)
+                it.withOpacity(computedOpacity).argb
+            )
         }
+
         drawContent(graphics, ctx)
-        children.forEach { it.drawSelf(graphics, ctx) }
+        children.forEach { it.drawSelf(graphics, ctx, computedOpacity) }
     }
 
     protected open fun drawContent(graphics: GuiGraphics, ctx: MeasureContext) {}

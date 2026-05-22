@@ -8,6 +8,7 @@ import computer.obscure.piku.core.service.PikuService
 object AnimationManager : PikuService {
     private val animations: MutableList<Animation<Any>> = mutableListOf()
     private val pending: MutableList<Animation<Any>> = mutableListOf()
+    private val lock = Any()
 
     var easingResolver: (String, Double) -> Double = { _, t -> t }
 
@@ -23,20 +24,17 @@ object AnimationManager : PikuService {
         return animations.any { it.targetId == id } || pending.any { it.targetId == id }
     }
 
-    fun cancelFor(id: String) {
-        animations.removeAll { it.targetId == id && !it.finished }
+    fun cancelFor(id: String) = synchronized(lock) {
+        animations.removeAll { it.targetId == id }
         pending.removeAll { it.targetId == id }
     }
 
-    fun <T> animate(anim: Animation<T>) {
+    fun <T> animate(anim: Animation<T>) = synchronized(lock) {
         @Suppress("UNCHECKED_CAST")
         pending += anim as Animation<Any>
     }
 
-    fun tick(deltaSeconds: Double) {
-        animations += pending
-        pending.clear()
-
+    fun tick(deltaSeconds: Double) = synchronized(lock) {
         val toRemove = mutableListOf<Animation<*>>()
 
         for (anim in animations) {
@@ -88,5 +86,8 @@ object AnimationManager : PikuService {
         // so any new animations queued by onFinish go to pending safely
         animations.removeAll(toRemove)
         toRemove.forEach { it.onFinish() }
+
+        animations += pending
+        pending.clear()
     }
 }

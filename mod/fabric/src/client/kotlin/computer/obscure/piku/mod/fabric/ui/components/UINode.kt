@@ -69,7 +69,7 @@ abstract class UINode {
         }
 
         children.forEach { it.measureSelf(childCtx) }
-        val (contentW, contentH) = measureContent(ctx)
+        val (contentW, contentH) = measureContent(childCtx)
         measuredWidth = resolveDimension(width, contentW + padding.horizontal, ctx.parentWidth)
         measuredHeight = resolveDimension(height, contentH + padding.vertical, ctx.parentHeight)
     }

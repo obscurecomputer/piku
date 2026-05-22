@@ -31,11 +31,14 @@ abstract class FlowNode(var gap: Float = 0f) : UINode() {
     }
 
     override fun measureContent(ctx: MeasureContext): Pair<Float, Float> {
-        val fillChildren = children.filter {
-            ax.mainDimension(it) == Dimension.Fill
-        }
-        val nonFillChildren = children.filter {
-            ax.mainDimension(it) != Dimension.Fill
+        val innerCtx = ax.withCross(ctx, ax.parentCross(ctx) - ax.crossPadding(padding))
+
+        val fillChildren = children.filter { ax.mainDimension(it) == Dimension.Fill }
+        val nonFillChildren = children.filter { ax.mainDimension(it) != Dimension.Fill }
+
+        // re-measure non-fill children with correct cross constraint
+        nonFillChildren.forEach { child ->
+            child.measureSelf(innerCtx)
         }
 
         // fixed children are measured first to know how
@@ -45,7 +48,7 @@ abstract class FlowNode(var gap: Float = 0f) : UINode() {
             .toFloat() + gap * (children.size - 1).coerceAtLeast(0)
 
         // divide the remaining space equally across fillChildren
-        val remaining = (ax.parentMain(ctx) - fixedMain - ax.mainPadding(padding))
+        val remaining = (ax.parentMain(innerCtx) - fixedMain - ax.mainPadding(padding))
             .coerceAtLeast(0f)
 
         val fillSize = if (fillChildren.isNotEmpty())
@@ -56,7 +59,7 @@ abstract class FlowNode(var gap: Float = 0f) : UINode() {
         // cross axis - tallest child
         fillChildren.forEach { child ->
             val childMain = (fillSize - ax.mainMargin(child)).coerceAtLeast(0f)
-            child.measureSelf(ax.withMain(ctx, childMain))
+            child.measureSelf(ax.withMain(innerCtx, childMain))
         }
 
         val main = children

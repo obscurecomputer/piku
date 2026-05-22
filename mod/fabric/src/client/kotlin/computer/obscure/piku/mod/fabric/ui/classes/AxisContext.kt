@@ -28,6 +28,10 @@ sealed interface Axis {
     fun crossStart(node: FlowNode): Float
     fun setLayout(child: UINode, mainPos: Float, crossPos: Float)
 
+    fun parentCross(ctx: MeasureContext): Float
+    fun crossPadding(padding: Spacing): Float
+    fun withCross(ctx: MeasureContext, value: Float): MeasureContext
+
     object Horizontal : Axis {
         override fun mainMeasured(node: UINode) =
             node.measuredWidth
@@ -78,6 +82,13 @@ sealed interface Axis {
             child.layoutX = mainPos
             child.layoutY = crossPos
         }
+
+        override fun parentCross(ctx: MeasureContext) =
+            ctx.parentHeight
+        override fun crossPadding(padding: Spacing) =
+            padding.vertical
+        override fun withCross(ctx: MeasureContext, value: Float) =
+            ctx.copy(parentHeight = value)
     }
 
     object Vertical : Axis {
@@ -130,5 +141,12 @@ sealed interface Axis {
             child.layoutX = crossPos
             child.layoutY = mainPos
         }
+
+        override fun parentCross(ctx: MeasureContext) =
+            ctx.parentWidth
+        override fun crossPadding(padding: Spacing) =
+            padding.horizontal
+        override fun withCross(ctx: MeasureContext, value: Float) =
+            ctx.copy(parentWidth = value)
     }
 }

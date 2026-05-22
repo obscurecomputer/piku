@@ -50,11 +50,11 @@ class SpriteNode() : UINode() {
                 "sprite_${path}")
             Minecraft.getInstance().textureManager.register(id, it)
             textureId = id
-            val img = it.pixels
-            if (img != null && width == Dimension.Wrap && height == Dimension.Wrap) {
-                measuredWidth = img.width.toFloat()
-                measuredHeight = img.height.toFloat()
-            }
+//            val img = it.pixels
+//            if (img != null && width == Dimension.Wrap && height == Dimension.Wrap) {
+//                measuredWidth = img.width.toFloat()
+//                measuredHeight = img.height.toFloat()
+//            }
         }
     }
 

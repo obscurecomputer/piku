@@ -64,14 +64,32 @@ open class LuaUINode(open val node: UINode) : TwineNative() {
     }
 
     @TwineFunction
+    fun color(value: LuaColorInstance): LuaUINode {
+        node.color = value.toUIColor()
+        return this
+    }
+
+    @TwineFunction
     fun width(value: String): LuaUINode {
         node.width = parseDimension(value)
         return this
     }
 
     @TwineFunction
+    fun width(value: Float): LuaUINode {
+        node.width = Dimension.Fixed(value)
+        return this
+    }
+
+    @TwineFunction
     fun height(value: String): LuaUINode {
         node.height = parseDimension(value)
+        return this
+    }
+
+    @TwineFunction
+    fun height(value: Float): LuaUINode {
+        node.height = Dimension.Fixed(value)
         return this
     }
 

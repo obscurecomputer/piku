@@ -56,10 +56,7 @@ object AnimationManager : PikuService {
                 is Double -> AnimationUtil.lerp(from, to as Double, eased)
                 is Int -> AnimationUtil.lerp(from.toFloat(), (to as Int).toFloat(), eased).toInt()
                 is Vec3 -> AnimationUtil.lerp(from, to as Vec3, eased)
-                is Vec2 -> Vec2(
-                    AnimationUtil.lerp(from.x, (to as Vec2).x, eased),
-                    AnimationUtil.lerp(from.y, to.y, eased)
-                )
+                is Vec2 -> AnimationUtil.lerp(from, to as Vec2, eased)
                 is Spacing -> {
                     val t2 = to as Spacing
                     Spacing(

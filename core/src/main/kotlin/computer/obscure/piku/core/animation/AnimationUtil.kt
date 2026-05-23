@@ -2,6 +2,7 @@ package computer.obscure.piku.core.animation
 
 import computer.obscure.piku.core.classes.Vec3
 import computer.obscure.piku.core.classes.Easing
+import computer.obscure.piku.core.classes.Vec2
 import computer.obscure.twine.LuaCallback
 
 object AnimationUtil {
@@ -37,4 +38,9 @@ object AnimationUtil {
             lerp(start.y, end.y, t),
             lerp(start.z, end.z, t)
         )
+
+    fun lerp(start: Vec2, end: Vec2, t: Double): Vec2 = Vec2(
+        lerp(start.x, end.x, t),
+        lerp(start.y, end.y, t)
+    )
 }

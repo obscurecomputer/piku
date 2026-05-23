@@ -1,6 +1,7 @@
 package computer.obscure.piku.mod.fabric.scripting.api.ui
 
 import computer.obscure.piku.core.animation.Animation
+import computer.obscure.piku.core.scripting.api.LuaVec2Instance
 import computer.obscure.piku.core.scripting.engine.EngineError
 import computer.obscure.piku.core.scripting.engine.EngineErrorCode
 import computer.obscure.piku.mod.fabric.scripting.api.animation.LuaAnimatable
@@ -24,6 +25,21 @@ class LuaUIAnimation(val node: UINode) : LuaAnimatable() {
     @TwineFunction
     fun onFinish(callback: LuaCallback): LuaUIAnimation {
         onFinishCallback = callback
+        return this
+    }
+
+    @TwineFunction
+    fun offset(to: LuaVec2Instance, duration: Double, easing: String): LuaUIAnimation {
+        queue.add(Animation(
+            targetId = node.id,
+            durationSeconds = duration,
+            easing = easing,
+            getter = { node.offset },
+            setter = { node.offset = it },
+            to = to.toVec2(),
+            onStart = { onStartCallback?.call<Unit>() },
+            onFinish = { onFinishCallback?.call<Unit>() }
+        ))
         return this
     }
 

@@ -11,6 +11,7 @@ import computer.obscure.piku.core.classes.vertical
 import computer.obscure.piku.core.graphics.UIColor
 import computer.obscure.piku.mod.fabric.ui.classes.Anchor
 import computer.obscure.piku.mod.fabric.ui.classes.Dimension
+import computer.obscure.piku.mod.fabric.ui.classes.OffsetDimension
 import computer.obscure.piku.mod.fabric.ui.classes.context.LayoutContext
 import computer.obscure.piku.mod.fabric.ui.classes.context.MeasureContext
 import net.minecraft.client.gui.GuiGraphics
@@ -22,6 +23,8 @@ abstract class UINode {
 
     var anchor: Anchor = Anchor.TOP_LEFT
     var offset: Vec2 = Vec2.ZERO
+    var offsetX: OffsetDimension = OffsetDimension.Zero
+    var offsetY: OffsetDimension = OffsetDimension.Zero
 
     // STYLE INPUTS
     var width: Dimension = Dimension.Wrap
@@ -93,8 +96,8 @@ abstract class UINode {
                 ctx.y + ctx.parentHeight - measuredHeight - margin.bottomF
         }
 
-        layoutX = resolvedX + offset.x.toFloat()
-        layoutY = resolvedY + offset.y.toFloat()
+        layoutX = resolvedX + offsetX.resolve(ctx.parentWidth)
+        layoutY = resolvedY + offsetY.resolve(ctx.parentHeight)
 
         layoutChildren()
     }

@@ -19,6 +19,7 @@ import computer.obscure.piku.mod.fabric.scripting.api.ui.components.LuaUIText
 import computer.obscure.piku.mod.fabric.ui.classes.Anchor
 import computer.obscure.piku.mod.fabric.ui.classes.Dimension
 import computer.obscure.piku.mod.fabric.ui.UIRenderer
+import computer.obscure.piku.mod.fabric.ui.classes.OffsetDimension
 import computer.obscure.piku.mod.fabric.ui.components.BoxNode
 import computer.obscure.piku.mod.fabric.ui.components.ColumnNode
 import computer.obscure.piku.mod.fabric.ui.components.DividerNode
@@ -119,9 +120,23 @@ open class LuaUINode(open val node: UINode) : TwineNative() {
         return this
     }
 
+    private fun parseOffsetDimension(value: String): OffsetDimension = when {
+        value.endsWith("%") -> OffsetDimension.Fraction(value.dropLast(1).toFloat() / 100f)
+        value.endsWith("px") -> OffsetDimension.Fixed(value.dropLast(2).toFloat())
+        else -> OffsetDimension.Fixed(value.toFloat())
+    }
+
+    @TwineFunction
+    fun offset(x: String, y: String): LuaUINode {
+        node.offsetX = parseOffsetDimension(x)
+        node.offsetY = parseOffsetDimension(y)
+        return this
+    }
+
     @TwineFunction
     fun offset(value: LuaVec2Instance): LuaUINode {
-        node.offset = value.toVec2()
+        node.offsetX = OffsetDimension.Fixed(value.x.toFloat())
+        node.offsetY = OffsetDimension.Fixed(value.y.toFloat())
         return this
     }
 

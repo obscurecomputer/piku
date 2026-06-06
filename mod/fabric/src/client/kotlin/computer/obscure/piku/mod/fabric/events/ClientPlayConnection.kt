@@ -8,6 +8,7 @@ import computer.obscure.piku.mod.fabric.InputHandler
 import computer.obscure.piku.mod.fabric.PikuClient
 import computer.obscure.piku.core.animation.AnimationManager
 import computer.obscure.piku.core.animation.AnimationUtil
+import computer.obscure.piku.mod.fabric.storage.SessionStorage
 import computer.obscure.piku.mod.fabric.ui.UIRenderer
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents
 import net.minecraft.client.Minecraft
@@ -45,12 +46,13 @@ object ClientPlayConnection {
     fun onDisconnect(
         onFinish: () -> Unit = {}
     ) {
+        SessionStorage.shutdown()
         SharedStateManager.shutdown()
         PikuClient.engine!!.shutdown()
         AnimationManager.shutdown()
         UIRenderer.shutdown()
         Scheduler.shutdown()
-        InputHandler.clearInputQueue()
+        InputHandler.shutdown()
 
         Client.apply {
             rotation = Vec3.ZERO

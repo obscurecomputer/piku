@@ -1,11 +1,12 @@
 package computer.obscure.piku.mod.fabric
 
+import computer.obscure.piku.core.service.PikuService
 import computer.obscure.piku.mod.fabric.scripting.api.LuaKeyBind
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents
 import net.minecraft.client.Minecraft
 import org.lwjgl.glfw.GLFW
 
-object InputHandler {
+object InputHandler : PikuService {
 
     private val keyStates = mutableMapOf<Int, Boolean>()
     private val mouseStates = mutableMapOf<Int, Boolean>()
@@ -84,8 +85,12 @@ object InputHandler {
         return Client.connectedToServer && mc.screen == null && mc.player != null
     }
 
-    fun queueInputUp(luaKeyBind: LuaKeyBind) { luaInputQueue.add(luaKeyBind) }
-    fun clearInputQueue() { luaInputQueue.clear() }
+    fun queueInputUp(luaKeyBind: LuaKeyBind) {
+        luaInputQueue.add(luaKeyBind)
+    }
+    override fun shutdown() {
+        luaInputQueue.clear()
+    }
 
     fun getKeyName(key: Int): String = when (key) {
         GLFW.GLFW_KEY_LEFT -> "left_arrow"

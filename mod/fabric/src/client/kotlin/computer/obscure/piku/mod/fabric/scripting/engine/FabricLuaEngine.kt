@@ -11,6 +11,7 @@ import computer.obscure.piku.mod.fabric.scripting.api.LuaLevel
 import computer.obscure.piku.mod.fabric.scripting.api.LuaScreens
 import computer.obscure.piku.mod.fabric.scripting.api.LuaWidgets
 import computer.obscure.piku.mod.fabric.scripting.api.raycast.LuaRaycast
+import computer.obscure.piku.mod.fabric.scripting.api.storage.LuaSessionStorage
 import computer.obscure.piku.mod.fabric.scripting.api.ui.LuaEasing
 
 class ClientLuaEngine : LuaEngine() {
@@ -37,6 +38,7 @@ class ClientLuaEngine : LuaEngine() {
         register(LuaWidgets())
         register(LuaRaycast())
         register(LuaLevel())
+        register(LuaSessionStorage())
         super.registerCommons()
 
         val eventListener = LuaClientEventListener()

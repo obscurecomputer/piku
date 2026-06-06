@@ -7,27 +7,27 @@ class LuaLogger(
     val scriptName: String
 ) : TwineNative("log") {
     @TwineFunction
-    fun info(message: Any) {
+    fun info(message: Any?) {
         println(
             getMessage(LogLevel.INFO, message)
         )
     }
 
     @TwineFunction
-    fun warn(message: Any) {
+    fun warn(message: Any?) {
         println(
             getMessage(LogLevel.WARN, message)
         )
     }
 
     @TwineFunction
-    fun error(message: Any) {
+    fun error(message: Any?) {
         println(
             getMessage(LogLevel.ERROR, message)
         )
     }
 
-    fun getMessage(level: LogLevel, message: Any): String {
+    fun getMessage(level: LogLevel, message: Any?): String {
         val fixedMessage = when (message) {
             else -> message
         }

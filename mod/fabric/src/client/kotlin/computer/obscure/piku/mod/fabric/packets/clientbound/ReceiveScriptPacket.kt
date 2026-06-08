@@ -8,6 +8,7 @@ import net.minecraft.network.codec.ByteBufCodecs
 import net.minecraft.network.codec.StreamCodec
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload
 import net.minecraft.resources.Identifier
+import java.lang.reflect.InvocationTargetException
 
 class ReceiveScriptPacket(
     val name: String,
@@ -33,7 +34,20 @@ class ReceiveScriptPacket(
                 PikuClient.LOGGER.debug("Loading script ${name}: ${fileContents.length} bytes")
                 PikuClient.engine!!.activeScripts[name] = fileContents
             } catch (e: Exception) {
-                e.printStackTrace()
+                val realError = if (e is InvocationTargetException)
+                    e.cause ?: e
+                else e
+
+                PikuClient.LOGGER.error("Script error: [${realError.javaClass.simpleName}] ${realError.message}")
+
+                val maxDepth = 5
+                realError.stackTrace.take(maxDepth).forEach { element ->
+                    PikuClient.LOGGER.error("    at $element")
+                }
+
+                if (realError.stackTrace.size > maxDepth) {
+                    PikuClient.LOGGER.error("    ... and ${realError.stackTrace.size - maxDepth} more lines")
+                }
             }
         }
     }

@@ -76,7 +76,9 @@ abstract class LuaEngine : PikuService {
         synchronized(engineLock) {
             if (_engine == null || _engine!!.closed) return
             val result = twine.runSafe(name, content, env)
-            result.onFailure { throw it }
+            result.onFailure {
+                throw it
+            }
         }
     }
 }

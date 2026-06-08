@@ -70,6 +70,9 @@ object UIRenderer : PikuService {
         roots.forEach { root ->
             root.measureSelf(measureCtx)
             root.layoutSelf(layoutCtx)
+        }
+
+        roots.forEach { root ->
             root.drawSelf(graphics, measureCtx)
         }
     }

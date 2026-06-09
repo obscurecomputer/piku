@@ -107,16 +107,16 @@ dependencies {
 }
 
 tasks.jar {
-    val nativeFiles = project.provider {
-        configurations.runtimeClasspath.get()
-            .filter { it.name.contains("luau-natives") }
-            .map { zipTree(it) }
-    }
-
-    from(nativeFiles) {
-        include("net/hollowcube/luau/**")
-        duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-    }
+//    val nativeFiles = project.provider {
+//        configurations.runtimeClasspath.get()
+//            .filter { it.name.contains("luau-natives") }
+//            .map { zipTree(it) }
+//    }
+//
+//    from(nativeFiles) {
+//        include("net/hollowcube/luau/**")
+//        duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+//    }
 
     from("LICENSE") {
         rename { "${it}_${project.base.archivesName}" }
@@ -205,7 +205,7 @@ modrinth {
         }
     )
     uploadFile.set(tasks.jar)
-    gameVersions.addAll("1.21.10")
+    gameVersions.addAll(project.property("minecraft_version").toString())
     loaders.addAll("fabric")
     changelog.set(System.getenv("CHANGELOG") ?: "Automated release from CI")
 }

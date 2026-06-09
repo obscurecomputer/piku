@@ -204,7 +204,7 @@ modrinth {
             "release"
         }
     )
-    uploadFile.set(tasks.build)
+    uploadFile.set(tasks.named("remapJar"))
     gameVersions.addAll(project.property("minecraft_version").toString())
     loaders.addAll("fabric")
     changelog.set(System.getenv("CHANGELOG") ?: "Automated release from CI")

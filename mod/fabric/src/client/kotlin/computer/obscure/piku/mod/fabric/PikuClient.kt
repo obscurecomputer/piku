@@ -29,37 +29,42 @@ class PikuClient : ClientModInitializer {
         val LOGGER: Logger = LogManager.getLogger()
 
         val miniMessage = MiniMessage.miniMessage()
-        const val MOD_ID = "piku"
 
         var engine: ClientLuaEngine? = null
             private set
 
         fun warn(message: Any) {
-            LOGGER.warn(message)
+            LOGGER.warn(formatLog(message))
         }
 
         fun error(message: Any) {
-            LOGGER.error(message)
+            LOGGER.error(formatLog(message))
         }
 
         fun info(message: Any) {
-            LOGGER.info(message)
+            LOGGER.info(formatLog(message))
         }
+
+        fun debug(message: Any) {
+            LOGGER.debug(formatLog(message))
+        }
+
+        fun formatLog(message: Any) = "[Piku] $message"
     }
 
     override fun onInitializeClient() {
         try {
-            info("[PIKU] Instantiating Lua Engine...")
+            info("Instantiating Lua Engine...")
             engine = ClientLuaEngine()
             engine?.init()
-            info("[PIKU] Engine started successfully.")
+            info("Engine started successfully.")
         } catch (e: Throwable) {
-            error("[PIKU] Engine failed to start!")
+            error("Engine failed to start!")
             e.printStackTrace()
             exitProcess(1)
         }
 
-        LOGGER.info("Piku Client Initialized successfully!")
+        LOGGER.info("Client Initialized successfully!")
         InputHandler.init()
         ClientLifecycleEvents.CLIENT_STARTED.register { client ->
             InputHandler.registerCallbacks(client.window.handle())

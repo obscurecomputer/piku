@@ -21,32 +21,32 @@ class ReceiveScriptPacket(
         Minecraft.getInstance().execute {
             try {
                 if (PikuClient.engine !== engineRef) {
-                    PikuClient.LOGGER.error("Cannot load script ${name}: Engine reference lost!")
+                    PikuClient.error("Cannot load script ${name}: Engine reference lost!")
                     return@execute
                 }
                 if (name == "END_OF_SCRIPT_LOADING") {
-                    PikuClient.LOGGER.debug("Server sent EOSL")
+                    PikuClient.debug("Server sent EOSL")
                     engineRef!!.activeScripts.forEach { script ->
                         engineRef.runScript(script.key, script.value)
                     }
                     return@execute
                 }
-                PikuClient.LOGGER.debug("Loading script ${name}: ${fileContents.length} bytes")
+                PikuClient.debug("Loading script ${name}: ${fileContents.length} bytes")
                 PikuClient.engine!!.activeScripts[name] = fileContents
             } catch (e: Exception) {
                 val realError = if (e is InvocationTargetException)
                     e.cause ?: e
                 else e
 
-                PikuClient.LOGGER.error("Script error: [${realError.javaClass.simpleName}] ${realError.message}")
+                PikuClient.error("Script error: [${realError.javaClass.simpleName}] ${realError.message}")
 
                 val maxDepth = 5
                 realError.stackTrace.take(maxDepth).forEach { element ->
-                    PikuClient.LOGGER.error("    at $element")
+                    PikuClient.error("    at $element")
                 }
 
                 if (realError.stackTrace.size > maxDepth) {
-                    PikuClient.LOGGER.error("    ... and ${realError.stackTrace.size - maxDepth} more lines")
+                    PikuClient.error("    ... and ${realError.stackTrace.size - maxDepth} more lines")
                 }
             }
         }

@@ -204,7 +204,7 @@ modrinth {
             "release"
         }
     )
-    uploadFile.set(tasks.jar)
+    uploadFile.set(tasks.build)
     gameVersions.addAll(project.property("minecraft_version").toString())
     loaders.addAll("fabric")
     changelog.set(System.getenv("CHANGELOG") ?: "Automated release from CI")

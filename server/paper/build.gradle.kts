@@ -2,6 +2,8 @@ plugins {
     kotlin("jvm")
     id("com.gradleup.shadow") version "9.4.1"
     id("xyz.jpenilla.run-paper") version "3.0.2"
+    `java-library`
+    `maven-publish`
 }
 
 group = project.property("group")!!
@@ -57,5 +59,30 @@ tasks.processResources {
     filteringCharset = "UTF-8"
     filesMatching("plugin.yml") {
         expand(props)
+    }
+}
+
+publishing {
+    publications {
+        create<MavenPublication>("mavenJava") {
+            from(components["java"])
+
+            group
+            artifactId = "paper"
+            version
+        }
+    }
+
+    repositories {
+        maven {
+            name = "obscurerepo"
+            url = uri("https://repo.obscure.computer/repository/maven-releases/")
+            credentials {
+                username = findProperty("obscureUsername") as String? ?: System.getenv("OBSCURE_MAVEN_USER")
+                password = findProperty("obscurePassword") as String? ?: System.getenv("OBSCURE_MAVEN_PASS")
+            }
+        }
+
+        mavenLocal()
     }
 }

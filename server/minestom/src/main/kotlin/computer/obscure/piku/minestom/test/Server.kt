@@ -1,16 +1,16 @@
 package computer.obscure.piku.minestom.test
 
 import computer.obscure.piku.core.classes.ScriptSource
+import computer.obscure.piku.core.graphics.UIColor
 import computer.obscure.piku.minestom.scripting.MinestomAPI
 import computer.obscure.piku.minestom.scripting.utils.piku
 import me.znotchill.blossom.command.command
-import me.znotchill.blossom.component.component
 import me.znotchill.blossom.extensions.addListener
 import me.znotchill.blossom.server.BlossomServer
-import net.kyori.adventure.audience.Audience
 import net.minestom.server.Auth
 import net.minestom.server.entity.GameMode
 import net.minestom.server.event.player.AsyncPlayerConfigurationEvent
+import net.minestom.server.event.player.PlayerChatEvent
 import net.minestom.server.event.player.PlayerLoadedEvent
 import net.minestom.server.instance.InstanceContainer
 import java.io.File
@@ -41,12 +41,23 @@ class Server : BlossomServer(
             onSuccessfulReload = {}
         )
 
-
         eventHandler.addListener<PlayerLoadedEvent> { event ->
             piku.sendAllScripts(
                 player = event.player,
                 source = ScriptSource.Directory(dir = File("server/minestom/test/scripts/client")),
                 recurse = true
+            )
+        }
+
+        eventHandler.addListener<PlayerChatEvent> { event ->
+            piku.sendData(
+                players,
+                "piku.demo.chat_message",
+                mapOf(
+                    "message" to event.rawMessage,
+                    "author" to event.player.username,
+                    "author_color" to UIColor.random(),
+                )
             )
         }
 

@@ -55,6 +55,12 @@ class LuaColor : TwineNative("color") {
 
     @TwineFunction
     fun blue() = LuaColorInstance(UIColor.BLUE)
+
+    companion object {
+        fun fromUIColor(uiColor: UIColor): LuaColorInstance {
+            return LuaColorInstance(uiColor)
+        }
+    }
 }
 
 class LuaColorInstance(
@@ -223,6 +229,7 @@ class LuaColorInstance(
         color.hex()
 
     @TwineFunction("tostring")
-    override fun toString(): String =
-        color.toString()
+    override fun toString(): String {
+        return "color[uicolor=${color}]"
+    }
 }

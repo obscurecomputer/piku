@@ -2,6 +2,7 @@ package computer.obscure.piku.core.utils
 
 import computer.obscure.piku.core.classes.Vec2
 import computer.obscure.piku.core.classes.Vec3
+import computer.obscure.piku.core.graphics.UIColor
 import computer.obscure.piku.core.serialization.PikuSerializable
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.json.*
@@ -10,7 +11,7 @@ val json = Json { ignoreUnknownKeys = true }
 
 // todo: move this / make it better
 val pikuSerializableTypes: Map<String, KSerializer<out PikuSerializable>> = mapOf(
-//    "color" to Color.serializer(),
+    "uicolor" to UIColor.serializer(),
     "vec2" to Vec2.serializer(),
     "vec3" to Vec3.serializer(),
 )

@@ -1,14 +1,22 @@
 package computer.obscure.piku.core.graphics
 
+import computer.obscure.piku.core.scripting.api.LuaColor
+import computer.obscure.piku.core.serialization.PikuSerializable
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 import java.awt.Color
 import kotlin.math.max
 import kotlin.math.pow
 import kotlin.random.Random
 
-@JvmInline
-value class UIColor(
+@Serializable
+@SerialName("uicolor")
+data class UIColor(
     val argb: Int
-) {
+) : PikuSerializable() {
+    override val typeName = "uicolor"
+    override fun toLuaInstance() = LuaColor.fromUIColor(this)
+
     val r: Int
         get() = (argb shr 16) and 0xFF
 
@@ -251,13 +259,13 @@ value class UIColor(
 
     override fun toString(): String {
         return buildString {
-            append("UIColor(")
+            append("uicolor[")
             append("r=$r")
             append(", g=$g")
             append(", b=$b")
             append(", a=$a")
             append(", hex=${hex()}")
-            append(")")
+            append("]")
         }
     }
 

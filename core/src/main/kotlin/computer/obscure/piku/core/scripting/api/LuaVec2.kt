@@ -22,25 +22,62 @@ class LuaVec2 : TwineNative("vec2") {
 }
 
 class LuaVec2Instance(
+    @TwineProperty
     var x: Double,
+    @TwineProperty
     var y: Double
 ) : TwineNative("vec2") {
-    @TwineProperty("x")
-    var xCoord: Double
-        get() = x
-        set(value) { x = value }
-
-    @TwineProperty("y")
-    var yCoord: Double
-        get() = y
-        set(value) { y = value }
-
     @TwineFunction
     fun set(x: Double, y: Double): LuaVec2Instance {
-        return apply {
-            this.x = x
-            this.y = y
-        }
+        return LuaVec2Instance(x, y)
+    }
+
+    @TwineFunction
+    fun add(x: Double, y: Double): LuaVec2Instance {
+        return LuaVec2Instance(
+            this.x + x,
+            this.y + y
+        )
+    }
+
+    @TwineFunction
+    fun sub(x: Double, y: Double): LuaVec2Instance {
+        return LuaVec2Instance(
+            this.x - x,
+            this.y - y
+        )
+    }
+
+    @TwineFunction
+    fun mul(x: Double, y: Double): LuaVec2Instance {
+        return LuaVec2Instance(
+            this.x * x,
+            this.y * y
+        )
+    }
+
+    @TwineFunction
+    fun div(x: Double, y: Double): LuaVec2Instance {
+        return LuaVec2Instance(
+            this.x / x,
+            this.y / y
+        )
+    }
+
+    @TwineFunction
+    fun mod(x: Double, y: Double): LuaVec2Instance {
+        return LuaVec2Instance(
+            this.x % x,
+            this.y % y
+        )
+    }
+
+    @TwineFunction
+    fun neg(): LuaVec2Instance {
+        return LuaVec2Instance(
+            -x,
+            -y
+        )
     }
 
     fun toVec2(): Vec2 {

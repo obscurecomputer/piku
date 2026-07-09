@@ -11,6 +11,10 @@ data class Vec2(
     val x: Double = 0.0,
     val y: Double = 0.0
 ): PikuSerializable() {
+    constructor(x: Int, y: Int) : this(x.toDouble(), y.toDouble())
+    constructor(x: Float, y: Float) : this(x.toDouble(), y.toDouble())
+    constructor(x: Long, y: Long) : this(x.toDouble(), y.toDouble())
+
     override val typeName = "vec2"
     override fun toLuaInstance() = LuaVec2.fromVec2(this)
 

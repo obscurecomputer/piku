@@ -1,6 +1,8 @@
 package computer.obscure.piku.mod.fabric.scripting.api.ui
 
 import computer.obscure.piku.core.animation.Animation
+import computer.obscure.piku.core.classes.Vec2
+import computer.obscure.piku.core.scripting.api.LuaColorInstance
 import computer.obscure.piku.core.scripting.api.LuaVec2Instance
 import computer.obscure.piku.core.scripting.engine.EngineError
 import computer.obscure.piku.core.scripting.engine.EngineErrorCode
@@ -90,6 +92,30 @@ class LuaUIAnimation(val node: UINode) : LuaAnimatable() {
     }
 
     @TwineFunction
+    fun size(to: LuaVec2Instance, duration: Double, easing: String): LuaUIAnimation {
+        queue.add(Animation(
+            targetId = node.id,
+            durationSeconds = duration,
+            easing = easing,
+            getter = {
+                Vec2(
+                    (node.width as? Dimension.Fixed)?.px ?: node.measuredWidth,
+                    (node.height as? Dimension.Fixed)?.px ?: node.measuredHeight
+                )
+            },
+            setter = { size ->
+                node.width = Dimension.Fixed(size.x.toFloat())
+                node.height = Dimension.Fixed(size.y.toFloat())
+            },
+            to = to.toVec2(),
+            onStart = { onStartCallback?.call<Unit>() },
+            onFinish = { onFinishCallback?.call<Unit>() }
+        ))
+
+        return this
+    }
+
+    @TwineFunction
     fun progress(to: Float, duration: Double, easing: String): LuaUIAnimation {
         if (node !is ProgressBarNode)
             throw EngineError(EngineErrorCode.INVALID_COMPONENT,
@@ -140,6 +166,38 @@ class LuaUIAnimation(val node: UINode) : LuaAnimatable() {
             onStart = { onStartCallback?.call<Unit>() },
             onFinish = { onFinishCallback?.call<Unit>() }
         ))
+        return this
+    }
+
+    @TwineFunction
+    fun background(to: LuaColorInstance, duration: Double, easing: String): LuaUIAnimation {
+        queue.add(Animation(
+            targetId = node.id,
+            durationSeconds = duration,
+            easing = easing,
+            getter = { node.background },
+            setter = { node.background = it },
+            to = to.toUIColor(),
+            onStart = { onStartCallback?.call<Unit>() },
+            onFinish = { onFinishCallback?.call<Unit>() }
+        ))
+
+        return this
+    }
+
+    @TwineFunction
+    fun color(to: LuaColorInstance, duration: Double, easing: String): LuaUIAnimation {
+        queue.add(Animation(
+            targetId = node.id,
+            durationSeconds = duration,
+            easing = easing,
+            getter = { node.color },
+            setter = { node.color = it },
+            to = to.toUIColor(),
+            onStart = { onStartCallback?.call<Unit>() },
+            onFinish = { onFinishCallback?.call<Unit>() }
+        ))
+
         return this
     }
 }

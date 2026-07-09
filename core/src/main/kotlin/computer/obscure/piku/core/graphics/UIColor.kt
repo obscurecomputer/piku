@@ -173,6 +173,10 @@ data class UIColor(
     fun mix(other: UIColor, t: Float): UIColor =
         lerp(other, t)
 
+    fun lerp(other: UIColor, t: Double): UIColor {
+        return lerp(other, t.toFloat())
+    }
+
     fun multiply(other: UIColor): UIColor {
         return rgba(
             r * other.r / 255,

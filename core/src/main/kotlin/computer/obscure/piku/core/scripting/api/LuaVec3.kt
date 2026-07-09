@@ -25,35 +25,77 @@ class LuaVec3 : TwineNative("vec3") {
 }
 
 class LuaVec3Instance(
+    @TwineProperty
     var x: Double,
+    @TwineProperty
     var y: Double,
+    @TwineProperty
     var z: Double
 ) : TwineNative("vec3") {
-    @TwineProperty("x")
-    var xCoord: Double
-        get() = x
-        set(value) { x = value }
-
-    @TwineProperty("y")
-    var yCoord: Double
-        get() = y
-        set(value) { y = value }
-
-    @TwineProperty("z")
-    var zCoord: Double
-        get() = z
-        set(value) { z = value }
-
-    fun toVec3(): Vec3 {
-        return Vec3(x = x, y = y, z = z)
+    @TwineFunction
+    fun set(x: Double, y: Double, z: Double): LuaVec3Instance {
+        return LuaVec3Instance(x, y, z)
     }
 
     @TwineFunction
-    fun add(vec3: LuaVec3Instance): LuaVec3Instance {
+    fun add(x: Double, y: Double, z: Double): LuaVec3Instance {
         return LuaVec3Instance(
-            x + vec3.x,
-            y + vec3.y,
-            z + vec3.z
+            this.x + x,
+            this.y + y,
+            this.z + z
+        )
+    }
+
+    @TwineFunction
+    fun sub(x: Double, y: Double, z: Double): LuaVec3Instance {
+        return LuaVec3Instance(
+            this.x - x,
+            this.y - y,
+            this.z - z
+        )
+    }
+
+    @TwineFunction
+    fun mul(x: Double, y: Double, z: Double): LuaVec3Instance {
+        return LuaVec3Instance(
+            this.x * x,
+            this.y * y,
+            this.z * z
+        )
+    }
+
+    @TwineFunction
+    fun div(x: Double, y: Double, z: Double): LuaVec3Instance {
+        return LuaVec3Instance(
+            this.x / x,
+            this.y / y,
+            this.z / z
+        )
+    }
+
+    @TwineFunction
+    fun mod(x: Double, y: Double, z: Double): LuaVec3Instance {
+        return LuaVec3Instance(
+            this.x % x,
+            this.y % y,
+            this.z % z
+        )
+    }
+
+    @TwineFunction
+    fun neg(): LuaVec3Instance {
+        return LuaVec3Instance(
+            -x,
+            -y,
+            -z
+        )
+    }
+
+    fun toVec3(): Vec3 {
+        return Vec3(
+            x = x,
+            y = y,
+            z = z
         )
     }
 

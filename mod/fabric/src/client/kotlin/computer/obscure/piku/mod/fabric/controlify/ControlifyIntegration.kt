@@ -70,7 +70,7 @@ object ControlifyIntegration : PikuService {
                 "x" to lookX,
                 "y" to lookY,
                 "vector" to LuaVec2Instance(
-                    moveX.toDouble(), moveY.toDouble()
+                    lookX.toDouble(), lookY.toDouble()
                 )
             )
         )

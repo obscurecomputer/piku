@@ -25,6 +25,15 @@ class LuaText : TwineNative("text") {
     fun translatable(key: String): LuaTextInstance {
         return LuaTextInstance("translatable", key)
     }
+
+    companion object {
+        fun fromComponent(component: Component): LuaTextInstance {
+            return LuaTextInstance(
+                baseComponent = component,
+                type = "text"
+            )
+        }
+    }
 }
 
 class LuaTextInstance(
@@ -47,13 +56,15 @@ class LuaTextInstance(
     var hoverText: LuaTextInstance? = null,
 
     var textColor: LuaColorInstance? = null,
-    var textShadowColor: LuaColorInstance? = null
+    var textShadowColor: LuaColorInstance? = null,
+
+    private val baseComponent: Component? = null,
 ) : TwineNative() {
 
     val children: MutableList<LuaTextInstance> = mutableListOf()
 
     fun toComponent(): Component {
-        var component: Component = when (type) {
+        var component = baseComponent ?: when (type) {
             "text" -> Component.text(literalText)
             "keybind" -> Component.keybind(literalText)
             "translatable" -> Component.translatable(literalText)
@@ -102,6 +113,10 @@ class LuaTextInstance(
             component = component.font(Key.key(font!!))
         }
 
+        for (child in children) {
+            component = component.append(child.toComponent())
+        }
+
         return component
             .decoration(TextDecoration.BOLD, textBold)
             .decoration(TextDecoration.ITALIC, textItalic)
@@ -114,7 +129,6 @@ class LuaTextInstance(
                     ShadowColor.shadowColor(it.r, it.g, it.b, it.a)
                 }
             )
-            .append(children.map { it.toComponent() })
     }
 
     @TwineFunction

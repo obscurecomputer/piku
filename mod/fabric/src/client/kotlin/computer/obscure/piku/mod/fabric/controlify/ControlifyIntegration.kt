@@ -7,8 +7,11 @@ import dev.isxander.controlify.Controlify
 import dev.isxander.controlify.api.bind.InputBindingSupplier
 import dev.isxander.controlify.bindings.ControlifyBindings
 import dev.isxander.controlify.controller.ControllerEntity
+import net.minecraft.network.chat.Component
 
 object ControlifyIntegration : PikuService {
+    val bindings = mutableMapOf<String, InputBindingSupplier>()
+
     fun tick() {
         val controller = Controlify.instance().currentController.orElse(null)
             ?: return
@@ -17,8 +20,17 @@ object ControlifyIntegration : PikuService {
         addBinding(controller, ControlifyBindings.WALK_RIGHT, "move_right")
         addBinding(controller, ControlifyBindings.WALK_FORWARD, "move_forward")
         addBinding(controller, ControlifyBindings.WALK_BACKWARD, "move_backward")
+        addBinding(controller, ControlifyBindings.LOOK_LEFT, "look_left")
+        addBinding(controller, ControlifyBindings.LOOK_RIGHT, "look_right")
+        addBinding(controller, ControlifyBindings.LOOK_UP, "look_up")
+        addBinding(controller, ControlifyBindings.LOOK_DOWN, "look_down")
 
         fireAxis(controller)
+    }
+
+    fun getGlyph(binding: String): Component? {
+        val bind = bindings[binding] ?: return null
+        return bind.inputGlyph()
     }
 
     fun addBinding(
@@ -28,6 +40,8 @@ object ControlifyIntegration : PikuService {
     ) {
         val name = nameOverride ?: binding.bindId().path
         val bind = binding.on(controller)
+
+        bindings[name] = binding
 
         if (bind.justPressed()) fireButton(name, "press")
         if (bind.justReleased()) fireButton(name, "release")

@@ -3,6 +3,7 @@ package computer.obscure.piku.mod.fabric.ui.text
 import net.minecraft.client.Minecraft
 import net.minecraft.network.chat.Component
 import net.minecraft.network.chat.MutableComponent
+import net.minecraft.network.chat.contents.PlainTextContents
 import net.minecraft.world.entity.LivingEntity
 import net.minecraft.world.phys.EntityHitResult
 import net.minecraft.world.phys.HitResult
@@ -286,8 +287,12 @@ object TextInterpolator {
         }
 
         fun recurse(comp: Component): MutableComponent {
-            val newComp = Component.literal(process(comp.string))
-                .setStyle(comp.style)
+            val newComp = when (val contents = comp.contents) {
+                is PlainTextContents.LiteralContents -> Component.literal(process(contents.text()))
+                else -> comp.copy().apply {
+                    siblings.clear()
+                }
+            }.setStyle(comp.style)
 
             comp.siblings.forEach {
                 newComp.append(recurse(it))

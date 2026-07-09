@@ -15,5 +15,9 @@ fun LuaTextInstance.toMcComponent(): net.minecraft.network.chat.Component {
 
 fun FormattedText.toNativeComponent(): net.minecraft.network.chat.Component {
     return this as? net.minecraft.network.chat.Component
-        ?: net.minecraft.network.chat.Component.literal(getString())
+        ?: net.minecraft.network.chat.Component.literal(string)
+}
+
+fun net.minecraft.network.chat.Component.toAdventure(): Component {
+    return MinecraftClientAudiences.of().asAdventure(this)
 }

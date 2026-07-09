@@ -124,6 +124,11 @@ abstract class FlowNode(var gap: Float = 0f) : UINode() {
             val mainPos = cursor + ax.mainMarginStart(child)
 
             ax.setLayout(child, mainPos, crossPos)
+
+            // apply the child's offset on top of the layout-ed pos
+            child.layoutX += child.offsetX.resolve(measuredWidth)
+            child.layoutY += child.offsetY.resolve(measuredHeight)
+
             child.layoutChildren()
 
             cursor += ax.mainMeasured(child) + ax.mainMargin(child) + gap + spaceBetween + spaceAround

@@ -9,9 +9,6 @@
   "entrypoints": {
     "client": [
       "computer.obscure.piku.mod.fabric.PikuClient"
-    ],
-    "main": [
-      "computer.obscure.piku.fabric.server.Piku"
     ]
   },
   "mixins": [
@@ -21,5 +18,8 @@
     "fabricloader": ">=${loader_version}",
     "fabric-language-kotlin": ">=${kotlin_loader_version}",
     "minecraft": ">=1.21.11"
+  },
+  "suggests": {
+    "controlify": "*"
   }
 }

@@ -5,6 +5,7 @@ import computer.obscure.piku.mod.fabric.ui.components.BoxNode
 import computer.obscure.piku.mod.fabric.ui.components.ColumnNode
 import computer.obscure.piku.mod.fabric.ui.components.DividerNode
 import computer.obscure.piku.mod.fabric.ui.components.GradientNode
+import computer.obscure.piku.mod.fabric.ui.components.LineNode
 import computer.obscure.piku.mod.fabric.ui.components.ProgressBarNode
 import computer.obscure.piku.mod.fabric.ui.components.RowNode
 import computer.obscure.piku.mod.fabric.ui.components.ScrollbarNode
@@ -76,6 +77,13 @@ open class LuaUIContainer(node: UINode) : LuaUINode(node) {
         val child = ScrollbarNode()
         node.children.add(child)
         return LuaUIScrollbar(child)
+    }
+
+    @TwineFunction
+    fun addLine(): LuaUILine {
+        val child = LineNode()
+        node.children.add(child)
+        return LuaUILine(child)
     }
 
     @TwineFunction

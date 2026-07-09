@@ -11,6 +11,7 @@ import computer.obscure.piku.mod.fabric.scripting.api.ui.components.LuaUIBox
 import computer.obscure.piku.mod.fabric.scripting.api.ui.components.LuaUIColumn
 import computer.obscure.piku.mod.fabric.scripting.api.ui.components.LuaUIDivider
 import computer.obscure.piku.mod.fabric.scripting.api.ui.components.LuaUIGradient
+import computer.obscure.piku.mod.fabric.scripting.api.ui.components.LuaUILine
 import computer.obscure.piku.mod.fabric.scripting.api.ui.components.LuaUIProgressBar
 import computer.obscure.piku.mod.fabric.scripting.api.ui.components.LuaUIRow
 import computer.obscure.piku.mod.fabric.scripting.api.ui.components.LuaUIScrollbar
@@ -24,6 +25,7 @@ import computer.obscure.piku.mod.fabric.ui.components.BoxNode
 import computer.obscure.piku.mod.fabric.ui.components.ColumnNode
 import computer.obscure.piku.mod.fabric.ui.components.DividerNode
 import computer.obscure.piku.mod.fabric.ui.components.GradientNode
+import computer.obscure.piku.mod.fabric.ui.components.LineNode
 import computer.obscure.piku.mod.fabric.ui.components.ProgressBarNode
 import computer.obscure.piku.mod.fabric.ui.components.RowNode
 import computer.obscure.piku.mod.fabric.ui.components.ScrollbarNode
@@ -227,6 +229,7 @@ open class LuaUINode(open val node: UINode) : TwineNative() {
             is GradientNode -> LuaUIGradient(node)
             is DividerNode -> LuaUIDivider(node)
             is ScrollbarNode -> LuaUIScrollbar(node)
+            is LineNode -> LuaUILine(node)
             else -> null
         }
     }

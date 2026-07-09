@@ -7,6 +7,7 @@ import computer.obscure.piku.core.scripting.engine.EngineErrorCode
 import computer.obscure.piku.mod.fabric.scripting.api.animation.LuaAnimatable
 import computer.obscure.piku.mod.fabric.ui.classes.Dimension
 import computer.obscure.piku.mod.fabric.ui.components.FlowNode
+import computer.obscure.piku.mod.fabric.ui.components.LineNode
 import computer.obscure.piku.mod.fabric.ui.components.ProgressBarNode
 import computer.obscure.piku.mod.fabric.ui.components.UINode
 import computer.obscure.twine.LuaCallback
@@ -118,6 +119,24 @@ class LuaUIAnimation(val node: UINode) : LuaAnimatable() {
             getter = { node.scrollOffset },
             setter = { node.scrollOffset = it },
             to = -to, // negative because scroll is inverted internally
+            onStart = { onStartCallback?.call<Unit>() },
+            onFinish = { onFinishCallback?.call<Unit>() }
+        ))
+        return this
+    }
+
+    @TwineFunction
+    fun to(to: LuaVec2Instance, duration: Double, easing: String): LuaUIAnimation {
+        if (node !is LineNode)
+            throw EngineError(EngineErrorCode.INVALID_COMPONENT,
+                "to() is only supported on Line nodes")
+        queue.add(Animation(
+            targetId = node.id,
+            durationSeconds = duration,
+            easing = easing,
+            getter = { node.to },
+            setter = { node.to = it },
+            to = to.toVec2(),
             onStart = { onStartCallback?.call<Unit>() },
             onFinish = { onFinishCallback?.call<Unit>() }
         ))

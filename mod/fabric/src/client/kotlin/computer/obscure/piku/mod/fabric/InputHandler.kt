@@ -1,6 +1,8 @@
 package computer.obscure.piku.mod.fabric
 
 import computer.obscure.piku.core.service.PikuService
+import computer.obscure.piku.mod.fabric.compat.ModCompat
+import computer.obscure.piku.mod.fabric.controlify.ControlifyIntegration
 import computer.obscure.piku.mod.fabric.scripting.api.LuaKeyBind
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents
 import net.minecraft.client.Minecraft
@@ -17,6 +19,10 @@ object InputHandler : PikuService {
             luaInputQueue.toList().forEach {
                 it.setDown(false)
                 luaInputQueue.remove(it)
+            }
+
+            if (ModCompat.controlifyLoaded) {
+                ControlifyIntegration.tick()
             }
         }
     }

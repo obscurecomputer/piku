@@ -61,6 +61,7 @@ fabricApi {
 
 repositories {
     mavenLocal()
+    mavenCentral()
     // Add repositories to retrieve artifacts from in here.
     // You should only use this when depending on other mods because
     // Loom adds the essential maven repositories to download Minecraft and libraries from automatically.
@@ -73,6 +74,18 @@ repositories {
     maven("https://jitpack.io")
     maven("https://repo.obscure.computer/repository/maven-releases/")
     maven("https://repo.znotchill.me/repository/maven-releases/")
+    maven("https://maven.isxander.dev/releases/")
+    maven("https://maven.quiltmc.org/repository/release/")
+
+    exclusiveContent {
+        forRepository {
+            maven {
+                name = "Modrinth"
+                url = uri("https://api.modrinth.com/maven")
+            }
+        }
+        filter { includeGroup("maven.modrinth") }
+    }
 }
 
 dependencies {
@@ -97,6 +110,8 @@ dependencies {
     implementation("dev.hollowcube:luau:${luauVersion}")
     modImplementation("dev.hollowcube:luau:${luauVersion}")
     include("dev.hollowcube:luau:$luauVersion")
+
+    modImplementation("dev.isxander:controlify:3.0.0+lts+1.21.11-fabric")
 
     val platforms = listOf("windows-x64", "linux-x64", "macos-arm64", "macos-x64")
     platforms.forEach { platform ->

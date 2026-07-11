@@ -41,7 +41,7 @@ local move_to = vec2.of(0, 0)
 
 listen("client.controller.look", function(event)
 	look_to.x = event.vector.x * 100
-	look_to.y = event.vector.y * 100
+	look_to.y = event.vector.y * -100
 
 	look_line.animate()
 		.to(look_to, 0.05, "EASE_IN_OUT")

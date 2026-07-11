@@ -218,10 +218,7 @@ object ControlifyUI : PikuService {
         }
     }
 
-    // TODO: make this more complicated,
-    // add "shouldSelect" support to nodes so you can decide what
-    // should be selectable and what shouldn't be
     fun eligibleChildren(node: FlowNode): List<UINode> {
-        return node.children.filter { it !is FlowNode }
+        return node.children.filter { it !is FlowNode && it.selectable }
     }
 }

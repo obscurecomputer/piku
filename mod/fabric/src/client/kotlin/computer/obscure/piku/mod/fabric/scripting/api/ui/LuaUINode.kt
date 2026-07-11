@@ -239,6 +239,11 @@ open class LuaUINode(open val node: UINode) : TwineNative() {
         node.onDeactivate = { value.invoke(this) }
     }
 
+    @TwineFunction
+    fun selectable(value: Boolean) = apply {
+        node.selectable = value
+    }
+
     companion object {
         fun wrap(node: UINode): LuaUINode? = when (node) {
             is TextNode -> LuaUIText(node)

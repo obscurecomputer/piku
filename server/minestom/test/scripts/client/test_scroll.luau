@@ -22,7 +22,7 @@ local textures = {
 local selected_color = vec2.of(32, 32)
 local normal_color = vec2.of(16, 16)
 
-for i = 1, 2 do
+for i = 1, 14 do
 	local texture = textures[((i - 1) % #textures) + 1]
 
 	local game = game_showcase.addBox()
@@ -53,4 +53,8 @@ for i = 1, 2 do
 			.background(color.random(), 0.5, "ease_in_out")
 			.play()
 	end)
+
+	if i == 10 then
+		game.selectable(false)
+	end
 end

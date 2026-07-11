@@ -58,6 +58,8 @@ abstract class UINode {
     var activated: Boolean = false
     var selected: Boolean = false
 
+    var selectable: Boolean = true
+
     protected open fun measureContent(ctx: MeasureContext): Pair<Float, Float> {
         val w = children.maxOfOrNull { it.measuredWidth } ?: 0f
         val h = children.maxOfOrNull { it.measuredHeight } ?: 0f

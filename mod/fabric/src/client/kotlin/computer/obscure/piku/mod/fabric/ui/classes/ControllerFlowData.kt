@@ -35,6 +35,23 @@ data class ControllerFlowData(
      * [ControllerFlowOptions.repeatDelay].
      */
     var repeating: Boolean = false,
+    /**
+     * Whether this node is focused, and should take input.
+     */
+    var focused: Boolean = true,
+    /**
+     * Whether the scroller has reached the edge of the node selection.
+     */
+    var atEdgeDirection: ControllerScrollDirection = ControllerScrollDirection.NO_INPUT,
+    /**
+     * Whether a new input was just engaged and not yet executed.
+     */
+    var justEngaged: Boolean = false,
+    /**
+     * Whether the scroller reached the edge, and has received a new input to nudge wrap.
+     * Only applies when [ControllerFlowOptions.edgeMode] is [ControllerEdgeMode.REQUIRE_NUDGE]
+     */
+    var nudged: Boolean = false
 )
 
 enum class ControllerScrollDirection(val direction: Int) {

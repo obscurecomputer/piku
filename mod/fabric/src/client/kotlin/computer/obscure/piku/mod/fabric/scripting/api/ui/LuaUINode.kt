@@ -240,6 +240,18 @@ open class LuaUINode(open val node: UINode) : TwineNative() {
     }
 
     @TwineFunction
+    fun onFocus(value: LuaCallback) = apply {
+        node.onFocus = { value.invoke(this) }
+    }
+
+    @TwineFunction
+    fun onUnfocus(value: LuaCallback) = apply {
+        node.onUnfocus = { value.invoke(this) }
+
+        node.onUnfocus?.invoke()
+    }
+
+    @TwineFunction
     fun selectable(value: Boolean) = apply {
         node.selectable = value
     }

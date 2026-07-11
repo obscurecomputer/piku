@@ -70,9 +70,22 @@ data class ControllerFlowOptions(
      * [computer.obscure.piku.mod.fabric.ui.components.UINode]s.
      */
     var activateMode: ControllerActivateMode = ControllerActivateMode.TOGGLE,
+
+    /**
+     * Determines how edges are handled.
+     * [ControllerEdgeMode.WRAP]: holding the input will continuously wrap
+     * around the selection once an edge is reached
+     * [ControllerEdgeMode.REQUIRE_NUDGE]: holding the input will stop
+     * once an edge is reached, and an additional input is required to wrap
+     * back around.
+     * [ControllerEdgeMode.STOP]: holding the input will stop entirely
+     * once an edge is reached.
+     */
+    var edgeMode: ControllerEdgeMode = ControllerEdgeMode.REQUIRE_NUDGE
 )
 
 enum class ControllerActivateMode { MULTI, TOGGLE, SINGLE_TOGGLE, NONE }
+enum class ControllerEdgeMode { WRAP, REQUIRE_NUDGE, STOP }
 
 enum class ControllerScrollAxis {
     HORIZONTAL,

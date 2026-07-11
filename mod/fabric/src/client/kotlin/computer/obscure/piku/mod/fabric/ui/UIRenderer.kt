@@ -40,6 +40,10 @@ object UIRenderer : PikuService {
         deindexTree(node)
     }
 
+    fun registerNode(node: UINode) {
+        indexTree(node)
+    }
+
     fun clearRoots() {
         roots.clear()
         allNodes.clear()
@@ -65,7 +69,7 @@ object UIRenderer : PikuService {
         node.children.forEach { indexTree(it) }
     }
 
-    private fun deindexTree(node: UINode) {
+    fun deindexTree(node: UINode) {
         allNodes.remove(node)
         node.name?.let { nodesByName.remove(it, node) }
         nodesById.remove(node.id, node)

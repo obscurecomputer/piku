@@ -54,6 +54,8 @@ abstract class UINode {
     var onDeactivate: (() -> Unit)? = null
     var onSelect: (() -> Unit)? = null
     var onDeselect: (() -> Unit)? = null
+    var onFocus: (() -> Unit)? = null
+    var onUnfocus: (() -> Unit)? = null
 
     var activated: Boolean = false
     var selected: Boolean = false

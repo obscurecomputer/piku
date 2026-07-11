@@ -1,6 +1,7 @@
 package computer.obscure.piku.mod.fabric.scripting.api.ui
 
 import computer.obscure.piku.mod.fabric.ui.classes.ControllerActivateMode
+import computer.obscure.piku.mod.fabric.ui.classes.ControllerEdgeMode
 import computer.obscure.piku.mod.fabric.ui.classes.ControllerScrollAxis
 import computer.obscure.piku.mod.fabric.ui.components.FlowNode
 import computer.obscure.twine.TwineNative
@@ -45,6 +46,15 @@ class LuaUIController(val node: FlowNode) : TwineNative() {
             "h", "horizontal", "horiz" -> ControllerScrollAxis.HORIZONTAL
             "v", "vertical", "vert" -> ControllerScrollAxis.VERTICAL
             else -> ControllerScrollAxis.VERTICAL
+        }
+    }
+    @TwineFunction
+    fun edgeMode(value: String) = apply {
+        node.controllerOptions.edgeMode = when (value.lowercase()) {
+            "w", "wrap" -> ControllerEdgeMode.WRAP
+            "r", "rn", "require_nudge" -> ControllerEdgeMode.REQUIRE_NUDGE
+            "s", "stop" -> ControllerEdgeMode.STOP
+            else -> ControllerEdgeMode.STOP
         }
     }
 }

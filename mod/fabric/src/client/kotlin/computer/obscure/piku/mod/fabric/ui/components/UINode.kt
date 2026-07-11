@@ -50,6 +50,11 @@ abstract class UINode {
 
     val children = mutableListOf<UINode>()
 
+    var onActivate: (() -> Unit)? = null
+    var onDeactivate: (() -> Unit)? = null
+    var onSelect: (() -> Unit)? = null
+    var onDeselect: (() -> Unit)? = null
+
     protected open fun measureContent(ctx: MeasureContext): Pair<Float, Float> {
         val w = children.maxOfOrNull { it.measuredWidth } ?: 0f
         val h = children.maxOfOrNull { it.measuredHeight } ?: 0f

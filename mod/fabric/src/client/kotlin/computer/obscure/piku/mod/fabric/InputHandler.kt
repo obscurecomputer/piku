@@ -4,6 +4,7 @@ import computer.obscure.piku.core.service.PikuService
 import computer.obscure.piku.mod.fabric.compat.ModCompat
 import computer.obscure.piku.mod.fabric.controlify.ControlifyIntegration
 import computer.obscure.piku.mod.fabric.scripting.api.LuaKeyBind
+import computer.obscure.piku.mod.fabric.ui.ControlifyUI
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents
 import net.minecraft.client.Minecraft
 import org.lwjgl.glfw.GLFW
@@ -23,6 +24,7 @@ object InputHandler : PikuService {
 
             if (ModCompat.controlifyLoaded) {
                 ControlifyIntegration.tick()
+                ControlifyUI.tick()
             }
         }
     }

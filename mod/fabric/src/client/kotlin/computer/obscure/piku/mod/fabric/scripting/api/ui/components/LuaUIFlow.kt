@@ -1,5 +1,6 @@
 package computer.obscure.piku.mod.fabric.scripting.api.ui.components
 
+import computer.obscure.piku.mod.fabric.scripting.api.ui.LuaUIController
 import computer.obscure.piku.mod.fabric.scripting.api.util.Axis
 import computer.obscure.piku.mod.fabric.ui.components.FlowNode
 import computer.obscure.twine.annotations.TwineFunction
@@ -61,5 +62,10 @@ open class LuaUIFlow(override val node: FlowNode) : LuaUIContainer(node) {
     fun crossAxis(value: String): LuaUIFlow {
         node.crossAxis = Axis.parseCrossAxis(value)
         return this
+    }
+
+    @TwineFunction
+    fun controller(): LuaUIController {
+        return LuaUIController(node)
     }
 }

@@ -32,6 +32,7 @@ import computer.obscure.piku.mod.fabric.ui.components.ScrollbarNode
 import computer.obscure.piku.mod.fabric.ui.components.SpriteNode
 import computer.obscure.piku.mod.fabric.ui.components.TextNode
 import computer.obscure.piku.mod.fabric.ui.components.UINode
+import computer.obscure.twine.LuaCallback
 import computer.obscure.twine.TwineNative
 import computer.obscure.twine.annotations.TwineFunction
 import computer.obscure.twine.annotations.TwineProperty
@@ -216,6 +217,26 @@ open class LuaUINode(open val node: UINode) : TwineNative() {
     @TwineFunction
     fun cancelAnimations() {
         AnimationManager.cancelFor(node.id)
+    }
+
+    @TwineFunction
+    fun onSelect(value: LuaCallback) = apply {
+        node.onSelect = { value.invoke(this) }
+    }
+
+    @TwineFunction
+    fun onDeselect(value: LuaCallback) = apply {
+        node.onDeselect = { value.invoke(this) }
+    }
+
+    @TwineFunction
+    fun onActivate(value: LuaCallback) = apply {
+        node.onActivate = { value.invoke(this) }
+    }
+
+    @TwineFunction
+    fun onDeactivate(value: LuaCallback) = apply {
+        node.onDeactivate = { value.invoke(this) }
     }
 
     companion object {

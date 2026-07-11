@@ -9,6 +9,7 @@ import computer.obscure.piku.mod.fabric.PikuClient
 import computer.obscure.piku.core.animation.AnimationManager
 import computer.obscure.piku.core.animation.AnimationUtil
 import computer.obscure.piku.mod.fabric.storage.SessionStorage
+import computer.obscure.piku.mod.fabric.ui.ControlifyUI
 import computer.obscure.piku.mod.fabric.ui.UIRenderer
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents
 import net.minecraft.client.Minecraft
@@ -53,6 +54,7 @@ object ClientPlayConnection {
         UIRenderer.shutdown()
         Scheduler.shutdown()
         InputHandler.shutdown()
+        ControlifyUI.shutdown()
 
         Client.apply {
             rotation = Vec3.ZERO

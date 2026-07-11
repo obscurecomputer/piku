@@ -17,8 +17,13 @@ object UIRenderer : PikuService {
     val roots = mutableListOf<UINode>()
     val registeredEasings = mutableMapOf<String, LuaCallback>()
 
+    private val allNodes = LinkedHashSet<UINode>()
+    private val nodesByName = mutableMapOf<String, UINode>()
+    private val nodesById = mutableMapOf<String, UINode>()
+    val nodesByType = mutableMapOf<Class<out UINode>, LinkedHashSet<UINode>>()
+
     override fun shutdown() {
-        roots.clear()
+        clearRoots()
     }
 
     fun registerEasing(easing: LuaEasingInstance) {
@@ -27,33 +32,64 @@ object UIRenderer : PikuService {
 
     fun addRoot(node: UINode) {
         roots.add(node)
+        indexTree(node)
     }
 
     fun removeRoot(node: UINode) {
         roots.remove(node)
+        deindexTree(node)
     }
 
     fun clearRoots() {
         roots.clear()
+        allNodes.clear()
+        nodesByName.clear()
+        nodesById.clear()
+        nodesByType.clear()
     }
 
-    fun findByName(name: String): UINode? {
-        return roots.firstNotNullOfOrNull { searchTree(it, name) }
+    private fun indexTree(node: UINode) {
+        allNodes.add(node)
+        node.name?.let { nodesByName[it] = node }
+        nodesById[node.id] = node
+
+        var cls: Class<*>? = node::class.java
+        while (cls != null && UINode::class.java.isAssignableFrom(cls)) {
+            @Suppress("UNCHECKED_CAST")
+            nodesByType.getOrPut(cls as Class<out UINode>) {
+                LinkedHashSet()
+            }.add(node)
+            cls = cls.superclass
+        }
+
+        node.children.forEach { indexTree(it) }
     }
 
-    fun findById(id: String): UINode? {
-        return roots.firstNotNullOfOrNull { searchTreeById(it, id) }
+    private fun deindexTree(node: UINode) {
+        allNodes.remove(node)
+        node.name?.let { nodesByName.remove(it, node) }
+        nodesById.remove(node.id, node)
+
+        var cls: Class<*>? = node::class.java
+        while (cls != null && UINode::class.java.isAssignableFrom(cls)) {
+            @Suppress("UNCHECKED_CAST")
+            nodesByType[cls as Class<out UINode>]?.remove(node)
+            cls = cls.superclass
+        }
+
+        node.children.forEach { deindexTree(it) }
     }
 
-    private fun searchTree(node: UINode, name: String): UINode? {
-        if (node.name == name) return node
-        return node.children.firstNotNullOfOrNull { searchTree(it, name) }
-    }
+    fun findByName(name: String): UINode? = nodesByName[name]
+    fun findById(id: String): UINode? = nodesById[id]
 
-    private fun searchTreeById(node: UINode, id: String): UINode? {
-        if (node.id == id) return node
-        return node.children.firstNotNullOfOrNull { searchTreeById(it, id) }
-    }
+    inline fun <reified T : UINode> findAllOfType(): List<T> =
+        (nodesByType[T::class.java] as? Set<T>)?.toList() ?: emptyList()
+
+    fun findAllByTypeName(type: String): List<UINode> =
+        nodesByType.entries.firstOrNull { it.key.simpleName == type }?.value?.toList() ?: emptyList()
+
+    fun getAllNodes(): List<UINode> = allNodes.toList()
 
     fun render(graphics: GuiGraphics) {
         val screenW = instance.window.guiScaledWidth
@@ -66,12 +102,10 @@ object UIRenderer : PikuService {
             parentWidth = screenW.toFloat(),
             parentHeight = screenH.toFloat()
         )
-
         roots.forEach { root ->
             root.measureSelf(measureCtx)
             root.layoutSelf(layoutCtx)
         }
-
         roots.forEach { root ->
             root.drawSelf(graphics, measureCtx)
         }

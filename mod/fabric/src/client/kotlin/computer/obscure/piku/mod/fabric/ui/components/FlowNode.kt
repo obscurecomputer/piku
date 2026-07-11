@@ -1,6 +1,8 @@
 package computer.obscure.piku.mod.fabric.ui.components
 
 import computer.obscure.piku.mod.fabric.ui.classes.Axis
+import computer.obscure.piku.mod.fabric.ui.classes.ControllerFlowData
+import computer.obscure.piku.mod.fabric.ui.classes.ControllerFlowOptions
 import computer.obscure.piku.mod.fabric.ui.classes.Dimension
 import computer.obscure.piku.mod.fabric.ui.classes.alignment.CrossAxisAlignment
 import computer.obscure.piku.mod.fabric.ui.classes.alignment.MainAxisAlignment
@@ -16,6 +18,9 @@ abstract class FlowNode(var gap: Float = 0f) : UINode() {
     var scrollOffset: Float = 0f
     var clampedScroll: Float = 0f
     var maxScrollExtent: Float = 0f
+
+    var controllerOptions: ControllerFlowOptions = ControllerFlowOptions()
+    var controllerData: ControllerFlowData = ControllerFlowData()
 
     abstract val axis: FlowAxis
     private val ax get() =

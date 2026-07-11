@@ -1,29 +1,42 @@
 package computer.obscure.piku.mod.fabric.controlify
 
-import computer.obscure.piku.core.scripting.api.LuaVec2Instance
+import computer.obscure.piku.core.classes.Vec2
 import computer.obscure.piku.core.service.PikuService
 import computer.obscure.piku.mod.fabric.PikuClient
+import computer.obscure.piku.mod.fabric.ui.ControlifyUI
 import dev.isxander.controlify.Controlify
 import dev.isxander.controlify.api.bind.InputBindingSupplier
 import dev.isxander.controlify.bindings.ControlifyBindings
 import dev.isxander.controlify.controller.ControllerEntity
 import net.minecraft.network.chat.Component
 
+enum class BindingEvent {
+    PRESS,
+    RELEASE,
+    TAP,
+
+    LOOK,
+    MOVE
+}
+
 object ControlifyIntegration : PikuService {
     val bindings = mutableMapOf<String, InputBindingSupplier>()
+    private val prevTapped = mutableMapOf<String, Boolean>()
+    val prevState = mutableMapOf<BindingEvent, Vec2>()
 
     fun tick() {
         val controller = Controlify.instance().currentController.orElse(null)
             ?: return
 
-        addBinding(controller, ControlifyBindings.WALK_LEFT, "move_left")
-        addBinding(controller, ControlifyBindings.WALK_RIGHT, "move_right")
-        addBinding(controller, ControlifyBindings.WALK_FORWARD, "move_forward")
-        addBinding(controller, ControlifyBindings.WALK_BACKWARD, "move_backward")
-        addBinding(controller, ControlifyBindings.LOOK_LEFT, "look_left")
-        addBinding(controller, ControlifyBindings.LOOK_RIGHT, "look_right")
-        addBinding(controller, ControlifyBindings.LOOK_UP, "look_up")
-        addBinding(controller, ControlifyBindings.LOOK_DOWN, "look_down")
+//        addBinding(controller, ControlifyBindings.WALK_LEFT, "move_left")
+//        addBinding(controller, ControlifyBindings.WALK_RIGHT, "move_right")
+//        addBinding(controller, ControlifyBindings.WALK_FORWARD, "move_forward")
+//        addBinding(controller, ControlifyBindings.WALK_BACKWARD, "move_backward")
+//        addBinding(controller, ControlifyBindings.LOOK_LEFT, "look_left")
+//        addBinding(controller, ControlifyBindings.LOOK_RIGHT, "look_right")
+//        addBinding(controller, ControlifyBindings.LOOK_UP, "look_up")
+//        addBinding(controller, ControlifyBindings.LOOK_DOWN, "look_down")
+        addBinding(controller, ControlifyBindings.JUMP, "jump")
 
         fireAxis(controller)
     }
@@ -43,17 +56,31 @@ object ControlifyIntegration : PikuService {
 
         bindings[name] = binding
 
-        if (bind.justPressed()) fireButton(name, "press")
-        if (bind.justReleased()) fireButton(name, "release")
-        if (bind.justTapped()) fireButton(name, "tapped")
+        var fireEvent: BindingEvent? = null
+        if (bind.justPressed()) fireEvent = BindingEvent.PRESS
+        if (bind.justReleased()) fireEvent = BindingEvent.RELEASE
+
+        val tappedNow = bind.justTapped()
+        val tappedBefore = prevTapped[name] ?: false
+        if (tappedNow && !tappedBefore) fireEvent = BindingEvent.TAP
+        prevTapped[name] = tappedNow
+
+        if (fireEvent != null)
+            fireButton(controller, binding, name, fireEvent)
     }
 
-    private fun fireButton(name: String, action: String) {
+    private fun fireButton(
+        controller: ControllerEntity,
+        binding: InputBindingSupplier,
+        name: String,
+        action: BindingEvent
+    ) {
         val eventData = mapOf(
             "button" to name,
-            "action" to action
+            "action" to action.name,
         )
         PikuClient.engine!!.events.fire("client.controller.button", eventData)
+        ControlifyUI.fireButton(controller, binding, name, action)
     }
 
     private fun fireAxis(controller: ControllerEntity) {
@@ -62,31 +89,37 @@ object ControlifyIntegration : PikuService {
         val moveY = ControlifyBindings.WALK_FORWARD.on(controller).analogueNow() -
                 ControlifyBindings.WALK_BACKWARD.on(controller).analogueNow()
 
-        PikuClient.engine!!.events.fire(
-            "client.controller.move",
-            mapOf(
-                "x" to moveX,
-                "y" to moveY,
-                "vector" to LuaVec2Instance(
-                    moveX.toDouble(), moveY.toDouble()
-                )
-            )
-        )
-
         val lookX = ControlifyBindings.LOOK_RIGHT.on(controller).analogueNow() -
                 ControlifyBindings.LOOK_LEFT.on(controller).analogueNow()
         val lookY = ControlifyBindings.LOOK_DOWN.on(controller).analogueNow() -
                 ControlifyBindings.LOOK_UP.on(controller).analogueNow()
 
-        PikuClient.engine!!.events.fire(
-            "client.controller.look",
-            mapOf(
-                "x" to lookX,
-                "y" to lookY,
-                "vector" to LuaVec2Instance(
-                    lookX.toDouble(), lookY.toDouble()
+        val moveVec = Vec2(moveX, moveY)
+        val lookVec = Vec2(lookX, lookY)
+        val prevMoveVec = prevState[BindingEvent.MOVE]
+        val prevLookVec = prevState[BindingEvent.LOOK]
+
+        if (moveVec != Vec2.ZERO || prevMoveVec != Vec2.ZERO) {
+            PikuClient.engine!!.events.fire(
+                "client.controller.move",
+                mapOf(
+                    "vector" to moveVec.toLuaInstance()
                 )
             )
-        )
+            ControlifyUI.fireAxis(controller, BindingEvent.MOVE, moveVec)
+        }
+
+        if (lookVec != Vec2.ZERO || prevLookVec != Vec2.ZERO) {
+            PikuClient.engine!!.events.fire(
+                "client.controller.look",
+                mapOf(
+                    "vector" to lookVec.toLuaInstance()
+                )
+            )
+            ControlifyUI.fireAxis(controller, BindingEvent.LOOK, lookVec)
+        }
+
+        prevState[BindingEvent.MOVE] = moveVec
+        prevState[BindingEvent.LOOK] = lookVec
     }
 }

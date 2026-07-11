@@ -49,17 +49,17 @@ object ControlifyUI : PikuService {
         action: BindingEvent,
         vector: Vec2
     ) {
-        // TODO: make customisable
-        if (action != BindingEvent.MOVE) return
-
         val flowNodes = UIRenderer.findAllOfType<FlowNode>()
-        val controllerActive = flowNodes.filter { it.controllerOptions.active }
+        val eligible = flowNodes.filter {
+            it.controllerOptions.active &&
+                    it.controllerOptions.actions.contains(action)
+        }
 
-        controllerActive.forEach { node ->
+        eligible.forEach { node ->
             detectAxis(node, vector)
         }
 
-        tickingScrollers += controllerActive.filter {
+        tickingScrollers += eligible.filter {
             !tickingScrollers.contains(it)
         }
     }

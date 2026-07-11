@@ -1,5 +1,7 @@
 package computer.obscure.piku.mod.fabric.ui.classes
 
+import computer.obscure.piku.mod.fabric.controlify.BindingEvent
+
 data class ControllerFlowOptions(
     /**
      * The initial delay (in ticks) before the repeat delay should kick in
@@ -33,4 +35,9 @@ data class ControllerFlowOptions(
      * [computer.obscure.piku.mod.fabric.ui.components.FlowNode].
      */
     var active: Boolean = false,
+
+    var actions: List<BindingEvent> = listOf(
+        BindingEvent.MOVE,
+        BindingEvent.LOOK
+    ),
 )

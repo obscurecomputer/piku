@@ -3,6 +3,7 @@ package computer.obscure.piku.mod.fabric.ui
 import computer.obscure.piku.core.classes.Vec2
 import computer.obscure.piku.core.service.PikuService
 import computer.obscure.piku.mod.fabric.controlify.BindingEvent
+import computer.obscure.piku.mod.fabric.ui.classes.ControllerScrollAxis
 import computer.obscure.piku.mod.fabric.ui.classes.ControllerScrollDirection
 import computer.obscure.piku.mod.fabric.ui.components.FlowNode
 import computer.obscure.piku.mod.fabric.ui.components.UINode
@@ -97,18 +98,23 @@ object ControlifyUI : PikuService {
     }
 
     fun detectAxis(node: FlowNode, vector: Vec2) {
-        val x = vector.x
         val data = node.controllerData
         val options = node.controllerOptions
+
+        println(vector)
+        val axisValue = when (options.scrollAxis) {
+            ControllerScrollAxis.HORIZONTAL -> vector.x
+            ControllerScrollAxis.VERTICAL -> -vector.y
+        }
 
         // No direction is currently held
         // Require the engage threshold before accepting input
         if (data.heldDirection == ControllerScrollDirection.NO_INPUT) {
-            if (x > options.engageThreshold) {
-                data.direction = ControllerScrollDirection.RIGHT
+            if (axisValue > options.engageThreshold) {
+                data.direction = ControllerScrollDirection.FORWARD
                 data.holding = true
-            } else if (x < -options.engageThreshold) {
-                data.direction = ControllerScrollDirection.LEFT
+            } else if (axisValue < -options.engageThreshold) {
+                data.direction = ControllerScrollDirection.BACKWARD
                 data.holding = true
             }
         } else {
@@ -116,14 +122,14 @@ object ControlifyUI : PikuService {
             // change from small movements.
 
             // Allow deliberate direction change through the engage threshold
-            if (data.heldDirection == ControllerScrollDirection.RIGHT
-                && x < -options.engageThreshold) {
-                data.direction = ControllerScrollDirection.LEFT
-            } else if (data.heldDirection == ControllerScrollDirection.LEFT
-                && x > options.engageThreshold) {
-                data.direction = ControllerScrollDirection.RIGHT
-            } else if (abs(x) < options.releaseThreshold) {
-                // Release the input only once the x is within the release threshold
+            if (data.heldDirection == ControllerScrollDirection.FORWARD
+                && axisValue < -options.engageThreshold) {
+                data.direction = ControllerScrollDirection.BACKWARD
+            } else if (data.heldDirection == ControllerScrollDirection.BACKWARD
+                && axisValue > options.engageThreshold) {
+                data.direction = ControllerScrollDirection.FORWARD
+            } else if (abs(axisValue) < options.releaseThreshold) {
+                // Release the input only once the axisValue is within the release threshold
                 data.direction = ControllerScrollDirection.NO_INPUT
                 data.holding = false
                 data.repeating = false

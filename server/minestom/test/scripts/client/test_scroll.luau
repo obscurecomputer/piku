@@ -1,6 +1,6 @@
 
 
-local game_showcase = game.ui.row()
+local game_showcase = game.ui.column()
 	.anchor("center_center")
 	.mainAxis("start")
 	.crossAxis("center")
@@ -9,6 +9,7 @@ local game_showcase = game.ui.row()
 
 game_showcase.controller()
 	.active(true)
+	.scrollAxis("h")
 
 local textures = {
 	"block/dirt",

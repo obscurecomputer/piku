@@ -91,8 +91,8 @@ object ControlifyIntegration : PikuService {
 
         val lookX = ControlifyBindings.LOOK_RIGHT.on(controller).analogueNow() -
                 ControlifyBindings.LOOK_LEFT.on(controller).analogueNow()
-        val lookY = ControlifyBindings.LOOK_DOWN.on(controller).analogueNow() -
-                ControlifyBindings.LOOK_UP.on(controller).analogueNow()
+        val lookY = ControlifyBindings.LOOK_UP.on(controller).analogueNow() -
+                ControlifyBindings.LOOK_DOWN.on(controller).analogueNow()
 
         val moveVec = Vec2(moveX, moveY)
         val lookVec = Vec2(lookX, lookY)

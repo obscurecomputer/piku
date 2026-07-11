@@ -36,7 +36,7 @@ data class ControllerFlowData(
 )
 
 enum class ControllerScrollDirection(val direction: Int) {
-    LEFT(-1),
+    BACKWARD(-1),
     NO_INPUT(0),
-    RIGHT(1)
+    FORWARD(1)
 }

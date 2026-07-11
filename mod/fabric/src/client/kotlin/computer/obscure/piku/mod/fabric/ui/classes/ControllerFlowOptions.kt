@@ -40,4 +40,10 @@ data class ControllerFlowOptions(
         BindingEvent.MOVE,
         BindingEvent.LOOK
     ),
+    var scrollAxis: ControllerScrollAxis = ControllerScrollAxis.HORIZONTAL
 )
+
+enum class ControllerScrollAxis {
+    HORIZONTAL,
+    VERTICAL
+}

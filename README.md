@@ -25,11 +25,11 @@ Players are **not required to use it** on Piku servers **by default**, and is ty
 
 ## Platforms
 
-| Platform 	 | Client 	 | Server | Server (drop-in jar) |
-|------------|----------|--------|----------------------|
-| Fabric   	 | ✅      	 | ❌      | ❌                    |
-| Minestom 	 | ❌      	 | ✅      | ❌                    |
-| Paper    	 | ❌      	 | ✅      | ✅                    |
+| Platform 	 | Client 	               | Server | Server (drop-in jar) |
+|------------|------------------------|--------|----------------------|
+| Fabric   	 | ✅      	               | ❌      | ❌                    |
+| Minestom 	 | ❌      	               | ✅      | ❌  (Not Possible)    |
+| Paper    	 | ❌ (Not Possible)     	 | ✅      | ✅                    |
 
 ## Current Features
 - **Input Handling**
@@ -58,6 +58,8 @@ Players are **not required to use it** on Piku servers **by default**, and is ty
     - client-side raycasting with powerful entity filters and customisation options
 - **NBT & Components**
     - read & write data components of items and entities
+- **Controlify Support**
+    - Allow movement through UIs using controllers!
 
 # To-do List / Roadmap
 Tasks labeled here may not be worked on in chronological order.
@@ -82,4 +84,4 @@ Tasks labeled here may not be worked on in chronological order.
   - [ ] Disabling view of client or other players' limbs/armor
 - [x] Shared states
 - [ ] Particle System (GPU based)
-- [x] Write docs
+- [ ] Rewrite docs

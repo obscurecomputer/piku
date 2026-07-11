@@ -30,14 +30,14 @@ object ControlifyIntegration : PikuService {
         val controller = Controlify.instance().currentController.orElse(null)
             ?: return
 
-//        addBinding(controller, ControlifyBindings.WALK_LEFT, "move_left")
-//        addBinding(controller, ControlifyBindings.WALK_RIGHT, "move_right")
-//        addBinding(controller, ControlifyBindings.WALK_FORWARD, "move_forward")
-//        addBinding(controller, ControlifyBindings.WALK_BACKWARD, "move_backward")
-//        addBinding(controller, ControlifyBindings.LOOK_LEFT, "look_left")
-//        addBinding(controller, ControlifyBindings.LOOK_RIGHT, "look_right")
-//        addBinding(controller, ControlifyBindings.LOOK_UP, "look_up")
-//        addBinding(controller, ControlifyBindings.LOOK_DOWN, "look_down")
+        addBindingGlyph(controller, ControlifyBindings.WALK_LEFT, "move_left")
+        addBindingGlyph(controller, ControlifyBindings.WALK_RIGHT, "move_right")
+        addBindingGlyph(controller, ControlifyBindings.WALK_FORWARD, "move_forward")
+        addBindingGlyph(controller, ControlifyBindings.WALK_BACKWARD, "move_backward")
+        addBindingGlyph(controller, ControlifyBindings.LOOK_LEFT, "look_left")
+        addBindingGlyph(controller, ControlifyBindings.LOOK_RIGHT, "look_right")
+        addBindingGlyph(controller, ControlifyBindings.LOOK_UP, "look_up")
+        addBindingGlyph(controller, ControlifyBindings.LOOK_DOWN, "look_down")
         addBinding(controller, ControlifyBindings.JUMP, "jump")
 
         fireAxis(controller)
@@ -46,6 +46,19 @@ object ControlifyIntegration : PikuService {
     fun getGlyph(binding: String): Component? {
         val bind = bindings[binding] ?: return null
         return bind.inputGlyph()
+    }
+
+    /**
+     * Used as an alternative to [addBinding], where we don't want to fire
+     * look/move events, but we still need the bindings registered for their glyphs.
+     */
+    fun addBindingGlyph(
+        controller: ControllerEntity,
+        binding: InputBindingSupplier,
+        nameOverride: String? = null,
+    ) {
+        val name = nameOverride ?: binding.bindId().path
+        bindings[name] = binding
     }
 
     fun addBinding(

@@ -2,13 +2,14 @@ package computer.obscure.piku.mod.fabric.ui
 
 import computer.obscure.piku.core.classes.Vec2
 import computer.obscure.piku.core.service.PikuService
+import computer.obscure.piku.mod.fabric.controlify.ActionEvent
 import computer.obscure.piku.mod.fabric.controlify.BindingEvent
+import computer.obscure.piku.mod.fabric.ui.classes.ControllerActivateMode
 import computer.obscure.piku.mod.fabric.ui.classes.ControllerScrollAxis
 import computer.obscure.piku.mod.fabric.ui.classes.ControllerScrollDirection
 import computer.obscure.piku.mod.fabric.ui.components.FlowNode
 import computer.obscure.piku.mod.fabric.ui.components.UINode
 import dev.isxander.controlify.api.bind.InputBindingSupplier
-import dev.isxander.controlify.bindings.ControlifyBindings
 import dev.isxander.controlify.controller.ControllerEntity
 import kotlin.math.abs
 
@@ -27,27 +28,61 @@ object ControlifyUI : PikuService {
     ) {
         println("BUTTON FIRE CALLED FROM CONTROLIFYUI: $name $action")
 
-        when (action) {
-            BindingEvent.TAP -> {
-                if (binding == ControlifyBindings.JUMP) {
-                    tickingScrollers.toList().forEach { node ->
-                        val eligible = eligibleChildren(node)
-                        eligible.forEachIndexed { index, child ->
-                            if (index != node.controllerData.currentSelectionIndex) return@forEachIndexed
-                            // TODO: add options like "allowMultiActivate" and "toggleActivate"
+        tickingScrollers.toList().forEach { node ->
+            val options = node.controllerOptions
+            if (!options.activateBindings.contains(binding)) return@forEach
+            if (options.activateBindingEvent != action) return@forEach
+
+            val mode = options.activateMode
+            val selectedIndex = node.controllerData.currentSelectionIndex
+            val eligible = eligibleChildren(node)
+            eligible.forEachIndexed { index, child ->
+                when (mode) {
+                    ControllerActivateMode.MULTI -> {
+                        if (index != selectedIndex) return@forEachIndexed
+
+                        if (child.activated)
+                            child.onDeactivate?.invoke()
+                        else
                             child.onActivate?.invoke()
-                        }
+                        child.activated = !child.activated
                     }
+                    ControllerActivateMode.TOGGLE -> {
+                        if (index != selectedIndex) {
+                            if (!child.activated) return@forEachIndexed
+                            child.onDeactivate?.invoke()
+                            child.activated = false
+                            return@forEachIndexed
+                        }
+                        if (child.activated) return@forEachIndexed
+                        child.onActivate?.invoke()
+                        child.activated = true
+                    }
+                    ControllerActivateMode.SINGLE_TOGGLE -> {
+                        if (index != selectedIndex) {
+                            if (!child.activated) return@forEachIndexed
+                            child.onDeactivate?.invoke()
+                            child.activated = false
+                            return@forEachIndexed
+                        }
+
+                        if (child.activated) {
+                            child.onDeactivate?.invoke()
+                            child.activated = false
+                            return@forEachIndexed
+                        }
+                        child.onActivate?.invoke()
+                        child.activated = true
+                    }
+                    ControllerActivateMode.NONE -> {}
                 }
             }
-
-            else -> {}
         }
     }
 
     fun fireAxis(
         controller: ControllerEntity,
-        action: BindingEvent,
+        action: ActionEvent,
         vector: Vec2
     ) {
         val flowNodes = UIRenderer.findAllOfType<FlowNode>()
@@ -101,7 +136,6 @@ object ControlifyUI : PikuService {
         val data = node.controllerData
         val options = node.controllerOptions
 
-        println(vector)
         val axisValue = when (options.scrollAxis) {
             ControllerScrollAxis.HORIZONTAL -> vector.x
             ControllerScrollAxis.VERTICAL -> -vector.y
@@ -154,6 +188,8 @@ object ControlifyUI : PikuService {
         val data = node.controllerData
         val direction = data.direction
 
+        data.previousSelectionIndex = data.currentSelectionIndex
+        data.previousSelection = data.currentSelection
         data.currentSelectionIndex += direction.direction
 
         val eligible = eligibleChildren(node)
@@ -174,8 +210,10 @@ object ControlifyUI : PikuService {
             if (index == data.currentSelectionIndex) {
                 data.currentSelection = child
                 child.onSelect?.invoke()
+                child.selected = true
             } else {
                 child.onDeselect?.invoke()
+                child.selected = false
             }
         }
     }

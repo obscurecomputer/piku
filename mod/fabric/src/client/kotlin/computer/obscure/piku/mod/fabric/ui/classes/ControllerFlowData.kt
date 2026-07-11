@@ -9,6 +9,8 @@ import computer.obscure.piku.mod.fabric.ui.components.UINode
 data class ControllerFlowData(
     var currentSelectionIndex: Int = 0,
     var currentSelection: UINode? = null,
+    var previousSelectionIndex: Int = 0,
+    var previousSelection: UINode? = null,
     /**
      * Whether the controller has given enough analogue input within
      * the [ControllerFlowOptions.initialDelay]

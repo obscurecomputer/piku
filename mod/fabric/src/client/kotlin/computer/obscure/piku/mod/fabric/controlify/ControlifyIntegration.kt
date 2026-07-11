@@ -14,7 +14,9 @@ enum class BindingEvent {
     PRESS,
     RELEASE,
     TAP,
+}
 
+enum class ActionEvent {
     LOOK,
     MOVE
 }
@@ -22,7 +24,7 @@ enum class BindingEvent {
 object ControlifyIntegration : PikuService {
     val bindings = mutableMapOf<String, InputBindingSupplier>()
     private val prevTapped = mutableMapOf<String, Boolean>()
-    val prevState = mutableMapOf<BindingEvent, Vec2>()
+    val prevState = mutableMapOf<ActionEvent, Vec2>()
 
     fun tick() {
         val controller = Controlify.instance().currentController.orElse(null)
@@ -96,8 +98,8 @@ object ControlifyIntegration : PikuService {
 
         val moveVec = Vec2(moveX, moveY)
         val lookVec = Vec2(lookX, lookY)
-        val prevMoveVec = prevState[BindingEvent.MOVE]
-        val prevLookVec = prevState[BindingEvent.LOOK]
+        val prevMoveVec = prevState[ActionEvent.MOVE]
+        val prevLookVec = prevState[ActionEvent.LOOK]
 
         if (moveVec != Vec2.ZERO || prevMoveVec != Vec2.ZERO) {
             PikuClient.engine!!.events.fire(
@@ -106,7 +108,7 @@ object ControlifyIntegration : PikuService {
                     "vector" to moveVec.toLuaInstance()
                 )
             )
-            ControlifyUI.fireAxis(controller, BindingEvent.MOVE, moveVec)
+            ControlifyUI.fireAxis(controller, ActionEvent.MOVE, moveVec)
         }
 
         if (lookVec != Vec2.ZERO || prevLookVec != Vec2.ZERO) {
@@ -116,10 +118,10 @@ object ControlifyIntegration : PikuService {
                     "vector" to lookVec.toLuaInstance()
                 )
             )
-            ControlifyUI.fireAxis(controller, BindingEvent.LOOK, lookVec)
+            ControlifyUI.fireAxis(controller, ActionEvent.LOOK, lookVec)
         }
 
-        prevState[BindingEvent.MOVE] = moveVec
-        prevState[BindingEvent.LOOK] = lookVec
+        prevState[ActionEvent.MOVE] = moveVec
+        prevState[ActionEvent.LOOK] = lookVec
     }
 }

@@ -1,6 +1,9 @@
 package computer.obscure.piku.mod.fabric.ui.classes
 
+import computer.obscure.piku.mod.fabric.controlify.ActionEvent
 import computer.obscure.piku.mod.fabric.controlify.BindingEvent
+import dev.isxander.controlify.api.bind.InputBindingSupplier
+import dev.isxander.controlify.bindings.ControlifyBindings
 
 data class ControllerFlowOptions(
     /**
@@ -36,12 +39,40 @@ data class ControllerFlowOptions(
      */
     var active: Boolean = false,
 
-    var actions: List<BindingEvent> = listOf(
-        BindingEvent.MOVE,
-        BindingEvent.LOOK
+    /**
+     * The list of actions that can scroll this [computer.obscure.piku.mod.fabric.ui.components.FlowNode].
+     */
+    var actions: List<ActionEvent> = listOf(
+        ActionEvent.MOVE,
+        ActionEvent.LOOK
     ),
-    var scrollAxis: ControllerScrollAxis = ControllerScrollAxis.HORIZONTAL
+
+    /**
+     * The axis to take analogue input from in order to scroll.
+     */
+    var scrollAxis: ControllerScrollAxis = ControllerScrollAxis.HORIZONTAL,
+
+    /**
+     * Which [BindingEvent] should be used to determine when a
+     * valid activation occurs.
+     */
+    var activateBindingEvent: BindingEvent = BindingEvent.TAP,
+
+    /**
+     * Which [InputBindingSupplier]s should be used to control what
+     * inputs on the controller determines a valid input.
+     */
+    var activateBindings: List<InputBindingSupplier> = listOf(
+        ControlifyBindings.JUMP
+    ),
+    /**
+     * Determines how [activateBindings] translate into activation of
+     * [computer.obscure.piku.mod.fabric.ui.components.UINode]s.
+     */
+    var activateMode: ControllerActivateMode = ControllerActivateMode.TOGGLE,
 )
+
+enum class ControllerActivateMode { MULTI, TOGGLE, SINGLE_TOGGLE, NONE }
 
 enum class ControllerScrollAxis {
     HORIZONTAL,

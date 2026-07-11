@@ -1,5 +1,6 @@
 package computer.obscure.piku.mod.fabric.scripting.api.ui
 
+import computer.obscure.piku.mod.fabric.ui.classes.ControllerActivateMode
 import computer.obscure.piku.mod.fabric.ui.classes.ControllerScrollAxis
 import computer.obscure.piku.mod.fabric.ui.components.FlowNode
 import computer.obscure.twine.TwineNative
@@ -25,6 +26,18 @@ class LuaUIController(val node: FlowNode) : TwineNative() {
     @TwineFunction
     fun releaseThreshold(value: Float) = apply {
         node.controllerOptions.releaseThreshold = value
+    }
+    @TwineFunction
+    fun allowMultiActivate(value: Boolean) = apply {
+        node.controllerOptions.activateMode = ControllerActivateMode.MULTI
+    }
+    @TwineFunction
+    fun toggleActivate(value: Boolean) = apply {
+        node.controllerOptions.activateMode = ControllerActivateMode.TOGGLE
+    }
+    @TwineFunction
+    fun allowSingleToggleActivate(value: Boolean) = apply {
+        node.controllerOptions.activateMode = ControllerActivateMode.SINGLE_TOGGLE
     }
     @TwineFunction
     fun scrollAxis(value: String) = apply {

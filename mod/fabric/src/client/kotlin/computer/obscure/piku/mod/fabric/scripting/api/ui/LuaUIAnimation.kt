@@ -8,6 +8,7 @@ import computer.obscure.piku.core.scripting.engine.EngineError
 import computer.obscure.piku.core.scripting.engine.EngineErrorCode
 import computer.obscure.piku.mod.fabric.scripting.api.animation.LuaAnimatable
 import computer.obscure.piku.mod.fabric.ui.classes.Dimension
+import computer.obscure.piku.mod.fabric.ui.classes.OffsetDimension
 import computer.obscure.piku.mod.fabric.ui.components.FlowNode
 import computer.obscure.piku.mod.fabric.ui.components.LineNode
 import computer.obscure.piku.mod.fabric.ui.components.ProgressBarNode
@@ -37,8 +38,16 @@ class LuaUIAnimation(val node: UINode) : LuaAnimatable() {
             targetId = node.id,
             durationSeconds = duration,
             easing = easing,
-            getter = { node.offset },
-            setter = { node.offset = it },
+            getter = {
+                Vec2(
+                    (node.offsetX as? OffsetDimension.Fixed)?.px ?: 0f,
+                    (node.offsetY as? OffsetDimension.Fixed)?.px ?: 0f
+                )
+            },
+            setter = { offset ->
+                node.offsetX = OffsetDimension.Fixed(offset.x.toFloat())
+                node.offsetY = OffsetDimension.Fixed(offset.y.toFloat())
+            },
             to = to.toVec2(),
             onStart = { onStartCallback?.call<Unit>() },
             onFinish = { onFinishCallback?.call<Unit>() }

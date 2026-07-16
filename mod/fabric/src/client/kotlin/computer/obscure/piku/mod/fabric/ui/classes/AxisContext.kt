@@ -79,8 +79,6 @@ sealed interface Axis {
             node.layoutY + node.padding.topF
 
         override fun setLayout(child: UINode, mainPos: Float, crossPos: Float) {
-            child.layoutX = mainPos + child.offset.x.toFloat()
-            child.layoutY = crossPos + child.offset.y.toFloat()
         }
 
         override fun parentCross(ctx: MeasureContext) =
@@ -138,8 +136,6 @@ sealed interface Axis {
             node.layoutX + node.padding.leftF
 
         override fun setLayout(child: UINode, mainPos: Float, crossPos: Float) {
-            child.layoutX = crossPos + child.offset.x.toFloat()
-            child.layoutY = mainPos + child.offset.y.toFloat()
         }
 
         override fun parentCross(ctx: MeasureContext) =

@@ -22,7 +22,6 @@ abstract class UINode {
     var name: String? = null
 
     var anchor: Anchor = Anchor.TOP_LEFT
-    var offset: Vec2 = Vec2.ZERO
     var offsetX: OffsetDimension = OffsetDimension.Zero
     var offsetY: OffsetDimension = OffsetDimension.Zero
 

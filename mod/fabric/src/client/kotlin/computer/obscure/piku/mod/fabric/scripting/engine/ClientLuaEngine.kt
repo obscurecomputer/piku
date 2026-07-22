@@ -15,6 +15,7 @@ import computer.obscure.piku.mod.fabric.scripting.api.raycast.LuaRaycast
 import computer.obscure.piku.mod.fabric.scripting.api.sound.LuaSound
 import computer.obscure.piku.mod.fabric.scripting.api.storage.LuaSessionStorage
 import computer.obscure.piku.mod.fabric.scripting.api.ui.LuaEasing
+import me.znotchill.kiwi.twine.TwineCompat
 
 class ClientLuaEngine : LuaEngine() {
     lateinit var events: LuaClientEvents
@@ -43,6 +44,7 @@ class ClientLuaEngine : LuaEngine() {
         register(LuaSessionStorage())
         register(LuaControlify())
         register(LuaSound())
+        TwineCompat.bind(twine)
         super.registerCommons()
 
         val eventListener = LuaClientEventListener()

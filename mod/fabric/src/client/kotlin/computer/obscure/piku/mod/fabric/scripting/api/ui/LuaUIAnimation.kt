@@ -2,7 +2,6 @@ package computer.obscure.piku.mod.fabric.scripting.api.ui
 
 import computer.obscure.piku.core.animation.Animation
 import me.znotchill.kiwi.generated.Vec2
-import computer.obscure.piku.core.scripting.api.LuaColorInstance
 import computer.obscure.piku.core.scripting.engine.EngineError
 import computer.obscure.piku.core.scripting.engine.EngineErrorCode
 import computer.obscure.piku.mod.fabric.scripting.api.animation.LuaAnimatable
@@ -14,6 +13,7 @@ import computer.obscure.piku.mod.fabric.ui.components.ProgressBarNode
 import computer.obscure.piku.mod.fabric.ui.components.UINode
 import computer.obscure.twine.LuaCallback
 import computer.obscure.twine.annotations.TwineFunction
+import me.znotchill.kiwi.generated.Color
 
 class LuaUIAnimation(val node: UINode) : LuaAnimatable() {
     private var onStartCallback: LuaCallback? = null
@@ -178,14 +178,14 @@ class LuaUIAnimation(val node: UINode) : LuaAnimatable() {
     }
 
     @TwineFunction
-    fun background(to: LuaColorInstance, duration: Double, easing: String): LuaUIAnimation {
+    fun background(to: Color, duration: Double, easing: String): LuaUIAnimation {
         queue.add(Animation(
             targetId = node.id,
             durationSeconds = duration,
             easing = easing,
             getter = { node.background },
             setter = { node.background = it },
-            to = to.toUIColor(),
+            to = to,
             onStart = { onStartCallback?.call<Unit>() },
             onFinish = { onFinishCallback?.call<Unit>() }
         ))
@@ -194,14 +194,14 @@ class LuaUIAnimation(val node: UINode) : LuaAnimatable() {
     }
 
     @TwineFunction
-    fun color(to: LuaColorInstance, duration: Double, easing: String): LuaUIAnimation {
+    fun color(to: Color, duration: Double, easing: String): LuaUIAnimation {
         queue.add(Animation(
             targetId = node.id,
             durationSeconds = duration,
             easing = easing,
             getter = { node.color },
             setter = { node.color = it },
-            to = to.toUIColor(),
+            to = to,
             onStart = { onStartCallback?.call<Unit>() },
             onFinish = { onFinishCallback?.call<Unit>() }
         ))

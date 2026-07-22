@@ -3,7 +3,7 @@ package computer.obscure.piku.mod.fabric.ui.components
 import computer.obscure.piku.mod.fabric.ui.classes.context.MeasureContext
 import net.minecraft.client.gui.GuiGraphics
 
-class DividerNode() : UINode() {
+class DividerNode : UINode() {
     var thickness: Float = 1f
 
     override fun measureContent(ctx: MeasureContext) = 0f to thickness

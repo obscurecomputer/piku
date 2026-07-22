@@ -3,8 +3,8 @@ package computer.obscure.piku.core.animation
 import computer.obscure.piku.core.classes.Spacing
 import me.znotchill.kiwi.generated.Vec2
 import computer.obscure.piku.core.classes.Vec3
-import computer.obscure.piku.core.graphics.UIColor
 import computer.obscure.piku.core.service.PikuService
+import me.znotchill.kiwi.generated.Color
 
 object AnimationManager : PikuService {
     private val animations: MutableList<Animation<Any>> = mutableListOf()
@@ -67,7 +67,7 @@ object AnimationManager : PikuService {
                         bottom = AnimationUtil.lerp(from.bottom, t2.bottom, eased)
                     )
                 }
-                is UIColor -> from.lerp(to as UIColor, eased)
+                is Color -> from.lerp(to as Color, eased)
                 else -> to
             }
 

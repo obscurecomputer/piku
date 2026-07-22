@@ -1,14 +1,14 @@
 package computer.obscure.piku.mod.fabric.ui.components
 
-import computer.obscure.piku.core.graphics.UIColor
 import computer.obscure.piku.mod.fabric.ui.classes.context.MeasureContext
+import me.znotchill.kiwi.generated.Color
 import net.minecraft.client.gui.GuiGraphics
 
 enum class ScrollbarDirection { VERTICAL, HORIZONTAL }
 
 class ScrollbarNode(var target: FlowNode? = null) : UINode() {
-    var trackColor: UIColor = UIColor.hex("#44ffffff")
-    var thumbColor: UIColor = UIColor.hex("#88ffffff")
+    var trackColor: Color = Color.hex("#44ffffff")
+    var thumbColor: Color = Color.hex("#88ffffff")
     var direction: ScrollbarDirection = ScrollbarDirection.VERTICAL
 
     override fun measureContent(ctx: MeasureContext) = when (direction) {

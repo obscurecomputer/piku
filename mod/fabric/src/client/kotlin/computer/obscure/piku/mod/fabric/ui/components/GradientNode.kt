@@ -1,12 +1,12 @@
 package computer.obscure.piku.mod.fabric.ui.components
 
-import computer.obscure.piku.core.graphics.UIColor
 import computer.obscure.piku.mod.fabric.ui.classes.context.MeasureContext
+import me.znotchill.kiwi.generated.Color
 import net.minecraft.client.gui.GuiGraphics
 
 class GradientNode(
-    var colorStart: UIColor = UIColor.BLACK,
-    var colorEnd: UIColor = UIColor.WHITE,
+    var colorStart: Color = Color.BLACK,
+    var colorEnd: Color = Color.WHITE,
     var direction: GradientDirection = GradientDirection.HORIZONTAL
 ) : UINode() {
 

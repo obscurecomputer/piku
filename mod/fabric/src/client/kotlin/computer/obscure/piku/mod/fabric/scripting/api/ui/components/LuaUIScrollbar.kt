@@ -1,10 +1,10 @@
 package computer.obscure.piku.mod.fabric.scripting.api.ui.components
 
-import computer.obscure.piku.core.scripting.api.LuaColorInstance
 import computer.obscure.piku.mod.fabric.scripting.api.ui.LuaUINode
 import computer.obscure.piku.mod.fabric.ui.components.ScrollbarDirection
 import computer.obscure.piku.mod.fabric.ui.components.ScrollbarNode
 import computer.obscure.twine.annotations.TwineFunction
+import me.znotchill.kiwi.generated.Color
 
 class LuaUIScrollbar(override val node: ScrollbarNode) : LuaUINode(node) {
     @TwineFunction
@@ -14,14 +14,14 @@ class LuaUIScrollbar(override val node: ScrollbarNode) : LuaUINode(node) {
     }
 
     @TwineFunction
-    fun trackColor(value: LuaColorInstance): LuaUIScrollbar {
-        node.trackColor = value.toUIColor()
+    fun trackColor(value: Color): LuaUIScrollbar {
+        node.trackColor = value
         return this
     }
 
     @TwineFunction
-    fun thumbColor(value: LuaColorInstance): LuaUIScrollbar {
-        node.thumbColor = value.toUIColor()
+    fun thumbColor(value: Color): LuaUIScrollbar {
+        node.thumbColor = value
         return this
     }
 

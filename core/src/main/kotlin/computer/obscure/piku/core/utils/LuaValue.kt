@@ -2,11 +2,12 @@ package computer.obscure.piku.core.utils
 
 import me.znotchill.kiwi.generated.Vec2
 import computer.obscure.piku.core.classes.Vec3
-import computer.obscure.piku.core.graphics.UIColor
 import computer.obscure.piku.core.serialization.PikuSerializable
 import computer.obscure.twine.TwineNative
+import computer.obscure.twine.TwineValue
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.json.*
+import me.znotchill.kiwi.generated.Color
 import kotlin.reflect.KClass
 
 val json = Json { ignoreUnknownKeys = true }
@@ -20,9 +21,16 @@ data class SerializableTypeEntry<T : Any>(
 )
 
 val pikuSerializableTypes: List<SerializableTypeEntry<*>> = listOf(
-    SerializableTypeEntry(UIColor::class, "uicolor", UIColor.serializer()) { it.toLuaInstance() },
     SerializableTypeEntry(Vec3::class, "vec3", Vec3.serializer()) { it.toLuaInstance() },
-    SerializableTypeEntry(Vec2::class, "vec2", Vec2.serializer()) { it }
+    SerializableTypeEntry(
+        Vec2::class, "vec2",
+        Vec2.serializer()
+    ) { TwineValue(it, "vec2") },
+
+    SerializableTypeEntry(
+        Color::class, "color",
+        Color.serializer()
+    ) { TwineValue(it, "color") }
 )
 
 val typeNameToEntry: Map<String, SerializableTypeEntry<*>> =

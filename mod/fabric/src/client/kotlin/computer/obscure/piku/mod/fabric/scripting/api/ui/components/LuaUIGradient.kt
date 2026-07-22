@@ -1,19 +1,19 @@
 package computer.obscure.piku.mod.fabric.scripting.api.ui.components
 
-import computer.obscure.piku.core.scripting.api.LuaColorInstance
 import computer.obscure.piku.mod.fabric.ui.components.GradientNode
 import computer.obscure.twine.annotations.TwineFunction
+import me.znotchill.kiwi.generated.Color
 
 class LuaUIGradient(override val node: GradientNode) : LuaUIContainer(node) {
     @TwineFunction
-    fun from(value: LuaColorInstance): LuaUIGradient {
-        node.colorStart = value.toUIColor()
+    fun from(value: Color): LuaUIGradient {
+        node.colorStart = value
         return this
     }
 
     @TwineFunction
-    fun to(value: LuaColorInstance): LuaUIGradient {
-        node.colorEnd = value.toUIColor()
+    fun to(value: Color): LuaUIGradient {
+        node.colorEnd = value
         return this
     }
 

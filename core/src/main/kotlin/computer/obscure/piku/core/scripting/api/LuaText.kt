@@ -3,6 +3,8 @@ package computer.obscure.piku.core.scripting.api
 import computer.obscure.twine.annotations.TwineFunction
 import computer.obscure.twine.TwineNative
 import computer.obscure.twine.annotations.TwineProperty
+import me.znotchill.kiwi.generated.Color
+import me.znotchill.kiwi.generated.toTextColor
 import net.kyori.adventure.key.Key
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.event.ClickEvent
@@ -55,8 +57,8 @@ class LuaTextInstance(
 
     var hoverText: LuaTextInstance? = null,
 
-    var textColor: LuaColorInstance? = null,
-    var textShadowColor: LuaColorInstance? = null,
+    var textColor: Color? = null,
+    var textShadowColor: Color? = null,
 
     private val baseComponent: Component? = null,
 ) : TwineNative() {
@@ -162,12 +164,12 @@ class LuaTextInstance(
     }
 
     @TwineFunction
-    fun color(value: LuaColorInstance): LuaTextInstance = apply {
+    fun color(value: Color): LuaTextInstance = apply {
         textColor = value
     }
 
     @TwineFunction
-    fun shadowColor(value: LuaColorInstance): LuaTextInstance = apply {
+    fun shadowColor(value: Color): LuaTextInstance = apply {
         textShadowColor = value
     }
 

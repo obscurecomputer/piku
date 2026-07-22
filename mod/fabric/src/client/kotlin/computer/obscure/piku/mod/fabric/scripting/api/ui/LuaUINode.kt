@@ -2,7 +2,6 @@ package computer.obscure.piku.mod.fabric.scripting.api.ui
 
 import computer.obscure.piku.core.animation.AnimationManager
 import computer.obscure.piku.core.classes.Spacing
-import computer.obscure.piku.core.scripting.api.LuaColorInstance
 import computer.obscure.piku.core.scripting.api.LuaSpacingInstance
 import me.znotchill.kiwi.generated.Vec2
 import computer.obscure.piku.core.scripting.engine.EngineError
@@ -36,6 +35,7 @@ import computer.obscure.twine.LuaCallback
 import computer.obscure.twine.TwineNative
 import computer.obscure.twine.annotations.TwineFunction
 import computer.obscure.twine.annotations.TwineProperty
+import me.znotchill.kiwi.generated.Color
 
 open class LuaUINode(open val node: UINode) : TwineNative() {
 
@@ -62,14 +62,14 @@ open class LuaUINode(open val node: UINode) : TwineNative() {
     }
 
     @TwineFunction
-    fun background(value: LuaColorInstance): LuaUINode {
-        node.background = value.toUIColor()
+    fun background(value: Color): LuaUINode {
+        node.background = value
         return this
     }
 
     @TwineFunction
-    fun color(value: LuaColorInstance): LuaUINode {
-        node.color = value.toUIColor()
+    fun color(value: Color): LuaUINode {
+        node.color = value
         return this
     }
 

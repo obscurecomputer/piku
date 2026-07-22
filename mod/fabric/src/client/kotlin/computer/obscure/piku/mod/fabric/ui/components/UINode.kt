@@ -7,12 +7,12 @@ import computer.obscure.piku.core.classes.leftF
 import computer.obscure.piku.core.classes.rightF
 import computer.obscure.piku.core.classes.topF
 import computer.obscure.piku.core.classes.vertical
-import computer.obscure.piku.core.graphics.UIColor
 import computer.obscure.piku.mod.fabric.ui.classes.Anchor
 import computer.obscure.piku.mod.fabric.ui.classes.Dimension
 import computer.obscure.piku.mod.fabric.ui.classes.OffsetDimension
 import computer.obscure.piku.mod.fabric.ui.classes.context.LayoutContext
 import computer.obscure.piku.mod.fabric.ui.classes.context.MeasureContext
+import me.znotchill.kiwi.generated.Color
 import net.minecraft.client.gui.GuiGraphics
 import java.util.UUID
 
@@ -31,8 +31,8 @@ abstract class UINode {
     var padding: Spacing = Spacing.ZERO
     var margin: Spacing = Spacing.ZERO
 
-    var background: UIColor? = null
-    var color: UIColor = UIColor.WHITE
+    var background: Color? = null
+    var color: Color = Color.WHITE
 
     // COMPUTED LAYOUT
     var layoutX: Float = 0f

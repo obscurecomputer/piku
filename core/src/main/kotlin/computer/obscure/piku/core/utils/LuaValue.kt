@@ -1,21 +1,35 @@
 package computer.obscure.piku.core.utils
 
-import computer.obscure.piku.core.classes.Vec2
+import me.znotchill.kiwi.generated.Vec2
 import computer.obscure.piku.core.classes.Vec3
 import computer.obscure.piku.core.graphics.UIColor
 import computer.obscure.piku.core.serialization.PikuSerializable
+import computer.obscure.twine.TwineNative
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.json.*
+import kotlin.reflect.KClass
 
 val json = Json { ignoreUnknownKeys = true }
 
-// todo: move this / make it better
-val pikuSerializableTypes: Map<String, KSerializer<out PikuSerializable>> = mapOf(
-    "uicolor" to UIColor.serializer(),
-    "vec2" to Vec2.serializer(),
-    "vec3" to Vec3.serializer(),
+
+data class SerializableTypeEntry<T : Any>(
+    val klass: KClass<T>,
+    val typeName: String,
+    val serializer: KSerializer<T>,
+    val toLua: (T) -> TwineNative
 )
 
+val pikuSerializableTypes: List<SerializableTypeEntry<*>> = listOf(
+    SerializableTypeEntry(UIColor::class, "uicolor", UIColor.serializer()) { it.toLuaInstance() },
+    SerializableTypeEntry(Vec3::class, "vec3", Vec3.serializer()) { it.toLuaInstance() },
+    SerializableTypeEntry(Vec2::class, "vec2", Vec2.serializer()) { it }
+)
+
+val typeNameToEntry: Map<String, SerializableTypeEntry<*>> =
+    pikuSerializableTypes.associateBy { it.typeName }
+
+val classToEntry: Map<KClass<*>, SerializableTypeEntry<*>> =
+    pikuSerializableTypes.associateBy { it.klass }
 
 fun Any?.toJson(): String = when (this) {
     null -> "null"
@@ -31,16 +45,33 @@ fun Any?.toJson(): String = when (this) {
         val entries = this.joinToString(",") { it.toJson() }
         "[$entries]"
     }
-    else -> JsonPrimitive(this.toString()).toString()
+    else -> {
+        val entry = classToEntry[this::class]
+        if (entry != null) {
+            @Suppress("UNCHECKED_CAST")
+            val serializer = entry.serializer as KSerializer<Any>
+            val encoded = json.encodeToJsonElement(serializer, this) as JsonObject
+            JsonObject(buildMap {
+                put("__type", JsonPrimitive(entry.typeName))
+                putAll(encoded)
+            }).toString()
+        } else {
+            JsonPrimitive(this.toString()).toString()
+        }
+    }
 }
 
 fun jsonToKotlin(value: JsonElement): Any? {
     return when {
         value is JsonObject -> {
             val typeName = value["__type"]?.jsonPrimitive?.contentOrNull
-            val target = typeName?.let { pikuSerializableTypes[it] }
-            if (target != null) {
-                json.decodeFromJsonElement(target, value).toLuaInstance()
+            val entry = typeName?.let { typeNameToEntry[it] }
+            if (entry != null) {
+                @Suppress("UNCHECKED_CAST")
+                val serializer = entry.serializer as KSerializer<Any>
+                val decoded = json.decodeFromJsonElement(serializer, value)
+                @Suppress("UNCHECKED_CAST")
+                (entry.toLua as (Any) -> TwineNative)(decoded)
             } else {
                 value.entries.associate { (k, v) -> k to jsonToKotlin(v) }
             }
@@ -56,7 +87,6 @@ fun jsonToKotlin(value: JsonElement): Any? {
         else -> null
     }
 }
-
 fun jsonStringToKotlin(json: String): Any? {
     return jsonToKotlin(Json.parseToJsonElement(json))
 }

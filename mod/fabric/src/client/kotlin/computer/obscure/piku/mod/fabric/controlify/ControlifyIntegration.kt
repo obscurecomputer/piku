@@ -1,6 +1,6 @@
 package computer.obscure.piku.mod.fabric.controlify
 
-import computer.obscure.piku.core.classes.Vec2
+import me.znotchill.kiwi.generated.Vec2
 import computer.obscure.piku.core.service.PikuService
 import computer.obscure.piku.mod.fabric.PikuClient
 import computer.obscure.piku.mod.fabric.ui.ControlifyUI
@@ -118,7 +118,7 @@ object ControlifyIntegration : PikuService {
             PikuClient.engine!!.events.fire(
                 "client.controller.move",
                 mapOf(
-                    "vector" to moveVec.toLuaInstance()
+                    "vector" to moveVec
                 )
             )
             ControlifyUI.fireAxis(controller, ActionEvent.MOVE, moveVec)
@@ -128,7 +128,7 @@ object ControlifyIntegration : PikuService {
             PikuClient.engine!!.events.fire(
                 "client.controller.look",
                 mapOf(
-                    "vector" to lookVec.toLuaInstance()
+                    "vector" to lookVec
                 )
             )
             ControlifyUI.fireAxis(controller, ActionEvent.LOOK, lookVec)

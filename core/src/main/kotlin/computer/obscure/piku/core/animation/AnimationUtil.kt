@@ -2,7 +2,7 @@ package computer.obscure.piku.core.animation
 
 import computer.obscure.piku.core.classes.Vec3
 import computer.obscure.piku.core.classes.Easing
-import computer.obscure.piku.core.classes.Vec2
+import me.znotchill.kiwi.generated.Vec2
 import computer.obscure.twine.LuaCallback
 
 object AnimationUtil {

@@ -3,6 +3,7 @@ package computer.obscure.piku.mod.fabric.events
 import computer.obscure.piku.core.scheduler.Scheduler
 import computer.obscure.piku.mod.fabric.Client
 import computer.obscure.piku.mod.fabric.PikuClient
+import computer.obscure.piku.mod.fabric.sound.TrackManager
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents
 
 object ClientTick {
@@ -24,6 +25,8 @@ object ClientTick {
             // it stops F1 working entirely
             if (Client.hideHUD)
                 client.options.hideGui = true
+
+            TrackManager.tick()
         }
     }
 }

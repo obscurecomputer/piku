@@ -1,6 +1,6 @@
 package computer.obscure.piku.mod.fabric.ui.components
 
-import computer.obscure.piku.core.classes.Vec2
+import me.znotchill.kiwi.generated.Vec2
 import computer.obscure.piku.core.classes.leftF
 import computer.obscure.piku.core.classes.topF
 import computer.obscure.piku.mod.fabric.ui.classes.ScaleDimension

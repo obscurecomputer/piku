@@ -8,6 +8,8 @@ import computer.obscure.piku.mod.fabric.InputHandler
 import computer.obscure.piku.mod.fabric.PikuClient
 import computer.obscure.piku.core.animation.AnimationManager
 import computer.obscure.piku.core.animation.AnimationUtil
+import computer.obscure.piku.mod.fabric.sound.TrackManager
+import computer.obscure.piku.mod.fabric.sound.TrackRegistry
 import computer.obscure.piku.mod.fabric.storage.SessionStorage
 import computer.obscure.piku.mod.fabric.ui.ControlifyUI
 import computer.obscure.piku.mod.fabric.ui.UIRenderer
@@ -55,6 +57,8 @@ object ClientPlayConnection {
         Scheduler.shutdown()
         InputHandler.shutdown()
         ControlifyUI.shutdown()
+        TrackRegistry.shutdown()
+        TrackManager.shutdown()
 
         Client.apply {
             rotation = Vec3.ZERO

@@ -1,0 +1,16 @@
+
+--local track = sound.track("test")
+--	.category("master")
+--	.layer("base", "test:music.test.base", 1)
+--	.layer("combat", "test:music.test.combat", 0)
+--	.layer("phase2", "test:music.test.phase2", 0)
+--
+--track.play()
+--track.setLayer("combat", 1, 10)
+--
+--listen("client.key_update", function(event)
+--	if event.action ~= "press" then return end
+--	if event.key == "g" then
+--		track.setLayer("base", 1, 10)
+--	end
+--end)

@@ -1,6 +1,6 @@
 package computer.obscure.piku.mod.fabric.ui
 
-import computer.obscure.piku.core.classes.Vec2
+import me.znotchill.kiwi.generated.Vec2
 import computer.obscure.piku.core.service.PikuService
 import computer.obscure.piku.mod.fabric.controlify.ActionEvent
 import computer.obscure.piku.mod.fabric.controlify.BindingEvent

@@ -1,7 +1,7 @@
 package computer.obscure.piku.core.serialization
 
 import computer.obscure.piku.core.utils.json
-import computer.obscure.piku.core.utils.pikuSerializableTypes
+import computer.obscure.piku.core.utils.typeNameToEntry
 import computer.obscure.twine.TwineNative
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable
@@ -14,9 +14,12 @@ abstract class PikuSerializable {
     abstract fun toLuaInstance(): TwineNative
 
     fun toJsonElement(): JsonObject {
+        val entry = typeNameToEntry[typeName]
+            ?: error("Unregistered type: $typeName")
+
         @Suppress("UNCHECKED_CAST")
-        val serializer = (pikuSerializableTypes[typeName] ?:
-            error("Unregistered type: $typeName")) as KSerializer<PikuSerializable>
+        val serializer = entry.serializer as KSerializer<PikuSerializable>
+
         val encoded = json.encodeToJsonElement(serializer, this) as JsonObject
         return JsonObject(buildMap {
             put("__type", JsonPrimitive(typeName))

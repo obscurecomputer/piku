@@ -3,6 +3,7 @@ package computer.obscure.piku.core.scripting.api
 import computer.obscure.piku.core.noise.FastNoiseLite
 import computer.obscure.twine.TwineNative
 import computer.obscure.twine.annotations.TwineFunction
+import me.znotchill.kiwi.generated.Vec2
 
 class LuaNoise : TwineNative("noise") {
     @TwineFunction
@@ -41,7 +42,7 @@ class LuaNoiseBuilder(val seed: Int) : TwineNative() {
     }
 
     @TwineFunction
-    fun get(vec2: LuaVec2Instance): Double {
+    fun get(vec2: Vec2): Double {
         return internalNoise.GetNoise(vec2.x.toFloat(), vec2.y.toFloat()).toDouble()
     }
 

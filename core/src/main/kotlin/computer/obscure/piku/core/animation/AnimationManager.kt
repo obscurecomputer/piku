@@ -1,7 +1,7 @@
 package computer.obscure.piku.core.animation
 
 import computer.obscure.piku.core.classes.Spacing
-import computer.obscure.piku.core.classes.Vec2
+import me.znotchill.kiwi.generated.Vec2
 import computer.obscure.piku.core.classes.Vec3
 import computer.obscure.piku.core.graphics.UIColor
 import computer.obscure.piku.core.service.PikuService

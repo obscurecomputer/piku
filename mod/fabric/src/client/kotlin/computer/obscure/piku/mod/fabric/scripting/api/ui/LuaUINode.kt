@@ -4,7 +4,7 @@ import computer.obscure.piku.core.animation.AnimationManager
 import computer.obscure.piku.core.classes.Spacing
 import computer.obscure.piku.core.scripting.api.LuaColorInstance
 import computer.obscure.piku.core.scripting.api.LuaSpacingInstance
-import computer.obscure.piku.core.scripting.api.LuaVec2Instance
+import me.znotchill.kiwi.generated.Vec2
 import computer.obscure.piku.core.scripting.engine.EngineError
 import computer.obscure.piku.core.scripting.engine.EngineErrorCode
 import computer.obscure.piku.mod.fabric.scripting.api.ui.components.LuaUIBox
@@ -98,7 +98,7 @@ open class LuaUINode(open val node: UINode) : TwineNative() {
     }
 
     @TwineFunction
-    fun size(value: LuaVec2Instance): LuaUINode {
+    fun size(value: Vec2): LuaUINode {
         node.width = Dimension.Fixed(value.x.toFloat())
         node.height = Dimension.Fixed(value.y.toFloat())
         return this
@@ -137,7 +137,7 @@ open class LuaUINode(open val node: UINode) : TwineNative() {
     }
 
     @TwineFunction
-    fun offset(value: LuaVec2Instance): LuaUINode {
+    fun offset(value: Vec2): LuaUINode {
         node.offsetX = OffsetDimension.Fixed(value.x.toFloat())
         node.offsetY = OffsetDimension.Fixed(value.y.toFloat())
         return this

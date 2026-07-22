@@ -1,6 +1,6 @@
 package computer.obscure.piku.mod.fabric.mixin;
 
-import computer.obscure.piku.core.scripting.api.LuaVec2Instance;
+import me.znotchill.kiwi.generated.Vec2;
 import computer.obscure.piku.mod.fabric.PikuClient;
 import computer.obscure.piku.mod.fabric.scripting.api.screen.LuaScreenButtons;
 //import computer.obscure.piku.mod.fabric.ui.UIRenderer;
@@ -55,7 +55,7 @@ public abstract class MinecraftClientMixin {
         data.put("title", screen.getTitle().getString());
         data.put("height", screen.height);
         data.put("width", screen.width);
-        data.put("size", new LuaVec2Instance(screen.width, screen.height));
+        data.put("size", new Vec2(screen.width, screen.height));
         data.put("buttons", new LuaScreenButtons(screen));
 
         PikuClient.Companion.getEngine().getEvents().fire(
@@ -73,7 +73,7 @@ public abstract class MinecraftClientMixin {
         data.put("title", screen.getTitle().getString());
         data.put("height", screen.height);
         data.put("width", screen.width);
-        data.put("size", new LuaVec2Instance(screen.width, screen.height));
+        data.put("size", new Vec2(screen.width, screen.height));
         data.put("buttons", new LuaScreenButtons(screen));
 
         PikuClient.Companion.getEngine().getEvents().fire(

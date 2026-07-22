@@ -2,7 +2,7 @@ package computer.obscure.piku.mod.fabric.scripting.api
 
 import com.mojang.blaze3d.platform.InputConstants
 import computer.obscure.piku.core.scripting.api.LuaTextInstance
-import computer.obscure.piku.core.scripting.api.LuaVec2Instance
+import me.znotchill.kiwi.generated.Vec2
 import computer.obscure.piku.core.scripting.api.LuaVec3
 import computer.obscure.piku.core.scripting.api.LuaVec3Instance
 import computer.obscure.piku.mod.fabric.Client
@@ -146,18 +146,18 @@ class LuaClient : TwineNative("client") {
         }
 
     @TwineProperty
-    val windowSize: LuaVec2Instance
+    val windowSize: Vec2
         get() {
             val x = instance.window.width.toDouble()
             val y = instance.window.height.toDouble()
-            return LuaVec2Instance(x, y)
+            return Vec2(x, y)
         }
 
     @TwineProperty
-    val hudSize: LuaVec2Instance
+    val hudSize: Vec2
         get() {
             val mc = Minecraft.getInstance()
-            return LuaVec2Instance(
+            return Vec2(
                 mc.window.guiScaledWidth.toDouble(),
                 mc.window.guiScaledHeight.toDouble()
             )

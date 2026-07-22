@@ -1,9 +1,8 @@
 package computer.obscure.piku.mod.fabric.scripting.api.ui
 
 import computer.obscure.piku.core.animation.Animation
-import computer.obscure.piku.core.classes.Vec2
+import me.znotchill.kiwi.generated.Vec2
 import computer.obscure.piku.core.scripting.api.LuaColorInstance
-import computer.obscure.piku.core.scripting.api.LuaVec2Instance
 import computer.obscure.piku.core.scripting.engine.EngineError
 import computer.obscure.piku.core.scripting.engine.EngineErrorCode
 import computer.obscure.piku.mod.fabric.scripting.api.animation.LuaAnimatable
@@ -33,7 +32,7 @@ class LuaUIAnimation(val node: UINode) : LuaAnimatable() {
     }
 
     @TwineFunction
-    fun offset(to: LuaVec2Instance, duration: Double, easing: String): LuaUIAnimation {
+    fun offset(to: Vec2, duration: Double, easing: String): LuaUIAnimation {
         queue.add(Animation(
             targetId = node.id,
             durationSeconds = duration,
@@ -48,7 +47,7 @@ class LuaUIAnimation(val node: UINode) : LuaAnimatable() {
                 node.offsetX = OffsetDimension.Fixed(offset.x.toFloat())
                 node.offsetY = OffsetDimension.Fixed(offset.y.toFloat())
             },
-            to = to.toVec2(),
+            to = to,
             onStart = { onStartCallback?.call<Unit>() },
             onFinish = { onFinishCallback?.call<Unit>() }
         ))
@@ -101,7 +100,7 @@ class LuaUIAnimation(val node: UINode) : LuaAnimatable() {
     }
 
     @TwineFunction
-    fun size(to: LuaVec2Instance, duration: Double, easing: String): LuaUIAnimation {
+    fun size(to: Vec2, duration: Double, easing: String): LuaUIAnimation {
         queue.add(Animation(
             targetId = node.id,
             durationSeconds = duration,
@@ -116,7 +115,7 @@ class LuaUIAnimation(val node: UINode) : LuaAnimatable() {
                 node.width = Dimension.Fixed(size.x.toFloat())
                 node.height = Dimension.Fixed(size.y.toFloat())
             },
-            to = to.toVec2(),
+            to = to,
             onStart = { onStartCallback?.call<Unit>() },
             onFinish = { onFinishCallback?.call<Unit>() }
         ))
@@ -161,7 +160,7 @@ class LuaUIAnimation(val node: UINode) : LuaAnimatable() {
     }
 
     @TwineFunction
-    fun to(to: LuaVec2Instance, duration: Double, easing: String): LuaUIAnimation {
+    fun to(to: Vec2, duration: Double, easing: String): LuaUIAnimation {
         if (node !is LineNode)
             throw EngineError(EngineErrorCode.INVALID_COMPONENT,
                 "to() is only supported on Line nodes")
@@ -171,7 +170,7 @@ class LuaUIAnimation(val node: UINode) : LuaAnimatable() {
             easing = easing,
             getter = { node.to },
             setter = { node.to = it },
-            to = to.toVec2(),
+            to = to,
             onStart = { onStartCallback?.call<Unit>() },
             onFinish = { onFinishCallback?.call<Unit>() }
         ))

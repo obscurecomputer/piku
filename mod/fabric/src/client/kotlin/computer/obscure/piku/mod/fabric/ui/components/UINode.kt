@@ -1,7 +1,6 @@
 package computer.obscure.piku.mod.fabric.ui.components
 
 import computer.obscure.piku.core.classes.Spacing
-import computer.obscure.piku.core.classes.Vec2
 import computer.obscure.piku.core.classes.bottomF
 import computer.obscure.piku.core.classes.horizontal
 import computer.obscure.piku.core.classes.leftF

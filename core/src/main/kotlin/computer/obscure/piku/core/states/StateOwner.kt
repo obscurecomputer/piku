@@ -1,3 +1,5 @@
 package computer.obscure.piku.core.states
 
-interface StateOwner
+interface StateOwner<T> {
+    val owner: T
+}

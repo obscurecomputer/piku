@@ -12,7 +12,7 @@ version = project.property("paper_api_version")!!
 repositories {
     mavenLocal()
     mavenCentral()
-    maven("https://repo.znotchill.me/repository/maven-releases/")
+    maven("https://repo.znotchill.me/releases/")
     maven("https://repo.obscure.computer/repository/maven-releases/")
 
     maven("https://jitpack.io")

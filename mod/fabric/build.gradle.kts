@@ -73,7 +73,7 @@ repositories {
     }
     maven("https://jitpack.io")
     maven("https://repo.obscure.computer/repository/maven-releases/")
-    maven("https://repo.znotchill.me/repository/maven-releases/")
+    maven("https://repo.znotchill.me/releases/")
     maven("https://maven.isxander.dev/releases/")
     maven("https://maven.quiltmc.org/repository/release/")
 
@@ -104,6 +104,9 @@ dependencies {
     implementation("net.kyori:adventure-text-minimessage:${project.property("adventure_version")}")
     implementation("net.kyori:adventure-api:${project.property("adventure_version")}")
     modImplementation(include("net.kyori:adventure-platform-fabric:6.7.0")!!)
+
+    implementation("me.znotchill:kiwi:${project.property("kiwi_version")}")
+    include("me.znotchill:kiwi:${project.property("kiwi_version")}")
 
     val luauVersion = "1.0.1"
     val luauNativeVersion = "1.0.1-patch2"

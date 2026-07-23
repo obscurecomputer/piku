@@ -10,7 +10,7 @@ version = project.property("minestom_api_version")!!
 repositories {
     mavenLocal()
     mavenCentral()
-    maven("https://repo.znotchill.me/repository/maven-releases/")
+    maven("https://repo.znotchill.me/releases/")
     maven("https://repo.obscure.computer/repository/maven-releases/")
     maven(url = "https://central.sonatype.com/repository/maven-snapshots/") {
         content {

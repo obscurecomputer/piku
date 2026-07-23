@@ -12,7 +12,7 @@ version = project.property("common_version")!!
 repositories {
     mavenLocal()
     mavenCentral()
-    maven("https://repo.znotchill.me/repository/maven-releases/")
+    maven("https://repo.znotchill.me/releases/")
     maven("https://jitpack.io")
     maven("https://repo.obscure.computer/repository/maven-releases/")
 }

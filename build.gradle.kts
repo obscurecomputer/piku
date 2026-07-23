@@ -9,7 +9,7 @@ subprojects {
     repositories {
         mavenLocal()
         mavenCentral()
-        maven("https://repo.znotchill.me/repository/maven-releases/") {
+        maven("https://repo.znotchill.me/releases/") {
             content {
                 includeGroup("me.znotchill")
                 includeGroup("me.znotchill.luau")

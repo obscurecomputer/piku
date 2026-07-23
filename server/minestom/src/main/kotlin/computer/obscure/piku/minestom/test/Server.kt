@@ -1,12 +1,12 @@
 package computer.obscure.piku.minestom.test
 
 import computer.obscure.piku.core.classes.ScriptSource
-import computer.obscure.piku.core.graphics.UIColor
 import computer.obscure.piku.minestom.scripting.MinestomAPI
 import computer.obscure.piku.minestom.scripting.utils.piku
 import me.znotchill.blossom.command.command
 import me.znotchill.blossom.extensions.addListener
 import me.znotchill.blossom.server.BlossomServer
+import me.znotchill.kiwi.generated.Color
 import net.minestom.server.Auth
 import net.minestom.server.entity.GameMode
 import net.minestom.server.event.player.AsyncPlayerConfigurationEvent
@@ -56,7 +56,7 @@ class Server : BlossomServer(
                 mapOf(
                     "message" to event.rawMessage,
                     "author" to event.player.username,
-                    "author_color" to UIColor.random(),
+                    "author_color" to Color.random(),
                 )
             )
         }

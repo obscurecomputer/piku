@@ -1,9 +1,8 @@
 package computer.obscure.piku.core.scripting.server
 
 import computer.obscure.piku.core.classes.ScriptSource
-import computer.obscure.piku.core.scripting.base.Player
-import computer.obscure.piku.core.scripting.engine.LuaEngine
 import computer.obscure.piku.core.states.SharedState
+import computer.obscure.piku.core.states.StateOwner
 import java.io.File
 import java.net.JarURLConnection
 import java.nio.charset.StandardCharsets
@@ -55,9 +54,11 @@ interface ServerAPI<T> {
 
         when (owners) {
             is List<*> -> {
-                val validPlayers = owners.filter { it != null && it !in exemptList }
+                val validPlayers = owners
+                    .filter { it != null && it !in exemptList }
+                    .filterIsInstance<StateOwner<*>>()
                 @Suppress("UNCHECKED_CAST")
-                sendState(validPlayers as List<T>, state)
+                sendState(validPlayers.map { it.owner as T }, state)
             }
             else -> {
                 @Suppress("UNCHECKED_CAST")

@@ -21,19 +21,19 @@ fun sharedState(
     return state
 }
 
-fun StateOwner.sharedState(
+fun StateOwner<*>.sharedState(
     name: String,
     block: SharedState.() -> Unit
 ): SharedState {
 
     val state = SharedState(name).apply(block)
 
-    val owners = mutableListOf<StateOwner>()
+    val owners = mutableListOf<StateOwner<*>>()
     owners.add(this)
 
     when (val extraOwners = state.owners) {
-        is StateOwner -> owners.add(extraOwners)
-        is Iterable<*> -> owners.addAll(extraOwners.filterIsInstance<StateOwner>())
+        is StateOwner<*> -> owners.add(extraOwners)
+        is Iterable<*> -> owners.addAll(extraOwners.filterIsInstance<StateOwner<*>>())
     }
 
     state.owners = owners
@@ -44,6 +44,6 @@ fun StateOwner.sharedState(
     return state
 }
 
-fun <T : StateOwner> T.getState(name: String): SharedState? {
+fun <T : StateOwner<*>> T.getState(name: String): SharedState? {
     return SharedStateManager.getStateIfOwner(name, this as Any)
 }

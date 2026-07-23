@@ -28,9 +28,10 @@ abstract class LuaEngine : PikuService {
         _engine = freshEngine
 
         _engine!!.moduleLoader = { name ->
-            activeScripts[name]
+            val script = activeScripts[name]
                 ?: activeScripts["$name.luau"]
                 ?: activeScripts["$name.lua"]
+            script
         }
         _engine!!.enableRequire()
 

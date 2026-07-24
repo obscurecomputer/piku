@@ -85,3 +85,5 @@ Tasks labeled here may not be worked on in chronological order.
 - [x] Shared states
 - [ ] Particle System (GPU based)
 - [ ] Rewrite docs
+- [ ] Vertical UI Gradients
+- [ ] UI transitioning

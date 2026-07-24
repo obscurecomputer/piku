@@ -47,8 +47,10 @@ sourceSets {
     named("main") {
         extensions.extraProperties["refMap"] = "piku.refmap.json"
     }
+
     named("client") {
-        java.srcDirs("src/client/java", "src/client/kotlin")
+        kotlin.srcDirs("src/client/kotlin")
+        java.srcDirs("src/client/java")
         resources.srcDirs("src/client/resources")
     }
 }
@@ -99,32 +101,42 @@ dependencies {
     implementation("net.fabricmc:fabric-loader:${project.property("fabric_loader_version")}")
     implementation("net.fabricmc:fabric-language-kotlin:${project.property("kotlin_loader_version")}")
 
+    fun includeDependency(dep: String) {
+        implementation(dep)
+        include(dep)
+    }
+
 //    mappings(loom.officialMojangMappings())
     implementation("net.fabricmc.fabric-api:fabric-api:${project.property("fabric_api_version")}")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.9.0")
     implementation("com.terraformersmc:modmenu:${project.property("modmenu_version")}")
-    implementation("computer.obscure:twine:${project.property("twine_version")}")
-    include("computer.obscure:twine:${project.property("twine_version")}")
-    implementation("net.kyori:adventure-text-minimessage:${project.property("adventure_version")}")
+    includeDependency("computer.obscure:twine:${project.property("twine_version")}")
     implementation("net.kyori:adventure-api:${project.property("adventure_version")}")
     implementation(include("net.kyori:adventure-platform-fabric:7.1.1")!!)
 
-    implementation("me.znotchill:kiwi:${project.property("kiwi_version")}")
-    include("me.znotchill:kiwi:${project.property("kiwi_version")}")
+    val adventureVersion = project.property("adventure_version")
+
+    // SO MANY FOR WHAT
+    includeDependency("net.kyori:adventure-api:$adventureVersion")
+    includeDependency("net.kyori:adventure-key:$adventureVersion")
+    includeDependency("net.kyori:adventure-text-minimessage:$adventureVersion")
+    includeDependency("net.kyori:adventure-text-serializer-gson:$adventureVersion")
+    includeDependency("net.kyori:adventure-text-serializer-legacy:$adventureVersion")
+    includeDependency("net.kyori:examination-api:1.3.0")
+    includeDependency("net.kyori:examination-string:1.3.0")
+
+    includeDependency("me.znotchill:kiwi:${project.property("kiwi_version")}")
 
     val luauVersion = "1.0.1"
     val luauNativeVersion = "1.0.1-patch2"
-    implementation("dev.hollowcube:luau:${luauVersion}")
-    include("dev.hollowcube:luau:$luauVersion")
+    includeDependency("dev.hollowcube:luau:${luauVersion}")
 
-    // TODO: don't include this in the mod jar
     implementation("dev.isxander:controlify:3.1.0+26.2-fabric")
 
     val platforms = listOf("windows-x64", "linux-x64", "macos-arm64", "macos-x64")
     platforms.forEach { platform ->
         val dep = "me.znotchill.luau:luau-natives-$platform:$luauNativeVersion"
-        implementation(dep)
-        include(dep)
+        includeDependency(dep)
     }
 }
 

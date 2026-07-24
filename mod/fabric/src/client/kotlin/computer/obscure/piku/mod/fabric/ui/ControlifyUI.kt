@@ -4,6 +4,7 @@ import me.znotchill.kiwi.generated.Vec2
 import computer.obscure.piku.core.service.PikuService
 import computer.obscure.piku.mod.fabric.controlify.ActionEvent
 import computer.obscure.piku.mod.fabric.controlify.BindingEvent
+import computer.obscure.piku.mod.fabric.controlify.ControlifyCompat
 import computer.obscure.piku.mod.fabric.ui.classes.ControllerActivateMode
 import computer.obscure.piku.mod.fabric.ui.classes.ControllerEdgeMode
 import computer.obscure.piku.mod.fabric.ui.classes.ControllerScrollAxis
@@ -27,11 +28,10 @@ object ControlifyUI : PikuService {
         name: String,
         action: BindingEvent
     ) {
-        println("BUTTON FIRE CALLED FROM CONTROLIFYUI: $name $action")
-
+        val compatBinding = ControlifyCompat.getBind(binding)
         tickingScrollers.toList().forEach { node ->
             val options = node.controllerOptions
-            if (!options.activateBindings.contains(binding)) return@forEach
+            if (!options.activateBindings.contains(compatBinding)) return@forEach
             if (options.activateBindingEvent != action) return@forEach
 
             val mode = options.activateMode

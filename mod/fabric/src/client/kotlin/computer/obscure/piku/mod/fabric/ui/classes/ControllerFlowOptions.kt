@@ -2,8 +2,7 @@ package computer.obscure.piku.mod.fabric.ui.classes
 
 import computer.obscure.piku.mod.fabric.controlify.ActionEvent
 import computer.obscure.piku.mod.fabric.controlify.BindingEvent
-import dev.isxander.controlify.api.bind.InputBindingSupplier
-import dev.isxander.controlify.bindings.ControlifyBindings
+import computer.obscure.piku.mod.fabric.controlify.ControllerBind
 
 data class ControllerFlowOptions(
     /**
@@ -59,11 +58,11 @@ data class ControllerFlowOptions(
     var activateBindingEvent: BindingEvent = BindingEvent.TAP,
 
     /**
-     * Which [InputBindingSupplier]s should be used to control what
+     * Which [ControllerBind]s should be used to control what
      * inputs on the controller determines a valid input.
      */
-    var activateBindings: List<InputBindingSupplier> = listOf(
-        ControlifyBindings.JUMP
+    var activateBindings: List<ControllerBind> = listOf(
+        ControllerBind.JUMP
     ),
     /**
      * Determines how [activateBindings] translate into activation of

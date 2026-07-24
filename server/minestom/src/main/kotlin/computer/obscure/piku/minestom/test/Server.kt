@@ -38,7 +38,14 @@ class Server : BlossomServer(
                 this.players.toList()
             },
             source = ScriptSource.Directory(dir = File("server/minestom/test/scripts/client")),
-            onSuccessfulReload = {}
+            onSuccessfulReload = { players, files ->
+                files.forEach {
+                    players.forEach { p ->
+                        p.sendMessage(it.file.name)
+                    }
+                }
+                players.forEach { it.sendMessage("Hot reloaded ${files.size}!") }
+            }
         )
 
         eventHandler.addListener<PlayerLoadedEvent> { event ->

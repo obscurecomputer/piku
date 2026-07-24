@@ -1,6 +1,7 @@
 package computer.obscure.piku.minestom.scripting
 
 import computer.obscure.piku.core.scripting.server.HotReloadListener
+import computer.obscure.piku.core.scripting.server.PendingReload
 import computer.obscure.piku.core.scripting.server.PikuPlayer
 import computer.obscure.piku.core.scripting.server.PlayerStorage
 import computer.obscure.piku.core.scripting.server.ServerAPI
@@ -21,10 +22,22 @@ import net.minestom.server.event.player.PlayerPluginMessageEvent
 import net.minestom.server.network.NetworkBuffer
 import net.minestom.server.network.packet.server.common.PluginMessagePacket
 import java.util.*
+import java.util.concurrent.ConcurrentHashMap
+import java.util.concurrent.ExecutorService
+import java.util.concurrent.Executors
+import java.util.concurrent.atomic.AtomicLong
 
 class MinestomAPI(val server: BlossomServer) : ServerAPI<Player> {
     override val events = ServerEvents<Player>()
     override val hotReloadListeners: MutableList<HotReloadListener<Player>> = mutableListOf()
+
+    override val hotReloadExecutor: ExecutorService =
+        Executors.newSingleThreadExecutor { r ->
+            Thread(r, "script-reloader").apply { isDaemon = true }
+        }
+
+    override val pendingReloads: MutableMap<Long, PendingReload<Player>> = ConcurrentHashMap()
+    override val reloadIdCounter = AtomicLong(0)
 
     override fun registerEvents() {
         SharedStateManager.piku = this
@@ -74,11 +87,13 @@ class MinestomAPI(val server: BlossomServer) : ServerAPI<Player> {
                     }
                 }
                 "piku:finished_unloading_scripts" -> {
-                    if (hotReloadListeners.isNotEmpty()) {
-                        hotReloadListeners.forEach {
-                            this.sendAllScripts(event.player, it.source, it.recurse)
-                            it.onSuccessfulReload(listOf(event.player))
-                        }
+                    try {
+                        val buf = NetworkBuffer.wrap(event.message, 0, 0)
+                        val reloadId = buf.read(NetworkBuffer.VAR_LONG)
+
+                        handleFinishedUnloading(event.player, reloadId)
+                    } catch (e: Exception) {
+                        error("Failed to decode: ${e.message}")
                     }
                 }
             }
@@ -97,6 +112,7 @@ class MinestomAPI(val server: BlossomServer) : ServerAPI<Player> {
 
         server.eventHandler.addListener<PlayerDisconnectEvent> { event ->
             PlayerStorage.remove(event.player.uuid)
+            handlePlayerDisconnect(event.player)
         }
     }
 
@@ -137,9 +153,9 @@ class MinestomAPI(val server: BlossomServer) : ServerAPI<Player> {
         )
     }
 
-    override fun unloadScripts(player: Player) {
+    override fun unloadScripts(player: Player, reloadId: Long) {
         val bytes = NetworkBuffer.makeArray { buffer ->
-            buffer.write(NetworkBuffer.BOOLEAN, true)
+            buffer.write(NetworkBuffer.VAR_LONG, reloadId)
         }
 
         player.sendPacket(

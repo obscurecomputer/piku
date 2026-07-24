@@ -14,17 +14,17 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload
 import net.minecraft.resources.Identifier
 
 class UnloadScriptsPacket(
-    val blank: Boolean = true
+    val reloadId: Long
 ) : CustomPacket {
     override val packetType get() = TYPE
 
     override fun handle() {
         Minecraft.getInstance().execute {
             try {
-                ClientPlayConnection.onDisconnect {
+                ClientPlayConnection.onDisconnect(true) {
                     Client.connectedToServer = true
                     PikuClient.engine!!.init()
-                    ClientPlayNetworking.send(SendUnloadedPacket())
+                    ClientPlayNetworking.send(SendUnloadedPacket(reloadId))
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -37,7 +37,7 @@ class UnloadScriptsPacket(
             Identifier.fromNamespaceAndPath("piku", "unload_scripts")
         )
         val STREAM_CODEC: StreamCodec<FriendlyByteBuf, UnloadScriptsPacket> = StreamCodec.composite(
-            ByteBufCodecs.BOOL, UnloadScriptsPacket::blank,
+            ByteBufCodecs.VAR_LONG, UnloadScriptsPacket::reloadId,
             ::UnloadScriptsPacket
         )
     }

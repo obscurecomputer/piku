@@ -29,7 +29,7 @@ class PikuPaper : JavaPlugin() {
         piku.hotReload(
             players = { server.onlinePlayers.toList() },
             source = ScriptSource.Directory(dir = piku.scriptDir),
-            onSuccessfulReload = {}
+            onSuccessfulReload = {_,_->}
         )
     }
 

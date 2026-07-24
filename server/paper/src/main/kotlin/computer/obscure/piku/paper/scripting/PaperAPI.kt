@@ -3,9 +3,12 @@ package computer.obscure.piku.paper.scripting
 import com.github.retrooper.packetevents.PacketEvents
 import com.github.retrooper.packetevents.wrapper.play.server.WrapperPlayServerPluginMessage
 import computer.obscure.piku.core.buffers.readVarIntString
+import computer.obscure.piku.core.buffers.readVarLong
 import computer.obscure.piku.core.buffers.writeVarIntString
+import computer.obscure.piku.core.buffers.writeVarLong
 import computer.obscure.piku.core.classes.ScriptSource
 import computer.obscure.piku.core.scripting.server.HotReloadListener
+import computer.obscure.piku.core.scripting.server.PendingReload
 import computer.obscure.piku.core.scripting.server.PikuPlayer
 import computer.obscure.piku.core.scripting.server.PlayerStorage
 import computer.obscure.piku.core.scripting.server.ServerAPI
@@ -23,8 +26,13 @@ import org.bukkit.event.player.PlayerQuitEvent
 import org.bukkit.plugin.java.JavaPlugin
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
+import java.io.DataInputStream
 import java.io.File
 import java.util.UUID
+import java.util.concurrent.ConcurrentHashMap
+import java.util.concurrent.ExecutorService
+import java.util.concurrent.Executors
+import java.util.concurrent.atomic.AtomicLong
 
 class PaperAPI(
     val plugin: JavaPlugin,
@@ -32,6 +40,14 @@ class PaperAPI(
 ) : ServerAPI<Player>, Listener {
     override val events = ServerEvents<Player>()
     override val hotReloadListeners: MutableList<HotReloadListener<Player>> = mutableListOf()
+
+    override val hotReloadExecutor: ExecutorService =
+        Executors.newSingleThreadExecutor { r ->
+            Thread(r, "script-reloader").apply { isDaemon = true }
+        }
+
+    override val pendingReloads: MutableMap<Long, PendingReload<Player>> = ConcurrentHashMap()
+    override val reloadIdCounter = AtomicLong(0)
 
     override fun registerEvents() {
         SharedStateManager.piku = this
@@ -59,6 +75,19 @@ class PaperAPI(
                 throw IllegalAccessException("State '${state.name}' not modifiable")
             state.set(jsonStringToKotlin(value)!!, exemptSyncOwners = listOf(player))
         }
+
+        plugin.server.messenger.registerIncomingPluginChannel(
+            plugin, "piku:finished_unloading_scripts"
+        ) { _, player, message ->
+            try {
+                val input = ByteArrayInputStream(message)
+                val reloadId = input.readVarLong()
+                handleFinishedUnloading(player, reloadId)
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+
 
         plugin.server.messenger.registerOutgoingPluginChannel(plugin, "piku:receive_data")
         plugin.server.messenger.registerOutgoingPluginChannel(plugin, "piku:receive_state")
@@ -89,6 +118,7 @@ class PaperAPI(
     @EventHandler
     fun onQuit(event: PlayerQuitEvent) {
         PlayerStorage.remove(event.player.uniqueId)
+        handlePlayerDisconnect(event.player)
     }
 
     private fun send(player: Player, channel: String, out: ByteArrayOutputStream) {
@@ -123,9 +153,9 @@ class PaperAPI(
         send(player, "piku:receive_state", out)
     }
 
-    override fun unloadScripts(player: Player) {
+    override fun unloadScripts(player: Player, reloadId: Long) {
         val out = ByteArrayOutputStream()
-        out.write(1)
+        out.writeVarLong(reloadId)
         send(player, "piku:unload_scripts", out)
     }
 }

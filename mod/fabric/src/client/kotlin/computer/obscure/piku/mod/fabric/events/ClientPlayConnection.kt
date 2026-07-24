@@ -47,6 +47,7 @@ object ClientPlayConnection {
     }
 
     fun onDisconnect(
+        isHotReload: Boolean = false,
         onFinish: () -> Unit = {}
     ) {
         SessionStorage.shutdown()

@@ -11,18 +11,19 @@ class LuaBlockState(
 ) : TwineNative() {
     @TwineProperty
     val properties: Map<String, String>
-        get() = state.values.entries.associate { (property, value) ->
+        get() = state.properties.associate { property ->
             @Suppress("UNCHECKED_CAST")
-            property.name to (property as Property<Comparable<Any>>)
-                .getName(value as Comparable<Any>)
+            val prop = property as Property<Comparable<Any>>
+            prop.name to prop.getName(state.getValue(property))
         }
 
     @Suppress("UNCHECKED_CAST")
     @TwineFunction
     fun getProperty(name: String): String? {
-        val entry = state.values.entries.find { it.key.name == name } ?: return null
-        val prop = entry.key as Property<Comparable<Any>>
-        return prop.getName(entry.value as Comparable<Any>)
+        val property = state.properties.find { it.name == name } ?: return null
+
+        val prop = property as Property<Comparable<Any>>
+        return prop.getName(state.getValue(property))
     }
 
     @TwineProperty

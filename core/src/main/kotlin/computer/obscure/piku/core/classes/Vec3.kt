@@ -8,8 +8,11 @@ import kotlinx.serialization.Serializable
 @Serializable
 @SerialName("vec3")
 data class Vec3(
+    @JvmField
     val x: Double = 0.0,
+    @JvmField
     val y: Double = 0.0,
+    @JvmField
     val z: Double = 0.0
 ): PikuSerializable() {
     override val typeName = "vec3"

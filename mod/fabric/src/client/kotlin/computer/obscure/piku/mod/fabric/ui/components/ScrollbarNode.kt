@@ -2,7 +2,7 @@ package computer.obscure.piku.mod.fabric.ui.components
 
 import computer.obscure.piku.mod.fabric.ui.classes.context.MeasureContext
 import me.znotchill.kiwi.generated.Color
-import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.GuiGraphicsExtractor
 
 enum class ScrollbarDirection { VERTICAL, HORIZONTAL }
 
@@ -16,7 +16,7 @@ class ScrollbarNode(var target: FlowNode? = null) : UINode() {
         ScrollbarDirection.HORIZONTAL -> 0f to 4f
     }
 
-    override fun drawContent(graphics: GuiGraphics, ctx: MeasureContext) {
+    override fun drawContent(graphics: GuiGraphicsExtractor, ctx: MeasureContext) {
         val t = target ?: return
         val x = layoutX.toInt()
         val y = layoutY.toInt()

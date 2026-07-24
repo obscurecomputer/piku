@@ -90,7 +90,7 @@ object InputHandler : PikuService {
 
     private fun shouldHandleInput(): Boolean {
         val mc = Minecraft.getInstance()
-        return Client.connectedToServer && mc.screen == null && mc.player != null
+        return Client.connectedToServer && mc.gui.screen() == null && mc.player != null
     }
 
     fun queueInputUp(luaKeyBind: LuaKeyBind) {

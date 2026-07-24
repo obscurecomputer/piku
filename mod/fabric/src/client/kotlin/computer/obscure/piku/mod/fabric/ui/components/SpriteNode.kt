@@ -4,7 +4,7 @@ import computer.obscure.piku.mod.fabric.ui.classes.Dimension
 import computer.obscure.piku.mod.fabric.ui.classes.context.MeasureContext
 import computer.obscure.piku.mod.fabric.ui.UIRenderer
 import net.minecraft.client.Minecraft
-import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.renderer.RenderPipelines
 import net.minecraft.client.renderer.texture.DynamicTexture
 import net.minecraft.resources.Identifier
@@ -65,7 +65,7 @@ class SpriteNode() : UINode() {
         else 16f to 16f // fallback size
     }
 
-    override fun drawContent(graphics: GuiGraphics, ctx: MeasureContext) {
+    override fun drawContent(graphics: GuiGraphicsExtractor, ctx: MeasureContext) {
         resolveOnce()
         val id = textureId ?: return
         val w = measuredWidth.toInt()

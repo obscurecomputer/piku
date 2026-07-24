@@ -27,7 +27,7 @@ dependencies {
     implementation(project(":core"))
     compileOnly("io.papermc.paper:paper-api:${project.property("paper_version")}")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
-    implementation("com.github.retrooper:packetevents-spigot:2.12.1")
+    implementation("com.github.retrooper:packetevents-spigot:2.13.0")
 }
 
 tasks.shadowJar {
@@ -40,7 +40,10 @@ tasks {
     // Configure the Minecraft version for our task.
     // This is the only required configuration besides applying the plugin.
     // Your plugin's jar (or shadowJar if present) will be used automatically.
-    minecraftVersion("1.21.11")
+
+      // TODO: Replace this with a stable version when it comes out
+      // right now, the 26.2 client is incompatible with this!!!!!!
+    minecraftVersion("26.2-rc-2")
   }
 }
 

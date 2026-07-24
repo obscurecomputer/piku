@@ -2,7 +2,7 @@ package computer.obscure.piku.mod.fabric.ui.components
 
 import computer.obscure.piku.mod.fabric.ui.classes.context.MeasureContext
 import me.znotchill.kiwi.generated.Color
-import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.GuiGraphicsExtractor
 
 class GradientNode(
     var colorStart: Color = Color.BLACK,
@@ -15,7 +15,7 @@ class GradientNode(
     // default height is 0px
     override fun measureContent(ctx: MeasureContext) = 0f to 0f
 
-    override fun drawContent(graphics: GuiGraphics, ctx: MeasureContext) {
+    override fun drawContent(graphics: GuiGraphicsExtractor, ctx: MeasureContext) {
         val x1 = layoutX.toInt()
         val y1 = layoutY.toInt()
         val x2 = (layoutX + measuredWidth).toInt()

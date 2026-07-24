@@ -85,11 +85,11 @@ class PikuClient : ClientModInitializer {
     }
 
     fun <T : CustomPacket> s2c(type: CustomPacketPayload.Type<T>, codec: StreamCodec<FriendlyByteBuf, T>) {
-        PayloadTypeRegistry.playS2C().register(type, codec)
+        PayloadTypeRegistry.clientboundPlay().register(type, codec)
         ClientPlayNetworking.registerGlobalReceiver(type) { payload, _ -> payload.handle() }
     }
 
     fun <T : CustomPacketPayload> c2s(type: CustomPacketPayload.Type<T>, codec: StreamCodec<FriendlyByteBuf, T>) {
-        PayloadTypeRegistry.playC2S().register(type, codec)
+        PayloadTypeRegistry.serverboundPlay().register(type, codec)
     }
 }

@@ -7,7 +7,6 @@
     "ClientPlayerEntityMixin",
     "GameRendererMixin",
     "HeldItemRendererMixin",
-    "InGameHudMixin",
     "MinecraftClientMixin",
     "MouseMixin",
     "ScreenshotMixin"
@@ -16,6 +15,8 @@
     "defaultRequire": 1
   },
   "mixins": [
+    "GuiMixin",
+    "HudMixin",
     "TranslatableContentsMixin"
   ]
 }

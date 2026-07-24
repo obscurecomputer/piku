@@ -23,7 +23,7 @@ public class MouseMixin {
         Minecraft mc = Minecraft.getInstance();
 
         if (Client.mouseButtonsLocked && !Client.emitMouseEvents) {
-            if (mc.screen == null) {
+            if (mc.gui.screen() == null) {
                 ci.cancel();
             }
         }

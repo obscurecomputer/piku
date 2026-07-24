@@ -73,12 +73,12 @@ class LuaClient : TwineNative("client") {
 
     @TwineFunction
     fun sendActionbar(message: Any?) {
-        instance.player?.displayClientMessage(parseMini(message.toString()), true)
+        instance.player?.sendOverlayMessage(parseMini(message.toString()))
     }
 
     @TwineFunction
     fun send(message: Any?) {
-        instance.player?.displayClientMessage(parseMini(message.toString()), false)
+        instance.player?.sendSystemMessage(parseMini(message.toString()))
     }
 
     @TwineFunction
@@ -101,10 +101,7 @@ class LuaClient : TwineNative("client") {
     @TwineProperty
     var hideHUD: Boolean
         get() = Client.hideHUD
-        set(value) {
-            instance.options.hideGui = value
-            Client.hideHUD = value
-        }
+        set(value) { Client.hideHUD = value }
 
     @TwineProperty
     var selectedSlot: Int

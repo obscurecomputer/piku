@@ -8,7 +8,7 @@ import computer.obscure.piku.mod.fabric.ui.classes.context.MeasureContext
 import computer.obscure.piku.mod.fabric.ui.components.*
 import computer.obscure.twine.LuaCallback
 import net.minecraft.client.Minecraft
-import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.renderer.texture.DynamicTexture
 import net.minecraft.resources.Identifier
 
@@ -95,7 +95,7 @@ object UIRenderer : PikuService {
 
     fun getAllNodes(): List<UINode> = allNodes.toList()
 
-    fun render(graphics: GuiGraphics) {
+    fun render(graphics: GuiGraphicsExtractor) {
         val screenW = instance.window.guiScaledWidth
         val screenH = instance.window.guiScaledHeight
         val scale = instance.window.guiScale.toFloat()

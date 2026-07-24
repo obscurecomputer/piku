@@ -2,7 +2,7 @@ package computer.obscure.piku.mod.fabric.ui.components
 
 import me.znotchill.kiwi.generated.Vec2
 import computer.obscure.piku.mod.fabric.ui.classes.context.MeasureContext
-import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.GuiGraphicsExtractor
 import kotlin.math.abs
 
 class LineNode(
@@ -17,7 +17,7 @@ class LineNode(
     }
 
     // TODO: Optimise, this is AWFUL
-    override fun drawContent(graphics: GuiGraphics, ctx: MeasureContext) {
+    override fun drawContent(graphics: GuiGraphicsExtractor, ctx: MeasureContext) {
         val origin = Vec2(layoutX.toDouble(), layoutY.toDouble())
         val target = Vec2(layoutX.toDouble() + to.x, layoutY.toDouble() + to.y)
         val points = origin.lineTo(target)

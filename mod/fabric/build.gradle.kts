@@ -2,8 +2,8 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    kotlin("jvm") version "2.3.0"
-    id("fabric-loom") version "1.15-SNAPSHOT"
+    kotlin("jvm")
+    id("net.fabricmc.fabric-loom") version "1.17-SNAPSHOT"
     id("maven-publish")
     id("com.modrinth.minotaur") version "2.+"
 }
@@ -68,8 +68,12 @@ repositories {
     // See https://docs.gradle.org/current/userguide/declaring_repositories.html
     // for more information about repositories.
     maven {
+        name = "CaffeineMC"
+        url = uri("https://maven.caffeinemc.net/releases/")
+    }
+    maven {
         name = "Terraformers"
-        url = uri("https://maven.terraformersmc.com/")
+        url = uri("https://maven.terraformersmc.com/repository/maven-public/")
     }
     maven("https://jitpack.io")
     maven("https://repo.obscure.computer/repository/maven-releases/")
@@ -92,18 +96,18 @@ dependencies {
     implementation(project(":core"))
     include(project(":core"))
     minecraft("com.mojang:minecraft:${project.property("minecraft_version")}")
-    modImplementation("net.fabricmc:fabric-loader:${project.property("fabric_loader_version")}")
-    modImplementation("net.fabricmc:fabric-language-kotlin:${project.property("kotlin_loader_version")}")
+    implementation("net.fabricmc:fabric-loader:${project.property("fabric_loader_version")}")
+    implementation("net.fabricmc:fabric-language-kotlin:${project.property("kotlin_loader_version")}")
 
-    mappings(loom.officialMojangMappings())
-    modImplementation("net.fabricmc.fabric-api:fabric-api:${project.property("fabric_api_version")}")
+//    mappings(loom.officialMojangMappings())
+    implementation("net.fabricmc.fabric-api:fabric-api:${project.property("fabric_api_version")}")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.9.0")
-    modImplementation("com.terraformersmc:modmenu:${project.property("modmenu_version")}")
+    implementation("com.terraformersmc:modmenu:${project.property("modmenu_version")}")
     implementation("computer.obscure:twine:${project.property("twine_version")}")
     include("computer.obscure:twine:${project.property("twine_version")}")
     implementation("net.kyori:adventure-text-minimessage:${project.property("adventure_version")}")
     implementation("net.kyori:adventure-api:${project.property("adventure_version")}")
-    modImplementation(include("net.kyori:adventure-platform-fabric:6.7.0")!!)
+    implementation(include("net.kyori:adventure-platform-fabric:7.1.1")!!)
 
     implementation("me.znotchill:kiwi:${project.property("kiwi_version")}")
     include("me.znotchill:kiwi:${project.property("kiwi_version")}")
@@ -111,10 +115,10 @@ dependencies {
     val luauVersion = "1.0.1"
     val luauNativeVersion = "1.0.1-patch2"
     implementation("dev.hollowcube:luau:${luauVersion}")
-    modImplementation("dev.hollowcube:luau:${luauVersion}")
     include("dev.hollowcube:luau:$luauVersion")
 
-    modImplementation("dev.isxander:controlify:3.0.0+lts+1.21.11-fabric")
+    // TODO: don't include this in the mod jar
+    implementation("dev.isxander:controlify:3.1.0+26.2-fabric")
 
     val platforms = listOf("windows-x64", "linux-x64", "macos-arm64", "macos-x64")
     platforms.forEach { platform ->
@@ -222,7 +226,7 @@ modrinth {
             "release"
         }
     )
-    uploadFile.set(tasks.named("remapJar"))
+    uploadFile.set(tasks.named("jar"))
     gameVersions.addAll(project.property("minecraft_version").toString())
     loaders.addAll("fabric")
     changelog.set(System.getenv("CHANGELOG") ?: "Automated release from CI")

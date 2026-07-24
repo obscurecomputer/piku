@@ -21,11 +21,6 @@ object ClientTick {
 
             if (client.level == null) return@register
 
-            // do NOT override if hideHUD is false,
-            // it stops F1 working entirely
-            if (Client.hideHUD)
-                client.options.hideGui = true
-
             TrackManager.tick()
         }
     }

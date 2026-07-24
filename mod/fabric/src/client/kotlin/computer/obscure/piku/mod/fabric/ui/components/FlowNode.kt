@@ -7,7 +7,7 @@ import computer.obscure.piku.mod.fabric.ui.classes.Dimension
 import computer.obscure.piku.mod.fabric.ui.classes.alignment.CrossAxisAlignment
 import computer.obscure.piku.mod.fabric.ui.classes.alignment.MainAxisAlignment
 import computer.obscure.piku.mod.fabric.ui.classes.context.MeasureContext
-import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.GuiGraphicsExtractor
 
 enum class FlowAxis { HORIZONTAL, VERTICAL }
 
@@ -140,7 +140,7 @@ abstract class FlowNode(var gap: Float = 0f) : UINode() {
         }
     }
 
-    override fun drawSelf(graphics: GuiGraphics, ctx: MeasureContext, parentOpacity: Float) {
+    override fun drawSelf(graphics: GuiGraphicsExtractor, ctx: MeasureContext, parentOpacity: Float) {
         if (!visible || opacity == 0f) return
 
         computedOpacity = opacity * parentOpacity

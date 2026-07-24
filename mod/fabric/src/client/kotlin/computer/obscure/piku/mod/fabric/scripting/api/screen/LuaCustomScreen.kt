@@ -16,7 +16,7 @@ class LuaCustomScreen(title: String) : TwineNative("") {
     @TwineFunction
     fun show() {
         Minecraft.getInstance().schedule {
-            Minecraft.getInstance().setScreen(screen)
+            Minecraft.getInstance().gui.setScreen(screen)
         }
     }
 }

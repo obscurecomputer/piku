@@ -13,7 +13,7 @@ import computer.obscure.piku.mod.fabric.ui.classes.OffsetDimension
 import computer.obscure.piku.mod.fabric.ui.classes.context.LayoutContext
 import computer.obscure.piku.mod.fabric.ui.classes.context.MeasureContext
 import me.znotchill.kiwi.generated.Color
-import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.GuiGraphicsExtractor
 import java.util.UUID
 
 abstract class UINode {
@@ -122,7 +122,7 @@ abstract class UINode {
         children.forEach { it.layoutSelf(childCtx) }
     }
 
-    open fun drawSelf(graphics: GuiGraphics, ctx: MeasureContext, parentOpacity: Float = 1f) {
+    open fun drawSelf(graphics: GuiGraphicsExtractor, ctx: MeasureContext, parentOpacity: Float = 1f) {
         if (!visible || opacity == 0f) return
 
         computedOpacity = opacity * parentOpacity
@@ -139,7 +139,7 @@ abstract class UINode {
         children.forEach { it.drawSelf(graphics, ctx, computedOpacity) }
     }
 
-    protected open fun drawContent(graphics: GuiGraphics, ctx: MeasureContext) {}
+    protected open fun drawContent(graphics: GuiGraphicsExtractor, ctx: MeasureContext) {}
 
     private fun resolveDimension(dim: Dimension, wrapSize: Float, parentSize: Float) = when (val d = dim) {
         Dimension.Wrap -> wrapSize

@@ -2,7 +2,7 @@ package computer.obscure.piku.mod.fabric.ui.components
 
 import computer.obscure.piku.mod.fabric.ui.classes.context.MeasureContext
 import me.znotchill.kiwi.generated.Color
-import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.GuiGraphicsExtractor
 
 class ProgressBarNode(
     var value: Float = 0f, // 0.0 to 1.0
@@ -12,7 +12,7 @@ class ProgressBarNode(
 
     override fun measureContent(ctx: MeasureContext) = 0f to 4f
 
-    override fun drawContent(graphics: GuiGraphics, ctx: MeasureContext) {
+    override fun drawContent(graphics: GuiGraphicsExtractor, ctx: MeasureContext) {
         val x = layoutX.toInt()
         val y = layoutY.toInt()
         val w = measuredWidth.toInt()

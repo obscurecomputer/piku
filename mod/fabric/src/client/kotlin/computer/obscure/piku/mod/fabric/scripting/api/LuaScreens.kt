@@ -14,8 +14,19 @@ class LuaScreens : TwineNative("screens") {
 
     private val registry: MutableMap<String, () -> Screen> = mutableMapOf(
         "title" to { TitleScreen() },
-        "options" to { OptionsScreen(Minecraft.getInstance().screen!!, Minecraft.getInstance().options) },
-        "achievements" to { StatsScreen(Minecraft.getInstance().screen!!, Minecraft.getInstance().player!!.stats) },
+        "options" to {
+            OptionsScreen(
+                Minecraft.getInstance().gui.screen()!!,
+                Minecraft.getInstance().options,
+                true // will always be true because scripts run on a server
+            )
+        },
+        "achievements" to {
+            StatsScreen(
+                Minecraft.getInstance().gui.screen()!!,
+                Minecraft.getInstance().player!!.stats
+            )
+        },
     )
 
     init {
@@ -23,7 +34,7 @@ class LuaScreens : TwineNative("screens") {
             registry["mods"] = {
                 Class.forName("com.terraformersmc.modmenu.gui.ModsScreen")
                     .getConstructor(Screen::class.java)
-                    .newInstance(Minecraft.getInstance().screen) as Screen
+                    .newInstance(Minecraft.getInstance().gui.screen()) as Screen
             }
         }
     }
@@ -35,14 +46,14 @@ class LuaScreens : TwineNative("screens") {
 
     @TwineFunction
     fun close() {
-        Minecraft.getInstance().setScreen(null)
+        Minecraft.getInstance().gui.setScreen(null)
     }
 
     @TwineFunction
     fun open(id: String) {
         val factory = registry[id] ?: error("Unknown screen: $id")
         Minecraft.getInstance().execute {
-            Minecraft.getInstance().setScreen(factory())
+            Minecraft.getInstance().gui.setScreen(factory())
         }
     }
 }

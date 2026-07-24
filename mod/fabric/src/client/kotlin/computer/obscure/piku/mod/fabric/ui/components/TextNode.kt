@@ -6,7 +6,7 @@ import computer.obscure.piku.core.classes.topF
 import computer.obscure.piku.mod.fabric.ui.classes.ScaleDimension
 import computer.obscure.piku.mod.fabric.ui.classes.context.MeasureContext
 import computer.obscure.piku.mod.fabric.ui.text.TextInterpolator
-import net.minecraft.client.gui.GuiGraphics
+import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.network.chat.Component
 
 class TextNode(var text: Component) : UINode() {
@@ -36,7 +36,7 @@ class TextNode(var text: Component) : UINode() {
         return w to h
     }
 
-    override fun drawContent(graphics: GuiGraphics, ctx: MeasureContext) {
+    override fun drawContent(graphics: GuiGraphicsExtractor, ctx: MeasureContext) {
         val interpolated = TextInterpolator.interpolate(text)
         val x = layoutX + padding.leftF
         val y = layoutY + padding.topF
@@ -45,7 +45,7 @@ class TextNode(var text: Component) : UINode() {
         graphics.pose().translate(x, y)
         graphics.pose().scale(resolvedScaleX, resolvedScaleY)
 
-        graphics.drawString(
+        graphics.text(
             ctx.textRenderer,
             interpolated,
             0,

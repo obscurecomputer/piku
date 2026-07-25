@@ -2,12 +2,14 @@ package computer.obscure.piku.minestom.test
 
 import computer.obscure.piku.core.classes.ScriptSource
 import computer.obscure.piku.minestom.scripting.MinestomAPI
+import computer.obscure.piku.minestom.scripting.states.sharedState
 import computer.obscure.piku.minestom.scripting.utils.piku
 import me.znotchill.blossom.command.command
 import me.znotchill.blossom.extensions.addListener
 import me.znotchill.blossom.server.BlossomServer
 import me.znotchill.kiwi.generated.Color
 import net.minestom.server.Auth
+import net.minestom.server.MinecraftServer
 import net.minestom.server.entity.GameMode
 import net.minestom.server.event.player.AsyncPlayerConfigurationEvent
 import net.minestom.server.event.player.PlayerChatEvent
@@ -48,12 +50,22 @@ class Server : BlossomServer(
             }
         )
 
+        MinecraftServer.setBrandName("<gradient:#54daf4:#545eb6>hello!</gradient>")
+
         eventHandler.addListener<PlayerLoadedEvent> { event ->
+            event.player.sharedState("test") {
+                value = false
+                clientModifiable = true
+                onSet = { oldValue, newValue ->
+                    event.player.sendMessage("$oldValue -> $newValue")
+                }
+            }
             piku.sendAllScripts(
                 player = event.player,
                 source = ScriptSource.Directory(dir = File("server/minestom/test/scripts/client")),
                 recurse = true
             )
+
         }
 
         eventHandler.addListener<PlayerChatEvent> { event ->

@@ -40,6 +40,11 @@ object UIRenderer : PikuService {
         deindexTree(node)
     }
 
+    fun reindexName(node: UINode, oldName: String?, newName: String?) {
+        oldName?.let { nodesByName.remove(it, node) }
+        newName?.let { nodesByName[it] = node }
+    }
+
     fun registerNode(node: UINode) {
         indexTree(node)
     }

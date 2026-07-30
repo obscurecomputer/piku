@@ -18,6 +18,10 @@ fun FormattedText.toNativeComponent(): net.minecraft.network.chat.Component {
         ?: net.minecraft.network.chat.Component.literal(string)
 }
 
+fun Component.toNativeComponent(): net.minecraft.network.chat.Component {
+    return this.toNative().toNativeComponent()
+}
+
 fun net.minecraft.network.chat.Component.toAdventure(): Component {
     return MinecraftClientAudiences.of().asAdventure(this)
 }

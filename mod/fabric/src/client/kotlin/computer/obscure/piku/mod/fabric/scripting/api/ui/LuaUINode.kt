@@ -170,7 +170,9 @@ open class LuaUINode(open val node: UINode) : TwineNative() {
 
     @TwineFunction
     fun name(value: String): LuaUINode {
+        val old = node.name
         node.name = value
+        UIRenderer.reindexName(this.node, old, value)
         return this
     }
 

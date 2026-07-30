@@ -20,15 +20,19 @@ class TextNode(var text: Component) : UINode() {
     var resolvedScaleX: Float = 1f
     var resolvedScaleY: Float = 1f
 
+    // the interpolated text recalculated every time the content is measured
+    private var resolvedText: Component = text
+
     constructor(text: String) : this(Component.literal(text))
 
     override fun measureContent(ctx: MeasureContext): Pair<Float, Float> {
+        resolvedText = TextInterpolator.interpolate(text)
+
         val base = ctx.textRenderer.lineHeight.toFloat()
         resolvedScaleX = scaleX.resolve(ctx.parentScale, ctx.parentWidth, ctx.parentHeight, base).toFloat()
         resolvedScaleY = scaleY.resolve(ctx.parentScale, ctx.parentWidth, ctx.parentHeight, base).toFloat()
 
-        val w = ctx.textRenderer.width(text).toFloat() * resolvedScaleX
-
+        val w = ctx.textRenderer.width(resolvedText).toFloat() * resolvedScaleX
         // - 1 because the text isn't technically vertically aligned
         // not sure what the issue is, but doing -1 seems to fix the broken
         // vertical alignment

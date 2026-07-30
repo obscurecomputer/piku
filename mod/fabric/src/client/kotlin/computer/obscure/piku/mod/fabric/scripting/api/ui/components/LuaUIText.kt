@@ -1,10 +1,12 @@
 package computer.obscure.piku.mod.fabric.scripting.api.ui.components
 
 import computer.obscure.piku.core.scripting.api.LuaTextInstance
+import computer.obscure.piku.mod.fabric.PikuClient
 import me.znotchill.kiwi.generated.Vec2
 import computer.obscure.piku.mod.fabric.ui.classes.ScaleDimension
 import computer.obscure.piku.mod.fabric.ui.components.TextNode
 import computer.obscure.piku.mod.fabric.utils.toMcComponent
+import computer.obscure.piku.mod.fabric.utils.toNativeComponent
 import computer.obscure.twine.annotations.TwineFunction
 import net.minecraft.network.chat.Component
 
@@ -16,8 +18,13 @@ class LuaUIText(override val node: TextNode) : LuaUIContainer(node) {
 
     @TwineFunction
     fun text(value: String): LuaUIText {
-        node.text = Component.literal(value)
-        currentTextInstance = LuaTextInstance(value)
+        val component = PikuClient.miniMessage
+            .deserialize(value)
+        node.text = component.toNativeComponent()
+        currentTextInstance = LuaTextInstance(
+            type = "text",
+            baseComponent = component
+        )
         return this
     }
 

@@ -23,7 +23,7 @@ class LuaBaseGenerics : TwineNative() {
     fun toString(value: Any?): String {
         return when (value) {
             null -> "null"
-            is String -> "value"
+            is String -> value
             is Map<*, *> -> "{${value.keys.joinToString(", ")}}"
             is List<*> -> "[${value.joinToString(", ")}]"
             is Double -> value.toTwineString()

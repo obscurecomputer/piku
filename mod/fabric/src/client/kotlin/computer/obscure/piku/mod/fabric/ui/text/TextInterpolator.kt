@@ -266,8 +266,8 @@ object TextInterpolator {
         return output
     }
 
+    val regex = Regex("\\{([A-Z_]+)(?::R(\\d+))?}")
     fun interpolate(component: Component): MutableComponent {
-        val regex = Regex("\\{([A-Z_]+)(?::R(\\d+))?}")
 
         fun process(text: String): String {
             return regex.replace(text) { match ->

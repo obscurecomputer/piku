@@ -91,8 +91,8 @@ object InputHandler : PikuService {
 
     private fun shouldHandleInput(): Boolean {
         val mc = Minecraft.getInstance()
-        if (mc.gui.screen() != null && mc.gui.screen() is UIMenu)
-            return true
+        if (mc.gui.screen() != null)
+            return mc.gui.screen() is UIMenu
         return Client.connectedToServer && mc.player != null
     }
 

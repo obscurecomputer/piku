@@ -75,9 +75,8 @@ repositories {
     }
     maven {
         name = "Terraformers"
-        url = uri("https://maven.terraformersmc.com/repository/maven-public/")
+        url = uri("https://maven.terraformersmc.com/")
     }
-    maven("https://jitpack.io")
     maven("https://repo.obscure.computer/repository/maven-releases/")
     maven("https://repo.znotchill.me/releases/")
     maven("https://maven.isxander.dev/releases/")
@@ -131,7 +130,11 @@ dependencies {
     val luauNativeVersion = "1.0.1-patch2"
     includeDependency("dev.hollowcube:luau:${luauVersion}")
 
-    implementation("dev.isxander:controlify:3.1.0+26.2-fabric")
+    implementation("dev.isxander:controlify:3.4.1+mc26.2") {
+        capabilities {
+            requireCapability("dev.isxander:26.2-fabric")
+        }
+    }
 
     val platforms = listOf("windows-x64", "linux-x64", "macos-arm64", "macos-x64")
     platforms.forEach { platform ->

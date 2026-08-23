@@ -16,12 +16,12 @@ import computer.obscure.piku.mod.fabric.scripting.api.ui.components.LuaUIRow
 import computer.obscure.piku.mod.fabric.scripting.api.ui.components.LuaUIScrollbar
 import computer.obscure.piku.mod.fabric.scripting.api.ui.components.LuaUISprite
 import computer.obscure.piku.mod.fabric.scripting.api.ui.components.LuaUIText
+import computer.obscure.piku.mod.fabric.scripting.api.ui.components.LuaUITextInput
 import computer.obscure.piku.mod.fabric.ui.classes.Anchor
 import computer.obscure.piku.mod.fabric.ui.classes.Dimension
 import computer.obscure.piku.mod.fabric.ui.UIRenderer
 import computer.obscure.piku.mod.fabric.ui.classes.HitShape
 import computer.obscure.piku.mod.fabric.ui.classes.OffsetDimension
-import computer.obscure.piku.mod.fabric.ui.classes.UIEvent
 import computer.obscure.piku.mod.fabric.ui.components.BoxNode
 import computer.obscure.piku.mod.fabric.ui.components.ColumnNode
 import computer.obscure.piku.mod.fabric.ui.components.DividerNode
@@ -31,6 +31,7 @@ import computer.obscure.piku.mod.fabric.ui.components.ProgressBarNode
 import computer.obscure.piku.mod.fabric.ui.components.RowNode
 import computer.obscure.piku.mod.fabric.ui.components.ScrollbarNode
 import computer.obscure.piku.mod.fabric.ui.components.SpriteNode
+import computer.obscure.piku.mod.fabric.ui.components.TextInputNode
 import computer.obscure.piku.mod.fabric.ui.components.TextNode
 import computer.obscure.piku.mod.fabric.ui.components.UINode
 import computer.obscure.twine.LuaCallback
@@ -225,34 +226,32 @@ open class LuaUINode(open val node: UINode) : TwineNative() {
 
     @TwineFunction
     fun onHover(value: LuaCallback) = apply {
-        node.onHover = { event -> value.invoke(event) }
+        node.onHover = { event, uiNode -> value.invoke(event, uiNode) }
     }
 
     @TwineFunction
     fun onUnhover(value: LuaCallback) = apply {
-        node.onUnhover = { event -> value.invoke(event) }
+        node.onUnhover = { event, uiNode -> value.invoke(event, uiNode) }
     }
 
     @TwineFunction
     fun onPress(value: LuaCallback) = apply {
-        node.onPress = { event -> value.invoke(event) }
+        node.onPress = { event, uiNode -> value.invoke(event, uiNode) }
     }
 
     @TwineFunction
     fun onRelease(value: LuaCallback) = apply {
-        node.onRelease = { event -> value.invoke(event) }
+        node.onRelease = { event, uiNode -> value.invoke(event, uiNode) }
     }
 
     @TwineFunction
     fun onFocus(value: LuaCallback) = apply {
-        node.onFocus = { event -> value.invoke(event) }
+        node.onFocus = { event, uiNode -> value.invoke(event, uiNode) }
     }
 
     @TwineFunction
     fun onUnfocus(value: LuaCallback) = apply {
-        node.onUnfocus = { event -> value.invoke(event) }
-
-        node.onUnfocus?.invoke(UIEvent.Manual)
+        node.onUnfocus = { event, uiNode -> value.invoke(event, uiNode) }
     }
 
     @TwineFunction
@@ -271,6 +270,7 @@ open class LuaUINode(open val node: UINode) : TwineNative() {
 
     companion object {
         fun wrap(node: UINode): LuaUINode? = when (node) {
+            is TextInputNode -> LuaUITextInput(node)
             is TextNode -> LuaUIText(node)
             is ColumnNode -> LuaUIColumn(node)
             is RowNode -> LuaUIRow(node)

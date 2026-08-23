@@ -7,8 +7,9 @@ import computer.obscure.piku.core.scripting.api.LuaVec3
 import computer.obscure.piku.core.scripting.api.LuaVec3Instance
 import computer.obscure.piku.mod.fabric.Client
 import computer.obscure.piku.mod.fabric.InputHandler
+import computer.obscure.piku.mod.fabric.PikuClient
 import computer.obscure.piku.mod.fabric.scripting.api.camera.LuaClientCamera
-import computer.obscure.piku.mod.fabric.utils.parseMini
+import computer.obscure.piku.mod.fabric.utils.toNativeComponent
 import computer.obscure.twine.TwineLogger
 import computer.obscure.twine.TwineNative
 import computer.obscure.twine.annotations.TwineFunction
@@ -73,12 +74,20 @@ class LuaClient : TwineNative("client") {
 
     @TwineFunction
     fun sendActionbar(message: Any?) {
-        instance.player?.sendOverlayMessage(parseMini(message.toString()))
+        instance.player?.sendOverlayMessage(
+            PikuClient.miniMessage
+                .deserialize(message.toString())
+                .toNativeComponent()
+        )
     }
 
     @TwineFunction
     fun send(message: Any?) {
-        instance.player?.sendSystemMessage(parseMini(message.toString()))
+        instance.player?.sendSystemMessage(
+            PikuClient.miniMessage
+                .deserialize(message.toString())
+                .toNativeComponent()
+        )
     }
 
     @TwineFunction

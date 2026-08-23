@@ -1,12 +1,16 @@
 package computer.obscure.piku.mod.fabric.ui.menu
 
+import computer.obscure.piku.mod.fabric.scripting.api.ui.LuaUINode
 import computer.obscure.piku.mod.fabric.ui.UIRenderer
 import computer.obscure.piku.mod.fabric.ui.classes.UIEvent
 import computer.obscure.piku.mod.fabric.ui.classes.context.LayoutContext
 import computer.obscure.piku.mod.fabric.ui.classes.context.MeasureContext
+import computer.obscure.piku.mod.fabric.ui.components.TextInputNode
 import computer.obscure.piku.mod.fabric.ui.components.UINode
 import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.gui.screens.Screen
+import net.minecraft.client.input.CharacterEvent
+import net.minecraft.client.input.KeyEvent
 import net.minecraft.client.input.MouseButtonEvent
 import net.minecraft.network.chat.Component
 
@@ -16,6 +20,8 @@ class UIMenu(
     val roots = mutableListOf<UINode>()
     var escapeClose = false
     var blur = false
+
+    private var focusedNode: UINode? = null
 
     override fun isPauseScreen(): Boolean = true
     override fun shouldCloseOnEsc() = escapeClose
@@ -100,9 +106,32 @@ class UIMenu(
                 localY = event.y().toFloat() - hit.layoutY,
                 buttonIndex = event.button()
             )
+
+            if (focusedNode != hit) {
+                getAllNodes().forEach {
+                    if (it.focused) {
+                        it.focused = false
+                        it.onBaseUnfocus(uiEvent, LuaUINode(it))
+                    }
+                }
+
+                println(hit)
+                focusedNode = hit
+                hit.focused = true
+                hit.onBaseFocus(uiEvent, LuaUINode(hit))
+            }
+
             hit.activated = true
-            hit.onPress?.invoke(uiEvent)
+            hit.onBasePress(uiEvent, LuaUINode(hit))
             return true
+        }
+
+        focusedNode = null
+        getAllNodes().forEach {
+            if (it.focused) {
+                it.focused = false
+                it.onBaseUnfocus(UIEvent.FocusDropped, LuaUINode(it))
+            }
         }
         return super.mouseClicked(event, doubleClick)
     }
@@ -119,11 +148,22 @@ class UIMenu(
         getAllNodes().forEach {
             if (it.activated) {
                 it.activated = false
-                it.onRelease?.invoke(uiEvent)
-                return true
+                it.onBaseRelease(uiEvent, LuaUINode(it))
             }
         }
         return super.mouseReleased(event)
+    }
+
+    override fun keyPressed(event: KeyEvent): Boolean {
+        val input = focusedNode as? TextInputNode
+        if (input != null && input.handleKeyPressed(event)) return true
+        return super.keyPressed(event)
+    }
+
+    override fun charTyped(event: CharacterEvent): Boolean {
+        val input = focusedNode as? TextInputNode
+        if (input != null && input.handleCharTyped(event)) return true
+        return super.charTyped(event)
     }
 
     override fun mouseDragged(event: MouseButtonEvent, dx: Double, dy: Double): Boolean {

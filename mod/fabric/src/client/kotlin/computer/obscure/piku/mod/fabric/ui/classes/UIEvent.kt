@@ -30,4 +30,5 @@ sealed interface UIEvent {
     ) : TwineNative(), UIEvent
 
     data object Manual : TwineNative(), UIEvent
+    data object FocusDropped : TwineNative(), UIEvent
 }

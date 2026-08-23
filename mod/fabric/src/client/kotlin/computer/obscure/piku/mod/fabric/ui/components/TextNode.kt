@@ -11,7 +11,7 @@ import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.network.chat.Component
 import net.minecraft.util.FormattedCharSequence
 
-class TextNode(var text: Component) : UINode() {
+open class TextNode(var text: Component) : UINode() {
     var rawText: String? = null
     var shadow: Boolean = false
     var scale: Vec2 = Vec2.ONE
@@ -66,13 +66,22 @@ class TextNode(var text: Component) : UINode() {
     }
 
     override fun drawContent(graphics: GuiGraphicsExtractor, ctx: MeasureContext) {
+        drawLines(resolvedLines, graphics, ctx)
+    }
+
+    fun drawLine(line: String, graphics: GuiGraphicsExtractor, ctx: MeasureContext) {
+        val component = Component.literal(line).visualOrderText
+        drawLines(listOf(component), graphics, ctx)
+    }
+
+    fun drawLines(lines: List<FormattedCharSequence>, graphics: GuiGraphicsExtractor, ctx: MeasureContext) {
         val x = layoutX + padding.leftF
         val y = layoutY + padding.topF
         graphics.pose().pushMatrix()
         graphics.pose().translate(x, y)
         graphics.pose().scale(resolvedScaleX, resolvedScaleY)
 
-        resolvedLines.forEachIndexed { index, line ->
+        lines.forEachIndexed { index, line ->
             graphics.text(
                 ctx.textRenderer,
                 line,

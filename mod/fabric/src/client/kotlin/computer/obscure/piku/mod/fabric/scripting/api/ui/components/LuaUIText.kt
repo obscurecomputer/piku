@@ -10,8 +10,8 @@ import computer.obscure.piku.mod.fabric.utils.toNativeComponent
 import computer.obscure.twine.annotations.TwineFunction
 import net.minecraft.network.chat.Component
 
-class LuaUIText(override val node: TextNode) : LuaUIContainer(node) {
-    private var currentTextInstance: LuaTextInstance = LuaTextInstance("")
+open class LuaUIText(override val node: TextNode) : LuaUIContainer(node) {
+    private var currentTextInstance = LuaTextInstance("")
 
     @TwineFunction
     fun text(): LuaTextInstance = currentTextInstance
@@ -20,7 +20,7 @@ class LuaUIText(override val node: TextNode) : LuaUIContainer(node) {
     fun rawText(): String? = node.rawText
 
     @TwineFunction
-    fun text(value: String): LuaUIText {
+    open fun text(value: String): LuaUIText {
         val component = PikuClient.miniMessage
             .deserialize(value)
         node.text = component.toNativeComponent()
@@ -34,7 +34,7 @@ class LuaUIText(override val node: TextNode) : LuaUIContainer(node) {
     }
 
     @TwineFunction
-    fun text(value: LuaTextInstance): LuaUIText {
+    open fun text(value: LuaTextInstance): LuaUIText {
         node.text = value.toMcComponent()
         currentTextInstance = value
         return this

@@ -17,6 +17,9 @@ open class LuaUIContainer(node: UINode) : LuaUINode(node) {
     fun addText(): LuaUIText = LuaUIText(attach(TextNode("")))
 
     @TwineFunction
+    fun addTextInput(): LuaUITextInput = LuaUITextInput(attach(TextInputNode("")))
+
+    @TwineFunction
     fun addBox(): LuaUIBox = LuaUIBox(attach(BoxNode()))
 
     @TwineFunction

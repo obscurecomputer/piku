@@ -7,6 +7,7 @@ import computer.obscure.piku.core.classes.leftF
 import computer.obscure.piku.core.classes.rightF
 import computer.obscure.piku.core.classes.topF
 import computer.obscure.piku.core.classes.vertical
+import computer.obscure.piku.mod.fabric.scripting.api.ui.LuaUINode
 import computer.obscure.piku.mod.fabric.ui.classes.Anchor
 import computer.obscure.piku.mod.fabric.ui.classes.Dimension
 import computer.obscure.piku.mod.fabric.ui.classes.HitShape
@@ -52,13 +53,37 @@ abstract class UINode {
 
     val children = mutableListOf<UINode>()
 
-    var onHover: ((UIEvent) -> Unit)? = null
-    var onUnhover: ((UIEvent) -> Unit)? = null
-    var onPress: ((UIEvent) -> Unit)? = null
-    var onRelease: ((UIEvent) -> Unit)? = null
-    var onFocus: ((UIEvent) -> Unit)? = null
-    var onUnfocus: ((UIEvent) -> Unit)? = null
+    // The base hooks for this component.
+    // Can not be overriden through Luau!!
+    open fun onBaseHover(event: UIEvent, node: LuaUINode) {
+        onHover?.invoke(event, node)
+    }
+    open fun onBaseUnhover(event: UIEvent, node: LuaUINode) {
+        onUnhover?.invoke(event, node)
+    }
+    open fun onBasePress(event: UIEvent, node: LuaUINode) {
+        onPress?.invoke(event, node)
+    }
+    open fun onBaseRelease(event: UIEvent, node: LuaUINode) {
+        onRelease?.invoke(event, node)
+    }
+    open fun onBaseFocus(event: UIEvent, node: LuaUINode) {
+        onFocus?.invoke(event, node)
+    }
+    open fun onBaseUnfocus(event: UIEvent, node: LuaUINode) {
+        onUnfocus?.invoke(event, node)
+    }
 
+    // The hooks for this component that can be
+    // overridden through Luau.
+    var onHover: ((UIEvent, LuaUINode) -> Unit)? = null
+    var onUnhover: ((UIEvent, LuaUINode) -> Unit)? = null
+    var onPress: ((UIEvent, LuaUINode) -> Unit)? = null
+    var onRelease: ((UIEvent, LuaUINode) -> Unit)? = null
+    var onFocus: ((UIEvent, LuaUINode) -> Unit)? = null
+    var onUnfocus: ((UIEvent, LuaUINode) -> Unit)? = null
+
+    var focused: Boolean = false
     var activated: Boolean = false
     var selected: Boolean = false
 
@@ -148,7 +173,7 @@ abstract class UINode {
 
         drawContent(graphics, ctx)
 
-//        drawDebugOutline(graphics)
+        drawDebugOutline(graphics)
 
         children.forEach { it.drawSelf(graphics, ctx, computedOpacity) }
     }

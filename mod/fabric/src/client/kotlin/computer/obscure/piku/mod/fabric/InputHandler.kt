@@ -13,6 +13,8 @@ import org.lwjgl.glfw.GLFW
 
 object InputHandler : PikuService {
 
+    val mc = Minecraft.getInstance()
+
     private val keyStates = mutableMapOf<Int, Boolean>()
     private val mouseStates = mutableMapOf<Int, Boolean>()
     private val luaInputQueue = mutableListOf<LuaKeyBind>()
@@ -65,7 +67,6 @@ object InputHandler : PikuService {
             val prev = mouseStates[button] ?: false
             if (pressed != prev) {
                 mouseStates[button] = pressed
-                val mc = Minecraft.getInstance()
                 fireClick(
                     MouseButton.fromIndex(button),
                     pressed,
@@ -76,7 +77,6 @@ object InputHandler : PikuService {
 
         GLFW.glfwSetScrollCallback(windowHandle) { window, deltaX, deltaY ->
             prevScrollCallback?.invoke(window, deltaX, deltaY)
-            val mc = Minecraft.getInstance()
             if (!shouldHandleInput()) return@glfwSetScrollCallback
             val data = mapOf(
                 "deltaX" to deltaX,
@@ -89,7 +89,6 @@ object InputHandler : PikuService {
     }
 
     private fun shouldHandleInput(): Boolean {
-        val mc = Minecraft.getInstance()
         if (mc.gui.screen() != null)
             return mc.gui.screen() is UIMenu
         return Client.connectedToServer && mc.player != null

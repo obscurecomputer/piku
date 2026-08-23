@@ -14,6 +14,16 @@ class UIMenu(
     menuTitle: Component
 ) : Screen(menuTitle) {
     val roots = mutableListOf<UINode>()
+    var escapeClose = false
+    var blur = false
+
+    override fun isPauseScreen(): Boolean = true
+    override fun shouldCloseOnEsc() = escapeClose
+
+    override fun extractBlurredBackground(graphics: GuiGraphicsExtractor) {
+        if (blur)
+            super.extractBlurredBackground(graphics)
+    }
 
     fun addRoot(node: UINode) {
         roots.add(node)
@@ -52,8 +62,6 @@ class UIMenu(
         }
         return null
     }
-
-    override fun isPauseScreen(): Boolean = true
 
     override fun extractRenderState(graphics: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, a: Float) {
         super.extractRenderState(graphics, mouseX, mouseY, a)

@@ -148,7 +148,7 @@ abstract class UINode {
 
         drawContent(graphics, ctx)
 
-        drawDebugOutline(graphics)
+//        drawDebugOutline(graphics)
 
         children.forEach { it.drawSelf(graphics, ctx, computedOpacity) }
     }

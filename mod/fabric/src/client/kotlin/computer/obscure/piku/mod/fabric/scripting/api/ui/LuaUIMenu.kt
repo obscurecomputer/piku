@@ -18,6 +18,16 @@ class LuaUIMenuInstance(
 ) : TwineNative() {
 
     @TwineFunction
+    fun escapeClose(value: Boolean) = apply {
+        screen.escapeClose = value
+    }
+
+    @TwineFunction
+    fun blur(value: Boolean) = apply {
+        screen.blur = value
+    }
+
+    @TwineFunction
     fun column(): LuaUIColumn {
         val node = ColumnNode()
         screen.addRoot(node)

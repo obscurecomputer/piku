@@ -6,10 +6,12 @@ import computer.obscure.piku.mod.fabric.scripting.api.ui.LuaEasingInstance
 import computer.obscure.piku.mod.fabric.ui.classes.context.LayoutContext
 import computer.obscure.piku.mod.fabric.ui.classes.context.MeasureContext
 import computer.obscure.piku.mod.fabric.ui.components.*
+import computer.obscure.piku.mod.fabric.ui.menu.UIMenu
 import computer.obscure.twine.LuaCallback
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.renderer.texture.DynamicTexture
+import net.minecraft.network.chat.Component
 import net.minecraft.resources.Identifier
 
 object UIRenderer : PikuService {
@@ -22,8 +24,30 @@ object UIRenderer : PikuService {
     private val nodesById = mutableMapOf<String, UINode>()
     val nodesByType = mutableMapOf<Class<out UINode>, LinkedHashSet<UINode>>()
 
+    private val menus = mutableMapOf<String, UIMenu>()
+
+    fun getOrCreateMenu(name: String, titleProvider: () -> Component): UIMenu {
+        return menus.getOrPut(name) { UIMenu(titleProvider()) }
+    }
+
+    fun findMenu(name: String): UIMenu? = menus[name]
+
+    fun removeMenu(name: String) {
+        menus.remove(name)?.let { menu ->
+            menu.roots.forEach { deindexTree(it) }
+        }
+    }
+
+    fun closeAllMenus() {
+        val current = instance.gui.screen()
+        if (current is UIMenu && menus.containsValue(current)) {
+            instance.gui.setScreen(null)
+        }
+    }
+
     override fun shutdown() {
         clearRoots()
+        menus.clear()
     }
 
     fun registerEasing(easing: LuaEasingInstance) {

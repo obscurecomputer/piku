@@ -5,6 +5,7 @@ import computer.obscure.piku.mod.fabric.compat.ModCompat
 import computer.obscure.piku.mod.fabric.controlify.ControlifyIntegration
 import computer.obscure.piku.mod.fabric.scripting.api.LuaKeyBind
 import computer.obscure.piku.mod.fabric.ui.ControlifyUI
+import computer.obscure.piku.mod.fabric.ui.menu.UIMenu
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents
 import net.minecraft.client.Minecraft
 import org.lwjgl.glfw.GLFW
@@ -90,7 +91,9 @@ object InputHandler : PikuService {
 
     private fun shouldHandleInput(): Boolean {
         val mc = Minecraft.getInstance()
-        return Client.connectedToServer && mc.gui.screen() == null && mc.player != null
+        if (mc.gui.screen() != null && mc.gui.screen() is UIMenu)
+            return true
+        return Client.connectedToServer && mc.player != null
     }
 
     fun queueInputUp(luaKeyBind: LuaKeyBind) {

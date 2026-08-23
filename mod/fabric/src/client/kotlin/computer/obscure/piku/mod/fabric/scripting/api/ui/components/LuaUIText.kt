@@ -17,12 +17,17 @@ class LuaUIText(override val node: TextNode) : LuaUIContainer(node) {
     fun text(): LuaTextInstance = currentTextInstance
 
     @TwineFunction
+    fun rawText(): String? = node.rawText
+
+    @TwineFunction
     fun text(value: String): LuaUIText {
         val component = PikuClient.miniMessage
             .deserialize(value)
         node.text = component.toNativeComponent()
+        node.rawText = value
         currentTextInstance = LuaTextInstance(
             type = "text",
+            literalText = value,
             baseComponent = component
         )
         return this

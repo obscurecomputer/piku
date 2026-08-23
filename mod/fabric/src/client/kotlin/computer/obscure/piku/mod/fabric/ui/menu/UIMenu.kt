@@ -1,6 +1,7 @@
 package computer.obscure.piku.mod.fabric.ui.menu
 
 import computer.obscure.piku.mod.fabric.ui.UIRenderer
+import computer.obscure.piku.mod.fabric.ui.classes.UIEvent
 import computer.obscure.piku.mod.fabric.ui.classes.context.LayoutContext
 import computer.obscure.piku.mod.fabric.ui.classes.context.MeasureContext
 import computer.obscure.piku.mod.fabric.ui.components.UINode
@@ -22,6 +23,34 @@ class UIMenu(
     fun removeRoot(node: UINode) {
         roots.remove(node)
         UIRenderer.deindexTree(node)
+    }
+
+    fun getAllNodes(): List<UINode> {
+        val result = mutableListOf<UINode>()
+        fun collect(node: UINode) {
+            result.add(node)
+            node.children.forEach { collect(it) }
+        }
+        roots.forEach { collect(it) }
+        return result
+    }
+
+    private fun hitTest(node: UINode, x: Float, y: Float): UINode? {
+        for (child in node.children.asReversed()) {
+            hitTest(child, x, y)?.let {
+                return it
+            }
+        }
+        if (node.visible && node.containsPoint(x, y))
+            return node
+        return null
+    }
+
+    private fun hitTestRoots(x: Float, y: Float): UINode? {
+        for (root in roots.asReversed()) {
+            hitTest(root, x, y)?.let { return it }
+        }
+        return null
     }
 
     override fun isPauseScreen(): Boolean = true
@@ -49,11 +78,43 @@ class UIMenu(
         }
     }
 
+    override fun mouseMoved(x: Double, y: Double) {
+        super.mouseMoved(x, y)
+    }
+
     override fun mouseClicked(event: MouseButtonEvent, doubleClick: Boolean): Boolean {
+        val hit = hitTestRoots(event.x().toFloat(), event.y().toFloat())
+        if (hit != null) {
+            val uiEvent = UIEvent.Pointer(
+                screenX = event.x().toFloat(),
+                screenY = event.y().toFloat(),
+                localX = event.x().toFloat() - hit.layoutX,
+                localY = event.y().toFloat() - hit.layoutY,
+                buttonIndex = event.button()
+            )
+            hit.activated = true
+            hit.onPress?.invoke(uiEvent)
+            return true
+        }
         return super.mouseClicked(event, doubleClick)
     }
 
     override fun mouseReleased(event: MouseButtonEvent): Boolean {
+        val hit = hitTestRoots(event.x().toFloat(), event.y().toFloat())
+        val uiEvent = UIEvent.Pointer(
+            screenX = event.x().toFloat(),
+            screenY = event.y().toFloat(),
+            localX = event.x().toFloat() - (hit?.layoutX ?: 0f),
+            localY = event.y().toFloat() - (hit?.layoutY ?: 0f),
+            buttonIndex = event.button()
+        )
+        getAllNodes().forEach {
+            if (it.activated) {
+                it.activated = false
+                it.onRelease?.invoke(uiEvent)
+                return true
+            }
+        }
         return super.mouseReleased(event)
     }
 

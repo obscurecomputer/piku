@@ -5,6 +5,7 @@ import computer.obscure.piku.mod.fabric.compat.ModCompat
 import computer.obscure.piku.mod.fabric.controlify.ControlifyIntegration
 import computer.obscure.piku.mod.fabric.scripting.api.LuaKeyBind
 import computer.obscure.piku.mod.fabric.ui.ControlifyUI
+import computer.obscure.piku.mod.fabric.ui.classes.UIEvent
 import computer.obscure.piku.mod.fabric.ui.menu.UIMenu
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents
 import net.minecraft.client.Minecraft
@@ -65,13 +66,11 @@ object InputHandler : PikuService {
             if (pressed != prev) {
                 mouseStates[button] = pressed
                 val mc = Minecraft.getInstance()
-                val data = mapOf(
-                    "button" to button,
-                    "action" to if (pressed) "press" else "release",
-                    "x" to mc.mouseHandler.xpos(),
-                    "y" to mc.mouseHandler.ypos()
+                fireClick(
+                    MouseButton.fromIndex(button),
+                    pressed,
+                    mc.mouseHandler.xpos(), mc.mouseHandler.ypos()
                 )
-                PikuClient.engine!!.events.fire("client.mouse_update", data)
             }
         }
 
@@ -138,5 +137,39 @@ object InputHandler : PikuService {
 
     fun getMouseButtonName(button: Int): String {
         return "mouse_$button"
+    }
+
+    fun fireClick(
+        button: MouseButton,
+        pressed: Boolean,
+        x: Double, y: Double,
+        inMenu: Boolean = false,
+    ) {
+        val data = mapOf(
+            "button" to button.index,
+            "action" to if (pressed) "press" else "release",
+            "x" to x,
+            "y" to y,
+            "inMenu" to inMenu
+        )
+        PikuClient.engine!!.events.fire("client.mouse_update", data)
+    }
+
+    fun fireMenuClick(
+        event: UIEvent
+    ) {
+        PikuClient.engine!!.events.fire("client.menu.mouse_update", mapOf("event" to event))
+    }
+}
+
+enum class MouseButton(val index: Int) {
+    LEFT(0),
+    RIGHT(1),
+    MIDDLE(2);
+
+    companion object {
+        fun fromIndex(index: Int): MouseButton {
+            return entries.firstOrNull { it.index == index } ?: LEFT
+        }
     }
 }

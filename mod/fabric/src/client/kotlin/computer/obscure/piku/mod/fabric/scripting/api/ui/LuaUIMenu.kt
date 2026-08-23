@@ -4,7 +4,6 @@ import computer.obscure.piku.core.scripting.api.LuaTextInstance
 import computer.obscure.piku.mod.fabric.scripting.api.ui.components.LuaUIBox
 import computer.obscure.piku.mod.fabric.scripting.api.ui.components.LuaUIColumn
 import computer.obscure.piku.mod.fabric.scripting.api.ui.components.LuaUIRow
-import computer.obscure.piku.mod.fabric.ui.UIRenderer
 import computer.obscure.piku.mod.fabric.ui.components.BoxNode
 import computer.obscure.piku.mod.fabric.ui.components.ColumnNode
 import computer.obscure.piku.mod.fabric.ui.components.RowNode
@@ -37,11 +36,6 @@ class LuaUIMenuInstance(
         val node = BoxNode()
         screen.addRoot(node)
         return LuaUIBox(node)
-    }
-
-    @TwineFunction
-    fun hi() {
-        println("hello!")
     }
 
     @TwineFunction

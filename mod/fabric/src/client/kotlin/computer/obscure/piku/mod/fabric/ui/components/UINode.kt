@@ -9,12 +9,16 @@ import computer.obscure.piku.core.classes.topF
 import computer.obscure.piku.core.classes.vertical
 import computer.obscure.piku.mod.fabric.ui.classes.Anchor
 import computer.obscure.piku.mod.fabric.ui.classes.Dimension
+import computer.obscure.piku.mod.fabric.ui.classes.HitShape
 import computer.obscure.piku.mod.fabric.ui.classes.OffsetDimension
+import computer.obscure.piku.mod.fabric.ui.classes.ShapeBounds
+import computer.obscure.piku.mod.fabric.ui.classes.UIEvent
 import computer.obscure.piku.mod.fabric.ui.classes.context.LayoutContext
 import computer.obscure.piku.mod.fabric.ui.classes.context.MeasureContext
 import me.znotchill.kiwi.generated.Color
 import net.minecraft.client.gui.GuiGraphicsExtractor
 import java.util.UUID
+import kotlin.math.sqrt
 
 abstract class UINode {
     val id: String = UUID.randomUUID().toString()
@@ -48,17 +52,24 @@ abstract class UINode {
 
     val children = mutableListOf<UINode>()
 
-    var onActivate: (() -> Unit)? = null
-    var onDeactivate: (() -> Unit)? = null
-    var onSelect: (() -> Unit)? = null
-    var onDeselect: (() -> Unit)? = null
-    var onFocus: (() -> Unit)? = null
-    var onUnfocus: (() -> Unit)? = null
+    var onHover: ((UIEvent) -> Unit)? = null
+    var onUnhover: ((UIEvent) -> Unit)? = null
+    var onPress: ((UIEvent) -> Unit)? = null
+    var onRelease: ((UIEvent) -> Unit)? = null
+    var onFocus: ((UIEvent) -> Unit)? = null
+    var onUnfocus: ((UIEvent) -> Unit)? = null
 
     var activated: Boolean = false
     var selected: Boolean = false
 
     var selectable: Boolean = true
+
+    var hitShape: HitShape = HitShape.Rectangle
+
+    fun containsPoint(x: Float, y: Float): Boolean {
+        val bounds = ShapeBounds(layoutX, layoutY, measuredWidth, measuredHeight)
+        return hitShape.contains(x, y, bounds)
+    }
 
     protected open fun measureContent(ctx: MeasureContext): Pair<Float, Float> {
         val w = children.maxOfOrNull { it.measuredWidth } ?: 0f
@@ -136,7 +147,39 @@ abstract class UINode {
         }
 
         drawContent(graphics, ctx)
+
+        drawDebugOutline(graphics)
+
         children.forEach { it.drawSelf(graphics, ctx, computedOpacity) }
+    }
+
+    private fun drawDebugOutline(graphics: GuiGraphicsExtractor) {
+        val bounds = ShapeBounds(layoutX, layoutY, measuredWidth, measuredHeight)
+        val points = hitShape.outlinePoints(bounds)
+        if (points.isEmpty()) return
+
+        val lineColor = 0xFF00FF00.toInt()
+        for (i in points.indices) {
+            val (x1, y1) = points[i]
+            val (x2, y2) = points[(i + 1) % points.size]
+            drawDebugLine(graphics, x1, y1, x2, y2, lineColor)
+        }
+    }
+
+    private fun drawDebugLine(graphics: GuiGraphicsExtractor, x1: Float, y1: Float, x2: Float, y2: Float, color: Int) {
+        // this is REALLY bad
+        val dx = x2 - x1
+        val dy = y2 - y1
+        val length = sqrt(dx * dx + dy * dy)
+        if (length < 0.01f) return
+
+        val steps = length.toInt().coerceAtLeast(1)
+        for (s in 0..steps) {
+            val t = s.toFloat() / steps
+            val px = (x1 + dx * t).toInt()
+            val py = (y1 + dy * t).toInt()
+            graphics.fill(px, py, px + 1, py + 1, color)
+        }
     }
 
     protected open fun drawContent(graphics: GuiGraphicsExtractor, ctx: MeasureContext) {}

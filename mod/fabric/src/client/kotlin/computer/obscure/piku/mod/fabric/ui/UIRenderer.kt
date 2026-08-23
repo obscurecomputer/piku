@@ -24,30 +24,8 @@ object UIRenderer : PikuService {
     private val nodesById = mutableMapOf<String, UINode>()
     val nodesByType = mutableMapOf<Class<out UINode>, LinkedHashSet<UINode>>()
 
-    private val menus = mutableMapOf<String, UIMenu>()
-
-    fun getOrCreateMenu(name: String, titleProvider: () -> Component): UIMenu {
-        return menus.getOrPut(name) { UIMenu(titleProvider()) }
-    }
-
-    fun findMenu(name: String): UIMenu? = menus[name]
-
-    fun removeMenu(name: String) {
-        menus.remove(name)?.let { menu ->
-            menu.roots.forEach { deindexTree(it) }
-        }
-    }
-
-    fun closeAllMenus() {
-        val current = instance.gui.screen()
-        if (current is UIMenu && menus.containsValue(current)) {
-            instance.gui.setScreen(null)
-        }
-    }
-
     override fun shutdown() {
         clearRoots()
-        menus.clear()
     }
 
     fun registerEasing(easing: LuaEasingInstance) {

@@ -19,7 +19,9 @@ import computer.obscure.piku.mod.fabric.scripting.api.ui.components.LuaUIText
 import computer.obscure.piku.mod.fabric.ui.classes.Anchor
 import computer.obscure.piku.mod.fabric.ui.classes.Dimension
 import computer.obscure.piku.mod.fabric.ui.UIRenderer
+import computer.obscure.piku.mod.fabric.ui.classes.HitShape
 import computer.obscure.piku.mod.fabric.ui.classes.OffsetDimension
+import computer.obscure.piku.mod.fabric.ui.classes.UIEvent
 import computer.obscure.piku.mod.fabric.ui.components.BoxNode
 import computer.obscure.piku.mod.fabric.ui.components.ColumnNode
 import computer.obscure.piku.mod.fabric.ui.components.DividerNode
@@ -222,40 +224,49 @@ open class LuaUINode(open val node: UINode) : TwineNative() {
     }
 
     @TwineFunction
-    fun onSelect(value: LuaCallback) = apply {
-        node.onSelect = { value.invoke(this) }
+    fun onHover(value: LuaCallback) = apply {
+        node.onHover = { event -> value.invoke(event) }
     }
 
     @TwineFunction
-    fun onDeselect(value: LuaCallback) = apply {
-        node.onDeselect = { value.invoke(this) }
+    fun onUnhover(value: LuaCallback) = apply {
+        node.onUnhover = { event -> value.invoke(event) }
     }
 
     @TwineFunction
-    fun onActivate(value: LuaCallback) = apply {
-        node.onActivate = { value.invoke(this) }
+    fun onPress(value: LuaCallback) = apply {
+        node.onPress = { event -> value.invoke(event) }
     }
 
     @TwineFunction
-    fun onDeactivate(value: LuaCallback) = apply {
-        node.onDeactivate = { value.invoke(this) }
+    fun onRelease(value: LuaCallback) = apply {
+        node.onRelease = { event -> value.invoke(event) }
     }
 
     @TwineFunction
     fun onFocus(value: LuaCallback) = apply {
-        node.onFocus = { value.invoke(this) }
+        node.onFocus = { event -> value.invoke(event) }
     }
 
     @TwineFunction
     fun onUnfocus(value: LuaCallback) = apply {
-        node.onUnfocus = { value.invoke(this) }
+        node.onUnfocus = { event -> value.invoke(event) }
 
-        node.onUnfocus?.invoke()
+        node.onUnfocus?.invoke(UIEvent.Manual)
     }
 
     @TwineFunction
     fun selectable(value: Boolean) = apply {
         node.selectable = value
+    }
+
+    @TwineFunction
+    fun hitShape(value: String) = apply {
+        node.hitShape = when (value) {
+            "r", "rect", "rectangle" -> HitShape.Rectangle
+            "e", "ellipse" -> HitShape.Ellipse
+            else -> HitShape.Rectangle
+        }
     }
 
     companion object {

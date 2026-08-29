@@ -3,8 +3,9 @@ package computer.obscure.piku.mod.fabric.scripting.api.ui.components
 import computer.obscure.piku.core.scripting.api.LuaTextInstance
 import computer.obscure.piku.mod.fabric.PikuClient
 import me.znotchill.kiwi.generated.Vec2
-import computer.obscure.piku.mod.fabric.ui.classes.ScaleDimension
 import computer.obscure.piku.mod.fabric.ui.components.TextNode
+import computer.obscure.piku.mod.fabric.utils.parseScale
+import computer.obscure.piku.mod.fabric.utils.parseScaleRegex
 import computer.obscure.piku.mod.fabric.utils.toMcComponent
 import computer.obscure.piku.mod.fabric.utils.toNativeComponent
 import computer.obscure.twine.annotations.TwineFunction
@@ -61,25 +62,11 @@ open class LuaUIText(override val node: TextNode) : LuaUIContainer(node) {
         return this
     }
 
-    private fun parseScale(value: String): ScaleDimension = when {
-        value.endsWith("pw") -> ScaleDimension.ParentWidth(value.dropLast(2).toDouble() / 100.0)
-        value.endsWith("ph") -> ScaleDimension.ParentHeight(value.dropLast(2).toDouble() / 100.0)
-        value.endsWith("%") -> ScaleDimension.Fixed(value.dropLast(1).toDouble() / 100.0)
-        value.endsWith("x") -> ScaleDimension.Fixed(value.dropLast(1).toDouble())
-        else -> ScaleDimension.Fixed(value.toDouble())
-    }
-
     @TwineFunction
     fun scale(value: String): LuaUIText {
-        val parts = value.trim().split("\\s+".toRegex())
-        if (parts.size == 2) {
-            node.scaleX = parseScale(parts[0])
-            node.scaleY = parseScale(parts[1])
-        } else {
-            val s = parseScale(value)
-            node.scaleX = s
-            node.scaleY = s
-        }
+        val scale = parseScaleRegex(value)
+        node.scaleX = scale.x
+        node.scaleY = scale.y
         return this
     }
 

@@ -1,9 +1,11 @@
-package computer.obscure.piku.core.animation
+package computer.obscure.piku.mod.fabric.animation
 
 import computer.obscure.piku.core.classes.Spacing
 import me.znotchill.kiwi.generated.Vec2
 import computer.obscure.piku.core.classes.Vec3
 import computer.obscure.piku.core.service.PikuService
+import computer.obscure.piku.mod.fabric.ui.classes.ScaleDimension
+import computer.obscure.piku.mod.fabric.ui.classes.ScaleDimension2
 import me.znotchill.kiwi.generated.Color
 
 object AnimationManager : PikuService {
@@ -68,6 +70,14 @@ object AnimationManager : PikuService {
                     )
                 }
                 is Color -> from.lerp(to as Color, eased)
+                is ScaleDimension -> lerpScaleDimension(from, to as ScaleDimension, eased)
+                is ScaleDimension2 -> {
+                    val t2 = to as ScaleDimension2
+                    ScaleDimension2(
+                        x = lerpScaleDimension(from.x, t2.x, eased),
+                        y = lerpScaleDimension(from.y, t2.y, eased)
+                    )
+                }
                 else -> to
             }
 
@@ -83,10 +93,38 @@ object AnimationManager : PikuService {
 
         // remove finished animations, then fire onFinish
         // so any new animations queued by onFinish go to pending safely
-        animations.removeAll(toRemove)
+        animations.removeAll(toRemove.toSet())
         toRemove.forEach { it.onFinish() }
 
         animations += pending
         pending.clear()
     }
+
+    private fun lerpScaleDimension(from: ScaleDimension, to: ScaleDimension, eased: Double): ScaleDimension {
+        fun asFixedValue(d: ScaleDimension): Double? = when (d) {
+            is ScaleDimension.One -> 1.0
+            is ScaleDimension.Fixed -> d.value
+            else -> null
+        }
+
+        val fromFixed = asFixedValue(from)
+        val toFixed = asFixedValue(to)
+
+        return when {
+            fromFixed != null && toFixed != null ->
+                ScaleDimension.Fixed(AnimationUtil.lerp(fromFixed, toFixed, eased))
+
+            from is ScaleDimension.Fraction && to is ScaleDimension.Fraction ->
+                ScaleDimension.Fraction(AnimationUtil.lerp(from.frac, to.frac, eased))
+
+            from is ScaleDimension.ParentWidth && to is ScaleDimension.ParentWidth ->
+                ScaleDimension.ParentWidth(AnimationUtil.lerp(from.frac, to.frac, eased))
+
+            from is ScaleDimension.ParentHeight && to is ScaleDimension.ParentHeight ->
+                ScaleDimension.ParentHeight(AnimationUtil.lerp(from.frac, to.frac, eased))
+
+            else -> if (eased < 0.5) from else to
+        }
+    }
 }
+

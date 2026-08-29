@@ -6,8 +6,8 @@ import computer.obscure.piku.core.scripting.server.SharedStateManager
 import computer.obscure.piku.mod.fabric.Client
 import computer.obscure.piku.mod.fabric.InputHandler
 import computer.obscure.piku.mod.fabric.PikuClient
-import computer.obscure.piku.core.animation.AnimationManager
-import computer.obscure.piku.core.animation.AnimationUtil
+import computer.obscure.piku.mod.fabric.animation.AnimationManager
+import computer.obscure.piku.mod.fabric.animation.AnimationUtil
 import computer.obscure.piku.mod.fabric.sound.TrackManager
 import computer.obscure.piku.mod.fabric.sound.TrackRegistry
 import computer.obscure.piku.mod.fabric.storage.SessionStorage

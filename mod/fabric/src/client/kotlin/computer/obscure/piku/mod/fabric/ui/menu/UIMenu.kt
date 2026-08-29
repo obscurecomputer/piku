@@ -134,17 +134,19 @@ class UIMenu(
     }
 
     override fun mouseClicked(event: MouseButtonEvent, doubleClick: Boolean): Boolean {
-        val hit = hitTestRoots(event.x().toFloat(), event.y().toFloat())
-        if (hit != null) {
+        val path = hitTestRootsPath(event.x().toFloat(), event.y().toFloat())
+
+        if (path.isNotEmpty()) {
+            val topHit = path.first()
             val uiEvent = UIEvent.Pointer(
                 screenX = event.x().toFloat(),
                 screenY = event.y().toFloat(),
-                localX = event.x().toFloat() - hit.layoutX,
-                localY = event.y().toFloat() - hit.layoutY,
+                localX = event.x().toFloat() - topHit.layoutX,
+                localY = event.y().toFloat() - topHit.layoutY,
                 buttonIndex = event.button()
             )
 
-            if (focusedNode != hit) {
+            if (focusedNode != topHit) {
                 getAllNodes().forEach {
                     if (it.focused) {
                         it.focused = false
@@ -152,14 +154,22 @@ class UIMenu(
                     }
                 }
 
-                println(hit)
-                focusedNode = hit
-                hit.focused = true
-                hit.onBaseFocus(uiEvent, LuaUINode(hit))
+                focusedNode = topHit
+                topHit.focused = true
+                topHit.onBaseFocus(uiEvent, LuaUINode(topHit))
             }
 
-            hit.activated = true
-            hit.onBasePress(uiEvent, LuaUINode(hit))
+            for (node in path) {
+                val nodeEvent = UIEvent.Pointer(
+                    screenX = event.x().toFloat(),
+                    screenY = event.y().toFloat(),
+                    localX = event.x().toFloat() - node.layoutX,
+                    localY = event.y().toFloat() - node.layoutY,
+                    buttonIndex = event.button()
+                )
+                node.activated = true
+                node.onBasePress(nodeEvent, LuaUINode(node))
+            }
             return true
         }
 

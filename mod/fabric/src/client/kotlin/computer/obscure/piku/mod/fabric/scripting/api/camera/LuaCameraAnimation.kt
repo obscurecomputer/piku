@@ -1,9 +1,9 @@
 package computer.obscure.piku.mod.fabric.scripting.api.camera
 
-import computer.obscure.piku.core.animation.Animation
-import computer.obscure.piku.core.animation.AnimationManager
+import computer.obscure.piku.mod.fabric.animation.Animation
 import computer.obscure.piku.core.classes.Vec3
 import computer.obscure.piku.core.scripting.api.LuaVec3Instance
+import computer.obscure.piku.mod.fabric.animation.AnimationManager
 import computer.obscure.piku.mod.fabric.camera.CinematicCamera
 import computer.obscure.twine.annotations.TwineFunction
 import computer.obscure.twine.TwineNative

@@ -1,7 +1,7 @@
 package computer.obscure.piku.mod.fabric.scripting.api.camera
 
-import computer.obscure.piku.core.animation.Animation
-import computer.obscure.piku.core.animation.AnimationManager
+import computer.obscure.piku.mod.fabric.animation.Animation
+import computer.obscure.piku.mod.fabric.animation.AnimationManager
 import computer.obscure.piku.core.scripting.api.LuaVec3
 import computer.obscure.piku.core.scripting.api.LuaVec3Instance
 import computer.obscure.piku.mod.fabric.Client

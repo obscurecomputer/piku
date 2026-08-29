@@ -1,6 +1,7 @@
 package computer.obscure.piku.mod.fabric.events
 
-import computer.obscure.piku.core.animation.AnimationManager
+import computer.obscure.piku.mod.fabric.PikuClient
+import computer.obscure.piku.mod.fabric.animation.AnimationManager
 import computer.obscure.piku.mod.fabric.ui.UIRenderer
 import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry
 import net.minecraft.resources.Identifier
@@ -18,6 +19,8 @@ object ClientHudRender {
                 0.1
             ) // capped
             lastTimeNano = currentTime
+
+            PikuClient.engine!!.events.fire("client.ui_render", mapOf())
 
             AnimationManager.tick(deltaSeconds)
             UIRenderer.render(context)

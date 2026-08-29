@@ -1,4 +1,4 @@
-package computer.obscure.piku.core.animation
+package computer.obscure.piku.mod.fabric.animation
 
 import computer.obscure.piku.core.classes.Easing
 

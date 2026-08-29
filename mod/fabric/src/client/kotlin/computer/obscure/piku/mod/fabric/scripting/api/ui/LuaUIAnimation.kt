@@ -1,16 +1,21 @@
 package computer.obscure.piku.mod.fabric.scripting.api.ui
 
-import computer.obscure.piku.core.animation.Animation
+import computer.obscure.piku.mod.fabric.animation.Animation
+import computer.obscure.piku.core.classes.Spacing
+import computer.obscure.piku.core.scripting.api.LuaSpacingInstance
 import me.znotchill.kiwi.generated.Vec2
 import computer.obscure.piku.core.scripting.engine.EngineError
 import computer.obscure.piku.core.scripting.engine.EngineErrorCode
 import computer.obscure.piku.mod.fabric.scripting.api.animation.LuaAnimatable
 import computer.obscure.piku.mod.fabric.ui.classes.Dimension
 import computer.obscure.piku.mod.fabric.ui.classes.OffsetDimension
+import computer.obscure.piku.mod.fabric.ui.classes.ScaleDimension2
 import computer.obscure.piku.mod.fabric.ui.components.FlowNode
 import computer.obscure.piku.mod.fabric.ui.components.LineNode
 import computer.obscure.piku.mod.fabric.ui.components.ProgressBarNode
+import computer.obscure.piku.mod.fabric.ui.components.TextNode
 import computer.obscure.piku.mod.fabric.ui.components.UINode
+import computer.obscure.piku.mod.fabric.utils.parseScaleRegex
 import computer.obscure.twine.LuaCallback
 import computer.obscure.twine.annotations.TwineFunction
 import me.znotchill.kiwi.generated.Color
@@ -124,6 +129,34 @@ class LuaUIAnimation(val node: UINode) : LuaAnimatable() {
     }
 
     @TwineFunction
+    fun scale(to: String, duration: Double, easing: String): LuaUIAnimation {
+        val target = parseScaleRegex(to)
+        if (node !is TextNode)
+            throw EngineError(EngineErrorCode.INVALID_COMPONENT,
+                "scale() is only supported on Text nodes")
+        queue.add(Animation(
+            targetId = node.id,
+            durationSeconds = duration,
+            easing = easing,
+            getter = {
+                ScaleDimension2(
+                    x = node.scaleX,
+                    y = node.scaleY
+                )
+            },
+            setter = { scale ->
+                node.scaleX = scale.x
+                node.scaleY = scale.y
+            },
+            to = target,
+            onStart = { onStartCallback?.call<Unit>() },
+            onFinish = { onFinishCallback?.call<Unit>() }
+        ))
+
+        return this
+    }
+
+    @TwineFunction
     fun progress(to: Float, duration: Double, easing: String): LuaUIAnimation {
         if (node !is ProgressBarNode)
             throw EngineError(EngineErrorCode.INVALID_COMPONENT,
@@ -202,6 +235,27 @@ class LuaUIAnimation(val node: UINode) : LuaAnimatable() {
             getter = { node.color },
             setter = { node.color = it },
             to = to,
+            onStart = { onStartCallback?.call<Unit>() },
+            onFinish = { onFinishCallback?.call<Unit>() }
+        ))
+
+        return this
+    }
+
+    @TwineFunction
+    fun padding(to: LuaSpacingInstance, duration: Double, easing: String): LuaUIAnimation {
+        queue.add(Animation(
+            targetId = node.id,
+            durationSeconds = duration,
+            easing = easing,
+            getter = { node.padding },
+            setter = { node.padding = it },
+            to = Spacing(
+                left = to.left,
+                top = to.top,
+                right = to.right,
+                bottom = to.bottom
+            ),
             onStart = { onStartCallback?.call<Unit>() },
             onFinish = { onFinishCallback?.call<Unit>() }
         ))

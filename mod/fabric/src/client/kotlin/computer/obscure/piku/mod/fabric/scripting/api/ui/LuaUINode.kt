@@ -1,11 +1,11 @@
 package computer.obscure.piku.mod.fabric.scripting.api.ui
 
-import computer.obscure.piku.core.animation.AnimationManager
 import computer.obscure.piku.core.classes.Spacing
 import computer.obscure.piku.core.scripting.api.LuaSpacingInstance
 import me.znotchill.kiwi.generated.Vec2
 import computer.obscure.piku.core.scripting.engine.EngineError
 import computer.obscure.piku.core.scripting.engine.EngineErrorCode
+import computer.obscure.piku.mod.fabric.animation.AnimationManager
 import computer.obscure.piku.mod.fabric.scripting.api.ui.components.LuaUIBox
 import computer.obscure.piku.mod.fabric.scripting.api.ui.components.LuaUIColumn
 import computer.obscure.piku.mod.fabric.scripting.api.ui.components.LuaUIDivider
@@ -34,6 +34,7 @@ import computer.obscure.piku.mod.fabric.ui.components.SpriteNode
 import computer.obscure.piku.mod.fabric.ui.components.TextInputNode
 import computer.obscure.piku.mod.fabric.ui.components.TextNode
 import computer.obscure.piku.mod.fabric.ui.components.UINode
+import computer.obscure.piku.mod.fabric.utils.parseDimension
 import computer.obscure.twine.LuaCallback
 import computer.obscure.twine.TwineNative
 import computer.obscure.twine.annotations.TwineFunction
@@ -158,14 +159,6 @@ open class LuaUINode(open val node: UINode) : TwineNative() {
     fun contains(x: Float, y: Float): Boolean {
         return x >= node.layoutX && x <= node.layoutX + node.measuredWidth &&
                y >= node.layoutY && y <= node.layoutY + node.measuredHeight
-    }
-
-    private fun parseDimension(value: String): Dimension = when {
-        value == "wrap" -> Dimension.Wrap
-        value == "fill" -> Dimension.Fill
-        value.endsWith("%") -> Dimension.Fraction(value.dropLast(1).toFloat() / 100f)
-        value.endsWith("px") -> Dimension.Fixed(value.dropLast(2).toFloat())
-        else -> Dimension.Fixed(value.toFloat())
     }
 
     @TwineFunction

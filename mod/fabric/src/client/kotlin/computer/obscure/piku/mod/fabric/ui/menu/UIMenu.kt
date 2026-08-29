@@ -124,6 +124,7 @@ class UIMenu(
                 val uiEvent = UIEvent.Hover(
                     screenX = x, screenY = y,
                     localX = x - node.layoutX, localY = y - node.layoutY,
+                    node = LuaUINode(node)
                 )
                 node.hovered = true
                 node.onBaseHover(uiEvent, LuaUINode(node))
@@ -143,6 +144,7 @@ class UIMenu(
                 screenY = event.y().toFloat(),
                 localX = event.x().toFloat() - topHit.layoutX,
                 localY = event.y().toFloat() - topHit.layoutY,
+                node = LuaUINode(topHit),
                 buttonIndex = event.button()
             )
 
@@ -165,6 +167,7 @@ class UIMenu(
                     screenY = event.y().toFloat(),
                     localX = event.x().toFloat() - node.layoutX,
                     localY = event.y().toFloat() - node.layoutY,
+                    node = LuaUINode(node),
                     buttonIndex = event.button()
                 )
                 node.activated = true
@@ -190,6 +193,7 @@ class UIMenu(
             screenY = event.y().toFloat(),
             localX = event.x().toFloat() - (hit?.layoutX ?: 0f),
             localY = event.y().toFloat() - (hit?.layoutY ?: 0f),
+            node = hit?.let { LuaUINode(hit) },
             buttonIndex = event.button()
         )
         getAllNodes().forEach {

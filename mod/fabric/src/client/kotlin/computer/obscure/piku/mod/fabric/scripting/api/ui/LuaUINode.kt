@@ -54,6 +54,28 @@ open class LuaUINode(open val node: UINode) : TwineNative() {
         return this
     }
 
+    @TwineProperty
+    val screenX: Float
+        get() = node.layoutX
+
+    @TwineProperty
+    val screenY: Float
+        get() = node.layoutY
+
+    @TwineProperty
+    val measuredWidth: Float
+        get() = node.measuredWidth
+
+    @TwineProperty
+    val measuredHeight: Float
+        get() = node.measuredHeight
+
+    @TwineFunction
+    fun centerX(): Float = node.layoutX + (node.measuredWidth / 2f)
+
+    @TwineFunction
+    fun centerY(): Float = node.layoutY + (node.measuredHeight / 2f)
+
     @TwineFunction
     fun opacity(): Float {
         return node.opacity

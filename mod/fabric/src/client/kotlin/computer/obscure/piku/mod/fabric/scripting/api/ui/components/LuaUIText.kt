@@ -48,6 +48,12 @@ open class LuaUIText(override val node: TextNode) : LuaUIContainer(node) {
     }
 
     @TwineFunction
+    fun wrap(value: Boolean): LuaUIText {
+        node.wrap = value
+        return this
+    }
+
+    @TwineFunction
     fun setText(value: String): LuaUIText {
         // mutate the MC component's text only
         val current = node.text

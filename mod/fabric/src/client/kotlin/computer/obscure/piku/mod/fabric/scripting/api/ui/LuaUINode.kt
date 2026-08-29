@@ -226,32 +226,56 @@ open class LuaUINode(open val node: UINode) : TwineNative() {
 
     @TwineFunction
     fun onHover(value: LuaCallback) = apply {
-        node.onHover = { event, uiNode -> value.invoke(event, uiNode) }
+        node.onHover = { event, uiNode ->
+            try {
+                value.invoke(event, uiNode)
+            } catch (_: Exception) {}
+        }
     }
 
     @TwineFunction
     fun onUnhover(value: LuaCallback) = apply {
-        node.onUnhover = { event, uiNode -> value.invoke(event, uiNode) }
+        node.onUnhover = { event, uiNode ->
+            try {
+                value.invoke(event, uiNode)
+            } catch (_: Exception) {}
+        }
     }
 
     @TwineFunction
     fun onPress(value: LuaCallback) = apply {
-        node.onPress = { event, uiNode -> value.invoke(event, uiNode) }
+        node.onPress = { event, uiNode ->
+            try {
+                value.invoke(event, uiNode)
+            } catch (_: Exception) {}
+        }
     }
 
     @TwineFunction
     fun onRelease(value: LuaCallback) = apply {
-        node.onRelease = { event, uiNode -> value.invoke(event, uiNode) }
+        node.onRelease = { event, uiNode ->
+            try {
+                value.invoke(event, uiNode)
+            } catch (_: Exception) {}
+        }
     }
 
     @TwineFunction
     fun onFocus(value: LuaCallback) = apply {
-        node.onFocus = { event, uiNode -> value.invoke(event, uiNode) }
+        node.onFocus = { event, uiNode ->
+            try {
+                value.invoke(event, uiNode)
+            } catch (_: Exception) {}
+        }
     }
 
     @TwineFunction
     fun onUnfocus(value: LuaCallback) = apply {
-        node.onUnfocus = { event, uiNode -> value.invoke(event, uiNode) }
+        node.onUnfocus = { event, uiNode ->
+            try {
+                value.invoke(event, uiNode)
+            } catch (_: Exception) {}
+        }
     }
 
     @TwineFunction

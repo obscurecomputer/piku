@@ -22,6 +22,17 @@ sealed interface UIEvent {
         val button: LuaMouseButton = LuaMouseButton(button = MouseButton.fromIndex(buttonIndex))
     ) : TwineNative(), UIEvent
 
+    data class Hover(
+        @TwineProperty
+        val screenX: Float,
+        @TwineProperty
+        val screenY: Float,
+        @TwineProperty
+        val localX: Float,
+        @TwineProperty
+        val localY: Float,
+    ) : TwineNative(), UIEvent
+
     data class Controller(
         @TwineProperty
         val controllerId: String,
@@ -31,4 +42,5 @@ sealed interface UIEvent {
 
     data object Manual : TwineNative(), UIEvent
     data object FocusDropped : TwineNative(), UIEvent
+    data object HoverDropped : TwineNative(), UIEvent
 }

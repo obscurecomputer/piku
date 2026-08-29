@@ -83,6 +83,7 @@ abstract class UINode {
     var onFocus: ((UIEvent, LuaUINode) -> Unit)? = null
     var onUnfocus: ((UIEvent, LuaUINode) -> Unit)? = null
 
+    var hovered: Boolean = false
     var focused: Boolean = false
     var activated: Boolean = false
     var selected: Boolean = false
@@ -173,7 +174,7 @@ abstract class UINode {
 
         drawContent(graphics, ctx)
 
-        drawDebugOutline(graphics)
+//        drawDebugOutline(graphics)
 
         children.forEach { it.drawSelf(graphics, ctx, computedOpacity) }
     }

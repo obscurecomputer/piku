@@ -22,6 +22,7 @@ class UIMenu(
     var blur = false
 
     private var focusedNode: UINode? = null
+    private var hoveredPath: List<UINode> = emptyList()
 
     override fun isPauseScreen(): Boolean = true
     override fun shouldCloseOnEsc() = escapeClose
@@ -51,22 +52,32 @@ class UIMenu(
         return result
     }
 
-    private fun hitTest(node: UINode, x: Float, y: Float): UINode? {
+    private fun hitTestPath(node: UINode, x: Float, y: Float, path: MutableList<UINode>): Boolean {
         for (child in node.children.asReversed()) {
-            hitTest(child, x, y)?.let {
-                return it
+            if (hitTestPath(child, x, y, path)) {
+                path.add(node)
+                return true
             }
         }
-        if (node.visible && node.containsPoint(x, y))
-            return node
-        return null
+        if (node.visible && node.containsPoint(x, y)) {
+            path.add(node)
+            return true
+        }
+        return false
+    }
+
+    private fun hitTestRootsPath(x: Float, y: Float): List<UINode> {
+        for (root in roots.asReversed()) {
+            val path = mutableListOf<UINode>()
+            if (hitTestPath(root, x, y, path)) {
+                return path
+            }
+        }
+        return emptyList()
     }
 
     private fun hitTestRoots(x: Float, y: Float): UINode? {
-        for (root in roots.asReversed()) {
-            hitTest(root, x, y)?.let { return it }
-        }
-        return null
+        return hitTestRootsPath(x, y).firstOrNull()
     }
 
     override fun extractRenderState(graphics: GuiGraphicsExtractor, mouseX: Int, mouseY: Int, a: Float) {
@@ -92,8 +103,34 @@ class UIMenu(
         }
     }
 
-    override fun mouseMoved(x: Double, y: Double) {
-        super.mouseMoved(x, y)
+    override fun mouseMoved(xD: Double, yD: Double) {
+        val x = xD.toFloat()
+        val y = yD.toFloat()
+        val newPath = hitTestRootsPath(x, y)
+
+        if (newPath == hoveredPath) return
+
+        // unhover nodes that were hovered but aren't in the new path
+        for (node in hoveredPath) {
+            if (node !in newPath) {
+                node.hovered = false
+                node.onBaseUnhover(UIEvent.HoverDropped, LuaUINode(node))
+            }
+        }
+
+        // hover nodes just added to the path
+        for (node in newPath) {
+            if (node !in hoveredPath) {
+                val uiEvent = UIEvent.Hover(
+                    screenX = x, screenY = y,
+                    localX = x - node.layoutX, localY = y - node.layoutY,
+                )
+                node.hovered = true
+                node.onBaseHover(uiEvent, LuaUINode(node))
+            }
+        }
+
+        hoveredPath = newPath
     }
 
     override fun mouseClicked(event: MouseButtonEvent, doubleClick: Boolean): Boolean {

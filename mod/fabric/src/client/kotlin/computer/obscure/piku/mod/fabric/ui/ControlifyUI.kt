@@ -5,7 +5,7 @@ import computer.obscure.piku.core.service.PikuService
 import computer.obscure.piku.mod.fabric.controlify.ActionEvent
 import computer.obscure.piku.mod.fabric.controlify.BindingEvent
 import computer.obscure.piku.mod.fabric.controlify.ControlifyCompat
-import computer.obscure.piku.mod.fabric.scripting.api.ui.LuaUINode
+import computer.obscure.piku.mod.fabric.scripting.old.ui.LuaUINode
 import computer.obscure.piku.mod.fabric.ui.classes.ControllerActivateMode
 import computer.obscure.piku.mod.fabric.ui.classes.ControllerEdgeMode
 import computer.obscure.piku.mod.fabric.ui.classes.ControllerScrollAxis

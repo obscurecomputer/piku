@@ -26,6 +26,7 @@ dependencies {
     implementation("org.joml:joml:1.10.8")
 //    implementation("org.luaj:luaj-jse:${project.property("luaj_version")}")
     implementation("computer.obscure:twine:${project.property("twine_version")}")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.11.0")
     compileOnly("net.kyori:adventure-text-minimessage:${project.property("adventure_version")}")
     compileOnly("net.kyori:adventure-api:${project.property("adventure_version")}")
     compileOnly("net.kyori:adventure-text-serializer-plain:${project.property("adventure_version")}")

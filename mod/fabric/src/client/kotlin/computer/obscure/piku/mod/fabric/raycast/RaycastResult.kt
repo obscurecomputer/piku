@@ -1,6 +1,6 @@
 package computer.obscure.piku.mod.fabric.raycast
 
-import computer.obscure.piku.mod.fabric.scripting.api.raycast.LuaRaycastResult
+import computer.obscure.piku.mod.fabric.scripting.old.raycast.LuaRaycastResult
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
 import net.minecraft.world.entity.Entity

@@ -26,9 +26,11 @@ class ReceiveScriptPacket(
                 }
                 if (name == "END_OF_SCRIPT_LOADING") {
                     PikuClient.debug("Server sent EOSL")
+
                     engineRef!!.activeScripts.forEach { script ->
                         engineRef.runScript(script.key, script.value)
                     }
+
                     return@execute
                 }
                 PikuClient.debug("Loading script ${name}: ${fileContents.length} bytes")

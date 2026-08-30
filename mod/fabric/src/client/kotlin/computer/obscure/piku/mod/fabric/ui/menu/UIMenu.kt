@@ -1,6 +1,6 @@
 package computer.obscure.piku.mod.fabric.ui.menu
 
-import computer.obscure.piku.mod.fabric.scripting.api.ui.LuaUINode
+import computer.obscure.piku.mod.fabric.scripting.old.ui.LuaUINode
 import computer.obscure.piku.mod.fabric.ui.UIRenderer
 import computer.obscure.piku.mod.fabric.ui.classes.UIEvent
 import computer.obscure.piku.mod.fabric.ui.classes.context.LayoutContext

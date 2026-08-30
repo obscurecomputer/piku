@@ -102,7 +102,7 @@ interface ServerAPI<T> {
                     file.isDirectory && recurse ->
                         walk(file, "$prefix${file.name}/")
 
-                    file.isFile && file.extension in setOf("lua", "luau") ->
+                    file.isFile && file.name.endsWith("piku.kts") ->
                         consumer(
                             "$prefix${file.name}",
                             file.readText(StandardCharsets.UTF_8)

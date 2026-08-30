@@ -1,7 +1,7 @@
 package computer.obscure.piku.mod.fabric.mixin;
 
 import computer.obscure.piku.mod.fabric.PikuClient;
-import computer.obscure.piku.mod.fabric.scripting.api.screen.LuaScreenButtons;
+import computer.obscure.piku.mod.fabric.scripting.old.screen.LuaScreenButtons;
 import computer.obscure.piku.mod.fabric.utils.ScreenKt;
 import me.znotchill.kiwi.generated.Vec2;
 import net.minecraft.client.Minecraft;

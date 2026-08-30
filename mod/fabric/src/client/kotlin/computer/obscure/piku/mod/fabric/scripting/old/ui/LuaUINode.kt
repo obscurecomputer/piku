@@ -1,0 +1,326 @@
+package computer.obscure.piku.mod.fabric.scripting.old.ui
+
+import computer.obscure.piku.core.classes.Spacing
+import computer.obscure.piku.core.scripting.api.LuaSpacingInstance
+import me.znotchill.kiwi.generated.Vec2
+import computer.obscure.piku.core.scripting.engine.EngineError
+import computer.obscure.piku.core.scripting.engine.EngineErrorCode
+import computer.obscure.piku.mod.fabric.animation.AnimationManager
+import computer.obscure.piku.mod.fabric.scripting.old.ui.components.LuaUIBox
+import computer.obscure.piku.mod.fabric.scripting.old.ui.components.LuaUIColumn
+import computer.obscure.piku.mod.fabric.scripting.old.ui.components.LuaUIDivider
+import computer.obscure.piku.mod.fabric.scripting.old.ui.components.LuaUIGradient
+import computer.obscure.piku.mod.fabric.scripting.old.ui.components.LuaUILine
+import computer.obscure.piku.mod.fabric.scripting.old.ui.components.LuaUIProgressBar
+import computer.obscure.piku.mod.fabric.scripting.old.ui.components.LuaUIRow
+import computer.obscure.piku.mod.fabric.scripting.old.ui.components.LuaUIScrollbar
+import computer.obscure.piku.mod.fabric.scripting.old.ui.components.LuaUISprite
+import computer.obscure.piku.mod.fabric.scripting.old.ui.components.LuaUIText
+import computer.obscure.piku.mod.fabric.scripting.old.ui.components.LuaUITextInput
+import computer.obscure.piku.mod.fabric.ui.classes.Anchor
+import computer.obscure.piku.mod.fabric.ui.classes.Dimension
+import computer.obscure.piku.mod.fabric.ui.UIRenderer
+import computer.obscure.piku.mod.fabric.ui.classes.HitShape
+import computer.obscure.piku.mod.fabric.ui.classes.OffsetDimension
+import computer.obscure.piku.mod.fabric.ui.components.BoxNode
+import computer.obscure.piku.mod.fabric.ui.components.ColumnNode
+import computer.obscure.piku.mod.fabric.ui.components.DividerNode
+import computer.obscure.piku.mod.fabric.ui.components.GradientNode
+import computer.obscure.piku.mod.fabric.ui.components.LineNode
+import computer.obscure.piku.mod.fabric.ui.components.ProgressBarNode
+import computer.obscure.piku.mod.fabric.ui.components.RowNode
+import computer.obscure.piku.mod.fabric.ui.components.ScrollbarNode
+import computer.obscure.piku.mod.fabric.ui.components.SpriteNode
+import computer.obscure.piku.mod.fabric.ui.components.TextInputNode
+import computer.obscure.piku.mod.fabric.ui.components.TextNode
+import computer.obscure.piku.mod.fabric.ui.components.UINode
+import computer.obscure.piku.mod.fabric.utils.parseDimension
+import computer.obscure.twine.LuaCallback
+import computer.obscure.twine.TwineNative
+import computer.obscure.twine.annotations.TwineFunction
+import computer.obscure.twine.annotations.TwineProperty
+import me.znotchill.kiwi.generated.Color
+
+open class LuaUINode(open val node: UINode) : TwineNative() {
+
+    @TwineFunction
+    fun visible(): Boolean {
+        return node.visible
+    }
+
+    @TwineFunction
+    fun visible(value: Boolean): LuaUINode {
+        node.visible = value
+        return this
+    }
+
+    @TwineProperty
+    val screenX: Float
+        get() = node.layoutX
+
+    @TwineProperty
+    val screenY: Float
+        get() = node.layoutY
+
+    @TwineProperty
+    val measuredWidth: Float
+        get() = node.measuredWidth
+
+    @TwineProperty
+    val measuredHeight: Float
+        get() = node.measuredHeight
+
+    @TwineFunction
+    fun centerX(): Float = node.layoutX + (node.measuredWidth / 2f)
+
+    @TwineFunction
+    fun centerY(): Float = node.layoutY + (node.measuredHeight / 2f)
+
+    @TwineFunction
+    fun opacity(): Float {
+        return node.opacity
+    }
+
+    @TwineFunction
+    fun opacity(value: Float): LuaUINode {
+        node.opacity = value
+        return this
+    }
+
+    @TwineFunction
+    fun background(value: Color): LuaUINode {
+        node.background = value
+        return this
+    }
+
+    @TwineFunction
+    fun color(value: Color): LuaUINode {
+        node.color = value
+        return this
+    }
+
+    @TwineFunction
+    fun width(value: String): LuaUINode {
+        node.width = parseDimension(value)
+        return this
+    }
+
+    @TwineFunction
+    fun width(value: Float): LuaUINode {
+        node.width = Dimension.Fixed(value)
+        return this
+    }
+
+    @TwineFunction
+    fun height(value: String): LuaUINode {
+        node.height = parseDimension(value)
+        return this
+    }
+
+    @TwineFunction
+    fun height(value: Float): LuaUINode {
+        node.height = Dimension.Fixed(value)
+        return this
+    }
+
+    @TwineFunction
+    fun size(value: Vec2): LuaUINode {
+        node.width = Dimension.Fixed(value.x.toFloat())
+        node.height = Dimension.Fixed(value.y.toFloat())
+        return this
+    }
+
+    @TwineFunction
+    fun padding(value: LuaSpacingInstance): LuaUINode {
+        node.padding = value.toSpacing()
+        return this
+    }
+
+    @TwineFunction
+    fun margin(value: Double): LuaUINode {
+        node.margin = Spacing(value)
+        return this
+    }
+
+    @TwineFunction
+    fun anchor(value: String): LuaUINode {
+        node.anchor = Anchor.entries.find { it.name.equals(value, ignoreCase = true) }
+            ?: throw EngineError(EngineErrorCode.INVALID_ANCHOR, "Unknown anchor \"$value\"")
+        return this
+    }
+
+    private fun parseOffsetDimension(value: String): OffsetDimension = when {
+        value.endsWith("%") -> OffsetDimension.Fraction(value.dropLast(1).toFloat() / 100f)
+        value.endsWith("px") -> OffsetDimension.Fixed(value.dropLast(2).toFloat())
+        else -> OffsetDimension.Fixed(value.toFloat())
+    }
+
+    @TwineFunction
+    fun offset(x: String, y: String): LuaUINode {
+        node.offsetX = parseOffsetDimension(x)
+        node.offsetY = parseOffsetDimension(y)
+        return this
+    }
+
+    @TwineFunction
+    fun offset(value: Vec2): LuaUINode {
+        node.offsetX = OffsetDimension.Fixed(value.x.toFloat())
+        node.offsetY = OffsetDimension.Fixed(value.y.toFloat())
+        return this
+    }
+
+    @TwineFunction
+    fun children(): List<LuaUINode> = node.children.mapNotNull { wrap(it) }
+
+    @TwineFunction
+    fun removeChild(child: LuaUINode) {
+        node.children.remove(child.node)
+    }
+
+    @TwineFunction
+    fun contains(x: Float, y: Float): Boolean {
+        return x >= node.layoutX && x <= node.layoutX + node.measuredWidth &&
+               y >= node.layoutY && y <= node.layoutY + node.measuredHeight
+    }
+
+    @TwineFunction
+    fun name(): String? = node.name
+
+    @TwineFunction
+    fun name(value: String): LuaUINode {
+        val old = node.name
+        node.name = value
+        UIRenderer.reindexName(this.node, old, value)
+        return this
+    }
+
+    @TwineProperty
+    val id: String
+        get() = node.id
+
+    @TwineFunction
+    fun remove() {
+        UIRenderer.roots.remove(node)
+        // also search and remove from parent if nested
+        UIRenderer.roots.forEach { removeFromTree(it, node) }
+    }
+
+    private fun removeFromTree(parent: UINode, target: UINode) {
+        parent.children.remove(target)
+        parent.children.forEach { removeFromTree(it, target) }
+    }
+
+    @TwineFunction
+    fun exists(name: String): Boolean {
+        return node.children.any { searchTree(it, name) != null }
+    }
+
+    @TwineFunction("get")
+    fun getByName(name: String): LuaUINode? {
+        return searchTree(node, name)?.let { wrap(it) }
+    }
+
+    private fun searchTree(node: UINode, name: String): UINode? {
+        if (node.name == name) return node
+        return node.children.firstNotNullOfOrNull { searchTree(it, name) }
+    }
+
+    @TwineFunction
+    fun animate(): LuaUIAnimation {
+        return LuaUIAnimation(this.node)
+    }
+
+    @TwineProperty
+    val isAnimating: Boolean
+        get() = AnimationManager.isAnimating(node.id)
+
+    @TwineFunction
+    fun cancelAnimations() {
+        AnimationManager.cancelFor(node.id)
+    }
+
+    @TwineFunction
+    fun onHover(value: LuaCallback) = apply {
+        node.onHover = { event, uiNode ->
+            try {
+                value.invoke(event, uiNode)
+            } catch (_: Exception) {}
+        }
+    }
+
+    @TwineFunction
+    fun onUnhover(value: LuaCallback) = apply {
+        node.onUnhover = { event, uiNode ->
+            try {
+                value.invoke(event, uiNode)
+            } catch (_: Exception) {}
+        }
+    }
+
+    @TwineFunction
+    fun onPress(value: LuaCallback) = apply {
+        node.onPress = { event, uiNode ->
+            try {
+                value.invoke(event, uiNode)
+            } catch (_: Exception) {}
+        }
+    }
+
+    @TwineFunction
+    fun onRelease(value: LuaCallback) = apply {
+        node.onRelease = { event, uiNode ->
+            try {
+                value.invoke(event, uiNode)
+            } catch (_: Exception) {}
+        }
+    }
+
+    @TwineFunction
+    fun onFocus(value: LuaCallback) = apply {
+        node.onFocus = { event, uiNode ->
+            try {
+                value.invoke(event, uiNode)
+            } catch (_: Exception) {}
+        }
+    }
+
+    @TwineFunction
+    fun onUnfocus(value: LuaCallback) = apply {
+        node.onUnfocus = { event, uiNode ->
+            try {
+                value.invoke(event, uiNode)
+            } catch (_: Exception) {}
+        }
+    }
+
+    @TwineFunction
+    fun selectable(value: Boolean) = apply {
+        node.selectable = value
+    }
+
+    @TwineFunction
+    fun hitShape(value: String) = apply {
+        node.hitShape = when (value) {
+            "r", "rect", "rectangle" -> HitShape.Rectangle
+            "e", "ellipse" -> HitShape.Ellipse
+            else -> HitShape.Rectangle
+        }
+    }
+
+    companion object {
+        fun wrap(node: UINode): LuaUINode? = when (node) {
+            is TextInputNode -> LuaUITextInput(node)
+            is TextNode -> LuaUIText(node)
+            is ColumnNode -> LuaUIColumn(node)
+            is RowNode -> LuaUIRow(node)
+            is BoxNode -> LuaUIBox(node)
+            is ProgressBarNode -> LuaUIProgressBar(node)
+            is SpriteNode -> LuaUISprite(node)
+            is GradientNode -> LuaUIGradient(node)
+            is DividerNode -> LuaUIDivider(node)
+            is ScrollbarNode -> LuaUIScrollbar(node)
+            is LineNode -> LuaUILine(node)
+            else -> null
+        }
+    }
+}

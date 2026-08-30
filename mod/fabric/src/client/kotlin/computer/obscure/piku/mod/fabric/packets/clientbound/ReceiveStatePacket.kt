@@ -4,7 +4,7 @@ import computer.obscure.piku.core.scripting.server.SharedStateManager
 import computer.obscure.piku.core.utils.jsonStringToKotlin
 import computer.obscure.piku.mod.fabric.PikuClient
 import computer.obscure.piku.mod.fabric.packets.CustomPacket
-import computer.obscure.piku.mod.fabric.scripting.api.LuaSharedState
+import computer.obscure.piku.mod.fabric.scripting.old.LuaSharedState
 import net.minecraft.client.Minecraft
 import net.minecraft.network.FriendlyByteBuf
 import net.minecraft.network.codec.ByteBufCodecs

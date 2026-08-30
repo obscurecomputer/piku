@@ -1,0 +1,14 @@
+<idea-plugin>
+    <id>computer.obscure.piku.plugin</id>
+    <name>Piku</name>
+    <vendor>what</vendor>
+
+    <depends>com.intellij.modules.platform</depends>
+    <depends>org.jetbrains.kotlin</depends>
+
+    <extensions defaultExtensionNs="org.jetbrains.kotlin">
+        <scriptDefinitionsProvider
+                implementation="computer.obscure.piku.plugin.PikuScriptDefinitionsProvider"/>
+    </extensions>
+
+</idea-plugin>

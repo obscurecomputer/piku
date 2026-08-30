@@ -3,15 +3,17 @@ package computer.obscure.piku.core.scripting.engine
 import computer.obscure.piku.core.scripting.api.*
 import computer.obscure.piku.core.service.PikuService
 import computer.obscure.twine.TwineEngine
-import computer.obscure.twine.TwineEnvironment
 import computer.obscure.twine.TwineNative
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
 
 abstract class LuaEngine : PikuService {
     private var _engine: TwineEngine? = null
+    val scriptScope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
 
     val twine: TwineEngine
         get() = _engine ?: TwineEngine()
-
 
     private val registeredNatives: MutableMap<String, TwineNative> = mutableMapOf()
     open val activeScripts: MutableMap<String, String> = mutableMapOf()
@@ -67,19 +69,5 @@ abstract class LuaEngine : PikuService {
     fun registerBase(native: TwineNative) {
         registeredNatives[native.resolvedName] = native
         twine.setBase(native)
-    }
-
-    fun runScript(name: String, content: String) {
-        val env = TwineEnvironment()
-        env.register(LuaLogger(name))
-        env.register("SCRIPT_NAME", name)
-
-        synchronized(engineLock) {
-            if (_engine == null || _engine!!.closed) return
-            val result = twine.runSafe(name, content, env)
-            result.onFailure {
-                throw it
-            }
-        }
     }
 }

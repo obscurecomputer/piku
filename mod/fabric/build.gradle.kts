@@ -125,6 +125,7 @@ dependencies {
     includeDependency("net.kyori:examination-string:1.3.0")
 
     includeDependency("me.znotchill:kiwi:${project.property("kiwi_version")}")
+    includeDependency("computer.obscure:endergine:${project.property("endergine_version")}")
 
     val luauVersion = "1.0.1"
     val luauNativeVersion = "1.0.1-patch2"
@@ -144,17 +145,6 @@ dependencies {
 }
 
 tasks.jar {
-//    val nativeFiles = project.provider {
-//        configurations.runtimeClasspath.get()
-//            .filter { it.name.contains("luau-natives") }
-//            .map { zipTree(it) }
-//    }
-//
-//    from(nativeFiles) {
-//        include("net/hollowcube/luau/**")
-//        duplicatesStrategy = DuplicatesStrategy.EXCLUDE
-//    }
-
     from("LICENSE") {
         rename { "${it}_${project.base.archivesName}" }
     }
@@ -195,6 +185,15 @@ tasks.withType<KotlinCompile>().configureEach {
     compilerOptions.jvmTarget.set(JvmTarget.fromTarget(targetJavaVersion.toString()))
 }
 
+tasks.register<Jar>("scriptApiJar") {
+    archiveBaseName.set("script-api")
+
+    from(sourceSets["client"].output) {
+        include("computer/obscure/piku/**")
+        include("META-INF/kotlin/script/templates/**")
+    }
+}
+
 // configure the maven publication
 publishing {
     publications {
@@ -205,6 +204,14 @@ publishing {
             group
             artifactId = "fabric"
             version
+        }
+
+        create<MavenPublication>("pikuScriptApi") {
+            groupId = "computer.obscure.piku"
+            artifactId = "script-api"
+            version = project.version.toString()
+
+            artifact(tasks.named<Jar>("scriptApiJar"))
         }
     }
 

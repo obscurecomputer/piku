@@ -17,6 +17,7 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry
 import net.kyori.adventure.text.minimessage.MiniMessage
+import net.minecraft.client.Minecraft
 import net.minecraft.network.FriendlyByteBuf
 import net.minecraft.network.codec.StreamCodec
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload
@@ -26,6 +27,7 @@ import kotlin.system.exitProcess
 
 class PikuClient : ClientModInitializer {
     companion object {
+        private lateinit var minecraft: Minecraft
         val LOGGER: Logger = LogManager.getLogger()
 
         val miniMessage = MiniMessage.miniMessage()
@@ -50,9 +52,14 @@ class PikuClient : ClientModInitializer {
         }
 
         fun formatLog(message: Any) = "[Piku] $message"
+
+        fun execute(block: () -> Unit) {
+            minecraft.execute(block)
+        }
     }
 
     override fun onInitializeClient() {
+        minecraft = Minecraft.getInstance()
         try {
             info("Instantiating Lua Engine...")
             engine = ClientLuaEngine()

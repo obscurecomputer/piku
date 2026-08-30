@@ -7,7 +7,7 @@ import computer.obscure.piku.core.classes.leftF
 import computer.obscure.piku.core.classes.rightF
 import computer.obscure.piku.core.classes.topF
 import computer.obscure.piku.core.classes.vertical
-import computer.obscure.piku.mod.fabric.scripting.api.ui.LuaUINode
+import computer.obscure.piku.mod.fabric.scripting.old.ui.LuaUINode
 import computer.obscure.piku.mod.fabric.ui.classes.Anchor
 import computer.obscure.piku.mod.fabric.ui.classes.Dimension
 import computer.obscure.piku.mod.fabric.ui.classes.HitShape

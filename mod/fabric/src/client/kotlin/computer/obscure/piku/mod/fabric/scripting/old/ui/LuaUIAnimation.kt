@@ -1,0 +1,265 @@
+package computer.obscure.piku.mod.fabric.scripting.old.ui
+
+import computer.obscure.piku.mod.fabric.animation.Animation
+import computer.obscure.piku.core.classes.Spacing
+import computer.obscure.piku.core.scripting.api.LuaSpacingInstance
+import me.znotchill.kiwi.generated.Vec2
+import computer.obscure.piku.core.scripting.engine.EngineError
+import computer.obscure.piku.core.scripting.engine.EngineErrorCode
+import computer.obscure.piku.mod.fabric.scripting.old.animation.LuaAnimatable
+import computer.obscure.piku.mod.fabric.ui.classes.Dimension
+import computer.obscure.piku.mod.fabric.ui.classes.OffsetDimension
+import computer.obscure.piku.mod.fabric.ui.classes.ScaleDimension2
+import computer.obscure.piku.mod.fabric.ui.components.FlowNode
+import computer.obscure.piku.mod.fabric.ui.components.LineNode
+import computer.obscure.piku.mod.fabric.ui.components.ProgressBarNode
+import computer.obscure.piku.mod.fabric.ui.components.TextNode
+import computer.obscure.piku.mod.fabric.ui.components.UINode
+import computer.obscure.piku.mod.fabric.utils.parseScaleRegex
+import computer.obscure.twine.LuaCallback
+import computer.obscure.twine.annotations.TwineFunction
+import me.znotchill.kiwi.generated.Color
+
+class LuaUIAnimation(val node: UINode) : LuaAnimatable() {
+    private var onStartCallback: LuaCallback? = null
+    private var onFinishCallback: LuaCallback? = null
+
+    @TwineFunction
+    fun onStart(callback: LuaCallback): LuaUIAnimation {
+        onStartCallback = callback
+        return this
+    }
+
+    @TwineFunction
+    fun onFinish(callback: LuaCallback): LuaUIAnimation {
+        onFinishCallback = callback
+        return this
+    }
+
+    @TwineFunction
+    fun offset(to: Vec2, duration: Double, easing: String): LuaUIAnimation {
+        queue.add(Animation(
+            targetId = node.id,
+            durationSeconds = duration,
+            easing = easing,
+            getter = {
+                Vec2(
+                    (node.offsetX as? OffsetDimension.Fixed)?.px ?: 0f,
+                    (node.offsetY as? OffsetDimension.Fixed)?.px ?: 0f
+                )
+            },
+            setter = { offset ->
+                node.offsetX = OffsetDimension.Fixed(offset.x.toFloat())
+                node.offsetY = OffsetDimension.Fixed(offset.y.toFloat())
+            },
+            to = to,
+            onStart = { onStartCallback?.call<Unit>() },
+            onFinish = { onFinishCallback?.call<Unit>() }
+        ))
+        return this
+    }
+
+    @TwineFunction
+    fun opacity(to: Float, duration: Double, easing: String): LuaUIAnimation {
+        queue.add(Animation(
+            targetId = node.id,
+            durationSeconds = duration,
+            easing = easing,
+            getter = { node.opacity },
+            setter = { node.opacity = it },
+            to = to,
+            onStart = { onStartCallback?.call<Unit>() },
+            onFinish = { onFinishCallback?.call<Unit>() }
+        ))
+        return this
+    }
+
+    @TwineFunction
+    fun width(to: Float, duration: Double, easing: String): LuaUIAnimation {
+        queue.add(Animation(
+            targetId = node.id,
+            durationSeconds = duration,
+            easing = easing,
+            getter = { (node.width as? Dimension.Fixed)?.px ?: node.measuredWidth },
+            setter = { node.width = Dimension.Fixed(it) },
+            to = to,
+            onStart = { onStartCallback?.call<Unit>() },
+            onFinish = { onFinishCallback?.call<Unit>() }
+        ))
+        return this
+    }
+
+    @TwineFunction
+    fun height(to: Float, duration: Double, easing: String): LuaUIAnimation {
+        queue.add(Animation(
+            targetId = node.id,
+            durationSeconds = duration,
+            easing = easing,
+            getter = { (node.height as? Dimension.Fixed)?.px ?: node.measuredHeight },
+            setter = { node.height = Dimension.Fixed(it) },
+            to = to,
+            onStart = { onStartCallback?.call<Unit>() },
+            onFinish = { onFinishCallback?.call<Unit>() }
+        ))
+        return this
+    }
+
+    @TwineFunction
+    fun size(to: Vec2, duration: Double, easing: String): LuaUIAnimation {
+        queue.add(Animation(
+            targetId = node.id,
+            durationSeconds = duration,
+            easing = easing,
+            getter = {
+                Vec2(
+                    (node.width as? Dimension.Fixed)?.px ?: node.measuredWidth,
+                    (node.height as? Dimension.Fixed)?.px ?: node.measuredHeight
+                )
+            },
+            setter = { size ->
+                node.width = Dimension.Fixed(size.x.toFloat())
+                node.height = Dimension.Fixed(size.y.toFloat())
+            },
+            to = to,
+            onStart = { onStartCallback?.call<Unit>() },
+            onFinish = { onFinishCallback?.call<Unit>() }
+        ))
+
+        return this
+    }
+
+    @TwineFunction
+    fun scale(to: String, duration: Double, easing: String): LuaUIAnimation {
+        val target = parseScaleRegex(to)
+        if (node !is TextNode)
+            throw EngineError(EngineErrorCode.INVALID_COMPONENT,
+                "scale() is only supported on Text nodes")
+        queue.add(Animation(
+            targetId = node.id,
+            durationSeconds = duration,
+            easing = easing,
+            getter = {
+                ScaleDimension2(
+                    x = node.scaleX,
+                    y = node.scaleY
+                )
+            },
+            setter = { scale ->
+                node.scaleX = scale.x
+                node.scaleY = scale.y
+            },
+            to = target,
+            onStart = { onStartCallback?.call<Unit>() },
+            onFinish = { onFinishCallback?.call<Unit>() }
+        ))
+
+        return this
+    }
+
+    @TwineFunction
+    fun progress(to: Float, duration: Double, easing: String): LuaUIAnimation {
+        if (node !is ProgressBarNode)
+            throw EngineError(EngineErrorCode.INVALID_COMPONENT,
+                "progress() is only supported on ProgressBar nodes")
+        queue.add(Animation(
+            targetId = node.id,
+            durationSeconds = duration,
+            easing = easing,
+            getter = { node.value },
+            setter = { node.value = it },
+            to = to,
+            onStart = { onStartCallback?.call<Unit>() },
+            onFinish = { onFinishCallback?.call<Unit>() }
+        ))
+        return this
+    }
+
+    @TwineFunction
+    fun scroll(to: Float, duration: Double, easing: String): LuaUIAnimation {
+        if (node !is FlowNode)
+            throw EngineError(EngineErrorCode.INVALID_COMPONENT,
+                "scroll() is only supported on Row/Column nodes")
+        queue.add(Animation(
+            targetId = node.id,
+            durationSeconds = duration,
+            easing = easing,
+            getter = { node.scrollOffset },
+            setter = { node.scrollOffset = it },
+            to = -to, // negative because scroll is inverted internally
+            onStart = { onStartCallback?.call<Unit>() },
+            onFinish = { onFinishCallback?.call<Unit>() }
+        ))
+        return this
+    }
+
+    @TwineFunction
+    fun to(to: Vec2, duration: Double, easing: String): LuaUIAnimation {
+        if (node !is LineNode)
+            throw EngineError(EngineErrorCode.INVALID_COMPONENT,
+                "to() is only supported on Line nodes")
+        queue.add(Animation(
+            targetId = node.id,
+            durationSeconds = duration,
+            easing = easing,
+            getter = { node.to },
+            setter = { node.to = it },
+            to = to,
+            onStart = { onStartCallback?.call<Unit>() },
+            onFinish = { onFinishCallback?.call<Unit>() }
+        ))
+        return this
+    }
+
+    @TwineFunction
+    fun background(to: Color, duration: Double, easing: String): LuaUIAnimation {
+        queue.add(Animation(
+            targetId = node.id,
+            durationSeconds = duration,
+            easing = easing,
+            getter = { node.background },
+            setter = { node.background = it },
+            to = to,
+            onStart = { onStartCallback?.call<Unit>() },
+            onFinish = { onFinishCallback?.call<Unit>() }
+        ))
+
+        return this
+    }
+
+    @TwineFunction
+    fun color(to: Color, duration: Double, easing: String): LuaUIAnimation {
+        queue.add(Animation(
+            targetId = node.id,
+            durationSeconds = duration,
+            easing = easing,
+            getter = { node.color },
+            setter = { node.color = it },
+            to = to,
+            onStart = { onStartCallback?.call<Unit>() },
+            onFinish = { onFinishCallback?.call<Unit>() }
+        ))
+
+        return this
+    }
+
+    @TwineFunction
+    fun padding(to: LuaSpacingInstance, duration: Double, easing: String): LuaUIAnimation {
+        queue.add(Animation(
+            targetId = node.id,
+            durationSeconds = duration,
+            easing = easing,
+            getter = { node.padding },
+            setter = { node.padding = it },
+            to = Spacing(
+                left = to.left,
+                top = to.top,
+                right = to.right,
+                bottom = to.bottom
+            ),
+            onStart = { onStartCallback?.call<Unit>() },
+            onFinish = { onFinishCallback?.call<Unit>() }
+        ))
+
+        return this
+    }
+}

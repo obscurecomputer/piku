@@ -1,7 +1,7 @@
 package computer.obscure.piku.mod.fabric.scripting
 
 import computer.obscure.piku.core.scripting.server.SharedStateManager
-import computer.obscure.piku.mod.fabric.scripting.api.LuaSharedState
+import computer.obscure.piku.mod.fabric.scripting.old.LuaSharedState
 import computer.obscure.twine.TwineNative
 import computer.obscure.twine.annotations.TwineFunction
 

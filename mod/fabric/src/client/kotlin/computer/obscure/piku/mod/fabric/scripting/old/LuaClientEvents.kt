@@ -1,0 +1,68 @@
+package computer.obscure.piku.mod.fabric.scripting.old
+
+import computer.obscure.piku.core.scripting.base.LuaEvent
+import computer.obscure.piku.core.states.SharedState
+import computer.obscure.piku.core.utils.toJson
+import computer.obscure.piku.mod.fabric.packets.serverbound.SendDataPacket
+import computer.obscure.piku.mod.fabric.packets.serverbound.SendStatePacket
+import computer.obscure.piku.mod.fabric.scripting.ClientEventBus
+import computer.obscure.piku.mod.fabric.scripting.events.BrandEvent
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking
+import java.util.UUID
+
+class LuaClientEvents : ClientEventBus {
+    val customListeners = mutableMapOf<String, MutableList<(Map<String, Any?>) -> Unit>>()
+    val baseListeners = mutableMapOf<String, LuaEvent>()
+    val stateCallbacks: MutableMap<UUID, (Map<String, Any?>) -> Unit> = mutableMapOf()
+
+    fun registerBaseListeners() {
+        register(BrandEvent)
+    }
+
+    private fun register(luaEvent: LuaEvent) {
+        baseListeners[luaEvent.id] = luaEvent
+    }
+
+    fun clear() {
+        customListeners.clear()
+        baseListeners.clear()
+        stateCallbacks.clear()
+    }
+
+    override fun send(eventId: String, data: Map<String, Any?>) {
+        val payload = SendDataPacket(
+            id = eventId,
+            json = data.toJson()
+        )
+        ClientPlayNetworking.send(payload)
+    }
+
+    override fun listen(eventId: String, callback: (Map<String, Any?>) -> Unit) {
+        customListeners.computeIfAbsent(eventId) { mutableListOf() }.add(callback)
+    }
+
+    override fun fire(eventId: String, data: Map<String, Any?>) {
+        customListeners[eventId]?.forEach { callback ->
+            try {
+                callback.invoke(data)
+            } catch (e: Exception) {
+                println("[Lua error] in event $eventId: ${e.message}")
+            }
+        }
+        baseListeners[eventId]?.let { event ->
+            try {
+                event.onClientReceive(data)
+            } catch (e: Exception) {
+                println("[Lua error] in base event $eventId: ${e.message}")
+            }
+        }
+    }
+
+    fun sendState(state: SharedState) {
+        val payload = SendStatePacket(
+            internalId = state.internalId.toString(),
+            value = state.value.toJson()
+        )
+        ClientPlayNetworking.send(payload)
+    }
+}

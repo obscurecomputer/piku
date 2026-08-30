@@ -1,7 +1,7 @@
 package computer.obscure.piku.mod.fabric.ui.components
 
 import computer.obscure.piku.mod.fabric.PikuClient
-import computer.obscure.piku.mod.fabric.scripting.api.ui.LuaUINode
+import computer.obscure.piku.mod.fabric.scripting.old.ui.LuaUINode
 import computer.obscure.piku.mod.fabric.ui.classes.UIEvent
 import computer.obscure.piku.mod.fabric.ui.classes.context.MeasureContext
 import computer.obscure.piku.mod.fabric.ui.menu.PikuEditBox

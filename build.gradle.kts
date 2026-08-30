@@ -3,6 +3,8 @@ plugins {
     kotlin("plugin.serialization") version "2.4.10" apply false
 }
 
+val jvmVersion = "2.4.10"
+
 subprojects {
     apply(plugin = "org.jetbrains.kotlin.jvm")
 
@@ -13,12 +15,18 @@ subprojects {
             content {
                 includeGroup("me.znotchill")
                 includeGroup("me.znotchill.luau")
+                includeGroup("me.znotchill.endergine")
             }
         }
     }
 
     dependencies {
         add("implementation", "me.znotchill:kiwi:${project.property("kiwi_version")}")
+        add("implementation", "computer.obscure:endergine:${project.property("endergine_version")}")
+        add("implementation", "org.jetbrains.kotlin:kotlin-scripting-compiler-embeddable:${jvmVersion}")
+        add("implementation", "org.jetbrains.kotlin:kotlin-scripting-common:${jvmVersion}")
+        add("implementation", "org.jetbrains.kotlin:kotlin-scripting-jvm:${jvmVersion}")
+        add("implementation", "org.jetbrains.kotlin:kotlin-scripting-jvm-host:${jvmVersion}")
     }
 
     val targetVersion = 25

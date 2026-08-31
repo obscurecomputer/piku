@@ -27,14 +27,12 @@ class ReceiveScriptPacket(
                 if (name == "END_OF_SCRIPT_LOADING") {
                     PikuClient.debug("Server sent EOSL")
 
-                    engineRef!!.activeScripts.forEach { script ->
-                        engineRef.runScript(script.key, script.value)
-                    }
+                    engineRef!!.compileScripts()
 
                     return@execute
                 }
                 PikuClient.debug("Loading script ${name}: ${fileContents.length} bytes")
-                PikuClient.engine!!.activeScripts[name] = fileContents
+                PikuClient.engine!!.loadedScripts[name] = fileContents
             } catch (e: Exception) {
                 val realError = if (e is InvocationTargetException)
                     e.cause ?: e

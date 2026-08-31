@@ -1,23 +1,13 @@
 package computer.obscure.piku.mod.fabric.events
 
 import computer.obscure.piku.core.scheduler.Scheduler
-import computer.obscure.piku.mod.fabric.Client
-import computer.obscure.piku.mod.fabric.PikuClient
 import computer.obscure.piku.mod.fabric.sound.TrackManager
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents
 
 object ClientTick {
     fun register() {
         ClientTickEvents.END_CLIENT_TICK.register { client ->
-            if (PikuClient.engine?.twine?.closed == true) {
-                PikuClient.error("Engine closed! Reopening.")
-                ClientPlayConnection.onDisconnect()
-                if (Client.connectedToServer) {
-                    PikuClient.engine!!.init()
-                }
-            } else {
-                Scheduler.tick()
-            }
+            Scheduler.tick()
 
             if (client.level == null) return@register
 

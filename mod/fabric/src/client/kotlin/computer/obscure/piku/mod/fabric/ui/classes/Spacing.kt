@@ -1,4 +1,4 @@
-package computer.obscure.piku.core.classes
+package computer.obscure.piku.mod.fabric.ui.classes
 
 class Spacing(
     var left: Double = 0.0,
@@ -6,7 +6,7 @@ class Spacing(
     var right: Double = 0.0,
     var bottom: Double = 0.0
 ) {
-    constructor(all: Double) : this(all, all, all, all)
+    constructor(all: Number) : this(all.toDouble(), all.toDouble(), all.toDouble(), all.toDouble())
 
     companion object {
         val ZERO = Spacing(0.0)

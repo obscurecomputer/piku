@@ -1,35 +1,27 @@
-package computer.obscure.piku.mod.fabric.scripting.old
+package computer.obscure.piku.mod.fabric.scripting.engine
 
-import computer.obscure.piku.core.scripting.base.LuaEvent
-import computer.obscure.piku.core.states.SharedState
+import computer.obscure.piku.core.scripting.base.EventBus
+import computer.obscure.piku.core.scripting.base.Event
 import computer.obscure.piku.core.utils.toJson
 import computer.obscure.piku.mod.fabric.packets.serverbound.SendDataPacket
-import computer.obscure.piku.mod.fabric.packets.serverbound.SendStatePacket
-import computer.obscure.piku.mod.fabric.scripting.ClientEventBus
 import computer.obscure.piku.mod.fabric.scripting.events.BrandEvent
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking
 import java.util.UUID
 
-class LuaClientEvents : ClientEventBus {
+open class ClientEventBus : EventBus {
     val customListeners = mutableMapOf<String, MutableList<(Map<String, Any?>) -> Unit>>()
-    val baseListeners = mutableMapOf<String, LuaEvent>()
+    val baseListeners = mutableMapOf<String, Event>()
     val stateCallbacks: MutableMap<UUID, (Map<String, Any?>) -> Unit> = mutableMapOf()
 
     fun registerBaseListeners() {
         register(BrandEvent)
     }
 
-    private fun register(luaEvent: LuaEvent) {
-        baseListeners[luaEvent.id] = luaEvent
+    private fun register(event: Event) {
+        baseListeners[event.id] = event
     }
 
-    fun clear() {
-        customListeners.clear()
-        baseListeners.clear()
-        stateCallbacks.clear()
-    }
-
-    override fun send(eventId: String, data: Map<String, Any?>) {
+    fun send(eventId: String, data: Map<String, Any?>) {
         val payload = SendDataPacket(
             id = eventId,
             json = data.toJson()
@@ -37,7 +29,10 @@ class LuaClientEvents : ClientEventBus {
         ClientPlayNetworking.send(payload)
     }
 
-    override fun listen(eventId: String, callback: (Map<String, Any?>) -> Unit) {
+    override fun listen(
+        eventId: String,
+        callback: (Map<String, Any?>) -> Unit
+    ) {
         customListeners.computeIfAbsent(eventId) { mutableListOf() }.add(callback)
     }
 
@@ -56,13 +51,5 @@ class LuaClientEvents : ClientEventBus {
                 println("[Lua error] in base event $eventId: ${e.message}")
             }
         }
-    }
-
-    fun sendState(state: SharedState) {
-        val payload = SendStatePacket(
-            internalId = state.internalId.toString(),
-            value = state.value.toJson()
-        )
-        ClientPlayNetworking.send(payload)
     }
 }

@@ -1,10 +1,10 @@
 package computer.obscure.piku.mod.fabric.ui.components
 
 import computer.obscure.piku.mod.fabric.PikuClient
-import computer.obscure.piku.mod.fabric.scripting.old.ui.LuaUINode
 import computer.obscure.piku.mod.fabric.ui.classes.UIEvent
 import computer.obscure.piku.mod.fabric.ui.classes.context.MeasureContext
 import computer.obscure.piku.mod.fabric.ui.menu.PikuEditBox
+import computer.obscure.piku.mod.fabric.utils.toAdventure
 import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.gui.components.EditBox
 import net.minecraft.client.input.CharacterEvent
@@ -33,7 +33,7 @@ class TextInputNode(text: Component) : TextNode(text) {
             value = rawText ?: ""
             setResponder { newValue ->
                 rawText = newValue
-                text = Component.literal(newValue)
+                text = Component.literal(newValue).toAdventure()
                 println("HELLO new value $rawText")
             }
             placeholder?.let {
@@ -47,13 +47,13 @@ class TextInputNode(text: Component) : TextNode(text) {
         return box
     }
 
-    override fun onBaseFocus(event: UIEvent, node: LuaUINode) {
+    override fun onBaseFocus(event: UIEvent, node: UINode) {
         PikuClient.LOGGER.info("Render mode = TEXT")
         renderMode = RenderMode.TEXT
         super.onBaseFocus(event, node)
     }
 
-    override fun onBaseUnfocus(event: UIEvent, node: LuaUINode) {
+    override fun onBaseUnfocus(event: UIEvent, node: UINode) {
         if ((placeholder != null && rawText == null)) {
             PikuClient.LOGGER.info("Render mode = PLACEHOLDER")
             renderMode = RenderMode.PLACEHOLDER

@@ -5,7 +5,6 @@ import computer.obscure.piku.core.service.PikuService
 import computer.obscure.piku.mod.fabric.controlify.ActionEvent
 import computer.obscure.piku.mod.fabric.controlify.BindingEvent
 import computer.obscure.piku.mod.fabric.controlify.ControlifyCompat
-import computer.obscure.piku.mod.fabric.scripting.old.ui.LuaUINode
 import computer.obscure.piku.mod.fabric.ui.classes.ControllerActivateMode
 import computer.obscure.piku.mod.fabric.ui.classes.ControllerEdgeMode
 import computer.obscure.piku.mod.fabric.ui.classes.ControllerScrollAxis
@@ -44,42 +43,41 @@ object ControlifyUI : PikuService {
             val event = UIEvent.Controller(controllerId = controllerId, bindingName = name)
 
             eligible.forEachIndexed { index, child ->
-                val luaChild = LuaUINode(child)
                 when (mode) {
                     ControllerActivateMode.MULTI -> {
                         if (index != selectedIndex) return@forEachIndexed
 
                         if (child.activated)
-                            child.onBaseRelease(event, luaChild)
+                            child.onBaseRelease(event, child)
                         else
-                            child.onBasePress(event, luaChild)
+                            child.onBasePress(event, child)
                         child.activated = !child.activated
                     }
                     ControllerActivateMode.TOGGLE -> {
                         if (index != selectedIndex) {
                             if (!child.activated) return@forEachIndexed
-                            child.onBaseRelease(event, luaChild)
+                            child.onBaseRelease(event, child)
                             child.activated = false
                             return@forEachIndexed
                         }
                         if (child.activated) return@forEachIndexed
-                        child.onBasePress(event, luaChild)
+                        child.onBasePress(event, child)
                         child.activated = true
                     }
                     ControllerActivateMode.SINGLE_TOGGLE -> {
                         if (index != selectedIndex) {
                             if (!child.activated) return@forEachIndexed
-                            child.onBaseRelease(event, luaChild)
+                            child.onBaseRelease(event, child)
                             child.activated = false
                             return@forEachIndexed
                         }
 
                         if (child.activated) {
-                            child.onBaseRelease(event, luaChild)
+                            child.onBaseRelease(event, child)
                             child.activated = false
                             return@forEachIndexed
                         }
-                        child.onBasePress(event, luaChild)
+                        child.onBasePress(event, child)
                         child.activated = true
                     }
                     ControllerActivateMode.NONE -> {}
@@ -257,21 +255,20 @@ object ControlifyUI : PikuService {
         val navEvent = UIEvent.Controller(controllerId = "controller", bindingName = "navigate")
 
         eligible.forEachIndexed { index, child ->
-            val luaChild = LuaUINode(child)
             if (index == data.currentSelectionIndex) {
                 data.currentSelection = child
-                child.onBaseHover(navEvent, luaChild)
+                child.onBaseHover(navEvent, child)
                 child.selected = true
                 if (child is FlowNode && !child.controllerData.focused) {
                     child.controllerData.focused = true
-                    child.onBaseFocus(navEvent, luaChild)
+                    child.onBaseFocus(navEvent, child)
                 }
             } else {
-                child.onBaseUnhover(navEvent, luaChild)
+                child.onBaseUnhover(navEvent, child)
                 child.selected = false
                 if (child is FlowNode && child.controllerData.focused) {
                     child.controllerData.focused = false
-                    child.onBaseUnfocus(navEvent, luaChild)
+                    child.onBaseUnfocus(navEvent, child)
                     resetScrollState(child)
                 }
             }

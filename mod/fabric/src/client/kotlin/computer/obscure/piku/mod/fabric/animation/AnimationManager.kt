@@ -1,12 +1,12 @@
 package computer.obscure.piku.mod.fabric.animation
 
-import computer.obscure.piku.core.classes.Spacing
+import computer.obscure.piku.mod.fabric.ui.classes.Spacing
 import me.znotchill.kiwi.generated.Vec2
-import computer.obscure.piku.core.classes.Vec3
 import computer.obscure.piku.core.service.PikuService
 import computer.obscure.piku.mod.fabric.ui.classes.ScaleDimension
 import computer.obscure.piku.mod.fabric.ui.classes.ScaleDimension2
 import me.znotchill.kiwi.generated.Color
+import me.znotchill.kiwi.generated.Vec3
 
 object AnimationManager : PikuService {
     private val animations: MutableList<Animation<Any>> = mutableListOf()

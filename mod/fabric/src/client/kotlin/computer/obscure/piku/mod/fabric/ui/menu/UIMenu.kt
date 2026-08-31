@@ -1,6 +1,5 @@
 package computer.obscure.piku.mod.fabric.ui.menu
 
-import computer.obscure.piku.mod.fabric.scripting.old.ui.LuaUINode
 import computer.obscure.piku.mod.fabric.ui.UIRenderer
 import computer.obscure.piku.mod.fabric.ui.classes.UIEvent
 import computer.obscure.piku.mod.fabric.ui.classes.context.LayoutContext
@@ -114,7 +113,7 @@ class UIMenu(
         for (node in hoveredPath) {
             if (node !in newPath) {
                 node.hovered = false
-                node.onBaseUnhover(UIEvent.HoverDropped, LuaUINode(node))
+                node.onBaseUnhover(UIEvent.HoverDropped, node)
             }
         }
 
@@ -124,10 +123,10 @@ class UIMenu(
                 val uiEvent = UIEvent.Hover(
                     screenX = x, screenY = y,
                     localX = x - node.layoutX, localY = y - node.layoutY,
-                    node = LuaUINode(node)
+                    node = node
                 )
                 node.hovered = true
-                node.onBaseHover(uiEvent, LuaUINode(node))
+                node.onBaseHover(uiEvent, node)
             }
         }
 
@@ -144,7 +143,7 @@ class UIMenu(
                 screenY = event.y().toFloat(),
                 localX = event.x().toFloat() - topHit.layoutX,
                 localY = event.y().toFloat() - topHit.layoutY,
-                node = LuaUINode(topHit),
+                node = topHit,
                 buttonIndex = event.button()
             )
 
@@ -152,13 +151,13 @@ class UIMenu(
                 getAllNodes().forEach {
                     if (it.focused) {
                         it.focused = false
-                        it.onBaseUnfocus(uiEvent, LuaUINode(it))
+                        it.onBaseUnfocus(uiEvent, it)
                     }
                 }
 
                 focusedNode = topHit
                 topHit.focused = true
-                topHit.onBaseFocus(uiEvent, LuaUINode(topHit))
+                topHit.onBaseFocus(uiEvent, topHit)
             }
 
             for (node in path) {
@@ -167,11 +166,11 @@ class UIMenu(
                     screenY = event.y().toFloat(),
                     localX = event.x().toFloat() - node.layoutX,
                     localY = event.y().toFloat() - node.layoutY,
-                    node = LuaUINode(node),
+                    node = node,
                     buttonIndex = event.button()
                 )
                 node.activated = true
-                node.onBasePress(nodeEvent, LuaUINode(node))
+                node.onBasePress(nodeEvent, node)
             }
             return true
         }
@@ -180,7 +179,7 @@ class UIMenu(
         getAllNodes().forEach {
             if (it.focused) {
                 it.focused = false
-                it.onBaseUnfocus(UIEvent.FocusDropped, LuaUINode(it))
+                it.onBaseUnfocus(UIEvent.FocusDropped, it)
             }
         }
         return super.mouseClicked(event, doubleClick)
@@ -193,13 +192,13 @@ class UIMenu(
             screenY = event.y().toFloat(),
             localX = event.x().toFloat() - (hit?.layoutX ?: 0f),
             localY = event.y().toFloat() - (hit?.layoutY ?: 0f),
-            node = hit?.let { LuaUINode(hit) },
+            node = hit?.let { hit },
             buttonIndex = event.button()
         )
         getAllNodes().forEach {
             if (it.activated) {
                 it.activated = false
-                it.onBaseRelease(uiEvent, LuaUINode(it))
+                it.onBaseRelease(uiEvent, it)
             }
         }
         return super.mouseReleased(event)

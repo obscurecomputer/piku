@@ -1,13 +1,15 @@
 package computer.obscure.piku.mod.fabric.ui.components
 
-import computer.obscure.piku.core.classes.Spacing
-import computer.obscure.piku.core.classes.bottomF
-import computer.obscure.piku.core.classes.horizontal
-import computer.obscure.piku.core.classes.leftF
-import computer.obscure.piku.core.classes.rightF
-import computer.obscure.piku.core.classes.topF
-import computer.obscure.piku.core.classes.vertical
-import computer.obscure.piku.mod.fabric.scripting.old.ui.LuaUINode
+import computer.obscure.piku.mod.fabric.ui.classes.Spacing
+import computer.obscure.piku.mod.fabric.ui.classes.bottomF
+import computer.obscure.piku.mod.fabric.ui.classes.horizontal
+import computer.obscure.piku.mod.fabric.ui.classes.leftF
+import computer.obscure.piku.mod.fabric.ui.classes.rightF
+import computer.obscure.piku.mod.fabric.ui.classes.topF
+import computer.obscure.piku.mod.fabric.ui.classes.vertical
+import computer.obscure.piku.mod.fabric.scripting.api.UIBuilder
+import computer.obscure.piku.mod.fabric.scripting.api.UINodeAnim
+import computer.obscure.piku.mod.fabric.ui.UIRenderer
 import computer.obscure.piku.mod.fabric.ui.classes.Anchor
 import computer.obscure.piku.mod.fabric.ui.classes.Dimension
 import computer.obscure.piku.mod.fabric.ui.classes.HitShape
@@ -16,18 +18,24 @@ import computer.obscure.piku.mod.fabric.ui.classes.ShapeBounds
 import computer.obscure.piku.mod.fabric.ui.classes.UIEvent
 import computer.obscure.piku.mod.fabric.ui.classes.context.LayoutContext
 import computer.obscure.piku.mod.fabric.ui.classes.context.MeasureContext
+import computer.obscure.piku.mod.fabric.utils.parseOffsetDimension
 import me.znotchill.kiwi.generated.Color
 import net.minecraft.client.gui.GuiGraphicsExtractor
 import java.util.UUID
 import kotlin.math.sqrt
 
-abstract class UINode {
+abstract class UINode : UIBuilder {
     val id: String = UUID.randomUUID().toString()
     var name: String? = null
 
     var anchor: Anchor = Anchor.TOP_LEFT
     var offsetX: OffsetDimension = OffsetDimension.Zero
     var offsetY: OffsetDimension = OffsetDimension.Zero
+
+    fun offset(x: String, y: String) {
+        offsetX = parseOffsetDimension(x)
+        offsetY = parseOffsetDimension(y)
+    }
 
     // STYLE INPUTS
     var width: Dimension = Dimension.Wrap
@@ -41,11 +49,14 @@ abstract class UINode {
 
     // COMPUTED LAYOUT
     var layoutX: Float = 0f
-
     var layoutY: Float = 0f
-    var measuredWidth: Float = 0f
 
+    var measuredWidth: Float = 0f
     var measuredHeight: Float = 0f
+
+    fun centerX(): Float = layoutX + (measuredWidth / 2f)
+    fun centerY(): Float = layoutY + (measuredHeight / 2f)
+
     var visible: Boolean = true
     var opacity: Float = 1f
 
@@ -53,35 +64,43 @@ abstract class UINode {
 
     val children = mutableListOf<UINode>()
 
+    fun animate(block: UINodeAnim.() -> Unit) = UINodeAnim(this).apply(block)
+
+    override fun <T : UINode> add(node: T): T {
+        children.add(node)
+        UIRenderer.registerNode(node)
+        return node
+    }
+
     // The base hooks for this component.
     // Can not be overriden through Luau!!
-    open fun onBaseHover(event: UIEvent, node: LuaUINode) {
+    open fun onBaseHover(event: UIEvent, node: UINode) {
         onHover?.invoke(event, node)
     }
-    open fun onBaseUnhover(event: UIEvent, node: LuaUINode) {
+    open fun onBaseUnhover(event: UIEvent, node: UINode) {
         onUnhover?.invoke(event, node)
     }
-    open fun onBasePress(event: UIEvent, node: LuaUINode) {
+    open fun onBasePress(event: UIEvent, node: UINode) {
         onPress?.invoke(event, node)
     }
-    open fun onBaseRelease(event: UIEvent, node: LuaUINode) {
+    open fun onBaseRelease(event: UIEvent, node: UINode) {
         onRelease?.invoke(event, node)
     }
-    open fun onBaseFocus(event: UIEvent, node: LuaUINode) {
+    open fun onBaseFocus(event: UIEvent, node: UINode) {
         onFocus?.invoke(event, node)
     }
-    open fun onBaseUnfocus(event: UIEvent, node: LuaUINode) {
+    open fun onBaseUnfocus(event: UIEvent, node: UINode) {
         onUnfocus?.invoke(event, node)
     }
 
     // The hooks for this component that can be
     // overridden through Luau.
-    var onHover: ((UIEvent, LuaUINode) -> Unit)? = null
-    var onUnhover: ((UIEvent, LuaUINode) -> Unit)? = null
-    var onPress: ((UIEvent, LuaUINode) -> Unit)? = null
-    var onRelease: ((UIEvent, LuaUINode) -> Unit)? = null
-    var onFocus: ((UIEvent, LuaUINode) -> Unit)? = null
-    var onUnfocus: ((UIEvent, LuaUINode) -> Unit)? = null
+    var onHover: ((UIEvent, UINode) -> Unit)? = null
+    var onUnhover: ((UIEvent, UINode) -> Unit)? = null
+    var onPress: ((UIEvent, UINode) -> Unit)? = null
+    var onRelease: ((UIEvent, UINode) -> Unit)? = null
+    var onFocus: ((UIEvent, UINode) -> Unit)? = null
+    var onUnfocus: ((UIEvent, UINode) -> Unit)? = null
 
     var hovered: Boolean = false
     var focused: Boolean = false
@@ -106,22 +125,22 @@ abstract class UINode {
     fun measureSelf(ctx: MeasureContext) {
         val childCtx = when {
             width != Dimension.Wrap && height != Dimension.Wrap -> ctx.copy(
-                parentWidth = (resolveDimension(width, 0f, ctx.parentWidth) - padding.horizontal).coerceAtLeast(0f),
-                parentHeight = (resolveDimension(height, 0f, ctx.parentHeight) - padding.vertical).coerceAtLeast(0f)
+                parentWidth = (resolveDimension(width, 0f, ctx.parentWidth).toFloat() - padding.horizontal).coerceAtLeast(0f),
+                parentHeight = (resolveDimension(height, 0f, ctx.parentHeight).toFloat() - padding.vertical).coerceAtLeast(0f)
             )
             width != Dimension.Wrap -> ctx.copy(
-                parentWidth = (resolveDimension(width, 0f, ctx.parentWidth) - padding.horizontal).coerceAtLeast(0f)
+                parentWidth = (resolveDimension(width, 0f, ctx.parentWidth).toFloat() - padding.horizontal).coerceAtLeast(0f)
             )
             height != Dimension.Wrap -> ctx.copy(
-                parentHeight = (resolveDimension(height, 0f, ctx.parentHeight) - padding.vertical).coerceAtLeast(0f)
+                parentHeight = (resolveDimension(height, 0f, ctx.parentHeight).toFloat() - padding.vertical).coerceAtLeast(0f)
             )
             else -> ctx
         }
 
         children.forEach { it.measureSelf(childCtx) }
         val (contentW, contentH) = measureContent(childCtx)
-        measuredWidth = resolveDimension(width, contentW + padding.horizontal, ctx.parentWidth)
-        measuredHeight = resolveDimension(height, contentH + padding.vertical, ctx.parentHeight)
+        measuredWidth = resolveDimension(width, contentW + padding.horizontal, ctx.parentWidth).toFloat()
+        measuredHeight = resolveDimension(height, contentH + padding.vertical, ctx.parentHeight).toFloat()
     }
 
     fun layoutSelf(ctx: LayoutContext) {
@@ -214,6 +233,6 @@ abstract class UINode {
         Dimension.Wrap -> wrapSize
         Dimension.Fill -> parentSize
         is Dimension.Fixed -> d.px
-        is Dimension.Fraction -> parentSize * d.frac
+        is Dimension.Fraction -> parentSize * d.frac.toFloat()
     }
 }

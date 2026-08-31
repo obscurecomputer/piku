@@ -124,7 +124,7 @@ dependencies {
     includeDependency("net.kyori:examination-api:1.3.0")
     includeDependency("net.kyori:examination-string:1.3.0")
 
-    includeDependency("me.znotchill:kiwi:${project.property("kiwi_version")}")
+    includeDependency("me.znotchill.kiwi:core:${project.property("kiwi_version")}")
     includeDependency("computer.obscure:endergine:${project.property("endergine_version")}")
 
     val luauVersion = "1.0.1"

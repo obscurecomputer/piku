@@ -1,6 +1,5 @@
 package computer.obscure.piku.core.utils
 
-import computer.obscure.piku.core.classes.Vec3
 import computer.obscure.piku.core.serialization.PikuSerializable
 import computer.obscure.twine.TwineNative
 import kotlinx.serialization.KSerializer
@@ -19,7 +18,7 @@ data class SerializableTypeEntry<T : Any>(
 )
 
 val pikuSerializableTypes: List<SerializableTypeEntry<*>> = listOf(
-    SerializableTypeEntry(Vec3::class, "vec3", Vec3.serializer()) { it.toLuaInstance() },
+//    SerializableTypeEntry(Vec3::class, "vec3", Vec3.serializer()) { it.toLuaInstance() },
     SerializableTypeEntry(
         Vec2::class, "vec2",
         Vec2.serializer()

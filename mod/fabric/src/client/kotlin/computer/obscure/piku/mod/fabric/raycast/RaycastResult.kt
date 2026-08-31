@@ -1,6 +1,5 @@
 package computer.obscure.piku.mod.fabric.raycast
 
-import computer.obscure.piku.mod.fabric.scripting.old.raycast.LuaRaycastResult
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
 import net.minecraft.world.entity.Entity
@@ -18,6 +17,4 @@ data class RaycastResult(
     val hitPosition: Vec3,
     val relativeHitPosition: Vec3,
     val hitFace: Direction
-) {
-    fun toLua(): LuaRaycastResult = LuaRaycastResult(this)
-}
+)

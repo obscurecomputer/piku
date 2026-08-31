@@ -1,5 +1,6 @@
 package computer.obscure.piku.mod.fabric.scripting.api
 
+import computer.obscure.piku.mod.fabric.ui.UIRenderer
 import computer.obscure.piku.mod.fabric.ui.components.BoxNode
 import computer.obscure.piku.mod.fabric.ui.components.ColumnNode
 import computer.obscure.piku.mod.fabric.ui.components.DividerNode
@@ -13,10 +14,20 @@ import computer.obscure.piku.mod.fabric.ui.components.TextNode
 import computer.obscure.piku.mod.fabric.ui.components.UINode
 
 interface UIBuilder {
-    fun getByName(name: String): UINode?
-    fun getById(id: String): UINode?
-    fun exists(name: String) = getByName(name) != null
-    fun existsById(id: String) = getById(id) != null
+    fun <T : UINode> find(name: String, type: Class<T>): T? {
+        return UIRenderer.findByName(name)?.let {
+            type.cast(it)
+        }
+    }
+
+    fun <T : UINode> findById(id: String, type: Class<T>): T? {
+        return UIRenderer.findById(id)?.let {
+            type.cast(it)
+        }
+    }
+
+    fun exists(name: String) = find(name, UINode::class.java) != null
+    fun existsById(id: String) = findById(id, UINode::class.java) != null
 
     fun searchTree(node: UINode, name: String): UINode? {
         if (node.name == name) return node
@@ -59,4 +70,8 @@ interface UIBuilder {
     fun line(block: LineNode.() -> Unit): LineNode {
         return add(LineNode().apply(block))
     }
+}
+
+inline fun <reified T : UINode> UIBuilder.get(name: String): T? {
+    return UIRenderer.findByName(name) as? T
 }

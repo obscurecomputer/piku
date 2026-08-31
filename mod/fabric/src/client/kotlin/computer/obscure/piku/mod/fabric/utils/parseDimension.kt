@@ -1,6 +1,7 @@
 package computer.obscure.piku.mod.fabric.utils
 
 import computer.obscure.piku.mod.fabric.ui.classes.Dimension
+import computer.obscure.piku.mod.fabric.ui.classes.OffsetDimension
 import computer.obscure.piku.mod.fabric.ui.classes.ScaleDimension
 import computer.obscure.piku.mod.fabric.ui.classes.ScaleDimension2
 
@@ -10,6 +11,12 @@ fun parseDimension(value: String): Dimension = when {
     value.endsWith("%") -> Dimension.Fraction(value.dropLast(1).toFloat() / 100f)
     value.endsWith("px") -> Dimension.Fixed(value.dropLast(2).toFloat())
     else -> Dimension.Fixed(value.toFloat())
+}
+
+fun parseOffsetDimension(value: String): OffsetDimension = when {
+    value.endsWith("%") -> OffsetDimension.Fraction(value.dropLast(1).toFloat() / 100f)
+    value.endsWith("px") -> OffsetDimension.Fixed(value.dropLast(2).toFloat())
+    else -> OffsetDimension.Fixed(value.toFloat())
 }
 
 fun parseScale(value: String): ScaleDimension = when {

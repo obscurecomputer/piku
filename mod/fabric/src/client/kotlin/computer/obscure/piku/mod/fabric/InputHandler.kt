@@ -3,7 +3,6 @@ package computer.obscure.piku.mod.fabric
 import computer.obscure.piku.core.service.PikuService
 import computer.obscure.piku.mod.fabric.compat.ModCompat
 import computer.obscure.piku.mod.fabric.controlify.ControlifyIntegration
-import computer.obscure.piku.mod.fabric.scripting.old.LuaKeyBind
 import computer.obscure.piku.mod.fabric.ui.ControlifyUI
 import computer.obscure.piku.mod.fabric.ui.classes.UIEvent
 import computer.obscure.piku.mod.fabric.ui.menu.UIMenu
@@ -17,14 +16,14 @@ object InputHandler : PikuService {
 
     private val keyStates = mutableMapOf<Int, Boolean>()
     private val mouseStates = mutableMapOf<Int, Boolean>()
-    private val luaInputQueue = mutableListOf<LuaKeyBind>()
+//    private val luaInputQueue = mutableListOf<Keybind>()
 
     fun init() {
         ClientTickEvents.END_CLIENT_TICK.register { client ->
-            luaInputQueue.toList().forEach {
-                it.setDown(false)
-                luaInputQueue.remove(it)
-            }
+//            luaInputQueue.toList().forEach {
+//                it.setDown(false)
+//                luaInputQueue.remove(it)
+//            }
 
             if (ModCompat.controlifyLoaded) {
                 ControlifyIntegration.tick()
@@ -94,12 +93,12 @@ object InputHandler : PikuService {
         return Client.connectedToServer && mc.player != null
     }
 
-    fun queueInputUp(luaKeyBind: LuaKeyBind) {
-        luaInputQueue.add(luaKeyBind)
-    }
-    override fun shutdown() {
-        luaInputQueue.clear()
-    }
+//    fun queueInputUp(luaKeyBind: LuaKeyBind) {
+//        luaInputQueue.add(luaKeyBind)
+//    }
+//    override fun shutdown() {
+//        luaInputQueue.clear()
+//    }
 
     fun getKeyName(key: Int): String = when (key) {
         GLFW.GLFW_KEY_LEFT -> "left_arrow"

@@ -2,7 +2,6 @@ package computer.obscure.piku.mod.fabric.ui
 
 import com.mojang.blaze3d.platform.NativeImage
 import computer.obscure.piku.core.service.PikuService
-import computer.obscure.piku.mod.fabric.scripting.old.ui.LuaEasingInstance
 import computer.obscure.piku.mod.fabric.ui.classes.context.LayoutContext
 import computer.obscure.piku.mod.fabric.ui.classes.context.MeasureContext
 import computer.obscure.piku.mod.fabric.ui.components.UINode
@@ -24,10 +23,6 @@ object UIRenderer : PikuService {
 
     override fun shutdown() {
         clearRoots()
-    }
-
-    fun registerEasing(easing: LuaEasingInstance) {
-        registeredEasings[easing.id] = easing.function
     }
 
     fun addRoot(node: UINode) {

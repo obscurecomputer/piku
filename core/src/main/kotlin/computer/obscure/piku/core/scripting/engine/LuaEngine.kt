@@ -1,6 +1,5 @@
 package computer.obscure.piku.core.scripting.engine
 
-import computer.obscure.piku.core.scripting.api.*
 import computer.obscure.piku.core.service.PikuService
 import computer.obscure.twine.TwineEngine
 import computer.obscure.twine.TwineNative
@@ -50,15 +49,6 @@ abstract class LuaEngine : PikuService {
     }
 
     fun registerCommons() {
-        registerBase(LuaBaseGenerics())
-        register(LuaVec2())
-        register(LuaVec3())
-        register(LuaColor())
-        register(LuaSpacing())
-        register(LuaScheduler())
-        register(LuaMath())
-        register(LuaNoise())
-        register(LuaText())
     }
 
     fun register(native: TwineNative) {

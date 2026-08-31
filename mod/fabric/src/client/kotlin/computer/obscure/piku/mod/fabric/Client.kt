@@ -1,9 +1,7 @@
 package computer.obscure.piku.mod.fabric
 
-import computer.obscure.piku.core.classes.Vec3
-import computer.obscure.piku.core.scripting.api.LuaTextInstance
+import me.znotchill.kiwi.generated.Vec3
 import net.kyori.adventure.text.Component
-import net.minecraft.client.CameraType
 import net.minecraft.client.Minecraft
 
 object Client {
@@ -67,10 +65,10 @@ object Client {
     @JvmField
     var hideArm = false
 
-    @JvmField
-    var customScreenshotMessage: Component? = null
-    @JvmField
-    var customScreenshotInstance: LuaTextInstance? = null
+//    @JvmField
+//    var customScreenshotMessage: Component? = null
+//    @JvmField
+//    var customScreenshotInstance: LuaTextInstance? = null
 
     @JvmField
     var bobbingStrength: Float = 0f

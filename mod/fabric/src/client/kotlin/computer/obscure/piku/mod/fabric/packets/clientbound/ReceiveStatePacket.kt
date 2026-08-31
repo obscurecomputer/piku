@@ -1,16 +1,17 @@
 package computer.obscure.piku.mod.fabric.packets.clientbound
 
 import computer.obscure.piku.core.scripting.server.SharedStateManager
+import computer.obscure.piku.core.states.SharedState
 import computer.obscure.piku.core.utils.jsonStringToKotlin
 import computer.obscure.piku.mod.fabric.PikuClient
 import computer.obscure.piku.mod.fabric.packets.CustomPacket
-import computer.obscure.piku.mod.fabric.scripting.old.LuaSharedState
 import net.minecraft.client.Minecraft
 import net.minecraft.network.FriendlyByteBuf
 import net.minecraft.network.codec.ByteBufCodecs
 import net.minecraft.network.codec.StreamCodec
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload
 import net.minecraft.resources.Identifier
+import java.util.UUID
 
 class ReceiveStatePacket(
     val internalId: String,
@@ -24,20 +25,18 @@ class ReceiveStatePacket(
         Minecraft.getInstance().execute {
             try {
                 val value = jsonStringToKotlin(value)
-                val luaState = LuaSharedState(
-                    internalId = internalId,
+                val luaState = SharedState(
+                    internalId = UUID.fromString(internalId),
                     name = name,
                     value = value,
                     clientModifiable = clientModifiable
                 )
 
-                val state = luaState.toSharedState()
+//                PikuClient.engine!!.events.stateCallbacks[state.internalId]?.invoke(
+//                    mapOf("value" to value)
+//                )
 
-                PikuClient.engine!!.events.stateCallbacks[state.internalId]?.invoke(
-                    mapOf("value" to value)
-                )
-
-                SharedStateManager.addState(state)
+//                SharedStateManager.addState(state)
                 PikuClient.engine!!.events.fire(
                     "client.update_state",
                     mapOf(

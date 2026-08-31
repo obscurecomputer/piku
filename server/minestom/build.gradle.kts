@@ -24,7 +24,7 @@ repositories {
 dependencies {
     implementation(project(":core"))
     implementation("computer.obscure.piku:script-api:1.7.0")
-    implementation("me.znotchill:kiwi:1.0.0")
+    implementation("me.znotchill.kiwi:core:1.0.1")
     testImplementation(kotlin("test"))
     implementation("io.netty:netty-buffer:4.1.111.Final")
     implementation("io.netty:netty-common:4.1.111.Final")

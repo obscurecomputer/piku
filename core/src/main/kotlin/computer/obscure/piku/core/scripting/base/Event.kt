@@ -1,6 +1,6 @@
 package computer.obscure.piku.core.scripting.base
 
-open class LuaEvent {
+open class Event {
     open val id: String = ""
     open val onClientReceive: (data: Any) -> Unit = {}
     open val onClientSend: (data: Any) -> Unit = {}

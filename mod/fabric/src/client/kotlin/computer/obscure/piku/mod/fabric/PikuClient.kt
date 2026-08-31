@@ -27,7 +27,7 @@ import kotlin.system.exitProcess
 
 class PikuClient : ClientModInitializer {
     companion object {
-        private lateinit var minecraft: Minecraft
+        lateinit var minecraft: Minecraft
         val LOGGER: Logger = LogManager.getLogger()
 
         val miniMessage = MiniMessage.miniMessage()
@@ -65,6 +65,9 @@ class PikuClient : ClientModInitializer {
             engine = ClientLuaEngine()
             engine?.init()
             info("Engine started successfully.")
+
+            info("Running cold start script to warm up the engine")
+            engine!!.runScript("cold_start.piku.kts", "println(\"Warmed up engine!\")")
         } catch (e: Throwable) {
             error("Engine failed to start!")
             e.printStackTrace()

@@ -26,6 +26,7 @@ open class TextNode(var text: Component) : UINode() {
     var wrap: Boolean = true
 
     constructor(text: String) : this(Component.literal(text))
+    constructor() : this(Component.literal(""))
 
     override fun measureContent(ctx: MeasureContext): Pair<Float, Float> {
         resolvedText = TextInterpolator.interpolate(text)

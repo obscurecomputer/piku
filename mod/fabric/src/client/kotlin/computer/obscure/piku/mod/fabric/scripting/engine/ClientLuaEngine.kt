@@ -41,7 +41,7 @@ class ClientLuaEngine : PikuService {
         allow("computer.obscure.piku.")
         allow("me.znotchill.kiwi.")
         allow("net.kyori.adventure.")
-        allow("")
+        allow("java.util.UUID")
 
         onError = { errors ->
             errors.forEach {
@@ -55,6 +55,9 @@ class ClientLuaEngine : PikuService {
 
     override fun shutdown() {
         PikuClient.info("Engine shut down")
+        loadedScripts.clear()
+        activeInstances.clear()
+        compiledScripts.clear()
         super.shutdown()
     }
 

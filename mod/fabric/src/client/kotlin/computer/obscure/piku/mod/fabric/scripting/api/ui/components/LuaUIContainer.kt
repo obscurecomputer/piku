@@ -8,16 +8,19 @@ import computer.obscure.twine.annotations.TwineFunction
 open class LuaUIContainer(node: UINode) : LuaUINode(node) {
 
     private fun <T : UINode> attach(child: T): T {
-        node.children.add(child)
+        node.addChild(child)
         UIRenderer.registerNode(child)
         return child
     }
 
     @TwineFunction
-    fun addText(): LuaUIText = LuaUIText(attach(TextNode("")))
+    fun addText(): LuaUIText = LuaUIText(attach(TextNode()))
 
     @TwineFunction
-    fun addTextInput(): LuaUITextInput = LuaUITextInput(attach(TextInputNode("")))
+    fun addTextInput(): LuaUITextInput = LuaUITextInput(attach(TextInputNode()))
+
+    @TwineFunction
+    fun addButton(): LuaUIButton = LuaUIButton(attach(ButtonNode()))
 
     @TwineFunction
     fun addBox(): LuaUIBox = LuaUIBox(attach(BoxNode()))
@@ -48,7 +51,7 @@ open class LuaUIContainer(node: UINode) : LuaUINode(node) {
 
     @TwineFunction
     fun clear() {
-        node.children.forEach { UIRenderer.deindexTree(it) }
-        node.children.clear()
+        node.children().forEach { UIRenderer.deindexTree(it) }
+        node.clearChildren()
     }
 }

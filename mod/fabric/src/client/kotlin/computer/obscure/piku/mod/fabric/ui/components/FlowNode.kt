@@ -22,15 +22,15 @@ abstract class FlowNode(var gap: Float = 0f) : UINode() {
     var controllerOptions: ControllerFlowOptions = ControllerFlowOptions()
     var controllerData: ControllerFlowData = ControllerFlowData()
 
-    abstract val axis: FlowAxis
+    open var axis: FlowAxis = FlowAxis.VERTICAL
     private val ax get() =
         if (axis == FlowAxis.HORIZONTAL)
             Axis.Horizontal
         else Axis.Vertical
 
     private fun totalMainSize(): Float {
-        val count = (children.size - 1).coerceAtLeast(0)
-        return children
+        val count = (children().size - 1).coerceAtLeast(0)
+        return children()
             .sumOf { (ax.mainMeasured(it) + ax.mainMargin(it)).toDouble() }
             .toFloat() + gap * count
     }
@@ -38,8 +38,8 @@ abstract class FlowNode(var gap: Float = 0f) : UINode() {
     override fun measureContent(ctx: MeasureContext): Pair<Float, Float> {
         val innerCtx = ax.withCross(ctx, ax.parentCross(ctx) - ax.crossPadding(padding))
 
-        val fillChildren = children.filter { ax.mainDimension(it) == Dimension.Fill }
-        val nonFillChildren = children.filter { ax.mainDimension(it) != Dimension.Fill }
+        val fillChildren = children().filter { ax.mainDimension(it) == Dimension.Fill }
+        val nonFillChildren = children().filter { ax.mainDimension(it) != Dimension.Fill }
 
         // re-measure non-fill children with correct cross constraint
         nonFillChildren.forEach { child ->
@@ -50,7 +50,7 @@ abstract class FlowNode(var gap: Float = 0f) : UINode() {
         // much space is left for fillChildren
         val fixedMain = nonFillChildren
             .sumOf { (ax.mainMeasured(it) + ax.mainMargin(it)).toDouble() }
-            .toFloat() + gap * (children.size - 1).coerceAtLeast(0)
+            .toFloat() + gap * (children().size - 1).coerceAtLeast(0)
 
         // divide the remaining space equally across fillChildren
         val remaining = (ax.parentMain(innerCtx) - fixedMain - ax.mainPadding(padding))
@@ -67,10 +67,10 @@ abstract class FlowNode(var gap: Float = 0f) : UINode() {
             child.measureSelf(ax.withMain(innerCtx, childMain))
         }
 
-        val main = children
+        val main = children()
             .sumOf { (ax.mainMeasured(it) + ax.mainMargin(it)).toDouble() }
-            .toFloat() + gap * (children.size - 1).coerceAtLeast(0)
-        val cross = children.maxOfOrNull {
+            .toFloat() + gap * (children().size - 1).coerceAtLeast(0)
+        val cross = children().maxOfOrNull {
             ax.crossMeasured(it) + ax.crossMargin(it)
         } ?: 0f
 
@@ -98,25 +98,25 @@ abstract class FlowNode(var gap: Float = 0f) : UINode() {
             MainAxisAlignment.Center -> (innerMain - total) / 2f
             MainAxisAlignment.End -> innerMain - total
             MainAxisAlignment.SpaceBetween -> 0f
-            MainAxisAlignment.SpaceAround -> (innerMain - total) / children.size / 2f
+            MainAxisAlignment.SpaceAround -> (innerMain - total) / children().size / 2f
         }
 
         // extra space inserted when using "SpaceBetween" or
         // "SpaceAround"s
         val spaceBetween = when {
-            mainAxis == MainAxisAlignment.SpaceBetween && children.size > 1 ->
-                (innerMain - total) / (children.size - 1)
+            mainAxis == MainAxisAlignment.SpaceBetween && children().size > 1 ->
+                (innerMain - total) / (children().size - 1)
             else -> 0f
         }
 
         val spaceAround = when (mainAxis) {
-            MainAxisAlignment.SpaceAround -> (innerMain - total) / children.size
+            MainAxisAlignment.SpaceAround -> (innerMain - total) / children().size
             else -> 0f
         }
 
         var cursor = ax.mainStart(this) + clampedScroll + mainOffset
 
-        children.forEach { child ->
+        children().forEach { child ->
             val crossOffset = when (crossAxis) {
                 CrossAxisAlignment.Start -> 0f
                 CrossAxisAlignment.Center ->
@@ -156,7 +156,7 @@ abstract class FlowNode(var gap: Float = 0f) : UINode() {
             )
         }
         drawContent(graphics, ctx)
-        children.forEach { child ->
+        children().forEach { child ->
             if (scrollable && !isChildVisible(child)) return@forEach
             child.drawSelf(graphics, ctx, computedOpacity)
         }

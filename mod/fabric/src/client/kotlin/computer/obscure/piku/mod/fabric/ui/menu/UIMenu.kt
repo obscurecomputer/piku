@@ -46,14 +46,14 @@ class UIMenu(
         val result = mutableListOf<UINode>()
         fun collect(node: UINode) {
             result.add(node)
-            node.children.forEach { collect(it) }
+            node.children().forEach { collect(it) }
         }
         roots.forEach { collect(it) }
         return result
     }
 
     private fun hitTestPath(node: UINode, x: Float, y: Float, path: MutableList<UINode>): Boolean {
-        for (child in node.children.asReversed()) {
+        for (child in node.children().asReversed()) {
             if (hitTestPath(child, x, y, path)) {
                 path.add(node)
                 return true
@@ -207,14 +207,12 @@ class UIMenu(
 
     override fun keyPressed(event: KeyEvent): Boolean {
         val input = focusedNode as? TextInputNode
-        if (input != null && input.handleKeyPressed(event)) return true
-        return super.keyPressed(event)
+        return input != null && input.handleKeyPressed(event) || super.keyPressed(event)
     }
 
     override fun charTyped(event: CharacterEvent): Boolean {
         val input = focusedNode as? TextInputNode
-        if (input != null && input.handleCharTyped(event)) return true
-        return super.charTyped(event)
+        return input != null && input.handleCharTyped(event) || super.charTyped(event)
     }
 
     override fun mouseDragged(event: MouseButtonEvent, dx: Double, dy: Double): Boolean {

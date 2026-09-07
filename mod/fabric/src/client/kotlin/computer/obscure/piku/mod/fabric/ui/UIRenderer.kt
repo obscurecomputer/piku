@@ -73,7 +73,7 @@ object UIRenderer : PikuService {
             cls = cls.superclass
         }
 
-        node.children.forEach { indexTree(it) }
+        node.children().forEach { indexTree(it) }
     }
 
     fun deindexTree(node: UINode) {
@@ -88,7 +88,7 @@ object UIRenderer : PikuService {
             cls = cls.superclass
         }
 
-        node.children.forEach { deindexTree(it) }
+        node.children().forEach { deindexTree(it) }
     }
 
     fun findByName(name: String): UINode? = nodesByName[name]

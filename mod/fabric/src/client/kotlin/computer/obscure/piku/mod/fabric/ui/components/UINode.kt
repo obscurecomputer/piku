@@ -51,7 +51,14 @@ abstract class UINode {
 
     var computedOpacity: Float = 1f
 
-    val children = mutableListOf<UINode>()
+    private val children = mutableListOf<UINode>()
+    open fun children() = children.toList()
+    open fun clearChildren() = children.clear()
+    open fun addChild(node: UINode) = children.add(node)
+
+    fun removeChild(node: UINode) {
+        children.remove(node)
+    }
 
     // The base hooks for this component.
     // Can not be overriden through Luau!!
@@ -98,8 +105,8 @@ abstract class UINode {
     }
 
     protected open fun measureContent(ctx: MeasureContext): Pair<Float, Float> {
-        val w = children.maxOfOrNull { it.measuredWidth } ?: 0f
-        val h = children.maxOfOrNull { it.measuredHeight } ?: 0f
+        val w = children().maxOfOrNull { it.measuredWidth } ?: 0f
+        val h = children().maxOfOrNull { it.measuredHeight } ?: 0f
         return w to h
     }
 
@@ -118,7 +125,7 @@ abstract class UINode {
             else -> ctx
         }
 
-        children.forEach { it.measureSelf(childCtx) }
+        children().forEach { it.measureSelf(childCtx) }
         val (contentW, contentH) = measureContent(childCtx)
         measuredWidth = resolveDimension(width, contentW + padding.horizontal, ctx.parentWidth)
         measuredHeight = resolveDimension(height, contentH + padding.vertical, ctx.parentHeight)
@@ -156,7 +163,7 @@ abstract class UINode {
             parentWidth = measuredWidth - padding.horizontal,
             parentHeight = measuredHeight - padding.vertical
         )
-        children.forEach { it.layoutSelf(childCtx) }
+        children().forEach { it.layoutSelf(childCtx) }
     }
 
     open fun drawSelf(graphics: GuiGraphicsExtractor, ctx: MeasureContext, parentOpacity: Float = 1f) {
@@ -176,7 +183,7 @@ abstract class UINode {
 
 //        drawDebugOutline(graphics)
 
-        children.forEach { it.drawSelf(graphics, ctx, computedOpacity) }
+        children().forEach { it.drawSelf(graphics, ctx, computedOpacity) }
     }
 
     private fun drawDebugOutline(graphics: GuiGraphicsExtractor) {

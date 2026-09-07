@@ -5,17 +5,16 @@ import computer.obscure.piku.mod.fabric.scripting.api.ui.LuaUINode
 import computer.obscure.piku.mod.fabric.ui.classes.UIEvent
 import computer.obscure.piku.mod.fabric.ui.classes.context.MeasureContext
 import computer.obscure.piku.mod.fabric.ui.menu.PikuEditBox
+import computer.obscure.piku.mod.fabric.utils.toNativeComponent
+import net.kyori.adventure.text.Component
 import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.gui.components.EditBox
 import net.minecraft.client.input.CharacterEvent
 import net.minecraft.client.input.KeyEvent
-import net.minecraft.network.chat.Component
 
-class TextInputNode(text: Component) : TextNode(text) {
-    constructor(text: String) : this(Component.literal(text))
-
+class TextInputNode() : TextNode() {
     var placeholder: String? = "Input..."
-    var placeholderComponent: Component? = Component.literal(placeholder ?: "")
+    var placeholderComponent: Component? = Component.text(placeholder ?: "")
     private var editBox: EditBox? = null
 
     var renderMode = RenderMode.PLACEHOLDER
@@ -27,17 +26,17 @@ class TextInputNode(text: Component) : TextNode(text) {
             layoutY.toInt(),
             measuredWidth.toInt(),
             measuredHeight.toInt(),
-            Component.empty()
+            Component.empty().toNativeComponent()
         ).apply {
             isBordered = false
             value = rawText ?: ""
             setResponder { newValue ->
                 rawText = newValue
-                text = Component.literal(newValue)
+                originText = Component.text(newValue)
                 println("HELLO new value $rawText")
             }
             placeholder?.let {
-                setHint(Component.literal(it))
+                setHint(Component.text(it).toNativeComponent())
             }
             isVisible = false
         }.also { editBox = it }

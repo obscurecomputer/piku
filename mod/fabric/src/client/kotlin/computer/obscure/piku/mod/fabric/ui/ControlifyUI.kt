@@ -279,7 +279,7 @@ object ControlifyUI : PikuService {
     }
 
     fun eligibleChildren(node: FlowNode): List<UINode> {
-        return node.children.filter { it.selectable }
+        return node.children().filter { it.selectable }
     }
 
     fun resetScrollState(node: FlowNode) {

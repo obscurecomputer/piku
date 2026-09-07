@@ -7,11 +7,19 @@ import computer.obscure.piku.mod.fabric.ui.classes.Dimension
 import computer.obscure.piku.mod.fabric.ui.classes.ScaleDimension
 import computer.obscure.piku.mod.fabric.ui.classes.context.MeasureContext
 import computer.obscure.piku.mod.fabric.ui.text.TextInterpolator
+import computer.obscure.piku.mod.fabric.utils.toNativeComponent
+import net.kyori.adventure.text.Component
+import net.minecraft.network.chat.Component as McComponent
 import net.minecraft.client.gui.GuiGraphicsExtractor
-import net.minecraft.network.chat.Component
 import net.minecraft.util.FormattedCharSequence
 
-open class TextNode(var text: Component) : UINode() {
+open class TextNode(
+) : FlowNode() {
+    var originText: Component = Component.empty()
+        set(value) {
+            field = value
+            resolvedText = TextInterpolator.interpolate(originText.toNativeComponent())
+        }
     var rawText: String? = null
     var shadow: Boolean = false
     var scale: Vec2 = Vec2.ONE
@@ -21,14 +29,11 @@ open class TextNode(var text: Component) : UINode() {
     var resolvedScaleX: Float = 1f
     var resolvedScaleY: Float = 1f
 
-    private var resolvedText: Component = text
+    private var resolvedText: McComponent = originText.toNativeComponent()
     private var resolvedLines: List<FormattedCharSequence> = emptyList()
     var wrap: Boolean = true
 
-    constructor(text: String) : this(Component.literal(text))
-
     override fun measureContent(ctx: MeasureContext): Pair<Float, Float> {
-        resolvedText = TextInterpolator.interpolate(text)
         val base = ctx.textRenderer.lineHeight.toFloat()
         resolvedScaleX = scaleX.resolve(ctx.parentScale, ctx.parentWidth, ctx.parentHeight, base).toFloat()
         resolvedScaleY = scaleY.resolve(ctx.parentScale, ctx.parentWidth, ctx.parentHeight, base).toFloat()
@@ -70,7 +75,7 @@ open class TextNode(var text: Component) : UINode() {
     }
 
     fun drawLine(line: String, graphics: GuiGraphicsExtractor, ctx: MeasureContext) {
-        val component = Component.literal(line).visualOrderText
+        val component = McComponent.literal(line).visualOrderText
         drawLines(listOf(component), graphics, ctx)
     }
 

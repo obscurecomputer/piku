@@ -6,12 +6,10 @@ import me.znotchill.kiwi.generated.Vec2
 import computer.obscure.piku.mod.fabric.ui.components.TextNode
 import computer.obscure.piku.mod.fabric.utils.parseScale
 import computer.obscure.piku.mod.fabric.utils.parseScaleRegex
-import computer.obscure.piku.mod.fabric.utils.toMcComponent
-import computer.obscure.piku.mod.fabric.utils.toNativeComponent
 import computer.obscure.twine.annotations.TwineFunction
-import net.minecraft.network.chat.Component
+import net.kyori.adventure.text.Component
 
-open class LuaUIText(override val node: TextNode) : LuaUIContainer(node) {
+open class LuaUIText(override val node: TextNode) : LuaUIFlow(node) {
     private var currentTextInstance = LuaTextInstance("")
 
     @TwineFunction
@@ -24,7 +22,7 @@ open class LuaUIText(override val node: TextNode) : LuaUIContainer(node) {
     open fun text(value: String): LuaUIText {
         val component = PikuClient.miniMessage
             .deserialize(value)
-        node.text = component.toNativeComponent()
+        node.originText = component
         node.rawText = value
         currentTextInstance = LuaTextInstance(
             type = "text",
@@ -36,7 +34,7 @@ open class LuaUIText(override val node: TextNode) : LuaUIContainer(node) {
 
     @TwineFunction
     open fun text(value: LuaTextInstance): LuaUIText {
-        node.text = value.toMcComponent()
+        node.originText = value.toComponent()
         currentTextInstance = value
         return this
     }
@@ -56,9 +54,9 @@ open class LuaUIText(override val node: TextNode) : LuaUIContainer(node) {
     @TwineFunction
     fun setText(value: String): LuaUIText {
         // mutate the MC component's text only
-        val current = node.text
-        node.text = Component.literal(value)
-            .withStyle(current.style)
+        val current = node.originText
+        node.originText = Component.text(value)
+            .style(current.style())
         return this
     }
 

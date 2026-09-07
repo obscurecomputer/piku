@@ -7,6 +7,7 @@ import computer.obscure.piku.core.scripting.engine.EngineError
 import computer.obscure.piku.core.scripting.engine.EngineErrorCode
 import computer.obscure.piku.mod.fabric.animation.AnimationManager
 import computer.obscure.piku.mod.fabric.scripting.api.ui.components.LuaUIBox
+import computer.obscure.piku.mod.fabric.scripting.api.ui.components.LuaUIButton
 import computer.obscure.piku.mod.fabric.scripting.api.ui.components.LuaUIColumn
 import computer.obscure.piku.mod.fabric.scripting.api.ui.components.LuaUIDivider
 import computer.obscure.piku.mod.fabric.scripting.api.ui.components.LuaUIGradient
@@ -23,6 +24,7 @@ import computer.obscure.piku.mod.fabric.ui.UIRenderer
 import computer.obscure.piku.mod.fabric.ui.classes.HitShape
 import computer.obscure.piku.mod.fabric.ui.classes.OffsetDimension
 import computer.obscure.piku.mod.fabric.ui.components.BoxNode
+import computer.obscure.piku.mod.fabric.ui.components.ButtonNode
 import computer.obscure.piku.mod.fabric.ui.components.ColumnNode
 import computer.obscure.piku.mod.fabric.ui.components.DividerNode
 import computer.obscure.piku.mod.fabric.ui.components.GradientNode
@@ -170,11 +172,11 @@ open class LuaUINode(open val node: UINode) : TwineNative() {
     }
 
     @TwineFunction
-    fun children(): List<LuaUINode> = node.children.mapNotNull { wrap(it) }
+    fun children(): List<LuaUINode> = node.children().mapNotNull { wrap(it) }
 
     @TwineFunction
     fun removeChild(child: LuaUINode) {
-        node.children.remove(child.node)
+        node.removeChild(child.node)
     }
 
     @TwineFunction
@@ -206,13 +208,13 @@ open class LuaUINode(open val node: UINode) : TwineNative() {
     }
 
     private fun removeFromTree(parent: UINode, target: UINode) {
-        parent.children.remove(target)
-        parent.children.forEach { removeFromTree(it, target) }
+        parent.removeChild(target)
+        parent.children().forEach { removeFromTree(it, target) }
     }
 
     @TwineFunction
     fun exists(name: String): Boolean {
-        return node.children.any { searchTree(it, name) != null }
+        return node.children().any { searchTree(it, name) != null }
     }
 
     @TwineFunction("get")
@@ -222,7 +224,7 @@ open class LuaUINode(open val node: UINode) : TwineNative() {
 
     private fun searchTree(node: UINode, name: String): UINode? {
         if (node.name == name) return node
-        return node.children.firstNotNullOfOrNull { searchTree(it, name) }
+        return node.children().firstNotNullOfOrNull { searchTree(it, name) }
     }
 
     @TwineFunction
@@ -310,6 +312,7 @@ open class LuaUINode(open val node: UINode) : TwineNative() {
     companion object {
         fun wrap(node: UINode): LuaUINode? = when (node) {
             is TextInputNode -> LuaUITextInput(node)
+            is ButtonNode -> LuaUIButton(node)
             is TextNode -> LuaUIText(node)
             is ColumnNode -> LuaUIColumn(node)
             is RowNode -> LuaUIRow(node)

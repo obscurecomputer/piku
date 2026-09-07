@@ -10,7 +10,7 @@ class LuaUITextInput(override val node: TextInputNode) : LuaUIText(node) {
     fun placeholder(value: String): LuaUITextInput {
         val component = PikuClient.miniMessage
             .deserialize(value)
-        node.placeholderComponent = component.toNativeComponent()
+        node.placeholderComponent = component
         node.placeholder = value
         return this
     }

@@ -62,11 +62,17 @@ class LuaUIMenuInstance(
 
     private fun searchTree(node: UINode, name: String): UINode? {
         if (node.name == name) return node
-        return node.children.firstNotNullOfOrNull { searchTree(it, name) }
+        return node.children().firstNotNullOfOrNull { searchTree(it, name) }
     }
 
     @TwineFunction
     fun open() {
         Minecraft.getInstance().gui.setScreen(screen)
+    }
+
+    @TwineFunction
+    fun close() {
+        if (Minecraft.getInstance().gui.screen() == screen)
+            Minecraft.getInstance().gui.setScreen(null)
     }
 }

@@ -4,7 +4,7 @@ import computer.obscure.twine.TwineNative
 import computer.obscure.twine.annotations.TwineFunction
 import computer.obscure.twine.utils.toTwineString
 
-class LuaBaseGenerics : TwineNative() {
+object LuaBaseGenerics : TwineNative() {
     @TwineFunction
     fun type(value: Any?): String {
         return when (value) {

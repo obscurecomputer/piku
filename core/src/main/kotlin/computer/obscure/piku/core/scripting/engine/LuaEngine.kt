@@ -48,7 +48,7 @@ abstract class LuaEngine : PikuService {
     }
 
     fun registerCommons() {
-        registerBase(LuaBaseGenerics())
+        registerBase(LuaBaseGenerics)
         register(LuaVec2())
         register(LuaVec3())
         register(LuaColor())

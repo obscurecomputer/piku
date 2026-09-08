@@ -1,5 +1,6 @@
 package computer.obscure.piku.mod.fabric.scripting.api.ui.components
 
+import computer.obscure.piku.core.scripting.api.LuaBaseGenerics
 import computer.obscure.piku.core.scripting.api.LuaTextInstance
 import computer.obscure.piku.mod.fabric.PikuClient
 import me.znotchill.kiwi.generated.Vec2
@@ -19,23 +20,22 @@ open class LuaUIText(override val node: TextNode) : LuaUIFlow(node) {
     fun rawText(): String? = node.rawText
 
     @TwineFunction
-    open fun text(value: String): LuaUIText {
+    open fun text(value: Any): LuaUIText {
+        if (value is LuaTextInstance) {
+            node.originText = value.toComponent()
+            currentTextInstance = value
+            return this
+        }
+        val fixedValue = LuaBaseGenerics.toString(value)
         val component = PikuClient.miniMessage
-            .deserialize(value)
+            .deserialize(fixedValue)
         node.originText = component
-        node.rawText = value
+        node.rawText = fixedValue
         currentTextInstance = LuaTextInstance(
             type = "text",
-            literalText = value,
+            literalText = fixedValue,
             baseComponent = component
         )
-        return this
-    }
-
-    @TwineFunction
-    open fun text(value: LuaTextInstance): LuaUIText {
-        node.originText = value.toComponent()
-        currentTextInstance = value
         return this
     }
 

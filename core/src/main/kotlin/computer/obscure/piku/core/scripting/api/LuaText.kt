@@ -11,6 +11,7 @@ import net.kyori.adventure.text.event.ClickEvent
 import net.kyori.adventure.text.event.HoverEvent
 import net.kyori.adventure.text.format.ShadowColor
 import net.kyori.adventure.text.format.TextDecoration
+import net.kyori.adventure.text.minimessage.MiniMessage
 
 class LuaText : TwineNative("text") {
     @TwineFunction
@@ -26,6 +27,12 @@ class LuaText : TwineNative("text") {
     @TwineFunction
     fun translatable(key: String): LuaTextInstance {
         return LuaTextInstance("translatable", key)
+    }
+
+    @TwineFunction
+    fun miniMessage(text: String): LuaTextInstance {
+        val component = MiniMessage.miniMessage().deserialize(text)
+        return fromComponent(component)
     }
 
     companion object {

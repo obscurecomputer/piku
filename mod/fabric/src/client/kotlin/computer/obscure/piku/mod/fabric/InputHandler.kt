@@ -19,6 +19,10 @@ object InputHandler : PikuService {
     private val mouseStates = mutableMapOf<Int, Boolean>()
     private val luaInputQueue = mutableListOf<LuaKeyBind>()
 
+    var keyboardCaptured = true
+    var mouseCaptured = true
+    var scrollCaptured = true
+
     fun init() {
         ClientTickEvents.END_CLIENT_TICK.register { client ->
             luaInputQueue.toList().forEach {
@@ -42,7 +46,7 @@ object InputHandler : PikuService {
 
         GLFW.glfwSetKeyCallback(windowHandle) { window, key, scancode, action, mods ->
             prevKeyCallback?.invoke(window, key, scancode, action, mods)
-            if (!shouldHandleInput()) return@glfwSetKeyCallback
+            if (!shouldHandleInput(InputMethod.KEYBOARD)) return@glfwSetKeyCallback
             val pressed = action == GLFW.GLFW_PRESS || action == GLFW.GLFW_REPEAT
             val prev = keyStates[key] ?: false
             if (pressed != prev || action == GLFW.GLFW_REPEAT) {
@@ -62,7 +66,7 @@ object InputHandler : PikuService {
 
         GLFW.glfwSetMouseButtonCallback(windowHandle) { window, button, action, mods ->
             prevMouseCallback?.invoke(window, button, action, mods)
-            if (!shouldHandleInput()) return@glfwSetMouseButtonCallback
+            if (!shouldHandleInput(InputMethod.MOUSE)) return@glfwSetMouseButtonCallback
             val pressed = action == GLFW.GLFW_PRESS
             val prev = mouseStates[button] ?: false
             if (pressed != prev) {
@@ -77,7 +81,7 @@ object InputHandler : PikuService {
 
         GLFW.glfwSetScrollCallback(windowHandle) { window, deltaX, deltaY ->
             prevScrollCallback?.invoke(window, deltaX, deltaY)
-            if (!shouldHandleInput()) return@glfwSetScrollCallback
+            if (!shouldHandleInput(InputMethod.MOUSE_SCROLL)) return@glfwSetScrollCallback
             val data = mapOf(
                 "deltaX" to deltaX,
                 "deltaY" to deltaY,
@@ -88,8 +92,12 @@ object InputHandler : PikuService {
         }
     }
 
-    private fun shouldHandleInput(): Boolean {
-        if (mc.gui.screen() != null)
+    private fun shouldHandleInput(method: InputMethod): Boolean {
+        if (method == InputMethod.KEYBOARD && !keyboardCaptured) return false
+        if (method == InputMethod.MOUSE && !mouseCaptured) return false
+        if (method == InputMethod.MOUSE_SCROLL && !scrollCaptured) return false
+
+        if (mc.gui.screen() != null && method == InputMethod.KEYBOARD)
             return mc.gui.screen() is UIMenu
         return Client.connectedToServer && mc.player != null
     }
@@ -171,4 +179,11 @@ enum class MouseButton(val index: Int) {
             return entries.firstOrNull { it.index == index } ?: LEFT
         }
     }
+}
+
+enum class InputMethod {
+    KEYBOARD,
+    MOUSE,
+    MOUSE_SCROLL,
+    CONTROLLER
 }

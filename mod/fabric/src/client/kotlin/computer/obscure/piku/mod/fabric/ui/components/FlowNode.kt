@@ -35,20 +35,27 @@ abstract class FlowNode(var gap: Float = 0f) : UINode() {
             .toFloat() + gap * count
     }
 
+    private fun isCrossFill(node: UINode): Boolean {
+        val dim = ax.crossDimension(node)
+        return dim == Dimension.Fill || dim is Dimension.Fraction
+    }
+
     override fun measureContent(ctx: MeasureContext): Pair<Float, Float> {
         val innerCtx = ax.withCross(ctx, ax.parentCross(ctx) - ax.crossPadding(padding))
 
         val fillChildren = children().filter { ax.mainDimension(it) == Dimension.Fill }
         val nonFillChildren = children().filter { ax.mainDimension(it) != Dimension.Fill }
+        val crossFillChildren = nonFillChildren.filter { isCrossFill(it) }
+        val crossFixedChildren = nonFillChildren.filter { !isCrossFill(it) }
 
         // re-measure non-fill children with correct cross constraint
-        nonFillChildren.forEach { child ->
+        crossFixedChildren.forEach { child ->
             child.measureSelf(innerCtx)
         }
 
         // fixed children are measured first to know how
         // much space is left for fillChildren
-        val fixedMain = nonFillChildren
+        val fixedMain = crossFixedChildren
             .sumOf { (ax.mainMeasured(it) + ax.mainMargin(it)).toDouble() }
             .toFloat() + gap * (children().size - 1).coerceAtLeast(0)
 
@@ -60,11 +67,20 @@ abstract class FlowNode(var gap: Float = 0f) : UINode() {
             remaining / fillChildren.size
         else 0f
 
+        val resolvedCross = crossFixedChildren.maxOfOrNull {
+            ax.crossMeasured(it) + ax.crossMargin(it)
+        } ?: 0f
+
         // main axis - sum all children widths
         // cross axis - tallest child
-        fillChildren.forEach { child ->
-            val childMain = (fillSize - ax.mainMargin(child)).coerceAtLeast(0f)
-            child.measureSelf(ax.withMain(innerCtx, childMain))
+        crossFillChildren.forEach { child ->
+            val stretchedCtx = ax.withCross(innerCtx, resolvedCross - ax.crossMargin(child))
+            if (ax.mainDimension(child) == Dimension.Fill) {
+                val childMain = (fillSize - ax.mainMargin(child)).coerceAtLeast(0f)
+                child.measureSelf(ax.withMain(stretchedCtx, childMain))
+            } else {
+                child.measureSelf(stretchedCtx)
+            }
         }
 
         val main = children()

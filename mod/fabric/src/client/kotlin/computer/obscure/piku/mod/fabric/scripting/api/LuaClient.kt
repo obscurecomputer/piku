@@ -9,6 +9,7 @@ import computer.obscure.piku.mod.fabric.Client
 import computer.obscure.piku.mod.fabric.InputHandler
 import computer.obscure.piku.mod.fabric.PikuClient
 import computer.obscure.piku.mod.fabric.scripting.api.camera.LuaClientCamera
+import computer.obscure.piku.mod.fabric.utils.getRemappedName
 import computer.obscure.piku.mod.fabric.utils.toNativeComponent
 import computer.obscure.twine.TwineLogger
 import computer.obscure.twine.TwineNative
@@ -217,6 +218,19 @@ class LuaClient : TwineNative("client") {
         Client.mouseButtonsLocked = true
     }
 
+    /**
+     * Input controls
+     */
+    @TwineFunction
+    fun captureKeyboard(value: Boolean = !InputHandler.keyboardCaptured) =
+        apply { InputHandler.keyboardCaptured = value }
+    @TwineFunction
+    fun captureMouse(value: Boolean = !InputHandler.mouseCaptured) =
+        apply { InputHandler.mouseCaptured = value }
+    @TwineFunction
+    fun captureScroll(value: Boolean = !InputHandler.scrollCaptured) =
+        apply { InputHandler.scrollCaptured = value }
+
     @TwineFunction
     fun playSound(name: String, volume: Double, pitch: Double) {
         val player = instance.player ?: return
@@ -293,4 +307,8 @@ class LuaClient : TwineNative("client") {
     fun hasMod(modId: String): Boolean {
         return FabricLoader.getInstance().isModLoaded(modId)
     }
+
+    @TwineProperty
+    val screen: String?
+        get() = instance.gui.screen()?.getRemappedName()
 }

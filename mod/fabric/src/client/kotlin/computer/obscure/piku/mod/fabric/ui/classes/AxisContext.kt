@@ -15,6 +15,7 @@ sealed interface Axis {
     fun mainMargin(node: UINode): Float
     fun crossMargin(node: UINode): Float
     fun mainDimension(node: UINode): Dimension
+    fun crossDimension(node: UINode): Dimension
     fun parentMain(ctx: MeasureContext): Float
     fun mainPadding(padding: Spacing): Float
     fun withMain(ctx: MeasureContext, value: Float): MeasureContext
@@ -47,6 +48,8 @@ sealed interface Axis {
 
         override fun mainDimension(node: UINode) =
             node.width
+        override fun crossDimension(node: UINode) =
+            node.height
 
         override fun parentMain(ctx: MeasureContext) =
             ctx.parentWidth
@@ -106,6 +109,8 @@ sealed interface Axis {
 
         override fun mainDimension(node: UINode) =
             node.height
+        override fun crossDimension(node: UINode) =
+            node.width
 
         override fun parentMain(ctx: MeasureContext) =
             ctx.parentHeight

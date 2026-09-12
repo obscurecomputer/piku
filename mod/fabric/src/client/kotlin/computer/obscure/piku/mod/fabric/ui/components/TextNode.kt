@@ -9,8 +9,10 @@ import computer.obscure.piku.mod.fabric.ui.classes.context.MeasureContext
 import computer.obscure.piku.mod.fabric.ui.text.TextInterpolator
 import computer.obscure.piku.mod.fabric.utils.toNativeComponent
 import net.kyori.adventure.text.Component
+import net.minecraft.client.gui.Font
 import net.minecraft.network.chat.Component as McComponent
 import net.minecraft.client.gui.GuiGraphicsExtractor
+import net.minecraft.network.chat.Style
 import net.minecraft.util.FormattedCharSequence
 
 open class TextNode(
@@ -21,6 +23,7 @@ open class TextNode(
             resolvedText = TextInterpolator.interpolate(originText.toNativeComponent())
         }
     var rawText: String? = null
+    private var cachedFont: Font? = null
     var shadow: Boolean = false
     var scale: Vec2 = Vec2.ONE
     var scaleX: ScaleDimension = ScaleDimension.One
@@ -34,6 +37,7 @@ open class TextNode(
     var wrap: Boolean = true
 
     override fun measureContent(ctx: MeasureContext): Pair<Float, Float> {
+        cachedFont = ctx.textRenderer
         val base = ctx.textRenderer.lineHeight.toFloat()
         resolvedScaleX = scaleX.resolve(ctx.parentScale, ctx.parentWidth, ctx.parentHeight, base).toFloat()
         resolvedScaleY = scaleY.resolve(ctx.parentScale, ctx.parentWidth, ctx.parentHeight, base).toFloat()
@@ -68,6 +72,32 @@ open class TextNode(
         }
 
         return w to h
+    }
+
+    fun findClickableStyle(mouseX: Double, mouseY: Double): Style? {
+        val font = cachedFont ?: return null
+        val x = layoutX + padding.leftF
+        val y = layoutY + padding.topF
+
+        val localX = (mouseX - x) / resolvedScaleX
+        val localY = (mouseY - y) / resolvedScaleY
+        if (localX < 0 || localY < 0) return null
+
+        val lineIndex = (localY / font.lineHeight).toInt()
+        if (lineIndex !in resolvedLines.indices) return null
+
+        return styleAtWidthInLine(resolvedLines[lineIndex], localX.toFloat(), font)
+    }
+
+    private fun styleAtWidthInLine(line: FormattedCharSequence, targetX: Float, font: Font): Style? {
+        if (targetX < 0) return null
+        var acc = 0f
+        var found: Style? = null
+        line.accept { _, style, codepoint ->
+            acc += font.width(String(Character.toChars(codepoint)))
+            if (acc > targetX) { found = style; false } else true
+        }
+        return found
     }
 
     override fun drawContent(graphics: GuiGraphicsExtractor, ctx: MeasureContext) {

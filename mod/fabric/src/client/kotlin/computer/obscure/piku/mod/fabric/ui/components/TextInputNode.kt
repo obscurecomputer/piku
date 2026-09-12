@@ -2,6 +2,7 @@ package computer.obscure.piku.mod.fabric.ui.components
 
 import computer.obscure.piku.mod.fabric.PikuClient
 import computer.obscure.piku.mod.fabric.scripting.api.ui.LuaUINode
+import computer.obscure.piku.mod.fabric.scripting.api.ui.components.LuaUITextInput
 import computer.obscure.piku.mod.fabric.ui.classes.UIEvent
 import computer.obscure.piku.mod.fabric.ui.classes.context.MeasureContext
 import computer.obscure.piku.mod.fabric.ui.menu.PikuEditBox
@@ -12,10 +13,24 @@ import net.minecraft.client.gui.components.EditBox
 import net.minecraft.client.input.CharacterEvent
 import net.minecraft.client.input.KeyEvent
 
-class TextInputNode() : TextNode() {
+class TextInputNode : TextNode() {
     var placeholder: String? = "Input..."
     var placeholderComponent: Component? = Component.text(placeholder ?: "")
-    private var editBox: EditBox? = null
+    var editBox: EditBox? = null
+
+    // The base hooks for this component.
+    // Can not be overriden through Luau!!
+    fun onBaseInput(event: UIEvent, node: LuaUINode) {
+        onInput?.invoke(event, node)
+    }
+    fun onBaseConfirm(event: UIEvent, node: LuaUINode) {
+        onConfirm?.invoke(event, node)
+    }
+
+    // The hooks for this component that can be
+    // overridden through Luau.
+    var onInput: ((UIEvent, LuaUINode) -> Unit)? = null
+    var onConfirm: ((UIEvent, LuaUINode) -> Unit)? = null
 
     var renderMode = RenderMode.PLACEHOLDER
 
@@ -33,7 +48,12 @@ class TextInputNode() : TextNode() {
             setResponder { newValue ->
                 rawText = newValue
                 originText = Component.text(newValue)
-                println("HELLO new value $rawText")
+
+                // this seems subpar
+                onBaseInput(
+                    UIEvent.TextConfirm(newValue),
+                    LuaUITextInput(this@TextInputNode)
+                )
             }
             placeholder?.let {
                 setHint(Component.text(it).toNativeComponent())
@@ -66,8 +86,16 @@ class TextInputNode() : TextNode() {
         return super.measureContent(ctx)
     }
 
-    fun handleKeyPressed(event: KeyEvent): Boolean =
-        editBox?.keyPressed(event) ?: false
+    fun handleKeyPressed(event: KeyEvent): Boolean {
+        if (event.isConfirmation) {
+            // this seems subpar
+            onBaseConfirm(
+                UIEvent.TextConfirm(rawText ?: ""),
+                LuaUITextInput(this@TextInputNode)
+            )
+        }
+        return editBox?.keyPressed(event) ?: false
+    }
     fun handleCharTyped(event: CharacterEvent): Boolean =
         editBox?.charTyped(event) ?: false
 

@@ -12,11 +12,14 @@ import computer.obscure.piku.mod.fabric.packets.serverbound.SendDataPacket
 import computer.obscure.piku.mod.fabric.packets.serverbound.SendStatePacket
 import computer.obscure.piku.mod.fabric.packets.serverbound.SendUnloadedPacket
 import computer.obscure.piku.mod.fabric.scripting.engine.ClientLuaEngine
+import computer.obscure.piku.mod.fabric.ui.menu.UIMenu
 import net.fabricmc.api.ClientModInitializer
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry
 import net.kyori.adventure.text.minimessage.MiniMessage
+import net.minecraft.client.Minecraft
+import net.minecraft.client.gui.screens.Screen
 import net.minecraft.network.FriendlyByteBuf
 import net.minecraft.network.codec.StreamCodec
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload
@@ -50,6 +53,12 @@ class PikuClient : ClientModInitializer {
         }
 
         fun formatLog(message: Any) = "[Piku] $message"
+
+        val screen: Screen?
+            get() = Minecraft.getInstance().gui.screen()
+        fun uiMenu(): UIMenu? = if (screen != null && screen is UIMenu)
+            screen as UIMenu
+        else null
     }
 
     override fun onInitializeClient() {

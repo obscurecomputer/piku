@@ -6,6 +6,7 @@ import computer.obscure.piku.mod.fabric.ui.classes.UIEvent
 import computer.obscure.piku.mod.fabric.ui.classes.context.LayoutContext
 import computer.obscure.piku.mod.fabric.ui.classes.context.MeasureContext
 import computer.obscure.piku.mod.fabric.ui.components.TextInputNode
+import computer.obscure.piku.mod.fabric.ui.components.TextNode
 import computer.obscure.piku.mod.fabric.ui.components.UINode
 import net.minecraft.client.gui.GuiGraphicsExtractor
 import net.minecraft.client.gui.screens.Screen
@@ -21,7 +22,7 @@ class UIMenu(
     var escapeClose = false
     var blur = false
 
-    private var focusedNode: UINode? = null
+    var focusedNode: UINode? = null
     private var hoveredPath: List<UINode> = emptyList()
 
     override fun isPauseScreen(): Boolean = true
@@ -128,6 +129,11 @@ class UIMenu(
                 )
                 node.hovered = true
                 node.onBaseHover(uiEvent, LuaUINode(node))
+
+                if (node is TextNode) {
+                    println("TEXT NODE:")
+                    println("STYLE: ${node.findClickableStyle(xD, yD)}")
+                }
             }
         }
 
@@ -139,7 +145,7 @@ class UIMenu(
 
         if (path.isNotEmpty()) {
             val topHit = path.first()
-            val uiEvent = UIEvent.Pointer(
+            val uiEvent = UIEvent.Focus(
                 screenX = event.x().toFloat(),
                 screenY = event.y().toFloat(),
                 localX = event.x().toFloat() - topHit.layoutX,
@@ -162,7 +168,7 @@ class UIMenu(
             }
 
             for (node in path) {
-                val nodeEvent = UIEvent.Pointer(
+                val nodeEvent = UIEvent.Focus(
                     screenX = event.x().toFloat(),
                     screenY = event.y().toFloat(),
                     localX = event.x().toFloat() - node.layoutX,
@@ -188,7 +194,7 @@ class UIMenu(
 
     override fun mouseReleased(event: MouseButtonEvent): Boolean {
         val hit = hitTestRoots(event.x().toFloat(), event.y().toFloat())
-        val uiEvent = UIEvent.Pointer(
+        val uiEvent = UIEvent.Focus(
             screenX = event.x().toFloat(),
             screenY = event.y().toFloat(),
             localX = event.x().toFloat() - (hit?.layoutX ?: 0f),

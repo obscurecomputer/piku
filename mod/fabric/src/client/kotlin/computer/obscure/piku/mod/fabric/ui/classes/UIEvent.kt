@@ -7,7 +7,7 @@ import computer.obscure.twine.TwineNative
 import computer.obscure.twine.annotations.TwineProperty
 
 sealed interface UIEvent {
-    data class Pointer(
+    data class Focus(
         @TwineProperty
         val screenX: Float,
         @TwineProperty
@@ -51,4 +51,13 @@ sealed interface UIEvent {
     data object Manual : TwineNative(), UIEvent
     data object FocusDropped : TwineNative(), UIEvent
     data object HoverDropped : TwineNative(), UIEvent
+
+    data class TextInput(
+        @TwineProperty
+        val rawText: String
+    ) : TwineNative(), UIEvent
+    data class TextConfirm(
+        @TwineProperty
+        val rawText: String
+    ) : TwineNative(), UIEvent
 }

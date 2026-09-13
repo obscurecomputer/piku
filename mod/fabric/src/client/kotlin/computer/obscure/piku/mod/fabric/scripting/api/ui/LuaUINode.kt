@@ -296,6 +296,17 @@ open class LuaUINode(open val node: UINode) : TwineNative() {
     }
 
     @TwineFunction
+    fun focused() = node.focused
+    @TwineFunction
+    fun hovered() = node.hovered
+    @TwineFunction
+    fun activated() = node.activated
+    @TwineFunction
+    fun selected() = node.selected
+    @TwineFunction
+    fun selectable() = node.selectable
+
+    @TwineFunction
     fun selectable(value: Boolean) = apply {
         node.selectable = value
     }

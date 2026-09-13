@@ -18,6 +18,8 @@ class TextInputNode : TextNode() {
     var placeholderComponent: Component? = Component.text(placeholder ?: "")
     var editBox: EditBox? = null
 
+    var maxLength: Int = 32
+
     // The base hooks for this component.
     // Can not be overriden through Luau!!
     fun onBaseInput(event: UIEvent, node: LuaUINode) {
@@ -43,12 +45,14 @@ class TextInputNode : TextNode() {
             measuredHeight.toInt(),
             Component.empty().toNativeComponent()
         ).apply {
+            setMaxLength(maxLength)
             isBordered = false
             value = rawText ?: ""
             setResponder { newValue ->
                 rawText = newValue
                 originText = Component.text(newValue)
 
+                checkPlaceholder()
                 // this seems subpar
                 onBaseInput(
                     UIEvent.TextConfirm(newValue),
@@ -58,30 +62,36 @@ class TextInputNode : TextNode() {
             placeholder?.let {
                 setHint(Component.text(it).toNativeComponent())
             }
-            isVisible = false
+//            isVisible = false
         }.also { editBox = it }
 
         box.x = layoutX.toInt()
         box.y = layoutY.toInt()
+        box.setWidth(measuredWidth.toInt())
+        box.setHeight(measuredHeight.toInt())
         return box
     }
 
     override fun onBaseFocus(event: UIEvent, node: LuaUINode) {
-        PikuClient.LOGGER.info("Render mode = TEXT")
-        renderMode = RenderMode.TEXT
+        checkPlaceholder()
         super.onBaseFocus(event, node)
     }
 
     override fun onBaseUnfocus(event: UIEvent, node: LuaUINode) {
-        if ((placeholder != null && rawText == null)) {
-            PikuClient.LOGGER.info("Render mode = PLACEHOLDER")
-            renderMode = RenderMode.PLACEHOLDER
-        }
+        checkPlaceholder()
         super.onBaseUnfocus(event, node)
     }
 
+    fun checkPlaceholder() {
+        if ((placeholder != null && rawText.isNullOrEmpty())) {
+            renderMode = RenderMode.PLACEHOLDER
+        } else {
+            renderMode = RenderMode.TEXT
+        }
+    }
+
     override fun measureContent(ctx: MeasureContext): Pair<Float, Float> {
-        if ((placeholder != null && rawText == null) && renderMode == RenderMode.PLACEHOLDER)
+        if ((placeholder != null && rawText.isNullOrEmpty()) && renderMode == RenderMode.PLACEHOLDER)
             return ctx.textRenderer.width(placeholder!!) * resolvedScaleX to (ctx.textRenderer.lineHeight.toFloat() - 1) * resolvedScaleY
         return super.measureContent(ctx)
     }
@@ -102,12 +112,14 @@ class TextInputNode : TextNode() {
     override fun drawContent(graphics: GuiGraphicsExtractor, ctx: MeasureContext) {
         val box = ensureEditBox(ctx)
         box.isFocused = this.focused
-        box.extractWidgetRenderState(graphics, 0, 0, 0f)
-        if ((placeholder != null && rawText == null) && renderMode == RenderMode.PLACEHOLDER) {
-            drawLine(placeholder!!, graphics, ctx)
-            return
-        }
-        return super.drawContent(graphics, ctx)
+        box.extractWidgetRenderState(graphics, box.cursorPosition, 0, 0f)
+        // stop bothering with our own text renderer
+        // minecraft already does it better by default
+//        if ((placeholder != null && rawText.isNullOrEmpty()) && renderMode == RenderMode.PLACEHOLDER) {
+//            drawLine(placeholder!!, graphics, ctx)
+//            return
+//        }
+//        return super.drawContent(graphics, ctx)
     }
 
     enum class RenderMode {

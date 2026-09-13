@@ -7,6 +7,16 @@ import computer.obscure.twine.LuaCallback
 import computer.obscure.twine.annotations.TwineFunction
 
 class LuaUITextInput(override val node: TextInputNode) : LuaUIText(node) {
+
+    @TwineFunction
+    fun maxLength() = node.maxLength
+
+    @TwineFunction
+    fun maxLength(value: Int) = apply {
+        node.maxLength = value
+        node.editBox?.setMaxLength(value)
+    }
+
     @TwineFunction
     fun focus() = apply {
         val menu = PikuClient.uiMenu() ?: return@apply
@@ -41,6 +51,9 @@ class LuaUITextInput(override val node: TextInputNode) : LuaUIText(node) {
             this
         )
     }
+
+    @TwineFunction
+    fun placeholder() = node.placeholder
 
     @TwineFunction
     fun placeholder(value: String): LuaUITextInput {

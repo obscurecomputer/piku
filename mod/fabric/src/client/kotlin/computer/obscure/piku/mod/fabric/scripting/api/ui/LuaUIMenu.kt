@@ -19,6 +19,11 @@ class LuaUIMenuInstance(
     val screen: UIMenu,
 ) : TwineNative() {
     @TwineFunction
+    fun name(value: String) = apply {
+        screen.name = value
+    }
+
+    @TwineFunction
     fun escapeClose(value: Boolean) = apply {
         screen.escapeClose = value
     }

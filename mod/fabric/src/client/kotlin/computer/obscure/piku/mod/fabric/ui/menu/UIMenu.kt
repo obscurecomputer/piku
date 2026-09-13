@@ -18,6 +18,7 @@ import net.minecraft.network.chat.Component
 class UIMenu(
     menuTitle: Component
 ) : Screen(menuTitle) {
+    var name: String? = null
     val roots = mutableListOf<UINode>()
     var escapeClose = false
     var blur = false

@@ -64,17 +64,10 @@ class LuaUI : TwineNative() {
     }
 
     @TwineFunction
-    fun menu(title: LuaTextInstance): LuaUIMenuInstance {
+    fun menu(name: String? = null, titleText: LuaTextInstance? = null): LuaUIMenuInstance {
+        val title = titleText ?: LuaText.fromComponent(Component.empty())
         return LuaUIMenuInstance(
-            title, UIMenu(title.toMcComponent())
-        )
-    }
-
-    @TwineFunction
-    fun menu(): LuaUIMenuInstance {
-        val title = LuaText.fromComponent(Component.empty())
-        return LuaUIMenuInstance(
-            title, UIMenu(title.toMcComponent())
+            title, UIMenu(title.toMcComponent()).also { it.name = name }
         )
     }
 }

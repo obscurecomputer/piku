@@ -89,4 +89,9 @@ class LuaUITextInput(override val node: TextInputNode) : LuaUIText(node) {
             } catch (_: Exception) {}
         }
     }
+
+    @TwineFunction
+    fun useCommandSuggestions(value: Boolean) = apply {
+        node.useCommandSuggestions = value
+    }
 }

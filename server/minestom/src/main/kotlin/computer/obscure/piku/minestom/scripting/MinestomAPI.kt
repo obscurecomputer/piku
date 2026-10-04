@@ -13,8 +13,8 @@ import computer.obscure.piku.core.utils.readString
 import computer.obscure.piku.core.utils.toJson
 import io.netty.buffer.ByteBuf
 import io.netty.buffer.Unpooled
-import me.znotchill.blossom.extensions.addListener
-import me.znotchill.blossom.server.BlossomServer
+import me.znotchill.kiwi.blossom.extensions.addListener
+import me.znotchill.kiwi.blossom.server.BlossomServer
 import net.minestom.server.entity.Player
 import net.minestom.server.event.player.PlayerDisconnectEvent
 import net.minestom.server.event.player.PlayerLoadedEvent

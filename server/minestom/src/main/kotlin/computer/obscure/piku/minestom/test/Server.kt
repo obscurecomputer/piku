@@ -4,9 +4,9 @@ import computer.obscure.piku.core.classes.ScriptSource
 import computer.obscure.piku.minestom.scripting.MinestomAPI
 import computer.obscure.piku.minestom.scripting.states.sharedState
 import computer.obscure.piku.minestom.scripting.utils.piku
-import me.znotchill.blossom.command.command
-import me.znotchill.blossom.extensions.addListener
-import me.znotchill.blossom.server.BlossomServer
+import me.znotchill.kiwi.blossom.command.command
+import me.znotchill.kiwi.blossom.extensions.addListener
+import me.znotchill.kiwi.blossom.server.BlossomServer
 import me.znotchill.kiwi.generated.Color
 import net.minestom.server.Auth
 import net.minestom.server.MinecraftServer

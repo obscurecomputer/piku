@@ -27,7 +27,7 @@ dependencies {
     implementation("io.netty:netty-buffer:4.1.111.Final")
     implementation("io.netty:netty-common:4.1.111.Final")
     implementation("net.minestom:minestom:${project.property("minestom_version")}")
-    implementation("me.znotchill:blossom:${project.property("blossom_version")}")
+    implementation("me.znotchill.kiwi:blossom:${project.property("blossom_version")}")
     implementation("io.github.xn32:json5k:0.3.0")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("net.kyori:adventure-text-minimessage:${project.property("adventure_version")}")

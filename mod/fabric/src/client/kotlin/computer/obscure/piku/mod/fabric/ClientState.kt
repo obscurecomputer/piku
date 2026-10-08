@@ -3,10 +3,9 @@ package computer.obscure.piku.mod.fabric
 import computer.obscure.piku.core.classes.Vec3
 import computer.obscure.piku.core.scripting.api.LuaTextInstance
 import net.kyori.adventure.text.Component
-import net.minecraft.client.CameraType
 import net.minecraft.client.Minecraft
 
-object Client {
+object ClientState {
     @JvmField
     var rotation: Vec3 = Vec3.ZERO
 

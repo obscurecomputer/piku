@@ -99,7 +99,7 @@ object InputHandler : PikuService {
 
         if (mc.gui.screen() != null && method == InputMethod.KEYBOARD)
             return mc.gui.screen() is UIMenu
-        return Client.connectedToServer && mc.player != null
+        return ClientState.connectedToServer && mc.player != null
     }
 
     fun queueInputUp(luaKeyBind: LuaKeyBind) {

@@ -1,6 +1,6 @@
 package computer.obscure.piku.mod.fabric.mixin;
 
-import computer.obscure.piku.mod.fabric.Client;
+import computer.obscure.piku.mod.fabric.ClientState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.MouseHandler;
 import net.minecraft.client.input.MouseButtonInfo;
@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class MouseMixin {
     @Inject(method = "turnPlayer", at = @At("HEAD"), cancellable = true)
     private void piku$lockCamera(double d, CallbackInfo ci) {
-        if (Client.cameraLocked) {
+        if (ClientState.cameraLocked) {
             ci.cancel();
         }
     }
@@ -22,7 +22,7 @@ public class MouseMixin {
     private void piku$lockButtons(long windowHandle, MouseButtonInfo info, int action, CallbackInfo ci) {
         Minecraft mc = Minecraft.getInstance();
 
-        if (Client.mouseButtonsLocked && !Client.emitMouseEvents) {
+        if (ClientState.mouseButtonsLocked && !ClientState.emitMouseEvents) {
             if (mc.gui.screen() == null) {
                 ci.cancel();
             }

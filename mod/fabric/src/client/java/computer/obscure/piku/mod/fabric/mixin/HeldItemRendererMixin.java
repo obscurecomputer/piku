@@ -1,7 +1,7 @@
 package computer.obscure.piku.mod.fabric.mixin;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import computer.obscure.piku.mod.fabric.Client;
+import computer.obscure.piku.mod.fabric.ClientState;
 import net.minecraft.client.renderer.ItemInHandRenderer;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.world.entity.LivingEntity;
@@ -34,10 +34,10 @@ public class HeldItemRendererMixin {
             int i,
             CallbackInfo ci
     ) {
-        if (Client.mouseButtonsLocked) {
+        if (ClientState.mouseButtonsLocked) {
             livingEntity.swinging = false;
         }
-        if (Client.hideArm) {
+        if (ClientState.hideArm) {
             ci.cancel();
         }
     }

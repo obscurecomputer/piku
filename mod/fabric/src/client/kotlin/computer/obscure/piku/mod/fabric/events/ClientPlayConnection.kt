@@ -3,7 +3,7 @@ package computer.obscure.piku.mod.fabric.events
 import computer.obscure.piku.core.classes.Vec3
 import computer.obscure.piku.core.scheduler.Scheduler
 import computer.obscure.piku.core.scripting.server.SharedStateManager
-import computer.obscure.piku.mod.fabric.Client
+import computer.obscure.piku.mod.fabric.ClientState
 import computer.obscure.piku.mod.fabric.InputHandler
 import computer.obscure.piku.mod.fabric.PikuClient
 import computer.obscure.piku.mod.fabric.animation.AnimationManager
@@ -32,13 +32,13 @@ object ClientPlayConnection {
     }
 
     fun onJoin() {
-        if (Client.connectedToServer) {
+        if (ClientState.connectedToServer) {
             // transferred between servers (on a network/transfer packet)
             // so onDisconnect won't ever be called otherwise
             onDisconnect()
         }
-        Client.connectedToServer = true
-        Client.serverRunsPiku = true // TODO: change this
+        ClientState.connectedToServer = true
+        ClientState.serverRunsPiku = true // TODO: change this
         PikuClient.engine!!.init()
 
         AnimationManager.easingResolver = { easing, t ->
@@ -61,7 +61,7 @@ object ClientPlayConnection {
         TrackRegistry.shutdown()
         TrackManager.shutdown()
 
-        Client.apply {
+        ClientState.apply {
             rotation = Vec3.ZERO
             targetFov = -1f
             currentFov = Minecraft.getInstance().options.fov().get().toFloat()

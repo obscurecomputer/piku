@@ -5,7 +5,7 @@ import computer.obscure.piku.core.scripting.api.LuaTextInstance
 import me.znotchill.kiwi.generated.Vec2
 import computer.obscure.piku.core.scripting.api.LuaVec3
 import computer.obscure.piku.core.scripting.api.LuaVec3Instance
-import computer.obscure.piku.mod.fabric.Client
+import computer.obscure.piku.mod.fabric.ClientState
 import computer.obscure.piku.mod.fabric.InputHandler
 import computer.obscure.piku.mod.fabric.PikuClient
 import computer.obscure.piku.mod.fabric.scripting.api.camera.LuaClientCamera
@@ -100,18 +100,18 @@ class LuaClient : TwineNative("client") {
 
     @TwineProperty
     var hideHotbar: Boolean
-        get() = Client.hideHotbar
-        set(value) { Client.hideHotbar = value }
+        get() = ClientState.hideHotbar
+        set(value) { ClientState.hideHotbar = value }
 
     @TwineProperty
     var hideArm: Boolean
-        get() = Client.hideArm
-        set(value) { Client.hideArm = value }
+        get() = ClientState.hideArm
+        set(value) { ClientState.hideArm = value }
 
     @TwineProperty
     var hideHUD: Boolean
-        get() = Client.hideHUD
-        set(value) { Client.hideHUD = value }
+        get() = ClientState.hideHUD
+        set(value) { ClientState.hideHUD = value }
 
     @TwineProperty
     var selectedSlot: Int
@@ -176,8 +176,8 @@ class LuaClient : TwineNative("client") {
 
     @TwineFunction
     fun screenshotMessage(value: LuaTextInstance) {
-        Client.customScreenshotMessage = value.toComponent()
-        Client.customScreenshotInstance = value
+        ClientState.customScreenshotMessage = value.toComponent()
+        ClientState.customScreenshotInstance = value
     }
 
     /*
@@ -186,17 +186,17 @@ class LuaClient : TwineNative("client") {
 
     @TwineProperty
     var cameraLocked: Boolean
-        get() = Client.cameraLocked
-        set(value) { Client.cameraLocked = value }
+        get() = ClientState.cameraLocked
+        set(value) { ClientState.cameraLocked = value }
 
     @TwineFunction
     fun lockCamera(value: Boolean) {
-        Client.cameraLocked = value
+        ClientState.cameraLocked = value
     }
 
     @TwineFunction
     fun lockCamera() {
-        Client.cameraLocked = true
+        ClientState.cameraLocked = true
     }
 
     /*
@@ -205,17 +205,17 @@ class LuaClient : TwineNative("client") {
 
     @TwineProperty
     var mouseButtonsLocked: Boolean
-        get() = Client.mouseButtonsLocked
-        set(value) { Client.mouseButtonsLocked = value }
+        get() = ClientState.mouseButtonsLocked
+        set(value) { ClientState.mouseButtonsLocked = value }
 
     @TwineFunction
     fun lockMouseButtons(value: Boolean) {
-        Client.mouseButtonsLocked = value
+        ClientState.mouseButtonsLocked = value
     }
 
     @TwineFunction
     fun lockMouseButtons() {
-        Client.mouseButtonsLocked = true
+        ClientState.mouseButtonsLocked = true
     }
 
     /**
@@ -298,9 +298,9 @@ class LuaClient : TwineNative("client") {
 
     @TwineProperty
     var bobbingStrength: Float
-        get() = Client.bobbingStrength
+        get() = ClientState.bobbingStrength
         set(value) {
-            Client.bobbingStrength = value
+            ClientState.bobbingStrength = value
         }
 
     @TwineFunction

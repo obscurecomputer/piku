@@ -2,9 +2,9 @@ package computer.obscure.piku.mod.fabric.ui.menu
 
 import computer.obscure.piku.mod.fabric.scripting.api.ui.LuaUINode
 import computer.obscure.piku.mod.fabric.ui.UIRenderer
-import computer.obscure.piku.mod.fabric.ui.classes.UIEvent
-import computer.obscure.piku.mod.fabric.ui.classes.context.LayoutContext
-import computer.obscure.piku.mod.fabric.ui.classes.context.MeasureContext
+import computer.obscure.piku.mod.fabric.ui.event.UIEvent
+import computer.obscure.piku.mod.fabric.ui.layout.context.LayoutContext
+import computer.obscure.piku.mod.fabric.ui.layout.context.MeasureContext
 import computer.obscure.piku.mod.fabric.ui.components.TextInputNode
 import computer.obscure.piku.mod.fabric.ui.components.TextNode
 import computer.obscure.piku.mod.fabric.ui.components.UINode

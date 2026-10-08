@@ -1,6 +1,6 @@
 package computer.obscure.piku.mod.fabric.ui.components
 
-import computer.obscure.piku.mod.fabric.ui.classes.context.MeasureContext
+import computer.obscure.piku.mod.fabric.ui.layout.context.MeasureContext
 import net.minecraft.client.gui.GuiGraphicsExtractor
 
 class DividerNode : UINode() {

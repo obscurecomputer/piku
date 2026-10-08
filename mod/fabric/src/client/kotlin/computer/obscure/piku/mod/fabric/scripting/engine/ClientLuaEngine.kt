@@ -4,12 +4,12 @@ import computer.obscure.piku.core.scripting.engine.LuaEngine
 import computer.obscure.piku.mod.fabric.PikuClient
 import computer.obscure.piku.mod.fabric.scripting.LuaStateManager
 import computer.obscure.piku.mod.fabric.scripting.api.LuaClient
-import computer.obscure.piku.mod.fabric.scripting.api.LuaClientEventListener
-import computer.obscure.piku.mod.fabric.scripting.api.LuaClientEvents
+import computer.obscure.piku.mod.fabric.scripting.api.events.LuaClientEventListener
+import computer.obscure.piku.mod.fabric.scripting.api.events.LuaClientEvents
 import computer.obscure.piku.mod.fabric.scripting.api.LuaGame
 import computer.obscure.piku.mod.fabric.scripting.api.LuaLevel
-import computer.obscure.piku.mod.fabric.scripting.api.LuaScreens
-import computer.obscure.piku.mod.fabric.scripting.api.LuaWidgets
+import computer.obscure.piku.mod.fabric.scripting.api.screen.LuaScreens
+import computer.obscure.piku.mod.fabric.scripting.api.screen.LuaWidgets
 import computer.obscure.piku.mod.fabric.scripting.api.controlify.LuaControlify
 import computer.obscure.piku.mod.fabric.scripting.api.raycast.LuaRaycast
 import computer.obscure.piku.mod.fabric.scripting.api.sound.LuaSound

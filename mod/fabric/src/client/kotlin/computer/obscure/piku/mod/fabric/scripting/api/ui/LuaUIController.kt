@@ -1,8 +1,8 @@
 package computer.obscure.piku.mod.fabric.scripting.api.ui
 
-import computer.obscure.piku.mod.fabric.ui.classes.ControllerActivateMode
-import computer.obscure.piku.mod.fabric.ui.classes.ControllerEdgeMode
-import computer.obscure.piku.mod.fabric.ui.classes.ControllerScrollAxis
+import computer.obscure.piku.mod.fabric.ui.layout.ControllerActivateMode
+import computer.obscure.piku.mod.fabric.ui.layout.ControllerEdgeMode
+import computer.obscure.piku.mod.fabric.ui.layout.ControllerScrollAxis
 import computer.obscure.piku.mod.fabric.ui.components.FlowNode
 import computer.obscure.twine.TwineNative
 import computer.obscure.twine.annotations.TwineFunction

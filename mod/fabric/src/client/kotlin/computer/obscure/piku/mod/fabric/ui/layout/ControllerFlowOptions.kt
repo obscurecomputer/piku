@@ -1,4 +1,4 @@
-package computer.obscure.piku.mod.fabric.ui.classes
+package computer.obscure.piku.mod.fabric.ui.layout
 
 import computer.obscure.piku.mod.fabric.compat.controlify.ActionEvent
 import computer.obscure.piku.mod.fabric.compat.controlify.BindingEvent

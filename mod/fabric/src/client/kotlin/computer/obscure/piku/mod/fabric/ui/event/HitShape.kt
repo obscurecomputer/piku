@@ -1,4 +1,7 @@
-package computer.obscure.piku.mod.fabric.ui.classes
+package computer.obscure.piku.mod.fabric.ui.event
+
+import kotlin.math.cos
+import kotlin.math.sin
 
 sealed interface HitShape {
     fun contains(x: Float, y: Float, bounds: ShapeBounds): Boolean
@@ -39,7 +42,7 @@ sealed interface HitShape {
             val segments = 24
             return (0 until segments).map { i ->
                 val angle = (i.toFloat() / segments) * (Math.PI.toFloat() * 2f)
-                (cx + rx * kotlin.math.cos(angle)) to (cy + ry * kotlin.math.sin(angle))
+                (cx + rx * cos(angle)) to (cy + ry * sin(angle))
             }
         }
     }

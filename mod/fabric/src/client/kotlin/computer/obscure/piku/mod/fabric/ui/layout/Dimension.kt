@@ -1,4 +1,4 @@
-package computer.obscure.piku.mod.fabric.ui.classes
+package computer.obscure.piku.mod.fabric.ui.layout
 
 sealed class Dimension {
     object Wrap : Dimension()

@@ -1,6 +1,6 @@
 package computer.obscure.piku.mod.fabric.scripting.api
 
-import computer.obscure.piku.mod.fabric.InputHandler
+import computer.obscure.piku.mod.fabric.input.InputHandler
 import computer.obscure.twine.annotations.TwineFunction
 import computer.obscure.twine.annotations.TwineProperty
 import computer.obscure.twine.TwineNative

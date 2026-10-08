@@ -1,12 +1,12 @@
 package computer.obscure.piku.mod.fabric.ui.components
 
-import computer.obscure.piku.mod.fabric.ui.classes.Axis
-import computer.obscure.piku.mod.fabric.ui.classes.ControllerFlowData
-import computer.obscure.piku.mod.fabric.ui.classes.ControllerFlowOptions
-import computer.obscure.piku.mod.fabric.ui.classes.Dimension
-import computer.obscure.piku.mod.fabric.ui.classes.alignment.CrossAxisAlignment
-import computer.obscure.piku.mod.fabric.ui.classes.alignment.MainAxisAlignment
-import computer.obscure.piku.mod.fabric.ui.classes.context.MeasureContext
+import computer.obscure.piku.mod.fabric.ui.layout.Axis
+import computer.obscure.piku.mod.fabric.ui.layout.ControllerFlowData
+import computer.obscure.piku.mod.fabric.ui.layout.ControllerFlowOptions
+import computer.obscure.piku.mod.fabric.ui.layout.Dimension
+import computer.obscure.piku.mod.fabric.ui.layout.alignment.CrossAxisAlignment
+import computer.obscure.piku.mod.fabric.ui.layout.alignment.MainAxisAlignment
+import computer.obscure.piku.mod.fabric.ui.layout.context.MeasureContext
 import net.minecraft.client.gui.GuiGraphicsExtractor
 
 enum class FlowAxis { HORIZONTAL, VERTICAL }

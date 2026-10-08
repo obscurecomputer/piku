@@ -1,5 +1,6 @@
 package computer.obscure.piku.mod.fabric.scripting.api
 
+import computer.obscure.piku.mod.fabric.scripting.api.components.LuaComponents
 import computer.obscure.twine.annotations.TwineProperty
 import computer.obscure.twine.TwineNative
 import net.minecraft.core.registries.BuiltInRegistries

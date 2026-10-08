@@ -3,9 +3,9 @@ package computer.obscure.piku.mod.fabric.ui.components
 import me.znotchill.kiwi.generated.Vec2
 import computer.obscure.piku.core.classes.leftF
 import computer.obscure.piku.core.classes.topF
-import computer.obscure.piku.mod.fabric.ui.classes.Dimension
-import computer.obscure.piku.mod.fabric.ui.classes.ScaleDimension
-import computer.obscure.piku.mod.fabric.ui.classes.context.MeasureContext
+import computer.obscure.piku.mod.fabric.ui.layout.Dimension
+import computer.obscure.piku.mod.fabric.ui.layout.ScaleDimension
+import computer.obscure.piku.mod.fabric.ui.layout.context.MeasureContext
 import computer.obscure.piku.mod.fabric.ui.text.TextInterpolator
 import computer.obscure.piku.mod.fabric.utils.toNativeComponent
 import net.kyori.adventure.text.Component

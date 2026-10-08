@@ -1,4 +1,4 @@
-package computer.obscure.piku.mod.fabric.ui.classes
+package computer.obscure.piku.mod.fabric.ui.layout
 
 import computer.obscure.piku.mod.fabric.ui.components.UINode
 

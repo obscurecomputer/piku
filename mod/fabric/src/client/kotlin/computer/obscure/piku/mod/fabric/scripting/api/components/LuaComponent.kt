@@ -2,7 +2,7 @@ package computer.obscure.piku.mod.fabric.scripting.api.components
 
 import com.google.gson.JsonParser
 import com.mojang.serialization.JsonOps
-import computer.obscure.piku.mod.fabric.scripting.api.LuaNbtCompound
+import computer.obscure.piku.mod.fabric.scripting.api.world.LuaNbtCompound
 import computer.obscure.piku.mod.fabric.scripting.api.util.unwrap
 import net.minecraft.core.component.DataComponentType
 import net.minecraft.core.component.DataComponents

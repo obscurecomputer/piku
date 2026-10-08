@@ -1,6 +1,6 @@
 package computer.obscure.piku.mod.fabric.ui.components
 
-import computer.obscure.piku.mod.fabric.ui.classes.context.MeasureContext
+import computer.obscure.piku.mod.fabric.ui.layout.context.MeasureContext
 import me.znotchill.kiwi.generated.Color
 import net.minecraft.client.gui.GuiGraphicsExtractor
 

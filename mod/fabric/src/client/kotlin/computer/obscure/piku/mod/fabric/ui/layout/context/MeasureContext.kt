@@ -1,4 +1,4 @@
-package computer.obscure.piku.mod.fabric.ui.classes.context
+package computer.obscure.piku.mod.fabric.ui.layout.context
 
 import net.minecraft.client.gui.Font
 

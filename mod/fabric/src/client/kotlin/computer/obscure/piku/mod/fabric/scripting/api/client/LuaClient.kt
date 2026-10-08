@@ -6,7 +6,7 @@ import me.znotchill.kiwi.generated.Vec2
 import computer.obscure.piku.core.scripting.api.LuaVec3
 import computer.obscure.piku.core.scripting.api.LuaVec3Instance
 import computer.obscure.piku.mod.fabric.ClientState
-import computer.obscure.piku.mod.fabric.InputHandler
+import computer.obscure.piku.mod.fabric.input.InputHandler
 import computer.obscure.piku.mod.fabric.PikuClient
 import computer.obscure.piku.mod.fabric.scripting.api.camera.LuaClientCamera
 import computer.obscure.piku.mod.fabric.utils.getRemappedName

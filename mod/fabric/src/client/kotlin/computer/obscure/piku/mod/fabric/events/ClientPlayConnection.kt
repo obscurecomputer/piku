@@ -4,7 +4,7 @@ import computer.obscure.piku.core.classes.Vec3
 import computer.obscure.piku.core.scheduler.Scheduler
 import computer.obscure.piku.core.scripting.server.SharedStateManager
 import computer.obscure.piku.mod.fabric.ClientState
-import computer.obscure.piku.mod.fabric.InputHandler
+import computer.obscure.piku.mod.fabric.input.InputHandler
 import computer.obscure.piku.mod.fabric.PikuClient
 import computer.obscure.piku.mod.fabric.animation.AnimationManager
 import computer.obscure.piku.mod.fabric.animation.AnimationUtil

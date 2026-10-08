@@ -1,7 +1,6 @@
-package computer.obscure.piku.mod.fabric.scripting.api
+package computer.obscure.piku.mod.fabric.scripting.api.screen
 
 import computer.obscure.piku.core.scripting.api.LuaTextInstance
-import computer.obscure.piku.mod.fabric.scripting.api.screen.LuaWidget
 import computer.obscure.twine.annotations.TwineFunction
 import computer.obscure.twine.TwineNative
 import net.kyori.adventure.platform.modcommon.MinecraftClientAudiences

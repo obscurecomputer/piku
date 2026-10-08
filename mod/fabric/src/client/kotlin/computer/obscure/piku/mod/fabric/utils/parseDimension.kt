@@ -1,8 +1,8 @@
 package computer.obscure.piku.mod.fabric.utils
 
-import computer.obscure.piku.mod.fabric.ui.classes.Dimension
-import computer.obscure.piku.mod.fabric.ui.classes.ScaleDimension
-import computer.obscure.piku.mod.fabric.ui.classes.ScaleDimension2
+import computer.obscure.piku.mod.fabric.ui.layout.Dimension
+import computer.obscure.piku.mod.fabric.ui.layout.ScaleDimension
+import computer.obscure.piku.mod.fabric.ui.layout.ScaleDimension2
 
 fun parseDimension(value: String): Dimension = when {
     value == "wrap" -> Dimension.Wrap

@@ -1,6 +1,6 @@
-package computer.obscure.piku.mod.fabric.ui.classes
+package computer.obscure.piku.mod.fabric.ui.event
 
-import computer.obscure.piku.mod.fabric.MouseButton
+import computer.obscure.piku.mod.fabric.input.MouseButton
 import computer.obscure.piku.mod.fabric.scripting.api.input.LuaMouseButton
 import computer.obscure.piku.mod.fabric.scripting.api.ui.LuaUINode
 import computer.obscure.twine.TwineNative

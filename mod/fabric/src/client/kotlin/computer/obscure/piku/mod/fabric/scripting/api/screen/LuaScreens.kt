@@ -1,6 +1,5 @@
-package computer.obscure.piku.mod.fabric.scripting.api
+package computer.obscure.piku.mod.fabric.scripting.api.screen
 
-import computer.obscure.piku.mod.fabric.scripting.api.screen.LuaCustomScreen
 import computer.obscure.twine.annotations.TwineFunction
 import computer.obscure.twine.TwineNative
 import net.fabricmc.loader.api.FabricLoader

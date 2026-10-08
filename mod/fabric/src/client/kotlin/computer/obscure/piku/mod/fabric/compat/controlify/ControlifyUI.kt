@@ -4,11 +4,11 @@ import me.znotchill.kiwi.generated.Vec2
 import computer.obscure.piku.core.service.PikuService
 import computer.obscure.piku.mod.fabric.scripting.api.ui.LuaUINode
 import computer.obscure.piku.mod.fabric.ui.UIRenderer
-import computer.obscure.piku.mod.fabric.ui.classes.ControllerActivateMode
-import computer.obscure.piku.mod.fabric.ui.classes.ControllerEdgeMode
-import computer.obscure.piku.mod.fabric.ui.classes.ControllerScrollAxis
-import computer.obscure.piku.mod.fabric.ui.classes.ControllerScrollDirection
-import computer.obscure.piku.mod.fabric.ui.classes.UIEvent
+import computer.obscure.piku.mod.fabric.ui.layout.ControllerActivateMode
+import computer.obscure.piku.mod.fabric.ui.layout.ControllerEdgeMode
+import computer.obscure.piku.mod.fabric.ui.layout.ControllerScrollAxis
+import computer.obscure.piku.mod.fabric.ui.layout.ControllerScrollDirection
+import computer.obscure.piku.mod.fabric.ui.event.UIEvent
 import computer.obscure.piku.mod.fabric.ui.components.FlowNode
 import computer.obscure.piku.mod.fabric.ui.components.UINode
 import dev.isxander.controlify.api.bind.InputBindingSupplier

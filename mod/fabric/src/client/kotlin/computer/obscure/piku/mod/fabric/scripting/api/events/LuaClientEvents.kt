@@ -1,4 +1,4 @@
-package computer.obscure.piku.mod.fabric.scripting.api
+package computer.obscure.piku.mod.fabric.scripting.api.events
 
 import computer.obscure.piku.core.scripting.base.LuaEvent
 import computer.obscure.piku.core.states.SharedState

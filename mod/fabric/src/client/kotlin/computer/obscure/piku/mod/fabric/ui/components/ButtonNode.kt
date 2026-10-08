@@ -1,7 +1,7 @@
 package computer.obscure.piku.mod.fabric.ui.components
 
 import computer.obscure.piku.mod.fabric.scripting.api.ui.LuaUINode
-import computer.obscure.piku.mod.fabric.ui.classes.UIEvent
+import computer.obscure.piku.mod.fabric.ui.event.UIEvent
 
 open class ButtonNode : TextNode() {
     var activateMode: ActivateMode = ActivateMode.RELEASE

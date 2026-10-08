@@ -11,7 +11,7 @@ import computer.obscure.piku.mod.fabric.animation.AnimationUtil
 import computer.obscure.piku.mod.fabric.sound.TrackManager
 import computer.obscure.piku.mod.fabric.sound.TrackRegistry
 import computer.obscure.piku.mod.fabric.storage.SessionStorage
-import computer.obscure.piku.mod.fabric.ui.ControlifyUI
+import computer.obscure.piku.mod.fabric.compat.controlify.ControlifyUI
 import computer.obscure.piku.mod.fabric.ui.UIRenderer
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents
 import net.minecraft.client.Minecraft

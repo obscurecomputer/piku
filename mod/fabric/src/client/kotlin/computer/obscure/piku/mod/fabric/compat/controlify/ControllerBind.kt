@@ -1,4 +1,4 @@
-package computer.obscure.piku.mod.fabric.controlify
+package computer.obscure.piku.mod.fabric.compat.controlify
 
 enum class ControllerBind {
     JUMP,

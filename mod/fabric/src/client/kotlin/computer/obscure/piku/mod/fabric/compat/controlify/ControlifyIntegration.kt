@@ -1,9 +1,8 @@
-package computer.obscure.piku.mod.fabric.controlify
+package computer.obscure.piku.mod.fabric.compat.controlify
 
 import me.znotchill.kiwi.generated.Vec2
 import computer.obscure.piku.core.service.PikuService
 import computer.obscure.piku.mod.fabric.PikuClient
-import computer.obscure.piku.mod.fabric.ui.ControlifyUI
 import dev.isxander.controlify.Controlify
 import dev.isxander.controlify.api.bind.InputBindingSupplier
 import dev.isxander.controlify.bindings.ControlifyBindings

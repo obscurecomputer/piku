@@ -1,8 +1,8 @@
 package computer.obscure.piku.mod.fabric.ui.classes
 
-import computer.obscure.piku.mod.fabric.controlify.ActionEvent
-import computer.obscure.piku.mod.fabric.controlify.BindingEvent
-import computer.obscure.piku.mod.fabric.controlify.ControllerBind
+import computer.obscure.piku.mod.fabric.compat.controlify.ActionEvent
+import computer.obscure.piku.mod.fabric.compat.controlify.BindingEvent
+import computer.obscure.piku.mod.fabric.compat.controlify.ControllerBind
 
 data class ControllerFlowOptions(
     /**

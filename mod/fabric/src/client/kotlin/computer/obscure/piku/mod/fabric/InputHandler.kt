@@ -2,9 +2,9 @@ package computer.obscure.piku.mod.fabric
 
 import computer.obscure.piku.core.service.PikuService
 import computer.obscure.piku.mod.fabric.compat.ModCompat
-import computer.obscure.piku.mod.fabric.controlify.ControlifyIntegration
+import computer.obscure.piku.mod.fabric.compat.controlify.ControlifyIntegration
 import computer.obscure.piku.mod.fabric.scripting.api.LuaKeyBind
-import computer.obscure.piku.mod.fabric.ui.ControlifyUI
+import computer.obscure.piku.mod.fabric.compat.controlify.ControlifyUI
 import computer.obscure.piku.mod.fabric.ui.classes.UIEvent
 import computer.obscure.piku.mod.fabric.ui.menu.UIMenu
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents

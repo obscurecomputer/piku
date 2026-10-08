@@ -1,4 +1,4 @@
-package computer.obscure.piku.mod.fabric.controlify
+package computer.obscure.piku.mod.fabric.compat.controlify
 
 import computer.obscure.piku.mod.fabric.compat.ModCompat
 import dev.isxander.controlify.api.bind.InputBindingSupplier

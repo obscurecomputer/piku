@@ -4,7 +4,7 @@ import computer.obscure.piku.mod.fabric.animation.Animation
 import computer.obscure.piku.mod.fabric.animation.AnimationManager
 import computer.obscure.piku.core.scripting.api.LuaVec3
 import computer.obscure.piku.core.scripting.api.LuaVec3Instance
-import computer.obscure.piku.mod.fabric.Client
+import computer.obscure.piku.mod.fabric.ClientState
 import computer.obscure.twine.TwineNative
 import computer.obscure.twine.annotations.TwineFunction
 import computer.obscure.twine.annotations.TwineProperty
@@ -12,13 +12,13 @@ import computer.obscure.twine.annotations.TwineProperty
 class LuaClientCamera : TwineNative() {
     @TwineFunction
     fun lockFov() {
-        Client.lockFov = true
+        ClientState.lockFov = true
     }
     @TwineFunction
     fun unlockFov() {
-        Client.lockFov = false
-        Client.fovControlled = false
-        Client.currentFov = -1f
+        ClientState.lockFov = false
+        ClientState.fovControlled = false
+        ClientState.currentFov = -1f
     }
 
     @TwineFunction
@@ -26,8 +26,8 @@ class LuaClientCamera : TwineNative() {
         AnimationManager.animate(
             Animation.instant(
                 to = to,
-                getter = { Client.currentFov },
-                setter = { Client.currentFov = it; Client.targetFov = it }
+                getter = { ClientState.currentFov },
+                setter = { ClientState.currentFov = it; ClientState.targetFov = it }
             )
         )
     }
@@ -39,8 +39,8 @@ class LuaClientCamera : TwineNative() {
         AnimationManager.animate(
             Animation.instant(
                 to = to.toVec3(),
-                getter = { Client.rotation },
-                setter = { Client.rotation = it }
+                getter = { ClientState.rotation },
+                setter = { ClientState.rotation = it }
             )
         )
     }
@@ -48,7 +48,7 @@ class LuaClientCamera : TwineNative() {
     @TwineProperty
     val rotation: LuaVec3Instance
         get() {
-            return LuaVec3.fromVec3(Client.rotation)
+            return LuaVec3.fromVec3(ClientState.rotation)
         }
 
     @TwineFunction

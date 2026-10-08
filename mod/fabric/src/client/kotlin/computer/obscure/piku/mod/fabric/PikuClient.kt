@@ -3,6 +3,7 @@ package computer.obscure.piku.mod.fabric
 import computer.obscure.piku.mod.fabric.events.ClientHudRender
 import computer.obscure.piku.mod.fabric.events.ClientPlayConnection
 import computer.obscure.piku.mod.fabric.events.ClientTick
+import computer.obscure.piku.mod.fabric.input.InputHandler
 import computer.obscure.piku.mod.fabric.packets.CustomPacket
 import computer.obscure.piku.mod.fabric.packets.clientbound.ReceiveDataPacket
 import computer.obscure.piku.mod.fabric.packets.clientbound.ReceiveScriptPacket

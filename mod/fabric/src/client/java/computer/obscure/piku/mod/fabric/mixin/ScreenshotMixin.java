@@ -2,7 +2,7 @@ package computer.obscure.piku.mod.fabric.mixin;
 
 import com.google.gson.JsonElement;
 import com.mojang.serialization.JsonOps;
-import computer.obscure.piku.mod.fabric.Client;
+import computer.obscure.piku.mod.fabric.ClientState;
 import computer.obscure.piku.core.scripting.api.LuaTextInstance;
 import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
 import net.minecraft.client.Screenshot;
@@ -27,12 +27,12 @@ public class ScreenshotMixin {
     )
     private static Consumer<Component> piku$interceptScreenshot(Consumer<Component> messageReceiver, File gameDirectory, String fileName) {
         return (text) -> {
-            if (Client.customScreenshotMessage != null && Client.customScreenshotInstance != null) {
+            if (ClientState.customScreenshotMessage != null && ClientState.customScreenshotInstance != null) {
                 String defaultText = text.getString();
                 String filename = defaultText.substring(defaultText.lastIndexOf(" ") + 1);
                 File screenshotFile = new File(new File(gameDirectory, "screenshots"), filename);
 
-                Component finalMessage = piku$convertAndInjectPath(Client.customScreenshotMessage, screenshotFile);
+                Component finalMessage = piku$convertAndInjectPath(ClientState.customScreenshotMessage, screenshotFile);
                 messageReceiver.accept(finalMessage);
             } else {
                 messageReceiver.accept(text);
@@ -49,7 +49,7 @@ public class ScreenshotMixin {
                 .getOrThrow(error ->
                         new RuntimeException("Failed to parse Component: " + error));
 
-        return piku$injectOpenFileRecursive(minecraft.copy(), Client.customScreenshotInstance, file);
+        return piku$injectOpenFileRecursive(minecraft.copy(), ClientState.customScreenshotInstance, file);
     }
 
     @Unique

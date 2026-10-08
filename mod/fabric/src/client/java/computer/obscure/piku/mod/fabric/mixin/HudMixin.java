@@ -1,6 +1,6 @@
 package computer.obscure.piku.mod.fabric.mixin;
 
-import computer.obscure.piku.mod.fabric.Client;
+import computer.obscure.piku.mod.fabric.ClientState;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.Hud;
@@ -22,7 +22,7 @@ public class HudMixin {
             DeltaTracker deltaTracker,
             CallbackInfo ci
     ) {
-        if (Client.hideHotbar) {
+        if (ClientState.hideHotbar) {
             ci.cancel();
         }
     }
@@ -37,7 +37,7 @@ public class HudMixin {
             DeltaTracker deltaTracker,
             CallbackInfo ci
     ) {
-        if (Client.hideHUD) {
+        if (ClientState.hideHUD) {
             ci.cancel();
         }
     }

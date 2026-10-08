@@ -4,8 +4,8 @@ import computer.obscure.piku.core.classes.Spacing
 import me.znotchill.kiwi.generated.Vec2
 import computer.obscure.piku.core.classes.Vec3
 import computer.obscure.piku.core.service.PikuService
-import computer.obscure.piku.mod.fabric.ui.classes.ScaleDimension
-import computer.obscure.piku.mod.fabric.ui.classes.ScaleDimension2
+import computer.obscure.piku.mod.fabric.ui.layout.ScaleDimension
+import computer.obscure.piku.mod.fabric.ui.layout.ScaleDimension2
 import me.znotchill.kiwi.generated.Color
 
 object AnimationManager : PikuService {

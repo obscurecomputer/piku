@@ -1,6 +1,6 @@
 package computer.obscure.piku.mod.fabric.scripting.api.input
 
-import computer.obscure.piku.mod.fabric.MouseButton
+import computer.obscure.piku.mod.fabric.input.MouseButton
 import computer.obscure.twine.TwineNative
 import computer.obscure.twine.annotations.TwineProperty
 

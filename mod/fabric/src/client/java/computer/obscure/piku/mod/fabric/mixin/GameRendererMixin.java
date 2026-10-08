@@ -1,6 +1,6 @@
 package computer.obscure.piku.mod.fabric.mixin;
 
-import computer.obscure.piku.mod.fabric.Client;
+import computer.obscure.piku.mod.fabric.ClientState;
 import net.minecraft.client.renderer.GameRenderer;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -14,6 +14,6 @@ public class GameRendererMixin {
             ordinal = 1
     )
     private float applyCustomBobStrength(float h) {
-        return h * Client.bobbingStrength;
+        return h * ClientState.bobbingStrength;
     }
 }

@@ -3,8 +3,8 @@ package computer.obscure.piku.mod.fabric.ui.components
 import computer.obscure.piku.mod.fabric.PikuClient
 import computer.obscure.piku.mod.fabric.scripting.api.ui.LuaUINode
 import computer.obscure.piku.mod.fabric.scripting.api.ui.components.LuaUITextInput
-import computer.obscure.piku.mod.fabric.ui.classes.UIEvent
-import computer.obscure.piku.mod.fabric.ui.classes.context.MeasureContext
+import computer.obscure.piku.mod.fabric.ui.event.UIEvent
+import computer.obscure.piku.mod.fabric.ui.layout.context.MeasureContext
 import computer.obscure.piku.mod.fabric.ui.menu.PikuCommandBox
 import computer.obscure.piku.mod.fabric.ui.menu.PikuEditBox
 import computer.obscure.piku.mod.fabric.utils.toNativeComponent

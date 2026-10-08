@@ -1,7 +1,7 @@
 package computer.obscure.piku.mod.fabric.scripting.api.ui.components
 
 import computer.obscure.piku.mod.fabric.PikuClient
-import computer.obscure.piku.mod.fabric.ui.classes.UIEvent
+import computer.obscure.piku.mod.fabric.ui.event.UIEvent
 import computer.obscure.piku.mod.fabric.ui.components.TextInputNode
 import computer.obscure.twine.LuaCallback
 import computer.obscure.twine.annotations.TwineFunction

@@ -7,9 +7,9 @@ import me.znotchill.kiwi.generated.Vec2
 import computer.obscure.piku.core.scripting.engine.EngineError
 import computer.obscure.piku.core.scripting.engine.EngineErrorCode
 import computer.obscure.piku.mod.fabric.scripting.api.animation.LuaAnimatable
-import computer.obscure.piku.mod.fabric.ui.classes.Dimension
-import computer.obscure.piku.mod.fabric.ui.classes.OffsetDimension
-import computer.obscure.piku.mod.fabric.ui.classes.ScaleDimension2
+import computer.obscure.piku.mod.fabric.ui.layout.Dimension
+import computer.obscure.piku.mod.fabric.ui.layout.OffsetDimension
+import computer.obscure.piku.mod.fabric.ui.layout.ScaleDimension2
 import computer.obscure.piku.mod.fabric.ui.components.FlowNode
 import computer.obscure.piku.mod.fabric.ui.components.LineNode
 import computer.obscure.piku.mod.fabric.ui.components.ProgressBarNode

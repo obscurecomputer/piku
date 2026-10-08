@@ -1,0 +1,316 @@
+package computer.obscure.piku.mod.fabric.scripting.api.client
+
+import com.mojang.blaze3d.platform.InputConstants
+import computer.obscure.piku.core.scripting.api.LuaTextInstance
+import me.znotchill.kiwi.generated.Vec2
+import computer.obscure.piku.core.scripting.api.LuaVec3
+import computer.obscure.piku.core.scripting.api.LuaVec3Instance
+import computer.obscure.piku.mod.fabric.ClientState
+import computer.obscure.piku.mod.fabric.input.InputHandler
+import computer.obscure.piku.mod.fabric.PikuClient
+import computer.obscure.piku.mod.fabric.scripting.api.camera.LuaClientCamera
+import computer.obscure.piku.mod.fabric.scripting.api.input.LuaKeyBind
+import computer.obscure.piku.mod.fabric.scripting.api.world.LuaItem
+import computer.obscure.piku.mod.fabric.utils.getRemappedName
+import computer.obscure.piku.mod.fabric.utils.toNativeComponent
+import computer.obscure.twine.TwineLogger
+import computer.obscure.twine.TwineNative
+import computer.obscure.twine.annotations.TwineFunction
+import computer.obscure.twine.annotations.TwineProperty
+import net.fabricmc.loader.api.FabricLoader
+import net.minecraft.client.CameraType
+import net.minecraft.client.Minecraft
+import net.minecraft.client.resources.sounds.SimpleSoundInstance
+import net.minecraft.resources.Identifier
+import net.minecraft.sounds.SoundEvent
+import net.minecraft.sounds.SoundSource
+import net.minecraft.world.item.ItemStack
+
+class LuaClient : TwineNative("client") {
+    val instance: Minecraft = Minecraft.getInstance()
+
+    @TwineProperty
+    val camera = LuaClientCamera()
+
+    @TwineFunction
+    fun debug(value: Boolean) {
+        TwineLogger.level = if (value) TwineLogger.DEBUG else TwineLogger.INFO
+    }
+
+    @TwineProperty
+    val pos: LuaVec3Instance
+        get() {
+            val p = instance.player
+                ?: return LuaVec3Instance(0.0, 0.0, 0.0)
+
+            return LuaVec3Instance(p.x, p.y, p.z)
+        }
+
+    @TwineProperty
+    val rotation: LuaVec3Instance
+        get() {
+            val player = Minecraft.getInstance().player
+                ?: return LuaVec3.ZERO
+
+            val vec = player.getViewVector(1.0f)
+
+            return LuaVec3Instance(vec.x, vec.y, vec.z)
+        }
+
+    @TwineProperty
+    val yaw: Float
+        get() = Minecraft.getInstance().player?.yRot ?: 0f
+
+    @TwineProperty
+    val pitch: Float
+        get() = Minecraft.getInstance().player?.xRot ?: 0f
+
+    @TwineProperty
+    val headPos: LuaVec3Instance
+        get() {
+            val p = instance.player
+                ?: return LuaVec3Instance(0.0, 0.0, 0.0)
+
+            val v = p.getEyePosition(1.0f)
+            return LuaVec3Instance(v.x, v.y, v.z)
+        }
+
+    @TwineFunction
+    fun sendActionbar(message: Any?) {
+        instance.player?.sendOverlayMessage(
+            PikuClient.miniMessage
+                .deserialize(message.toString())
+                .toNativeComponent()
+        )
+    }
+
+    @TwineFunction
+    fun send(message: Any?) {
+        instance.player?.sendSystemMessage(
+            PikuClient.miniMessage
+                .deserialize(message.toString())
+                .toNativeComponent()
+        )
+    }
+
+    @TwineFunction
+    fun setPerspective(perspective: String) {
+        val enum = CameraType.valueOf(perspective)
+
+        instance.options.cameraType = enum
+    }
+
+    @TwineProperty
+    var hideHotbar: Boolean
+        get() = ClientState.hideHotbar
+        set(value) { ClientState.hideHotbar = value }
+
+    @TwineProperty
+    var hideArm: Boolean
+        get() = ClientState.hideArm
+        set(value) { ClientState.hideArm = value }
+
+    @TwineProperty
+    var hideHUD: Boolean
+        get() = ClientState.hideHUD
+        set(value) { ClientState.hideHUD = value }
+
+    @TwineProperty
+    var selectedSlot: Int
+        get() = instance.player?.inventory?.selectedSlot ?: 0
+        set(value) {
+            instance.player?.inventory?.selectedSlot = value.coerceIn(0, 8)
+        }
+
+    @TwineFunction
+    fun getItem(slot: Int): LuaItem? {
+        val player = instance.player ?: return null
+        val inv = player.inventory
+
+        if (slot !in 0 until inv.containerSize) return null
+
+        val stack = inv.getItem(slot)
+        if (stack.isEmpty) return null
+
+        return LuaItem().setStack(stack)
+    }
+
+    @TwineFunction
+    fun clearSlot(slot: Int) {
+        val player = instance.player ?: return
+        val inv = player.inventory
+
+        if (slot !in 0 until inv.containerSize) return
+
+        inv.setItem(slot, ItemStack.EMPTY)
+    }
+
+    @TwineProperty
+    val heldItem: LuaItem?
+        get() {
+            val player = instance.player ?: return null
+            val stack = player.mainHandItem
+            return if (stack.isEmpty) null
+            else LuaItem().setStack(stack)
+        }
+
+    @TwineProperty
+    val windowSize: Vec2
+        get() {
+            val x = instance.window.width.toDouble()
+            val y = instance.window.height.toDouble()
+            return Vec2(x, y)
+        }
+
+    @TwineProperty
+    val hudSize: Vec2
+        get() {
+            val mc = Minecraft.getInstance()
+            return Vec2(
+                mc.window.guiScaledWidth.toDouble(),
+                mc.window.guiScaledHeight.toDouble()
+            )
+        }
+
+    @TwineProperty
+    val guiScale: Int
+        get() = instance.window.guiScale
+
+    @TwineFunction
+    fun screenshotMessage(value: LuaTextInstance) {
+        ClientState.customScreenshotMessage = value.toComponent()
+        ClientState.customScreenshotInstance = value
+    }
+
+    /*
+    * Camera Controls
+    */
+
+    @TwineProperty
+    var cameraLocked: Boolean
+        get() = ClientState.cameraLocked
+        set(value) { ClientState.cameraLocked = value }
+
+    @TwineFunction
+    fun lockCamera(value: Boolean) {
+        ClientState.cameraLocked = value
+    }
+
+    @TwineFunction
+    fun lockCamera() {
+        ClientState.cameraLocked = true
+    }
+
+    /*
+    * Mouse Controls
+    */
+
+    @TwineProperty
+    var mouseButtonsLocked: Boolean
+        get() = ClientState.mouseButtonsLocked
+        set(value) { ClientState.mouseButtonsLocked = value }
+
+    @TwineFunction
+    fun lockMouseButtons(value: Boolean) {
+        ClientState.mouseButtonsLocked = value
+    }
+
+    @TwineFunction
+    fun lockMouseButtons() {
+        ClientState.mouseButtonsLocked = true
+    }
+
+    /**
+     * Input controls
+     */
+    @TwineFunction
+    fun captureKeyboard(value: Boolean = !InputHandler.keyboardCaptured) =
+        apply { InputHandler.keyboardCaptured = value }
+    @TwineFunction
+    fun captureMouse(value: Boolean = !InputHandler.mouseCaptured) =
+        apply { InputHandler.mouseCaptured = value }
+    @TwineFunction
+    fun captureScroll(value: Boolean = !InputHandler.scrollCaptured) =
+        apply { InputHandler.scrollCaptured = value }
+
+    @TwineFunction
+    fun playSound(name: String, volume: Double, pitch: Double) {
+        val player = instance.player ?: return
+        val Identifier = Identifier.tryParse(name) ?: return
+
+        val soundEvent = SoundEvent.createVariableRangeEvent(Identifier)
+        val soundInstance = SimpleSoundInstance(
+            soundEvent,
+            SoundSource.PLAYERS,
+            volume.toFloat(),
+            pitch.toFloat(),
+            player.random,
+            player.x,
+            player.y,
+            player.z
+        )
+
+        instance.soundManager.play(soundInstance)
+    }
+
+    @TwineFunction
+    fun playSound(name: String) {
+        playSound(name, 1.0, 1.0)
+    }
+
+    @TwineFunction
+    fun getKeybind(name: String): LuaKeyBind? {
+        val bind = instance.options.keyMappings.find { it.name == name }
+            ?: return null
+
+        val internalName = bind.saveString()
+
+        val boundName = when {
+            internalName.startsWith("key.keyboard.") -> {
+                val keyCode = InputConstants.getKey(internalName).value
+                InputHandler.getKeyName(keyCode)
+            }
+            internalName.startsWith("key.mouse.") -> {
+                val keyCode = InputConstants.getKey(internalName).value
+                InputHandler.getMouseButtonName(keyCode)
+            }
+            else -> "unknown"
+        }
+
+        return LuaKeyBind(
+            name = bind.name,
+            isDown = bind.isDown,
+            isUnbound = bind.isUnbound,
+            isDefault = bind.isDefault,
+            category = bind.category.id.toString(),
+            boundKey = boundName
+        )
+    }
+
+    @TwineProperty
+    var bobbing: Boolean
+        get() {
+            println("CALLED")
+            return instance.options.bobView().get()
+        }
+        set(value) {
+            println("setting to $value")
+            instance.options.bobView().set(value)
+        }
+
+    @TwineProperty
+    var bobbingStrength: Float
+        get() = ClientState.bobbingStrength
+        set(value) {
+            ClientState.bobbingStrength = value
+        }
+
+    @TwineFunction
+    fun hasMod(modId: String): Boolean {
+        return FabricLoader.getInstance().isModLoaded(modId)
+    }
+
+    @TwineProperty
+    val screen: String?
+        get() = instance.gui.screen()?.getRemappedName()
+}

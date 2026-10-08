@@ -1,7 +1,7 @@
 package computer.obscure.piku.mod.fabric.ui.components
 
 import me.znotchill.kiwi.generated.Vec2
-import computer.obscure.piku.mod.fabric.ui.classes.context.MeasureContext
+import computer.obscure.piku.mod.fabric.ui.layout.context.MeasureContext
 import net.minecraft.client.gui.GuiGraphicsExtractor
 import kotlin.math.abs
 

@@ -1,7 +1,7 @@
 package computer.obscure.piku.mod.fabric.scripting.api.util
 
-import computer.obscure.piku.mod.fabric.ui.classes.alignment.CrossAxisAlignment
-import computer.obscure.piku.mod.fabric.ui.classes.alignment.MainAxisAlignment
+import computer.obscure.piku.mod.fabric.ui.layout.alignment.CrossAxisAlignment
+import computer.obscure.piku.mod.fabric.ui.layout.alignment.MainAxisAlignment
 
 object Axis {
     fun parseMainAxis(value: String) = when (value) {

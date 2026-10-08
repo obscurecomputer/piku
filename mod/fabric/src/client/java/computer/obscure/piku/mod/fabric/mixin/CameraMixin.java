@@ -1,6 +1,6 @@
 package computer.obscure.piku.mod.fabric.mixin;
 
-import computer.obscure.piku.mod.fabric.Client;
+import computer.obscure.piku.mod.fabric.ClientState;
 import computer.obscure.piku.mod.fabric.camera.CinematicCamera;
 import net.minecraft.client.Camera;
 import net.minecraft.client.DeltaTracker;
@@ -25,10 +25,10 @@ public abstract class CameraMixin {
 
     @Inject(method = "getFov", at = @At("RETURN"), cancellable = true)
     void onGetFov(CallbackInfoReturnable<Float> cir) {
-        Client.vanillaFov = cir.getReturnValue();
+        ClientState.vanillaFov = cir.getReturnValue();
 
-        boolean controlled = Client.fovControlled;
-        float animated = Client.animatedFov;
+        boolean controlled = ClientState.fovControlled;
+        float animated = ClientState.animatedFov;
 
         if (controlled) {
             cir.setReturnValue(animated);
@@ -100,14 +100,14 @@ public abstract class CameraMixin {
             return;
 
 
-        if (Client.rotation.x != 0 ||
-                Client.rotation.y != 0) {
+        if (ClientState.rotation.x != 0 ||
+                ClientState.rotation.y != 0) {
 
             Camera camera = (Camera)(Object)this;
 
             setRotation(
-                    (float) (camera.yRot() + Client.rotation.y),
-                    (float) (camera.xRot() + Client.rotation.x)
+                    (float) (camera.yRot() + ClientState.rotation.y),
+                    (float) (camera.xRot() + ClientState.rotation.x)
             );
         }
 
@@ -115,9 +115,9 @@ public abstract class CameraMixin {
 
         setPosition(
                 pos.add(
-                        -Client.cameraOffsetX,
-                        -Client.cameraOffsetZ,
-                        -Client.cameraOffsetY
+                        -ClientState.cameraOffsetX,
+                        -ClientState.cameraOffsetZ,
+                        -ClientState.cameraOffsetY
                 )
         );
     }

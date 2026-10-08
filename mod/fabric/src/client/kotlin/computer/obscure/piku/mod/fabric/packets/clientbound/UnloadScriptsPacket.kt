@@ -1,6 +1,6 @@
 package computer.obscure.piku.mod.fabric.packets.clientbound
 
-import computer.obscure.piku.mod.fabric.Client
+import computer.obscure.piku.mod.fabric.ClientState
 import computer.obscure.piku.mod.fabric.PikuClient
 import computer.obscure.piku.mod.fabric.events.ClientPlayConnection
 import computer.obscure.piku.mod.fabric.packets.CustomPacket
@@ -22,7 +22,7 @@ class UnloadScriptsPacket(
         Minecraft.getInstance().execute {
             try {
                 ClientPlayConnection.onDisconnect(true) {
-                    Client.connectedToServer = true
+                    ClientState.connectedToServer = true
                     PikuClient.engine!!.init()
                     ClientPlayNetworking.send(SendUnloadedPacket(reloadId))
                 }

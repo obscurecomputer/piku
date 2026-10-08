@@ -5,7 +5,7 @@ import computer.obscure.piku.mod.fabric.ClientState
 import computer.obscure.piku.mod.fabric.PikuClient
 import computer.obscure.piku.mod.fabric.compat.ModCompat
 import computer.obscure.piku.mod.fabric.compat.controlify.ControlifyIntegration
-import computer.obscure.piku.mod.fabric.scripting.api.LuaKeyBind
+import computer.obscure.piku.mod.fabric.scripting.api.input.LuaKeyBind
 import computer.obscure.piku.mod.fabric.compat.controlify.ControlifyUI
 import computer.obscure.piku.mod.fabric.ui.event.UIEvent
 import computer.obscure.piku.mod.fabric.ui.menu.UIMenu

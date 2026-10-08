@@ -1,8 +1,8 @@
 package computer.obscure.piku.mod.fabric.scripting.api.raycast
 
 import computer.obscure.piku.mod.fabric.raycast.RaycastResult
-import computer.obscure.piku.mod.fabric.scripting.api.LuaBlockState
-import computer.obscure.piku.mod.fabric.scripting.api.LuaEntity
+import computer.obscure.piku.mod.fabric.scripting.api.world.LuaBlockState
+import computer.obscure.piku.mod.fabric.scripting.api.world.LuaEntity
 import computer.obscure.piku.mod.fabric.scripting.api.util.minecraft.toCoreVec3
 import computer.obscure.twine.TwineNative
 import computer.obscure.twine.annotations.TwineFunction

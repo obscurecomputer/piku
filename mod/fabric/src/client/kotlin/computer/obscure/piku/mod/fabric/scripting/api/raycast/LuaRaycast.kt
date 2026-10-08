@@ -4,7 +4,7 @@ import computer.obscure.piku.core.scripting.api.LuaVec3Instance
 import computer.obscure.piku.core.scripting.engine.EngineError
 import computer.obscure.piku.core.scripting.engine.EngineErrorCode
 import computer.obscure.piku.mod.fabric.raycast.Raycast
-import computer.obscure.piku.mod.fabric.scripting.api.LuaEntity
+import computer.obscure.piku.mod.fabric.scripting.api.world.LuaEntity
 import computer.obscure.piku.mod.fabric.scripting.api.util.minecraft.toMCVec3
 import computer.obscure.twine.LuaCallback
 import computer.obscure.twine.TwineNative

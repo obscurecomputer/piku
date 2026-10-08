@@ -1,6 +1,7 @@
-package computer.obscure.piku.mod.fabric.scripting.api
+package computer.obscure.piku.mod.fabric.scripting.api.client
 
 import computer.obscure.piku.core.scripting.api.LuaVec3Instance
+import computer.obscure.piku.mod.fabric.scripting.api.world.LuaBlockState
 import computer.obscure.twine.TwineNative
 import computer.obscure.twine.annotations.TwineFunction
 import net.minecraft.client.Minecraft

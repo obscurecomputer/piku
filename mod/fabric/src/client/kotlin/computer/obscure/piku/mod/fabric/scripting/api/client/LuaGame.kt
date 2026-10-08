@@ -1,4 +1,4 @@
-package computer.obscure.piku.mod.fabric.scripting.api
+package computer.obscure.piku.mod.fabric.scripting.api.client
 
 import computer.obscure.piku.mod.fabric.scripting.api.camera.LuaCinematicCamera
 import computer.obscure.piku.mod.fabric.scripting.api.ui.LuaUI

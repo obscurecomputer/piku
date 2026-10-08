@@ -1,4 +1,4 @@
-package computer.obscure.piku.mod.fabric.scripting.api
+package computer.obscure.piku.mod.fabric.scripting.api.input
 
 import computer.obscure.piku.mod.fabric.input.InputHandler
 import computer.obscure.twine.annotations.TwineFunction

@@ -1,4 +1,4 @@
-package computer.obscure.piku.mod.fabric.scripting.api
+package computer.obscure.piku.mod.fabric.scripting.api.world
 
 import computer.obscure.piku.mod.fabric.scripting.api.components.LuaComponents
 import computer.obscure.twine.annotations.TwineProperty

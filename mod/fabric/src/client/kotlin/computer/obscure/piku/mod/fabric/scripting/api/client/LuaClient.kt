@@ -1,4 +1,4 @@
-package computer.obscure.piku.mod.fabric.scripting.api
+package computer.obscure.piku.mod.fabric.scripting.api.client
 
 import com.mojang.blaze3d.platform.InputConstants
 import computer.obscure.piku.core.scripting.api.LuaTextInstance
@@ -9,6 +9,8 @@ import computer.obscure.piku.mod.fabric.ClientState
 import computer.obscure.piku.mod.fabric.input.InputHandler
 import computer.obscure.piku.mod.fabric.PikuClient
 import computer.obscure.piku.mod.fabric.scripting.api.camera.LuaClientCamera
+import computer.obscure.piku.mod.fabric.scripting.api.input.LuaKeyBind
+import computer.obscure.piku.mod.fabric.scripting.api.world.LuaItem
 import computer.obscure.piku.mod.fabric.utils.getRemappedName
 import computer.obscure.piku.mod.fabric.utils.toNativeComponent
 import computer.obscure.twine.TwineLogger

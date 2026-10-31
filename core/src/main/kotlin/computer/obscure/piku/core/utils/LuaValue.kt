@@ -3,8 +3,10 @@ package computer.obscure.piku.core.utils
 import computer.obscure.piku.core.classes.Vec3
 import computer.obscure.piku.core.serialization.PikuSerializable
 import computer.obscure.twine.TwineNative
+import kotlinx.serialization.InternalSerializationApi
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.json.*
+import kotlinx.serialization.serializerOrNull
 import me.znotchill.kiwi.generated.Color
 import me.znotchill.kiwi.generated.Vec2
 import kotlin.reflect.KClass
@@ -37,6 +39,7 @@ val typeNameToEntry: Map<String, SerializableTypeEntry<*>> =
 val classToEntry: Map<KClass<*>, SerializableTypeEntry<*>> =
     pikuSerializableTypes.associateBy { it.klass }
 
+@OptIn(InternalSerializationApi::class)
 fun Any?.toJson(): String = when (this) {
     null -> "null"
     is String -> JsonPrimitive(this).toString()
@@ -52,6 +55,7 @@ fun Any?.toJson(): String = when (this) {
         "[$entries]"
     }
     else -> {
+        val klass = this::class
         val entry = classToEntry[this::class]
         if (entry != null) {
             @Suppress("UNCHECKED_CAST")
@@ -62,7 +66,13 @@ fun Any?.toJson(): String = when (this) {
                 putAll(encoded)
             }).toString()
         } else {
-            JsonPrimitive(this.toString()).toString()
+            val serializer = klass.serializerOrNull() as? KSerializer<Any>
+
+            if (serializer != null) {
+                json.encodeToJsonElement(serializer, this).toString()
+            } else {
+                JsonPrimitive(this.toString()).toString()
+            }
         }
     }
 }

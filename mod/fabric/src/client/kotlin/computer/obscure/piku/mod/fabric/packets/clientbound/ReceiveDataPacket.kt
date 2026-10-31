@@ -19,8 +19,7 @@ class ReceiveDataPacket(
     override fun handle() {
         Minecraft.getInstance().execute {
             try {
-                val data = jsonStringToKotlin(json) as? Map<String, Any?> ?: emptyMap()
-                PikuClient.engine!!.events.fire(id, data)
+                PikuClient.engine!!.events.fire(id, jsonStringToKotlin(json))
             } catch (e: Exception) {
                 e.printStackTrace()
             }

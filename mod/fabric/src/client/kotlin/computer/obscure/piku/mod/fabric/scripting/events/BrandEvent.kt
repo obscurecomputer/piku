@@ -5,7 +5,7 @@ import computer.obscure.piku.mod.fabric.PikuClient
 
 object BrandEvent : LuaEvent() {
     override val id = "piku.brand"
-    override val onClientReceive: (data: Any) -> Unit
+    override val onClientReceive: (data: Any?) -> Unit
         get() = {
             PikuClient.engine!!.events.send(
                 id,

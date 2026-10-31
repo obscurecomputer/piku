@@ -2,27 +2,27 @@ package computer.obscure.piku.core.scripting.server
 
 open class ServerEvents<P> : ServerEventBus<P> {
     private val listeners =
-        mutableMapOf<String, MutableList<(Map<String, Any?>, P) -> Unit>>()
+        mutableMapOf<String, MutableList<(Any?, P) -> Unit>>()
 
-    fun fire(eventId: String, data: Map<String, Any?>, player: P) {
+    fun fire(eventId: String, data: Any?, player: P) {
         listeners[eventId]?.forEach { it(data, player) }
     }
 
     override fun listen(
         eventId: String,
-        callback: (Map<String, Any?>) -> Unit
+        callback: (Any?) -> Unit
     ) {
         listeners.computeIfAbsent(eventId) { mutableListOf() }
             .add { data, _ -> callback(data) }
     }
 
-    override fun fire(eventId: String, data: Map<String, Any?>) {
+    override fun fire(eventId: String, data: Any?) {
         // platform specific override later
     }
 
     fun listen(
         eventId: String,
-        callback: (Map<String, Any?>, P) -> Unit
+        callback: (Any?, P) -> Unit
     ) {
         listeners.computeIfAbsent(eventId) { mutableListOf() }
             .add(callback)

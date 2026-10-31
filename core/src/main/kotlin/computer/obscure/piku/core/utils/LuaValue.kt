@@ -78,6 +78,7 @@ fun Any?.toJson(): String = when (this) {
 }
 
 fun jsonToKotlin(value: JsonElement): Any? {
+    println("${value.javaClass.name}: $value")
     return when {
         value is JsonObject -> {
             val typeName = value["__type"]?.jsonPrimitive?.contentOrNull
@@ -104,5 +105,6 @@ fun jsonToKotlin(value: JsonElement): Any? {
     }
 }
 fun jsonStringToKotlin(json: String): Any? {
+    println("CONVERT: ${jsonToKotlin(Json.parseToJsonElement(json))}")
     return jsonToKotlin(Json.parseToJsonElement(json))
 }

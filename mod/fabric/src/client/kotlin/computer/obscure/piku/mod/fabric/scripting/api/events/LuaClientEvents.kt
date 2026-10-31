@@ -11,9 +11,9 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking
 import java.util.UUID
 
 class LuaClientEvents : ClientEventBus {
-    val customListeners = mutableMapOf<String, MutableList<(Map<String, Any?>) -> Unit>>()
+    val customListeners = mutableMapOf<String, MutableList<(Any?) -> Unit>>()
     val baseListeners = mutableMapOf<String, LuaEvent>()
-    val stateCallbacks: MutableMap<UUID, (Map<String, Any?>) -> Unit> = mutableMapOf()
+    val stateCallbacks: MutableMap<UUID, (Any?) -> Unit> = mutableMapOf()
 
     fun registerBaseListeners() {
         register(BrandEvent)
@@ -29,7 +29,7 @@ class LuaClientEvents : ClientEventBus {
         stateCallbacks.clear()
     }
 
-    override fun send(eventId: String, data: Map<String, Any?>) {
+    override fun send(eventId: String, data: Any?) {
         val payload = SendDataPacket(
             id = eventId,
             json = data.toJson()
@@ -37,11 +37,15 @@ class LuaClientEvents : ClientEventBus {
         ClientPlayNetworking.send(payload)
     }
 
-    override fun listen(eventId: String, callback: (Map<String, Any?>) -> Unit) {
+    override fun listen(eventId: String, callback: (Any?) -> Unit) {
         customListeners.computeIfAbsent(eventId) { mutableListOf() }.add(callback)
     }
 
-    override fun fire(eventId: String, data: Map<String, Any?>) {
+    fun fire(eventId: String) {
+        fire(eventId, null)
+    }
+
+    override fun fire(eventId: String, data: Any?) {
         customListeners[eventId]?.forEach { callback ->
             try {
                 callback.invoke(data)

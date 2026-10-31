@@ -20,7 +20,7 @@ object ClientHudRender {
             ) // capped
             lastTimeNano = currentTime
 
-            PikuClient.engine!!.events.fire("client.ui_render", mapOf())
+            PikuClient.engine!!.events.fire("client.ui_render")
 
             AnimationManager.tick(deltaSeconds)
             UIRenderer.render(context)

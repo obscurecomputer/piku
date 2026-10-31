@@ -15,7 +15,7 @@ class LuaSharedState(
     @TwineProperty var clientModifiable: Boolean,
 ) : TwineNative("sharedState") {
 
-    var onSet: ((Map<String, Any?>) -> Unit)? = null
+    var onSet: ((Any?) -> Unit)? = null
         set(value) {
             field = value
             if (value != null) {

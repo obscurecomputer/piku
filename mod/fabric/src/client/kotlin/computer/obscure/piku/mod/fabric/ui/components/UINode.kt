@@ -111,21 +111,21 @@ abstract class UINode {
     }
 
     fun measureSelf(ctx: MeasureContext) {
-        val childCtx = when {
-            width != Dimension.Wrap && height != Dimension.Wrap -> ctx.copy(
-                parentWidth = (resolveDimension(width, 0f, ctx.parentWidth) - padding.horizontal).coerceAtLeast(0f),
-                parentHeight = (resolveDimension(height, 0f, ctx.parentHeight) - padding.vertical).coerceAtLeast(0f)
-            )
-            width != Dimension.Wrap -> ctx.copy(
-                parentWidth = (resolveDimension(width, 0f, ctx.parentWidth) - padding.horizontal).coerceAtLeast(0f)
-            )
-            height != Dimension.Wrap -> ctx.copy(
-                parentHeight = (resolveDimension(height, 0f, ctx.parentHeight) - padding.vertical).coerceAtLeast(0f)
-            )
-            else -> ctx
-        }
+        val availW = if (width != Dimension.Wrap)
+            resolveDimension(width, 0f, ctx.parentWidth)
+        else ctx.parentWidth
+        val availH = if (height != Dimension.Wrap)
+            resolveDimension(height, 0f, ctx.parentHeight)
+        else ctx.parentHeight
 
-        children().forEach { it.measureSelf(childCtx) }
+        val childCtx = ctx.copy(
+            parentWidth = (availW - padding.horizontal).coerceAtLeast(0f),
+            parentHeight = (availH - padding.vertical).coerceAtLeast(0f)
+        )
+
+        children().forEach {
+            it.measureSelf(childCtx)
+        }
         val (contentW, contentH) = measureContent(childCtx)
         measuredWidth = resolveDimension(width, contentW + padding.horizontal, ctx.parentWidth)
         measuredHeight = resolveDimension(height, contentH + padding.vertical, ctx.parentHeight)

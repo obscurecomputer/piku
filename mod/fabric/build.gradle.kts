@@ -109,7 +109,8 @@ dependencies {
     implementation("net.fabricmc.fabric-api:fabric-api:${project.property("fabric_api_version")}")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.9.0")
     implementation("com.terraformersmc:modmenu:${project.property("modmenu_version")}")
-    includeDependency("computer.obscure:twine:${project.property("twine_version")}")
+    includeDependency("computer.obscure.twine:core:${project.property("twine_version")}")
+    includeDependency("computer.obscure.twine:engine:${project.property("twine_version")}")
     implementation("net.kyori:adventure-api:${project.property("adventure_version")}")
     implementation(include("net.kyori:adventure-platform-fabric:7.1.1")!!)
 
@@ -124,7 +125,7 @@ dependencies {
     includeDependency("net.kyori:examination-api:1.3.0")
     includeDependency("net.kyori:examination-string:1.3.0")
 
-    includeDependency("me.znotchill:kiwi:${project.property("kiwi_version")}")
+    includeDependency("me.znotchill.kiwi:core:${project.property("kiwi_version")}")
 
     val luauVersion = "1.0.1"
     val luauNativeVersion = "1.0.1-patch2"

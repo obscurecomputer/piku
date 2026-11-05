@@ -35,7 +35,8 @@ dependencies {
     implementation("ch.qos.logback:logback-classic:1.5.6")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.9.0")
 //    implementation("org.luaj:luaj-jse:${project.property("luaj_version")}")
-    implementation("computer.obscure:twine:${project.property("twine_version")}")
+    implementation("computer.obscure.twine:core:${project.property("twine_version")}")
+    implementation("computer.obscure.twine:engine:${project.property("twine_version")}")
 }
 
 tasks.test {

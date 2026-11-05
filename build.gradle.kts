@@ -18,7 +18,7 @@ subprojects {
     }
 
     dependencies {
-        add("implementation", "me.znotchill:kiwi:${project.property("kiwi_version")}")
+        add("implementation", "me.znotchill.kiwi:core:${project.property("kiwi_version")}")
     }
 
     val targetVersion = 25

@@ -15,23 +15,23 @@ import net.kyori.adventure.text.minimessage.MiniMessage
 
 class LuaText : TwineNative("text") {
     @TwineFunction
-    fun literal(text: String): LuaTextInstance {
-        return LuaTextInstance("text", text)
+    fun literal(text: Any): LuaTextInstance {
+        return LuaTextInstance("text", text.toString())
     }
 
     @TwineFunction
-    fun keybind(text: String): LuaTextInstance {
-        return LuaTextInstance("keybind", text)
+    fun keybind(text: Any): LuaTextInstance {
+        return LuaTextInstance("keybind", text.toString())
     }
 
     @TwineFunction
-    fun translatable(key: String): LuaTextInstance {
-        return LuaTextInstance("translatable", key)
+    fun translatable(key: Any): LuaTextInstance {
+        return LuaTextInstance("translatable", key.toString())
     }
 
     @TwineFunction
-    fun miniMessage(text: String): LuaTextInstance {
-        val component = MiniMessage.miniMessage().deserialize(text)
+    fun miniMessage(text: Any): LuaTextInstance {
+        val component = MiniMessage.miniMessage().deserialize(text.toString())
         return fromComponent(component)
     }
 

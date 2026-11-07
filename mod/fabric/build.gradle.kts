@@ -127,11 +127,11 @@ dependencies {
 
     includeDependency("me.znotchill.kiwi:core:${project.property("kiwi_version")}")
 
-    val luauVersion = "1.0.1"
-    val luauNativeVersion = "1.0.1-patch2"
+    val luauVersion = "1.2.1"
+    val luauNativeVersion = "1.2.1"
     includeDependency("dev.hollowcube:luau:${luauVersion}")
 
-    implementation("dev.isxander:controlify:3.4.1+mc26.2") {
+    compileOnly("dev.isxander:controlify:3.4.1+mc26.2") {
         capabilities {
             requireCapability("dev.isxander:26.2-fabric")
         }
@@ -139,7 +139,7 @@ dependencies {
 
     val platforms = listOf("windows-x64", "linux-x64", "macos-arm64", "macos-x64")
     platforms.forEach { platform ->
-        val dep = "me.znotchill.luau:luau-natives-$platform:$luauNativeVersion"
+        val dep = "dev.hollowcube:luau-natives-$platform:$luauNativeVersion"
         includeDependency(dep)
     }
 }

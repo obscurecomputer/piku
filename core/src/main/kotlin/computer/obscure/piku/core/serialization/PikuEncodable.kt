@@ -1,7 +1,7 @@
 package computer.obscure.piku.core.serialization
 
-import kotlinx.serialization.json.JsonElement
+import kotlinx.serialization.KSerializer
 
 interface PikuEncodable {
-    fun encodeToJson(): JsonElement
+    fun serializer(): KSerializer<*>
 }

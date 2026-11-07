@@ -47,7 +47,10 @@ fun Any?.toJson(): String = when (this) {
     is Number -> this.toString()
     is Boolean -> this.toString()
     is PikuSerializable -> this.toJsonElement().toString()
-    is PikuEncodable -> this.encodeToJson().toString()
+    is PikuEncodable -> {
+        @Suppress("UNCHECKED_CAST")
+        json.encodeToJsonElement(this.serializer() as KSerializer<Any>, this).toString()
+    }
     is Map<*, *> -> {
         val entries = this.entries.joinToString(",") { (k, v) -> "\"$k\":${v.toJson()}" }
         "{$entries}"
@@ -82,7 +85,7 @@ fun Any?.toJson(): String = when (this) {
 fun jsonToKotlin(value: JsonElement): Any? {
     return when {
         value is JsonObject -> {
-            val typeName = value["__type"]?.jsonPrimitive?.contentOrNull
+            val typeName = (value["__type"] ?: value["valueName"])?.jsonPrimitive?.contentOrNull
             val entry = typeName?.let { typeNameToEntry[it] }
             if (entry != null) {
                 @Suppress("UNCHECKED_CAST")

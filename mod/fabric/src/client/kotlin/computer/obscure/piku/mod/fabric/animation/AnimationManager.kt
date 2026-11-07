@@ -20,23 +20,38 @@ object AnimationManager : PikuService {
         pending.clear()
     }
 
+    /**
+     * Get all the [Animation]s currently active.
+     */
     fun animations(): List<Animation<*>>
         = animations.toList()
 
+    /**
+     * Check whether a given ID is animating.
+     */
     fun isAnimating(id: String): Boolean {
         return animations.any { it.targetId == id } || pending.any { it.targetId == id }
     }
 
+    /**
+     * Cancel an animation by its targetId.
+     */
     fun cancelFor(id: String) = synchronized(lock) {
         animations.removeAll { it.targetId == id }
         pending.removeAll { it.targetId == id }
     }
 
+    /**
+     * Queue an animation.
+     */
     fun <T> animate(anim: Animation<T>) = synchronized(lock) {
         @Suppress("UNCHECKED_CAST")
         pending += anim as Animation<Any>
     }
 
+    /**
+     * Tick all animations. Runs every client frame.
+     */
     fun tick(deltaSeconds: Double) = synchronized(lock) {
         val toRemove = mutableListOf<Animation<*>>()
 

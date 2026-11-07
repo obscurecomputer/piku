@@ -57,6 +57,10 @@ object UIRenderer : PikuService {
         nodesByType.clear()
     }
 
+    /**
+     * Recursively re-indexes the tree of [UINode]s,
+     * repopulating [nodesById], [nodesByName], and [nodesByType].
+     */
     private fun indexTree(node: UINode) {
         allNodes.add(node)
         node.name?.let { nodesByName[it] = node }
@@ -89,17 +93,33 @@ object UIRenderer : PikuService {
         node.children().forEach { deindexTree(it) }
     }
 
+    /**
+     * Finds a [UINode] by its [UINode.name] from [nodesByName].
+     */
     fun findByName(name: String): UINode? = nodesByName[name]
+    /**
+     * Finds a [UINode] by its [UINode.id] from [nodesById].
+     */
     fun findById(id: String): UINode? = nodesById[id]
 
+    /**
+     * Finds a list of [UINode]s by its Java type.
+     * findAllOfType<FlowNode>() -> List<FlowNode>
+     */
     inline fun <reified T : UINode> findAllOfType(): List<T> =
         (nodesByType[T::class.java] as? Set<T>)?.toList() ?: emptyList()
 
-    fun findAllByTypeName(type: String): List<UINode> =
-        nodesByType.entries.firstOrNull { it.key.simpleName == type }?.value?.toList() ?: emptyList()
-
+    /**
+     * Get all [UINode]s that are registered.
+     */
     fun getAllNodes(): List<UINode> = allNodes.toList()
 
+    /**
+     * Renders the user interface in 3 passes:
+     * - measures the root nodes
+     * - lays out the root nodes
+     * - draws the root nodes
+     */
     fun render(graphics: GuiGraphicsExtractor) {
         val screenW = instance.window.guiScaledWidth
         val screenH = instance.window.guiScaledHeight
@@ -120,6 +140,9 @@ object UIRenderer : PikuService {
         }
     }
 
+    /**
+     * Converts a Minecraft texture resource into a [DynamicTexture].
+     */
     fun getTexture(path: String): DynamicTexture? {
         val id = getIdentifier(path) ?: return null
         return try {

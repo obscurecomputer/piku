@@ -24,20 +24,29 @@ class TextInputNode : TextNode() {
 
     var maxLength: Int = 32
 
-    // The base hooks for this component.
-    // Can not be overriden through Luau!!
+    /** The base hooks for this component.
+     * Can not be overriden through Luau!!
+     */
     fun onBaseInput(event: UIEvent, node: LuaUINode) {
         onInput?.invoke(event, node)
     }
+    /** The base hooks for this component.
+     * Can not be overriden through Luau!!
+     */
     fun onBaseConfirm(event: UIEvent, node: LuaUINode) {
         onConfirm?.invoke(event, node)
     }
 
-    // The hooks for this component that can be
-    // overridden through Luau.
+    /** The hooks for this component that can be
+     * overridden through Luau. */
     var onInput: ((UIEvent, LuaUINode) -> Unit)? = null
+    /** The hooks for this component that can be
+     * overridden through Luau. */
     var onConfirm: ((UIEvent, LuaUINode) -> Unit)? = null
 
+    /**
+     * The render mode of this [TextInputNode].
+     */
     var renderMode = RenderMode.PLACEHOLDER
 
     var useCommandSuggestions: Boolean = false

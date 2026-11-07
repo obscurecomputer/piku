@@ -40,26 +40,69 @@ interface ServerAPI<T> {
     val pendingReloads: MutableMap<Long, PendingReload<T>>
     val reloadIdCounter: AtomicLong
 
+    /**
+     * Registers Piku's server-side plugin message events
+     */
     fun registerEvents()
 
+    /**
+     * Sends any data through the given [eventId] channel to
+     * a single player of [T].
+     */
     fun sendData(player: T, eventId: String, data: Any)
+    /**
+     * Sends any data through the given [eventId] channel to
+     * a collection of players of [T].
+     */
     fun sendData(players: Collection<T>, eventId: String, data: Any) =
         players.forEach { sendData(it, eventId, data) }
+    /**
+     * Sends any data through the given [eventId] channel to
+     * a list of players of [T].
+     */
     fun sendData(players: List<T>, eventId: String, data: Any) =
         players.forEach { sendData(it, eventId, data) }
 
+    /**
+     * Sends a [SharedState] to a player of [T].
+     */
     fun sendState(player: T, state: SharedState)
+    /**
+     * Sends a [SharedState] to a collection of players of [T].
+     */
     fun sendState(players: Collection<T>, state: SharedState) =
         players.forEach { sendState(it, state) }
+    /**
+     * Sends a [SharedState] to a list of players of [T].
+     */
     fun sendState(players: List<T>, state: SharedState) =
         players.forEach { sendState(it, state) }
 
+    /**
+     * Sends an unload scripts event to a player of [T]
+     * with a [reloadId]. The client returns the [reloadId] to the server
+     * through the `piku:unload_scripts` channel once unloading is complete.
+     */
     fun unloadScripts(player: T, reloadId: Long)
+    /**
+     * Sends an unload scripts event to a collection of players of [T]
+     * with a [reloadId]. The clients return the [reloadId] to the server
+     * through the `piku:unload_scripts` channel once unloading is complete.
+     */
     fun unloadScripts(players: Collection<T>, reloadId: Long) =
         players.forEach { unloadScripts(it, reloadId) }
+    /**
+     * Sends an unload scripts event to a list of players of [T]
+     * with a [reloadId]. The clients return the [reloadId] to the server
+     * through the `piku:unload_scripts` channel once unloading is complete.
+     */
     fun unloadScripts(players: List<T>, reloadId: Long) =
         players.forEach { unloadScripts(it, reloadId) }
 
+    /**
+     * Syncs a [SharedState] to its owners, with support for
+     * owner lists and singular state owners.
+     */
     fun syncStateToOwners(
         owners: Any,
         state: SharedState,
@@ -89,6 +132,9 @@ interface ServerAPI<T> {
         }
     }
 
+    /**
+     * Sends a script to a player of [T] with a name and content.
+     */
     fun sendScript(player: T, name: String, content: String)
 
     private fun forEachFileScript(
@@ -154,16 +200,25 @@ interface ServerAPI<T> {
         }
     }
 
+    /**
+     * Sends all scripts to a list of players of [T] from a given [ScriptSource].
+     */
     fun sendAllScripts(
         players: List<T>,
         source: ScriptSource,
         recurse: Boolean = true
     ) = players.forEach { sendAllScripts(it, source, recurse) }
+    /**
+     * Sends all scripts to a collection of players of [T] from a given [ScriptSource].
+     */
     fun sendAllScripts(
         players: Collection<T>,
         source: ScriptSource,
         recurse: Boolean = true
     ) = players.forEach { sendAllScripts(it, source, recurse) }
+    /**
+     * Sends all scripts to a player of [T] from a given [ScriptSource].
+     */
     fun sendAllScripts(
         player: T,
         source: ScriptSource,
@@ -214,6 +269,19 @@ interface ServerAPI<T> {
         }
     }
 
+    /**
+     * Registers a hot reload listener.
+     *
+     * @param players A callback returning a list of players of [T] to receive the hot
+     *  reloaded scripts.
+     * @param source A [ScriptSource] defining where to take the hot reloaded scripts from.
+     *  Does not support [ScriptSource.Resource], since it is impossible.
+     * @param recurse Whether to recursively search subdirectories from the [source].
+     * @param debounceMs The delay in milliseconds before allowing another file save event
+     *  to trigger a hot reload
+     * @param onSuccessfulReload The callback to trigger once all [players] have unloaded
+     *  the old scripts and loaded the new ones.
+     */
     fun hotReload(
         players: () -> List<T>,
         source: ScriptSource,

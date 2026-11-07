@@ -1,6 +1,7 @@
 package computer.obscure.piku.core.utils
 
 import computer.obscure.piku.core.classes.Vec3
+import computer.obscure.piku.core.serialization.PikuEncodable
 import computer.obscure.piku.core.serialization.PikuSerializable
 import computer.obscure.twine.TwineNative
 import kotlinx.serialization.InternalSerializationApi
@@ -46,6 +47,7 @@ fun Any?.toJson(): String = when (this) {
     is Number -> this.toString()
     is Boolean -> this.toString()
     is PikuSerializable -> this.toJsonElement().toString()
+    is PikuEncodable -> this.encodeToJson().toString()
     is Map<*, *> -> {
         val entries = this.entries.joinToString(",") { (k, v) -> "\"$k\":${v.toJson()}" }
         "{$entries}"
@@ -78,7 +80,6 @@ fun Any?.toJson(): String = when (this) {
 }
 
 fun jsonToKotlin(value: JsonElement): Any? {
-    println("${value.javaClass.name}: $value")
     return when {
         value is JsonObject -> {
             val typeName = value["__type"]?.jsonPrimitive?.contentOrNull
@@ -105,6 +106,5 @@ fun jsonToKotlin(value: JsonElement): Any? {
     }
 }
 fun jsonStringToKotlin(json: String): Any? {
-    println("CONVERT: ${jsonToKotlin(Json.parseToJsonElement(json))}")
     return jsonToKotlin(Json.parseToJsonElement(json))
 }

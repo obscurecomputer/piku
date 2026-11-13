@@ -17,7 +17,7 @@ import net.minestom.server.event.player.PlayerLoadedEvent
 import net.minestom.server.instance.InstanceContainer
 import java.io.File
 
-class Server : BlossomServer(
+internal class Server : BlossomServer(
     auth = Auth.Offline()
 ) {
     lateinit var instanceContainer: InstanceContainer

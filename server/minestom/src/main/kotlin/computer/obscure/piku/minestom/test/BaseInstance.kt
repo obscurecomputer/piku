@@ -7,7 +7,7 @@ import net.minestom.server.instance.block.Block
 import net.minestom.server.instance.generator.GenerationUnit
 import net.minestom.server.utils.chunk.ChunkSupplier
 
-class BaseInstance {
+internal class BaseInstance {
     fun createInstance(instanceManager: InstanceManager): InstanceContainer {
         val instanceContainer = instanceManager.createInstanceContainer()
 

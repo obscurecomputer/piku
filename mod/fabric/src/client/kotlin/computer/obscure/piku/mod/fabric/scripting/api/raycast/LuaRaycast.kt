@@ -4,13 +4,12 @@ import computer.obscure.piku.core.scripting.engine.EngineError
 import computer.obscure.piku.core.scripting.engine.EngineErrorCode
 import computer.obscure.piku.mod.fabric.raycast.Raycast
 import computer.obscure.piku.mod.fabric.scripting.api.world.LuaEntity
-import computer.obscure.piku.mod.fabric.scripting.api.util.minecraft.toMCVec3
 import computer.obscure.twine.LuaCallback
 import computer.obscure.twine.TwineNative
 import computer.obscure.twine.annotations.TwineFunction
+import me.znotchill.kiwi.generated.Vec3
 import net.minecraft.client.Minecraft
 import net.minecraft.world.entity.Entity
-import net.minecraft.world.phys.Vec3
 
 class LuaRaycast : TwineNative("raycast") {
     @TwineFunction

@@ -7,6 +7,9 @@ import kotlinx.serialization.InternalSerializationApi
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.json.*
 import kotlinx.serialization.serializerOrNull
+import me.znotchill.kiwi.generated.Color
+import me.znotchill.kiwi.generated.Vec2
+import me.znotchill.kiwi.generated.Vec3
 import kotlin.reflect.KClass
 
 val json = Json { ignoreUnknownKeys = true }
@@ -19,16 +22,16 @@ data class SerializableTypeEntry<T : Any>(
 )
 
 val pikuSerializableTypes: List<SerializableTypeEntry<*>> = listOf(
-//    SerializableTypeEntry(Vec3::class, "vec3", Vec3.serializer()) { it },
-//    SerializableTypeEntry(
-//        Vec2::class, "vec2",
-//        Vec2.serializer()
-//    ) { it },
-//
-//    SerializableTypeEntry(
-//        Color::class, "color",
-//        Color.serializer()
-//    ) { it }
+    SerializableTypeEntry(Vec3::class, "vec3", Vec3.serializer()) { it },
+    SerializableTypeEntry(
+        Vec2::class, "vec2",
+        Vec2.serializer()
+    ) { it },
+
+    SerializableTypeEntry(
+        Color::class, "color",
+        Color.serializer()
+    ) { it }
 )
 
 val typeNameToEntry: Map<String, SerializableTypeEntry<*>> =

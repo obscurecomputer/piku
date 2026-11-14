@@ -1,5 +1,6 @@
 package computer.obscure.piku.mod.fabric.raycast
 
+import me.znotchill.kiwi.generated.Vec3
 import net.minecraft.client.Minecraft
 import net.minecraft.core.BlockPos
 import net.minecraft.core.Direction
@@ -9,8 +10,10 @@ import net.minecraft.world.level.Level
 import net.minecraft.world.phys.AABB
 import net.minecraft.world.phys.BlockHitResult
 import net.minecraft.world.phys.HitResult
-import net.minecraft.world.phys.Vec3
+import net.minecraft.world.phys.Vec3 as MCVec3
 import net.minecraft.world.phys.shapes.CollisionContext
+
+private fun Vec3.toMc() = MCVec3(x, y, z)
 
 object Raycast {
 
@@ -22,10 +25,10 @@ object Raycast {
         nearbyEntityRadius: Double = 3.0,
         entityFilter: (Entity) -> Boolean = { true }
     ): RaycastResult {
-        val end = start.add(direction.normalize().scale(maxDistance))
-
+        val origin = start.toMc()
+        val end = (start + direction.normalize().scale(maxDistance)).toMc()
         val blockContext = ClipContext(
-            start,
+            origin,
             end,
             ClipContext.Block.COLLIDER,
             ClipContext.Fluid.NONE,
@@ -34,23 +37,25 @@ object Raycast {
 
         val blockHit: BlockHitResult = level.clip(blockContext)
         val hitDistSq = if (blockHit.type != HitResult.Type.MISS) {
-            blockHit.location.distanceToSqr(start)
+            blockHit.location.distanceToSqr(origin)
         } else {
             Double.MAX_VALUE
         }
 
-        val searchBox = AABB(start, end).inflate(nearbyEntityRadius)
-        val entities = level.getEntities(null, searchBox) { entityFilter(it) }
+        val searchBox = AABB(origin, end).inflate(nearbyEntityRadius)
+        val entities = level.getEntities(null, searchBox) {
+            entityFilter(it)
+        }
 
         var closestEntity: Entity? = null
-        var entityHitVec: Vec3? = null
+        var entityHitVec: MCVec3? = null
         var closestEntityDistSq = hitDistSq
 
         for (entity in entities) {
             val aabb = entity.boundingBox.inflate(0.3)
-            val clip = aabb.clip(start, end)
+            val clip = aabb.clip(origin, end)
             if (clip.isPresent) {
-                val distSq = start.distanceToSqr(clip.get())
+                val distSq = origin.distanceToSqr(clip.get())
                 if (distSq < closestEntityDistSq) {
                     closestEntityDistSq = distSq
                     closestEntity = entity
@@ -74,7 +79,7 @@ object Raycast {
                     hitUnloadedChunk = false,
                     hitMaxDistance = false,
                     hitPosition = blockHit.location,
-                    relativeHitPosition = blockHit.location.subtract(Vec3.atCenterOf(pos)),
+                    relativeHitPosition = blockHit.location.subtract(MCVec3.atCenterOf(pos)),
                     hitFace = blockHit.direction
                 )
             }
@@ -83,16 +88,16 @@ object Raycast {
     }
 
     fun createEmptyResult(
-        pos: Vec3 = Vec3.ZERO,
+        pos: MCVec3 = MCVec3.ZERO,
         hitUnloadedChunk: Boolean = false,
         hitMaxDistance: Boolean = false
     ) = RaycastResult(
         false, BlockPos.ZERO, Minecraft.getInstance().level!!.getBlockState(BlockPos.ZERO),
-        false, null, hitUnloadedChunk, hitMaxDistance, pos, Vec3.ZERO, Direction.UP
+        false, null, hitUnloadedChunk, hitMaxDistance, pos, MCVec3.ZERO, Direction.UP
     )
 
-    private fun createEntityResult(pos: Vec3, entity: Entity) = RaycastResult(
+    private fun createEntityResult(pos: MCVec3, entity: Entity) = RaycastResult(
         false, BlockPos.ZERO, entity.level().getBlockState(BlockPos.ZERO),
-        true, entity, false, hitMaxDistance = false, hitPosition = pos, relativeHitPosition = Vec3.ZERO, hitFace = Direction.UP
+        true, entity, false, hitMaxDistance = false, hitPosition = pos, relativeHitPosition = MCVec3.ZERO, hitFace = Direction.UP
     )
 }

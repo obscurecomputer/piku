@@ -5,7 +5,9 @@ import computer.obscure.piku.core.service.PikuService
 import computer.obscure.twine.TwineEngine
 import computer.obscure.twine.TwineEnvironment
 import computer.obscure.twine.TwineNative
-import me.znotchill.kiwi.generated.Vec3
+import me.znotchill.kiwi.generated.builders.ColorBuilder
+import me.znotchill.kiwi.generated.builders.Vec2Builder
+import me.znotchill.kiwi.generated.builders.Vec3Builder
 
 open class LuaEngine : PikuService {
     private var _engine: TwineEngine? = null
@@ -49,9 +51,9 @@ open class LuaEngine : PikuService {
 
     fun registerCommons() {
         registerBase(LuaBaseGenerics)
-        register(LuaVec2())
-        register(Vec3())
-        register(LuaColor())
+        register(Vec2Builder())
+        register(Vec3Builder())
+        register(ColorBuilder())
         register(LuaSpacing())
         register(LuaScheduler())
         register(LuaMath())

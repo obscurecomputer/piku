@@ -2,12 +2,11 @@ package computer.obscure.piku.mod.fabric.scripting.api.camera
 
 import computer.obscure.piku.mod.fabric.animation.Animation
 import computer.obscure.piku.mod.fabric.animation.AnimationManager
-import computer.obscure.piku.core.scripting.api.LuaVec3
-import computer.obscure.piku.core.scripting.api.LuaVec3Instance
 import computer.obscure.piku.mod.fabric.ClientState
 import computer.obscure.twine.TwineNative
 import computer.obscure.twine.annotations.TwineFunction
 import computer.obscure.twine.annotations.TwineProperty
+import me.znotchill.kiwi.generated.Vec3
 
 class LuaClientCamera : TwineNative() {
     @TwineFunction
@@ -34,11 +33,11 @@ class LuaClientCamera : TwineNative() {
 
     @TwineFunction
     fun rotate(
-        to: LuaVec3Instance,
+        to: Vec3,
     ) {
         AnimationManager.animate(
             Animation.instant(
-                to = to.toVec3(),
+                to = to,
                 getter = { ClientState.rotation },
                 setter = { ClientState.rotation = it }
             )
@@ -46,9 +45,9 @@ class LuaClientCamera : TwineNative() {
     }
 
     @TwineProperty
-    val rotation: LuaVec3Instance
+    val rotation: Vec3
         get() {
-            return LuaVec3.fromVec3(ClientState.rotation)
+            return ClientState.rotation
         }
 
     @TwineFunction

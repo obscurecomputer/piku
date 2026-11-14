@@ -1,12 +1,11 @@
 package computer.obscure.piku.mod.fabric.scripting.api.camera
 
-import computer.obscure.piku.core.classes.Vec3
-import computer.obscure.piku.core.scripting.api.LuaVec3Instance
 import computer.obscure.piku.core.scripting.engine.EngineError
 import computer.obscure.piku.core.scripting.engine.EngineErrorCode
 import computer.obscure.piku.mod.fabric.camera.CinematicCamera
 import computer.obscure.twine.annotations.TwineFunction
 import computer.obscure.twine.TwineNative
+import me.znotchill.kiwi.generated.Vec3
 
 class LuaCinematicCamera : TwineNative() {
     @TwineFunction
@@ -36,13 +35,13 @@ class LuaCinematicCamera : TwineNative() {
     }
 
     @TwineFunction
-    fun move(to: LuaVec3Instance) {
-        CinematicCamera.pos = Vec3(to.x, to.y, to.z)
+    fun move(to: Vec3) {
+        CinematicCamera.pos = to
     }
 
     @TwineFunction
-    fun rotate(to: LuaVec3Instance) {
-        CinematicCamera.rotation = Vec3(to.x, to.y, to.z)
+    fun rotate(to: Vec3) {
+        CinematicCamera.rotation = to
     }
 
     @TwineFunction

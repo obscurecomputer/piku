@@ -1,12 +1,11 @@
 package computer.obscure.piku.mod.fabric.scripting.api.camera
 
 import computer.obscure.piku.mod.fabric.animation.Animation
-import computer.obscure.piku.core.classes.Vec3
-import computer.obscure.piku.core.scripting.api.LuaVec3Instance
 import computer.obscure.piku.mod.fabric.animation.AnimationManager
 import computer.obscure.piku.mod.fabric.camera.CinematicCamera
 import computer.obscure.twine.annotations.TwineFunction
 import computer.obscure.twine.TwineNative
+import me.znotchill.kiwi.generated.Vec3
 
 class LuaCameraAnimation : TwineNative() {
     val storedAnimations: MutableList<Animation<*>> = mutableListOf()
@@ -19,7 +18,7 @@ class LuaCameraAnimation : TwineNative() {
     }
 
     @TwineFunction
-    fun move(to: LuaVec3Instance, duration: Double, easing: String): LuaCameraAnimation {
+    fun move(to: Vec3, duration: Double, easing: String): LuaCameraAnimation {
         storedAnimations.add(
             Animation(
                 durationSeconds = duration,
@@ -33,7 +32,7 @@ class LuaCameraAnimation : TwineNative() {
     }
 
     @TwineFunction
-    fun rotate(to: LuaVec3Instance, duration: Double, easing: String): LuaCameraAnimation {
+    fun rotate(to: Vec3, duration: Double, easing: String): LuaCameraAnimation {
         storedAnimations.add(
             Animation(
                 durationSeconds = duration,

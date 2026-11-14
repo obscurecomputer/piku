@@ -3,8 +3,6 @@ package computer.obscure.piku.mod.fabric.scripting.api.client
 import com.mojang.blaze3d.platform.InputConstants
 import computer.obscure.piku.core.scripting.api.LuaTextInstance
 import me.znotchill.kiwi.generated.Vec2
-import computer.obscure.piku.core.scripting.api.LuaVec3
-import computer.obscure.piku.core.scripting.api.LuaVec3Instance
 import computer.obscure.piku.mod.fabric.ClientState
 import computer.obscure.piku.mod.fabric.input.InputHandler
 import computer.obscure.piku.mod.fabric.PikuClient
@@ -17,6 +15,7 @@ import computer.obscure.twine.TwineLogger
 import computer.obscure.twine.TwineNative
 import computer.obscure.twine.annotations.TwineFunction
 import computer.obscure.twine.annotations.TwineProperty
+import me.znotchill.kiwi.generated.Vec3
 import net.fabricmc.loader.api.FabricLoader
 import net.minecraft.client.CameraType
 import net.minecraft.client.Minecraft
@@ -38,23 +37,23 @@ class LuaClient : TwineNative("client") {
     }
 
     @TwineProperty
-    val pos: LuaVec3Instance
+    val pos: Vec3
         get() {
             val p = instance.player
-                ?: return LuaVec3Instance(0.0, 0.0, 0.0)
+                ?: return Vec3(0.0, 0.0, 0.0)
 
-            return LuaVec3Instance(p.x, p.y, p.z)
+            return Vec3(p.x, p.y, p.z)
         }
 
     @TwineProperty
-    val rotation: LuaVec3Instance
+    val rotation: Vec3
         get() {
             val player = Minecraft.getInstance().player
-                ?: return LuaVec3.ZERO
+                ?: return Vec3.ZERO
 
             val vec = player.getViewVector(1.0f)
 
-            return LuaVec3Instance(vec.x, vec.y, vec.z)
+            return Vec3(vec.x, vec.y, vec.z)
         }
 
     @TwineProperty
@@ -66,13 +65,13 @@ class LuaClient : TwineNative("client") {
         get() = Minecraft.getInstance().player?.xRot ?: 0f
 
     @TwineProperty
-    val headPos: LuaVec3Instance
+    val headPos: Vec3
         get() {
             val p = instance.player
-                ?: return LuaVec3Instance(0.0, 0.0, 0.0)
+                ?: return Vec3(0.0, 0.0, 0.0)
 
             val v = p.getEyePosition(1.0f)
-            return LuaVec3Instance(v.x, v.y, v.z)
+            return Vec3(v.x, v.y, v.z)
         }
 
     @TwineFunction

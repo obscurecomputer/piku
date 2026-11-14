@@ -1,6 +1,5 @@
 package computer.obscure.piku.core.utils
 
-import computer.obscure.piku.core.classes.Vec3
 import computer.obscure.piku.core.serialization.PikuEncodable
 import computer.obscure.piku.core.serialization.PikuSerializable
 import computer.obscure.twine.TwineNative
@@ -22,16 +21,17 @@ data class SerializableTypeEntry<T : Any>(
 )
 
 val pikuSerializableTypes: List<SerializableTypeEntry<*>> = listOf(
-    SerializableTypeEntry(Vec3::class, "vec3", Vec3.serializer()) { it.toLuaInstance() },
-    SerializableTypeEntry(
-        Vec2::class, "vec2",
-        Vec2.serializer()
-    ) { it },
-
-    SerializableTypeEntry(
-        Color::class, "color",
-        Color.serializer()
-    ) { it }
+    // todo: uncomment or find a better
+//    SerializableTypeEntry(Vec3::class, "vec3", Vec3.serializer()) { it.toLuaInstance() },
+//    SerializableTypeEntry(
+//        Vec2::class, "vec2",
+//        Vec2.serializer()
+//    ) { it },
+//
+//    SerializableTypeEntry(
+//        Color::class, "color",
+//        Color.serializer()
+//    ) { it }
 )
 
 val typeNameToEntry: Map<String, SerializableTypeEntry<*>> =

@@ -1,6 +1,5 @@
 package computer.obscure.piku.mod.fabric.events
 
-import computer.obscure.piku.core.classes.Vec3
 import computer.obscure.piku.core.scheduler.Scheduler
 import computer.obscure.piku.core.scripting.server.SharedStateManager
 import computer.obscure.piku.mod.fabric.ClientState
@@ -13,6 +12,7 @@ import computer.obscure.piku.mod.fabric.sound.TrackRegistry
 import computer.obscure.piku.mod.fabric.storage.SessionStorage
 import computer.obscure.piku.mod.fabric.compat.controlify.ControlifyUI
 import computer.obscure.piku.mod.fabric.ui.UIRenderer
+import me.znotchill.kiwi.generated.Vec3
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents
 import net.minecraft.client.Minecraft
 

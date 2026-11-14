@@ -9,7 +9,7 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents
 object ClientTick {
     fun register() {
         ClientTickEvents.END_CLIENT_TICK.register { client ->
-            if (PikuClient.engine?.twine?.closed == true) {
+            if (PikuClient.engine?.engine?.closed == true) {
                 PikuClient.error("Engine closed! Reopening.")
                 ClientPlayConnection.onDisconnect()
                 if (ClientState.connectedToServer) {

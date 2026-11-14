@@ -1,12 +1,12 @@
 package computer.obscure.piku.mod.fabric.scripting.api.camera
 
 import computer.obscure.piku.mod.fabric.animation.Animation
-import computer.obscure.piku.core.scripting.api.LuaVec3Instance
 import computer.obscure.piku.mod.fabric.ClientState
 import computer.obscure.piku.mod.fabric.PikuClient
 import computer.obscure.piku.mod.fabric.scripting.api.animation.LuaAnimatable
 import computer.obscure.twine.LuaCallback
 import computer.obscure.twine.annotations.TwineFunction
+import me.znotchill.kiwi.generated.Vec3
 
 class LuaClientCameraAnimation : LuaAnimatable() {
     @TwineFunction
@@ -30,7 +30,7 @@ class LuaClientCameraAnimation : LuaAnimatable() {
                 onFinish = {
                     ClientState.fovControlled = false
                     ClientState.animatedFov = to
-                    if (!PikuClient.engine!!.twine.closed)
+                    if (!PikuClient.engine!!.engine.closed)
                         onFinish?.invoke()
                 }
             )
@@ -40,7 +40,7 @@ class LuaClientCameraAnimation : LuaAnimatable() {
 
     @TwineFunction
     fun rotate(
-        to: LuaVec3Instance,
+        to: Vec3,
         duration: Double,
         easing: String,
         onFinish: LuaCallback? = null
@@ -49,11 +49,11 @@ class LuaClientCameraAnimation : LuaAnimatable() {
             Animation(
                 durationSeconds = duration,
                 easing = easing,
-                to = to.toVec3(),
+                to = to,
                 getter = { ClientState.rotation },
                 setter = { ClientState.rotation = it },
                 onFinish = {
-                    if (!PikuClient.engine!!.twine.closed)
+                    if (!PikuClient.engine!!.engine.closed)
                         onFinish?.invoke()
                 }
             )

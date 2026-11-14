@@ -1,9 +1,9 @@
 package computer.obscure.piku.mod.fabric.animation
 
 import computer.obscure.piku.core.classes.Easing
-import computer.obscure.piku.core.classes.Vec3
 import computer.obscure.twine.LuaCallback
 import me.znotchill.kiwi.generated.Vec2
+import me.znotchill.kiwi.generated.Vec3
 import net.minecraft.world.phys.Vec3 as McVec3
 
 object AnimationUtil {

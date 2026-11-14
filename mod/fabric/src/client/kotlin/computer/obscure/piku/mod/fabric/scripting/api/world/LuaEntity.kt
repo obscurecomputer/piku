@@ -1,10 +1,10 @@
 package computer.obscure.piku.mod.fabric.scripting.api.world
 
-import computer.obscure.piku.core.scripting.api.LuaVec3Instance
 import computer.obscure.piku.mod.fabric.scripting.api.components.LuaEntityComponents
 import computer.obscure.piku.mod.fabric.scripting.api.util.minecraft.toLua
 import computer.obscure.twine.TwineNative
 import computer.obscure.twine.annotations.TwineProperty
+import me.znotchill.kiwi.generated.Vec3
 import net.minecraft.client.Minecraft
 import net.minecraft.world.entity.Entity
 
@@ -46,7 +46,7 @@ class LuaEntity(val entity: Entity) : TwineNative() {
     val motionZ: Double = entity.deltaMovement.z
 
     @TwineProperty
-    val motion: LuaVec3Instance = entity.deltaMovement.toLua()
+    val motion: Vec3 = entity.deltaMovement.toLua()
 
     @TwineProperty
     val isOnGround: Boolean = entity.onGround()

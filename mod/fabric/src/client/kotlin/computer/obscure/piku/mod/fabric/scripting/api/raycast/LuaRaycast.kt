@@ -1,6 +1,5 @@
 package computer.obscure.piku.mod.fabric.scripting.api.raycast
 
-import computer.obscure.piku.core.scripting.api.LuaVec3Instance
 import computer.obscure.piku.core.scripting.engine.EngineError
 import computer.obscure.piku.core.scripting.engine.EngineErrorCode
 import computer.obscure.piku.mod.fabric.raycast.Raycast
@@ -28,14 +27,14 @@ class LuaRaycastBuilder : TwineNative() {
     var entityFilter: (Entity) -> Boolean = { true }
 
     @TwineFunction
-    fun start(vec3: LuaVec3Instance): LuaRaycastBuilder {
-        this.start = vec3.toMCVec3()
+    fun start(vec3: Vec3): LuaRaycastBuilder {
+        this.start = vec3
         return this
     }
 
     @TwineFunction
-    fun direction(vec3: LuaVec3Instance): LuaRaycastBuilder {
-        this.direction = vec3.toMCVec3()
+    fun direction(vec3: Vec3): LuaRaycastBuilder {
+        this.direction = vec3
         return this
     }
 

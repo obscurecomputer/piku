@@ -1,6 +1,7 @@
 package computer.obscure.piku.core.scripting.server
 
 import computer.obscure.piku.core.classes.ScriptSource
+import computer.obscure.piku.core.scripting.engine.LuaEngine
 import computer.obscure.piku.core.states.SharedState
 import computer.obscure.piku.core.states.StateOwner
 import java.io.File
@@ -39,6 +40,8 @@ interface ServerAPI<T> {
     val hotReloadExecutor: ExecutorService
     val pendingReloads: MutableMap<Long, PendingReload<T>>
     val reloadIdCounter: AtomicLong
+
+    var engine: LuaEngine
 
     /**
      * Registers Piku's server-side plugin message events

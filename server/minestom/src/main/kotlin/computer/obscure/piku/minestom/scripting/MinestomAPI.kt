@@ -1,5 +1,6 @@
 package computer.obscure.piku.minestom.scripting
 
+import computer.obscure.piku.core.scripting.engine.LuaEngine
 import computer.obscure.piku.core.scripting.server.HotReloadListener
 import computer.obscure.piku.core.scripting.server.PendingReload
 import computer.obscure.piku.core.scripting.server.PikuPlayer
@@ -38,6 +39,8 @@ class MinestomAPI(val server: BlossomServer) : ServerAPI<Player> {
 
     override val pendingReloads: MutableMap<Long, PendingReload<Player>> = ConcurrentHashMap()
     override val reloadIdCounter = AtomicLong(0)
+
+    override var engine = LuaEngine()
 
     override fun registerEvents() {
         SharedStateManager.piku = this

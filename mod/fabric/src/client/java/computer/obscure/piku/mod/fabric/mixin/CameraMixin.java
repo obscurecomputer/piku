@@ -56,18 +56,18 @@ public abstract class CameraMixin {
         Vec3 pos = new Vec3(
                 Mth.lerp(
                         tickDelta,
-                        CinematicCamera.INSTANCE.getPrevPos().x,
-                        CinematicCamera.INSTANCE.getPos().x
+                        CinematicCamera.INSTANCE.getPrevPos().getX(),
+                        CinematicCamera.INSTANCE.getPos().getX()
                 ),
                 Mth.lerp(
                         tickDelta,
-                        CinematicCamera.INSTANCE.getPrevPos().y,
-                        CinematicCamera.INSTANCE.getPos().y
+                        CinematicCamera.INSTANCE.getPrevPos().getY(),
+                        CinematicCamera.INSTANCE.getPos().getY()
                 ),
                 Mth.lerp(
                         tickDelta,
-                        CinematicCamera.INSTANCE.getPrevPos().z,
-                        CinematicCamera.INSTANCE.getPos().z
+                        CinematicCamera.INSTANCE.getPrevPos().getZ(),
+                        CinematicCamera.INSTANCE.getPos().getZ()
                 )
         );
 
@@ -100,14 +100,14 @@ public abstract class CameraMixin {
             return;
 
 
-        if (ClientState.rotation.x != 0 ||
-                ClientState.rotation.y != 0) {
+        if (ClientState.rotation.getX() != 0 ||
+                ClientState.rotation.getY() != 0) {
 
             Camera camera = (Camera)(Object)this;
 
             setRotation(
-                    (float) (camera.yRot() + ClientState.rotation.y),
-                    (float) (camera.xRot() + ClientState.rotation.x)
+                    (float) (camera.yRot() + ClientState.rotation.getY()),
+                    (float) (camera.xRot() + ClientState.rotation.getX())
             );
         }
 

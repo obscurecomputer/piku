@@ -1,5 +1,6 @@
 package computer.obscure.piku.core.scripting.server
 
+// TODO: migrate this into core Player
 class PikuPlayer<P>(
     val player: P
 ) {

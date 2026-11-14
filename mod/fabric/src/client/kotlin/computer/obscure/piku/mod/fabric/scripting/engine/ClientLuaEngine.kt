@@ -44,7 +44,7 @@ class ClientLuaEngine : LuaEngine() {
         register(LuaSessionStorage())
         register(LuaControlify())
         register(LuaSound())
-        TwineCompat.bind(twine)
+        TwineCompat.bind(engine)
         super.registerCommons()
 
         val eventListener = LuaClientEventListener()

@@ -5,13 +5,13 @@ import computer.obscure.piku.core.service.PikuService
 import computer.obscure.twine.TwineEngine
 import computer.obscure.twine.TwineEnvironment
 import computer.obscure.twine.TwineNative
+import me.znotchill.kiwi.generated.Vec3
 
-abstract class LuaEngine : PikuService {
+open class LuaEngine : PikuService {
     private var _engine: TwineEngine? = null
 
-    val twine: TwineEngine
+    val engine: TwineEngine
         get() = _engine ?: TwineEngine()
-
 
     private val registeredNatives: MutableMap<String, TwineNative> = mutableMapOf()
     open val activeScripts: MutableMap<String, String> = mutableMapOf()
@@ -50,7 +50,7 @@ abstract class LuaEngine : PikuService {
     fun registerCommons() {
         registerBase(LuaBaseGenerics)
         register(LuaVec2())
-        register(LuaVec3())
+        register(Vec3())
         register(LuaColor())
         register(LuaSpacing())
         register(LuaScheduler())
@@ -61,12 +61,12 @@ abstract class LuaEngine : PikuService {
 
     fun register(native: TwineNative) {
         registeredNatives[native.resolvedName] = native
-        twine.register(native)
+        engine.register(native)
     }
 
     fun registerBase(native: TwineNative) {
         registeredNatives[native.resolvedName] = native
-        twine.setBase(native)
+        engine.setBase(native)
     }
 
     fun runScript(name: String, content: String) {
@@ -76,7 +76,7 @@ abstract class LuaEngine : PikuService {
 
         synchronized(engineLock) {
             if (_engine == null || _engine!!.closed) return
-            val result = twine.runSafe(name, content, env)
+            val result = engine.runSafe(name, content, env)
             result.onFailure {
                 throw it
             }

@@ -1,7 +1,7 @@
 package computer.obscure.piku.mod.fabric
 
-import computer.obscure.piku.core.classes.Vec3
 import computer.obscure.piku.core.scripting.api.LuaTextInstance
+import me.znotchill.kiwi.generated.Vec3
 import net.kyori.adventure.text.Component
 import net.minecraft.client.Minecraft
 

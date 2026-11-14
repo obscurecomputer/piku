@@ -31,22 +31,23 @@ class ReceiveStatePacket(
                     clientModifiable = clientModifiable
                 )
 
-                val state = luaState.toSharedState()
-
-                PikuClient.engine!!.events.stateCallbacks[state.internalId]?.invoke(
-                    mapOf("value" to value)
-                )
-
-                SharedStateManager.addState(state)
-                PikuClient.engine!!.events.fire(
-                    "client.update_state",
-                    mapOf(
-                        "internalId" to luaState.internalId,
-                        "name" to luaState.name,
-                        "value" to luaState.value,
-                        "clientModifiable" to luaState.clientModifiable
-                    )
-                )
+                // TODO: FIX STATES
+//                val state = luaState.toSharedState()
+//
+//                PikuClient.engine!!.events.stateCallbacks[state.internalId]?.invoke(
+//                    mapOf("value" to value)
+//                )
+//
+//                SharedStateManager.addState(state)
+//                PikuClient.engine!!.events.fire(
+//                    "client.update_state",
+//                    mapOf(
+//                        "internalId" to luaState.internalId,
+//                        "name" to luaState.name,
+//                        "value" to luaState.value,
+//                        "clientModifiable" to luaState.clientModifiable
+//                    )
+//                )
             } catch (e: Exception) {
                 e.printStackTrace()
             }

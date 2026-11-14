@@ -9,7 +9,7 @@ import net.minestom.server.entity.Entity
 import net.minestom.server.entity.EntityType
 import computer.obscure.piku.core.scripting.platform.Entity as CoreEntity
 
-class MinestomEntity(
+open class MinestomEntity(
     val entity: Entity
 ) : CoreEntity<EntityType>, TwineNative() {
 

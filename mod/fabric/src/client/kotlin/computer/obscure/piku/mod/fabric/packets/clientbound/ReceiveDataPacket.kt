@@ -19,7 +19,12 @@ class ReceiveDataPacket(
     override fun handle() {
         Minecraft.getInstance().execute {
             try {
-                PikuClient.engine!!.events.fire(id, jsonStringToKotlin(json))
+                val engine = PikuClient.engine
+                    ?: return@execute
+
+                val data = jsonStringToKotlin(json)
+
+                engine.serverEvents.receive(id, data, Unit)
             } catch (e: Exception) {
                 e.printStackTrace()
             }

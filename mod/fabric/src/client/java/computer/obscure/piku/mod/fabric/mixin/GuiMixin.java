@@ -18,6 +18,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 @Mixin(Gui.class)
 public class GuiMixin {
@@ -53,7 +54,7 @@ public class GuiMixin {
         data.put("size", new Vec2(screen.width, screen.height));
         data.put("buttons", new LuaScreenButtons(screen));
 
-        PikuClient.Companion.getEngine().getEvents().fire(
+        Objects.requireNonNull(PikuClient.Companion.getEngine()).getClientEvents().emit(
                 "client.screen_close",
                 data
         );
@@ -71,7 +72,7 @@ public class GuiMixin {
         data.put("size", new Vec2(screen.width, screen.height));
         data.put("buttons", new LuaScreenButtons(screen));
 
-        PikuClient.Companion.getEngine().getEvents().fire(
+        Objects.requireNonNull(PikuClient.Companion.getEngine()).getClientEvents().emit(
                 "client.screen_open",
                 data
         );
@@ -83,7 +84,7 @@ public class GuiMixin {
             java.util.Map<String, Object> data = new java.util.HashMap<>();
             data.put("type", "multi_button");
 
-            PikuClient.Companion.getEngine().getEvents().fire(
+            Objects.requireNonNull(PikuClient.Companion.getEngine()).getClientEvents().emit(
                     "client.dialog_close",
                     data
             );

@@ -2,6 +2,8 @@ package computer.obscure.piku.core.scripting.server
 
 import computer.obscure.piku.core.classes.ScriptSource
 import computer.obscure.piku.core.scripting.engine.LuaEngine
+import computer.obscure.piku.core.scripting.events.EventBus
+import computer.obscure.piku.core.scripting.events.NetBus
 import computer.obscure.piku.core.states.SharedState
 import computer.obscure.piku.core.states.StateOwner
 import java.io.File
@@ -35,7 +37,15 @@ data class PendingReload<T>(
 )
 
 interface ServerAPI<T> {
-    val events: ServerEventBus<T>
+    /**
+     * Used for sending events to players who are running scripts.
+     */
+    val clientEvents: NetBus<T>
+    /**
+     * Used for sending events to scripts that are running on this server.
+     */
+    val serverEvents: EventBus
+
     val hotReloadListeners: MutableList<HotReloadListener<T>>
     val hotReloadExecutor: ExecutorService
     val pendingReloads: MutableMap<Long, PendingReload<T>>
@@ -140,7 +150,7 @@ interface ServerAPI<T> {
      */
     fun sendScript(player: T, name: String, content: String)
 
-    private fun forEachFileScript(
+    fun forEachFileScript(
         root: File,
         recurse: Boolean,
         consumer: (name: String, content: String) -> Unit

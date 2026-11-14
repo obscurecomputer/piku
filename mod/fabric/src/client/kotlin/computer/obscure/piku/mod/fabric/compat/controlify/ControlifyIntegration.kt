@@ -93,7 +93,7 @@ object ControlifyIntegration : PikuService {
             "button" to name,
             "action" to action.name,
         )
-        PikuClient.engine!!.events.fire("client.controller.button", eventData)
+        PikuClient.engine!!.clientEvents.emit("client.controller.button", eventData)
         ControlifyUI.fireButton(controller, binding, name, action)
     }
 
@@ -114,7 +114,7 @@ object ControlifyIntegration : PikuService {
         val prevLookVec = prevState[ActionEvent.LOOK]
 
         if (moveVec != Vec2.ZERO || prevMoveVec != Vec2.ZERO) {
-            PikuClient.engine!!.events.fire(
+            PikuClient.engine!!.clientEvents.emit(
                 "client.controller.move",
                 mapOf(
                     "vector" to moveVec
@@ -124,7 +124,7 @@ object ControlifyIntegration : PikuService {
         }
 
         if (lookVec != Vec2.ZERO || prevLookVec != Vec2.ZERO) {
-            PikuClient.engine!!.events.fire(
+            PikuClient.engine!!.clientEvents.emit(
                 "client.controller.look",
                 mapOf(
                     "vector" to lookVec

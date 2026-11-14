@@ -37,6 +37,17 @@ dependencies {
 //    implementation("org.luaj:luaj-jse:${project.property("luaj_version")}")
     implementation("computer.obscure.twine:core:${project.property("twine_version")}")
     implementation("computer.obscure.twine:engine:${project.property("twine_version")}")
+
+// todo: make this less horrid
+    val luauVersion = "1.2.1"
+    val luauNativeVersion = "1.2.1"
+    implementation("dev.hollowcube:luau:${luauVersion}")
+
+    val platforms = listOf("windows-x64", "linux-x64", "macos-arm64", "macos-x64")
+    platforms.forEach { platform ->
+        val dep = "dev.hollowcube:luau-natives-$platform:$luauNativeVersion"
+        implementation(dep)
+    }
 }
 
 tasks.test {

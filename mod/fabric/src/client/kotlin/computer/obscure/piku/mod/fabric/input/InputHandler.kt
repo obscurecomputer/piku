@@ -62,7 +62,7 @@ object InputHandler : PikuService {
                         else -> "unknown"
                     }
                 )
-                PikuClient.engine!!.events.fire("client.key_update", data)
+                PikuClient.engine!!.clientEvents.emit("client.key_update", data)
             }
         }
 
@@ -90,7 +90,7 @@ object InputHandler : PikuService {
                 "x" to mc.mouseHandler.xpos(),
                 "y" to mc.mouseHandler.ypos()
             )
-            PikuClient.engine!!.events.fire("client.scroll", data)
+            PikuClient.engine!!.clientEvents.emit("client.scroll", data)
         }
     }
 
@@ -161,13 +161,13 @@ object InputHandler : PikuService {
             "y" to y,
             "inMenu" to inMenu
         )
-        PikuClient.engine!!.events.fire("client.mouse_update", data)
+        PikuClient.engine!!.clientEvents.emit("client.mouse_update", data)
     }
 
     fun fireMenuClick(
         event: UIEvent
     ) {
-        PikuClient.engine!!.events.fire("client.menu.mouse_update", mapOf("event" to event))
+        PikuClient.engine!!.clientEvents.emit("client.menu.mouse_update", mapOf("event" to event))
     }
 }
 

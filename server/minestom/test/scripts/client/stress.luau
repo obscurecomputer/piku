@@ -1,9 +1,8 @@
 
-listen("client.ui_render", function(event)
-	local p = {}
-	for i = 1, 1000 do
-		p[i] = color.hsl(1, 1, 1)
-
-		client.send(p[i])
-	end
+net.listen("test", function(event)
+	client.send("hello")
+end)
+events.listen("client.mouse_update", function(event)
+	client.send("hello")
+	net.emit("player.click", "wow")
 end)

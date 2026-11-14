@@ -2,20 +2,20 @@ package computer.obscure.piku.minestom.test
 
 import computer.obscure.piku.core.classes.ScriptSource
 import computer.obscure.piku.minestom.scripting.MinestomAPI
+import computer.obscure.piku.minestom.scripting.platform.MinestomPlayer
 import computer.obscure.piku.minestom.scripting.states.sharedState
 import computer.obscure.piku.minestom.scripting.utils.piku
 import me.znotchill.kiwi.blossom.command.command
 import me.znotchill.kiwi.blossom.extensions.addListener
 import me.znotchill.kiwi.blossom.server.BlossomServer
-import me.znotchill.kiwi.generated.Color
 import net.minestom.server.Auth
 import net.minestom.server.MinecraftServer
 import net.minestom.server.entity.GameMode
 import net.minestom.server.event.player.AsyncPlayerConfigurationEvent
-import net.minestom.server.event.player.PlayerChatEvent
 import net.minestom.server.event.player.PlayerLoadedEvent
 import net.minestom.server.instance.InstanceContainer
 import java.io.File
+import kotlin.system.exitProcess
 
 internal class Server : BlossomServer(
     auth = Auth.Offline()
@@ -33,6 +33,23 @@ internal class Server : BlossomServer(
             event.spawningInstance = instanceContainer
             player.gameMode = GameMode.ADVENTURE
             player.permissionLevel = 4
+        }
+
+        val scripts = mutableMapOf<String, String>()
+        piku.forEachFileScript(
+            File("server/minestom/test/scripts/server"),
+            true,
+            consumer = { name, content ->
+                scripts[name] = content
+            }
+        )
+        scripts.forEach { (name, content) ->
+            println(content)
+            try {
+                piku.engine.runScript(name, content)
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
         }
 
         piku.hotReload(
@@ -66,18 +83,9 @@ internal class Server : BlossomServer(
                 recurse = true
             )
 
-        }
-
-        eventHandler.addListener<PlayerChatEvent> { event ->
-            piku.sendData(
-                players,
-                "piku.demo.chat_message",
-                mapOf(
-                    "message" to event.rawMessage,
-                    "author" to event.player.username,
-                    "author_color" to Color.random(),
-                )
-            )
+            piku.serverEvents.emit("server.player_join", mapOf(
+                "player" to MinestomPlayer(event.player)
+            ))
         }
 
         registerCommand(
@@ -87,6 +95,19 @@ internal class Server : BlossomServer(
                 }
             }
         )
+
+        registerCommand(command("stop") {
+            syntax {
+                Thread {
+                    MinecraftServer.stopCleanly()
+                }.start()
+
+                MinecraftServer.getSchedulerManager().buildShutdownTask {
+                    println("Process exiting")
+                    exitProcess(0)
+                }
+            }
+        })
     }
 }
 

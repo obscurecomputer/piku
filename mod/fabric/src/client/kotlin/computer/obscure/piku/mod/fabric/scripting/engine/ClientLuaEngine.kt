@@ -5,6 +5,7 @@ import computer.obscure.piku.core.scripting.api.NetEvents
 import computer.obscure.piku.core.scripting.engine.LuaEngine
 import computer.obscure.piku.core.scripting.events.EventBus
 import computer.obscure.piku.core.scripting.events.NetBus
+import computer.obscure.piku.core.scripting.platform.Platform
 import computer.obscure.piku.core.utils.toJson
 import computer.obscure.piku.mod.fabric.PikuClient
 import computer.obscure.piku.mod.fabric.packets.serverbound.SendDataPacket
@@ -19,6 +20,7 @@ import computer.obscure.piku.mod.fabric.scripting.api.screen.LuaWidgets
 import computer.obscure.piku.mod.fabric.scripting.api.sound.LuaSound
 import computer.obscure.piku.mod.fabric.scripting.api.storage.LuaSessionStorage
 import computer.obscure.piku.mod.fabric.scripting.api.ui.LuaEasing
+import computer.obscure.piku.mod.fabric.scripting.platform.FabricPlatform
 import me.znotchill.kiwi.twine.TwineCompat
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking
 
@@ -43,6 +45,7 @@ class ClientLuaEngine : LuaEngine() {
 
     override fun init() {
         clientEvents = EventBus()
+        Platform.current = FabricPlatform()
 
         serverEvents = NetBus { channel, data, _ ->
             val json = data.toJson()

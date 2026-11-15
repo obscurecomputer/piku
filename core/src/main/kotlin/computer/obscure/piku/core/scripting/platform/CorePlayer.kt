@@ -4,7 +4,10 @@ import computer.obscure.piku.core.scripting.api.LuaTextInstance
 import computer.obscure.twine.annotations.TwineFunction
 import net.kyori.adventure.text.Component
 
-interface Player<T> : Entity<T> {
+interface CorePlayer<T> : CoreEntity<T> {
+    override val refType: String
+        get() = "player"
+
     @TwineFunction
     fun send(component: Component)
 

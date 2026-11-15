@@ -1,5 +1,7 @@
 package computer.obscure.piku.core.utils
 
+import computer.obscure.piku.core.scripting.platform.Platform
+import computer.obscure.piku.core.scripting.platform.WireRef
 import computer.obscure.piku.core.serialization.PikuEncodable
 import computer.obscure.piku.core.serialization.PikuSerializable
 import computer.obscure.twine.TwineNative
@@ -10,6 +12,7 @@ import kotlinx.serialization.serializerOrNull
 import me.znotchill.kiwi.generated.Color
 import me.znotchill.kiwi.generated.Vec2
 import me.znotchill.kiwi.generated.Vec3
+import java.util.UUID
 import kotlin.reflect.KClass
 
 val json = Json { ignoreUnknownKeys = true }
@@ -46,6 +49,13 @@ fun Any?.toJson(): String = when (this) {
     is String -> JsonPrimitive(this).toString()
     is Number -> this.toString()
     is Boolean -> this.toString()
+    is WireRef -> JsonObject(
+        mapOf(
+            "__type" to JsonPrimitive("ref"),
+            "kind" to JsonPrimitive(refType),
+            "id" to JsonPrimitive(refId)
+        )
+    ).toString()
     is PikuSerializable -> this.toJsonElement().toString()
     is PikuEncodable -> {
         @Suppress("UNCHECKED_CAST")
@@ -87,6 +97,12 @@ fun jsonToKotlin(value: JsonElement): Any? {
         value is JsonObject -> {
             val typeName = (value["__type"] ?: value["valueName"])?.jsonPrimitive?.contentOrNull
             val entry = typeName?.let { typeNameToEntry[it] }
+            if (typeName == "ref") {
+                val kind = value["kind"]!!.jsonPrimitive.content
+                val uuid = UUID.fromString(value["id"]!!.jsonPrimitive.content)
+
+                return Platform.current?.resolve(kind, uuid)
+            }
             if (entry != null) {
                 @Suppress("UNCHECKED_CAST")
                 val serializer = entry.serializer as KSerializer<Any>

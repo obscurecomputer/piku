@@ -7,12 +7,13 @@ import net.minestom.server.coordinate.Pos
 import me.znotchill.kiwi.generated.Vec3 as CoreVec3
 import net.minestom.server.entity.Entity
 import net.minestom.server.entity.EntityType
-import computer.obscure.piku.core.scripting.platform.Entity as CoreEntity
+import java.util.UUID
+import computer.obscure.piku.core.scripting.platform.CoreEntity
 
 open class MinestomEntity(
     val entity: Entity
 ) : CoreEntity<EntityType>, TwineNative() {
-
+    override val uuid: UUID = entity.uuid
     override val type: EntityType
         get() = entity.entityType
 
@@ -25,7 +26,7 @@ open class MinestomEntity(
                 entity.position.z
             ),
             pitch = entity.position.pitch,
-            yaw = entity.position.pitch,
+            yaw = entity.position.yaw,
         )
         set(value) {
             val pos = Pos(

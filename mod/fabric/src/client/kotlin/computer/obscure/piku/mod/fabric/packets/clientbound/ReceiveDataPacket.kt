@@ -23,6 +23,7 @@ class ReceiveDataPacket(
                     ?: return@execute
 
                 val data = jsonStringToKotlin(json)
+                println("receive_data $id: $json")
 
                 engine.serverEvents.receive(id, data, Unit)
             } catch (e: Exception) {

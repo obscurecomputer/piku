@@ -1,21 +1,18 @@
 package computer.obscure.piku.minestom.scripting.platform
 
-import computer.obscure.piku.core.classes.Pos as CorePos
+import computer.obscure.piku.core.scripting.platform.CoreEntity
 import computer.obscure.twine.TwineNative
 import computer.obscure.twine.annotations.TwineProperty
 import net.minestom.server.coordinate.Pos
-import me.znotchill.kiwi.generated.Vec3 as CoreVec3
 import net.minestom.server.entity.Entity
-import net.minestom.server.entity.EntityType
-import java.util.UUID
-import computer.obscure.piku.core.scripting.platform.CoreEntity
+import java.util.*
+import computer.obscure.piku.core.classes.Pos as CorePos
+import me.znotchill.kiwi.generated.Vec3 as CoreVec3
 
 open class MinestomEntity(
     val entity: Entity
-) : CoreEntity<EntityType>, TwineNative() {
+) : CoreEntity, TwineNative() {
     override val uuid: UUID = entity.uuid
-    override val type: EntityType
-        get() = entity.entityType
 
     @TwineProperty
     override var position: CorePos

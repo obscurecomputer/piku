@@ -1,6 +1,6 @@
 package computer.obscure.piku.mod.fabric.packets.clientbound
 
-import computer.obscure.piku.core.utils.jsonStringToKotlin
+import computer.obscure.piku.core.utils.NetworkSerializer
 import computer.obscure.piku.mod.fabric.PikuClient
 import computer.obscure.piku.mod.fabric.packets.CustomPacket
 import net.minecraft.client.Minecraft
@@ -22,7 +22,7 @@ class ReceiveDataPacket(
                 val engine = PikuClient.engine
                     ?: return@execute
 
-                val data = jsonStringToKotlin(json)
+                val data = NetworkSerializer.toKotlin(json)
                 println("receive_data $id: $json")
 
                 engine.serverEvents.receive(id, data, Unit)

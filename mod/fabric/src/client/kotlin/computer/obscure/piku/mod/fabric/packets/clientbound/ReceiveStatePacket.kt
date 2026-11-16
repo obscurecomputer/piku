@@ -1,10 +1,6 @@
 package computer.obscure.piku.mod.fabric.packets.clientbound
 
-import computer.obscure.piku.core.scripting.server.SharedStateManager
-import computer.obscure.piku.core.utils.jsonStringToKotlin
-import computer.obscure.piku.mod.fabric.PikuClient
 import computer.obscure.piku.mod.fabric.packets.CustomPacket
-import computer.obscure.piku.mod.fabric.scripting.api.storage.LuaSharedState
 import net.minecraft.client.Minecraft
 import net.minecraft.network.FriendlyByteBuf
 import net.minecraft.network.codec.ByteBufCodecs
@@ -23,13 +19,13 @@ class ReceiveStatePacket(
     override fun handle() {
         Minecraft.getInstance().execute {
             try {
-                val value = jsonStringToKotlin(value)
-                val luaState = LuaSharedState(
-                    internalId = internalId,
-                    name = name,
-                    value = value,
-                    clientModifiable = clientModifiable
-                )
+//                val value = jsonStringToKotlin(value)
+//                val luaState = LuaSharedState(
+//                    internalId = internalId,
+//                    name = name,
+//                    value = value,
+//                    clientModifiable = clientModifiable
+//                )
 
                 // TODO: FIX STATES
 //                val state = luaState.toSharedState()

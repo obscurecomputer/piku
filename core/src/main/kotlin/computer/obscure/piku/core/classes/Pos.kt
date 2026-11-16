@@ -3,8 +3,10 @@ package computer.obscure.piku.core.classes
 import computer.obscure.twine.TwineNative
 import computer.obscure.twine.annotations.TwineFunction
 import computer.obscure.twine.annotations.TwineProperty
+import kotlinx.serialization.Serializable
 import me.znotchill.kiwi.generated.Vec3
 
+@Serializable
 data class Pos(
     @TwineProperty val vec: Vec3,
     @TwineProperty val pitch: Float,

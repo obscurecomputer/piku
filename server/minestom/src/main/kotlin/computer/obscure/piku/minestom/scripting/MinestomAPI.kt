@@ -5,9 +5,11 @@ import computer.obscure.piku.core.scripting.api.NetEvents
 import computer.obscure.piku.core.scripting.engine.LuaEngine
 import computer.obscure.piku.core.scripting.events.EventBus
 import computer.obscure.piku.core.scripting.events.NetBus
+import computer.obscure.piku.core.scripting.platform.Platform
 import computer.obscure.piku.core.scripting.server.*
 import computer.obscure.piku.core.states.SharedState
-import computer.obscure.piku.core.utils.jsonStringToKotlin
+import computer.obscure.piku.core.utils.NetworkSerializer
+import computer.obscure.piku.core.utils.asString
 import computer.obscure.piku.core.utils.readString
 import computer.obscure.piku.core.utils.toJson
 import computer.obscure.piku.minestom.scripting.platform.MinestomPlayer
@@ -96,7 +98,7 @@ class MinestomAPI(val server: BlossomServer) : ServerAPI<Player> {
 
                         buffer.release()
 
-                        val decoded = jsonStringToKotlin(data)
+                        val decoded = NetworkSerializer.toKotlin(data)
                         clientEvents.receive(eventId, decoded, event.player)
                     } catch (e: Exception) {
                         error("Failed to decode: ${e.message}")
@@ -120,7 +122,7 @@ class MinestomAPI(val server: BlossomServer) : ServerAPI<Player> {
                             throw IllegalAccessException("SharedState '${state.name}' is not client modifiable!")
 
                         state.set(
-                            jsonStringToKotlin(value)!!,
+                            NetworkSerializer.toKotlin(value)!!,
                             exemptSyncOwners = listOf(event.player)
                         )
                     } catch (e: Exception) {
@@ -158,7 +160,7 @@ class MinestomAPI(val server: BlossomServer) : ServerAPI<Player> {
     }
 
     override fun sendData(player: Player, eventId: String, data: Any) {
-        val jsonString = data.toJson()
+        val jsonString = data.toJson().asString()
 
         val bytes = NetworkBuffer.makeArray { buffer ->
             buffer.write(NetworkBuffer.STRING, eventId)
@@ -169,7 +171,7 @@ class MinestomAPI(val server: BlossomServer) : ServerAPI<Player> {
     }
 
     override fun sendState(player: Player, state: SharedState) {
-        val serializedData = state.value.toJson()
+        val serializedData = state.value.toJson().asString()
 
         val bytes = NetworkBuffer.makeArray { buffer ->
             buffer.write(NetworkBuffer.STRING, state.internalId.toString())

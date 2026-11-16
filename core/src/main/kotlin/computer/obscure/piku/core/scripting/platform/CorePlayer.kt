@@ -1,22 +1,33 @@
 package computer.obscure.piku.core.scripting.platform
 
-import computer.obscure.piku.core.scripting.api.LuaTextInstance
+import computer.obscure.piku.core.classes.Pos
 import computer.obscure.twine.annotations.TwineFunction
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+import me.znotchill.kiwi.blossom.serializer.UUIDSerializer
 import net.kyori.adventure.text.Component
+import java.util.UUID
 
-interface CorePlayer<T> : CoreEntity<T> {
-    override val refType: String
-        get() = "player"
-
-    @TwineFunction
-    fun send(component: Component)
+interface CorePlayer : CoreEntity {
+    fun send(message: Component) {}
 
     @TwineFunction
-    fun send(text: LuaTextInstance) {
-        send(text.toComponent())
+    fun send(message: String) {
+        send(Component.text(message))
     }
     @TwineFunction
-    fun send(value: Any) {
-        send(Component.text(value.toString()))
+    fun send(message: Any) {
+        send(message.toString())
     }
+
+    override fun toDto(): Dto =
+        CorePlayerDto(uuid, position)
+}
+
+@Serializable @SerialName("player")
+data class CorePlayerDto(
+    @Serializable(with = UUIDSerializer::class) val uuid: UUID,
+    val position: Pos,
+) : Dto {
+    override fun fromDto() = Platform.current.playerFromDto(this)
 }

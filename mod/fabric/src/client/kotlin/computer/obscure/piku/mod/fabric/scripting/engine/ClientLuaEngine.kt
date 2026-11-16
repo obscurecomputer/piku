@@ -6,6 +6,7 @@ import computer.obscure.piku.core.scripting.engine.LuaEngine
 import computer.obscure.piku.core.scripting.events.EventBus
 import computer.obscure.piku.core.scripting.events.NetBus
 import computer.obscure.piku.core.scripting.platform.Platform
+import computer.obscure.piku.core.utils.asString
 import computer.obscure.piku.core.utils.toJson
 import computer.obscure.piku.mod.fabric.PikuClient
 import computer.obscure.piku.mod.fabric.packets.serverbound.SendDataPacket
@@ -49,7 +50,12 @@ class ClientLuaEngine : LuaEngine() {
 
         serverEvents = NetBus { channel, data, _ ->
             val json = data.toJson()
-            ClientPlayNetworking.send(SendDataPacket(id = channel, json = json))
+            ClientPlayNetworking.send(
+                SendDataPacket(
+                    id = channel,
+                    json = json.asString()
+                )
+            )
         }
 
         clientScriptEvents = LocalScriptEvents(clientEvents)

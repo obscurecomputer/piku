@@ -2,21 +2,13 @@ package computer.obscure.piku.core.scripting.platform
 
 import java.util.UUID
 import java.util.concurrent.ConcurrentHashMap
+import kotlin.reflect.KClass
 
-open class Platform {
-
-    private val factories = ConcurrentHashMap<String, RefFactory>()
-
-    fun register(factory: RefFactory) {
-        factories[factory.kind] = factory
-    }
-
-    fun resolve(kind: String, uuid: UUID): Any? {
-        return factories[kind]?.resolve(uuid)
-    }
+abstract class Platform {
+    abstract fun entityFromDto(dto: CoreEntityDto): CoreEntity?
+    abstract fun playerFromDto(dto: CorePlayerDto): CorePlayer?
 
     companion object {
-        @Volatile
-        var current: Platform? = null
+        lateinit var current: Platform
     }
 }

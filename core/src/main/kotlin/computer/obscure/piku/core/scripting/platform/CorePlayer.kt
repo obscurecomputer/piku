@@ -20,6 +20,9 @@ interface CorePlayer : CoreEntity {
         send(message.toString())
     }
 
+    @TwineFunction
+    fun gameMode(gameMode: String) {}
+
     override fun toDto(): Dto =
         CorePlayerDto(uuid, position)
 }
@@ -29,5 +32,5 @@ data class CorePlayerDto(
     @Serializable(with = UUIDSerializer::class) val uuid: UUID,
     val position: Pos,
 ) : Dto {
-    override fun fromDto() = Platform.current.playerFromDto(this)
+    override fun fromDto() = Platform.current.player(this)
 }

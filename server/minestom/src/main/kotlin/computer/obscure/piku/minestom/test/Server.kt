@@ -1,9 +1,9 @@
 package computer.obscure.piku.minestom.test
 
 import computer.obscure.piku.core.classes.ScriptSource
-import computer.obscure.piku.core.scripting.platform.CorePlayer
 import computer.obscure.piku.core.scripting.platform.Platform
 import computer.obscure.piku.minestom.scripting.MinestomAPI
+import computer.obscure.piku.minestom.scripting.api.instance.LuaInstanceBuilder
 import computer.obscure.piku.minestom.scripting.platform.MinestomPlatform
 import computer.obscure.piku.minestom.scripting.platform.MinestomPlayer
 import computer.obscure.piku.minestom.scripting.states.sharedState
@@ -29,7 +29,9 @@ internal class Server : BlossomServer(
 
     override fun preLoad() {
         piku.registerEvents()
+        piku.engine.register(LuaInstanceBuilder())
         Platform.current = MinestomPlatform()
+
         instanceContainer = BaseInstance().createInstance(instanceManager)
 
         eventHandler.addListener<AsyncPlayerConfigurationEvent> { event ->

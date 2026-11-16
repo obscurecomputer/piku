@@ -22,5 +22,5 @@ data class CoreEntityDto(
     val uuid: UUID,
     val position: Pos
 ) : Dto {
-    override fun fromDto() = Platform.current.entityFromDto(this)
+    override fun fromDto() = Platform.current.entity(this)
 }

@@ -1,6 +1,7 @@
 package computer.obscure.piku.core.scripting.engine
 
 import computer.obscure.piku.core.scripting.api.*
+import computer.obscure.piku.core.scripting.platform.CoreBlocks
 import computer.obscure.piku.core.service.PikuService
 import computer.obscure.twine.TwineEngine
 import computer.obscure.twine.TwineEnvironment
@@ -59,6 +60,9 @@ open class LuaEngine : PikuService {
         register(LuaMath())
         register(LuaNoise())
         register(LuaText())
+
+        register(CoreBlocks())
+        register(BlockVecBuilder())
     }
 
     fun register(native: TwineNative) {

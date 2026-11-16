@@ -1,5 +1,7 @@
 package computer.obscure.piku.mod.fabric.scripting.platform
 
+import computer.obscure.piku.core.scripting.platform.CoreBlock
+import computer.obscure.piku.core.scripting.platform.CoreBlockDto
 import computer.obscure.piku.core.scripting.platform.CoreEntity
 import computer.obscure.piku.core.scripting.platform.CoreEntityDto
 import computer.obscure.piku.core.scripting.platform.CorePlayer
@@ -10,7 +12,7 @@ import net.minecraft.client.Minecraft
 class FabricPlatform : Platform() {
     init { current = this }
 
-    override fun entityFromDto(dto: CoreEntityDto): CoreEntity? {
+    override fun entity(dto: CoreEntityDto): CoreEntity? {
         val level = Minecraft.getInstance().level ?: return null
         val entity = level.entitiesForRendering().firstOrNull {
             it.uuid == dto.uuid
@@ -18,8 +20,12 @@ class FabricPlatform : Platform() {
         return entity?.let(::FabricEntity)
     }
 
-    override fun playerFromDto(dto: CorePlayerDto): CorePlayer? {
+    override fun player(dto: CorePlayerDto): CorePlayer? {
         val level = Minecraft.getInstance().level ?: return null
         return level.getPlayerByUUID(dto.uuid)?.let(::FabricPlayer)
+    }
+
+    override fun block(dto: CoreBlockDto): CoreBlock? {
+        TODO("Not yet implemented")
     }
 }
